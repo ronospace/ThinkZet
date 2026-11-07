@@ -61,6 +61,43 @@ function status() {
 }
 
 // ---- Stripe API (REST, no SDK) ----
+// Read-only lookups (GET). Used to verify the account's prices before charging anyone.
+async function stripeGet(path) {
+  const res = await fetch(`https://api.stripe.com/v1/${path}`, {
+    headers: { Authorization: `Bearer ${CONFIG.secretKey}` },
+    signal: AbortSignal.timeout(15000),
+  });
+  const json = await res.json();
+  if (!res.ok) throw new Error(json?.error?.message || `stripe ${path} failed`);
+  return json;
+}
+
+async function verifyPrices() {
+  const out = { monthly: null, annual: null, problems: [] };
+  for (const [key, id] of [['monthly', CONFIG.priceMonthly], ['annual', CONFIG.priceAnnual]]) {
+    if (!id) { out.problems.push(`no ${key} price id configured`); continue; }
+    try {
+      const price = await stripeGet(`prices/${id}?expand[]=product`);
+      const product = price.product;
+      out[key] = {
+        id: price.id,
+        amount: price.unit_amount != null ? price.unit_amount / 100 : null,
+        currency: (price.currency || '').toUpperCase(),
+        interval: price.recurring?.interval || null,
+        active: !!price.active,
+        product: typeof product === 'object' ? product.name : product,
+        livemode: !!price.livemode,
+      };
+      if (!price.active) out.problems.push(`${key} price is inactive`);
+      if (price.type !== 'recurring') out.problems.push(`${key} price is not recurring`);
+      if (price.livemode) out.problems.push(`${key} price is a LIVE price while the key is test — mismatch`);
+    } catch (e) {
+      out.problems.push(`${key}: ${e.message}`);
+    }
+  }
+  return out;
+}
+
 async function stripe(path, form) {
   const res = await fetch(`https://api.stripe.com/v1/${path}`, {
     method: 'POST',
@@ -174,4 +211,4 @@ function handleEvent(event) {
   }
 }
 
-module.exports = { PLANS, CONFIG, mode, status, createCheckout, setPlan, planFor, verifySignature, handleEvent };
+module.exports = { PLANS, CONFIG, mode, status, createCheckout, setPlan, planFor, verifySignature, handleEvent, verifyPrices, stripeGet };

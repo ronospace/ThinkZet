@@ -1172,6 +1172,18 @@ route('POST', /^\/api\/billing\/cancel$/, async (req, res) => {
   json(res, 200, { ok: true, plan: 'free' });
 });
 
+// Verify the configured prices against Stripe — catches mismatches before a customer does.
+route('GET', /^\/api\/billing\/verify$/, async (req, res) => {
+  const st = BILLING.status();
+  if (st.mode !== 'test' && st.mode !== 'live') return json(res, 200, { status: st, prices: null });
+  try {
+    const prices = await BILLING.verifyPrices();
+    json(res, 200, { status: st, prices });
+  } catch (e) {
+    json(res, 502, { error: String(e.message || e) });
+  }
+});
+
 route('GET', /^\/api\/billing\/status$/, async (req, res) => {
   const uid = resolveUser(req);
   const events = db.prepare('SELECT kind,plan,cycle,source,status,created_at FROM billing_events WHERE user_id=? ORDER BY id DESC LIMIT 10').all(uid);

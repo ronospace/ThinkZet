@@ -406,7 +406,7 @@ async function renderRadar() {
         <div class="row" style="justify-content:space-between;gap:16px;flex-wrap:wrap">
           <div style="flex:1;min-width:260px">
             <div style="font-size:13.5px;font-weight:600">You are on Free — showing your top ${plan.limits.matches} scored opportunities</div>
-            <div class="dim" style="font-size:12.5px;margin-top:3px">Pro unlocks the full radar, saved searches, the daily brief and the copilot. €19/month, or €149/year.</div>
+            <div class="dim" style="font-size:12.5px;margin-top:3px">Pro unlocks the full radar, saved searches, the daily brief and the copilot. €19.99/month, or €149.99/year.</div>
           </div>
           <button class="btn sm" id="upgrade">Unlock Pro</button>
         </div>
@@ -1223,12 +1223,12 @@ async function renderPlan() {
       </div>
       <div class="card" style="border-color:#33507a;background:linear-gradient(180deg,#131a24,#10141a)">
         <h3>Pro</h3>
-        <div class="big mono" style="margin:8px 0">€19<span style="font-size:14px;color:var(--muted)">/month</span></div>
-        <div class="dim" style="font-size:12.5px">or €149/year — two months free</div>
+        <div class="big mono" style="margin:8px 0">€19.99<span style="font-size:14px;color:var(--muted)">/month</span></div>
+        <div class="dim" style="font-size:12.5px">or €149.99/year — two months free</div>
         <div style="margin-top:12px">${p.plans.pro.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:#6fe3a4">✓</span></div>`).join('')}</div>
         ${p.plan === 'pro'
           ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
-          : `<div style="margin-top:14px" class="row"><button class="btn sm" id="up-month">€19 monthly</button><button class="btn sm ghost" id="up-year">€149 yearly</button></div>`}
+          : `<div style="margin-top:14px" class="row"><button class="btn sm" id="up-month">€19.99 monthly</button><button class="btn sm ghost" id="up-year">€149.99 yearly</button></div>`}
       </div>
     </div>
     <div class="card" style="margin-top:14px">
