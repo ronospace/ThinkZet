@@ -1554,6 +1554,33 @@ const server = http.createServer(async (req, res) => {
   const pathname = url.pathname;
   // Shared cards live at /s/<id>; the client renders them from the API.
   if (/^\/s\/[a-f0-9]+$/.test(pathname)) return serveStatic(req, res, '/index.html');
+  // Public SEO surfaces render client-side from the same rate engine.
+  if (/^\/(salary|skills)\/[^/]+(\/[A-Za-z]{2})?$/.test(pathname)) return serveStatic(req, res, '/index.html');
+
+  // Sitemap built from the live corpus: every role x country we can defend with data.
+  if (pathname === '/sitemap.xml') {
+    const roles = db.prepare(`SELECT role_family, COUNT(*) n FROM opportunities WHERE status='open'
+      GROUP BY role_family HAVING n >= 20 ORDER BY n DESC`).all();
+    const skills = db.prepare('SELECT canonical FROM skills WHERE demand_index >= 60').all();
+    const countries = db.prepare(`SELECT country, COUNT(*) n FROM opportunities WHERE status='open' AND country NOT IN ('WW','EU')
+      GROUP BY country HAVING n >= 20`).all();
+    const urls = ['/', '/?app=1'];
+    const SLUG = { backend: 'software-engineer', frontend: 'frontend-engineer', data_science: 'data-scientist',
+      data_engineering: 'data-engineer', ml_engineering: 'machine-learning-engineer', ai_engineering: 'ai-engineer',
+      platform: 'platform-engineer', mobile: 'mobile-engineer', product: 'product-manager',
+      security: 'security-engineer', design: 'product-designer' };
+    for (const r of roles) {
+      const slug = SLUG[r.role_family] || r.role_family.replace(/_/g, '-');
+      urls.push(`/salary/${slug}`);
+      for (const c of countries) urls.push(`/salary/${slug}/${c.country.toLowerCase()}`);
+    }
+    for (const sk of skills) urls.push(`/skills/${encodeURIComponent(sk.canonical.toLowerCase().replace(/\s+/g, '-'))}`);
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
+      urls.map((u) => `  <url><loc>http://127.0.0.1:${PORT}${u}</loc><changefreq>daily</changefreq></url>`).join('\n') +
+      `\n</urlset>`;
+    res.writeHead(200, { 'Content-Type': 'application/xml' });
+    return res.end(xml);
+  }
 
   if (!pathname.startsWith('/api/') && !pathname.startsWith('/go/')) return serveStatic(req, res, pathname);
 

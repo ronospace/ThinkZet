@@ -412,6 +412,91 @@ function scoreColor(s) {
 }
 
 
+
+/* ---------------- public SEO surface ---------------- */
+async function renderSeo() {
+  const parts = location.pathname.split('/').filter(Boolean);
+  // /salary/:role  /salary/:role/:country  /skills/:skill
+  const kind = parts[0];
+  const SLUG_ROLE = { 'software-engineer': 'Backend Engineer', 'frontend-engineer': 'Frontend Engineer',
+    'data-scientist': 'Data Scientist', 'data-engineer': 'Data Engineer',
+    'machine-learning-engineer': 'ML Engineer', 'ai-engineer': 'AI Engineer',
+    'platform-engineer': 'Platform Engineer', 'mobile-engineer': 'Mobile Engineer',
+    'product-manager': 'Product Manager', 'security-engineer': 'Security Engineer',
+    'product-designer': 'Product Designer' };
+  const rawSlug = parts[1] ? decodeURIComponent(parts[1]) : '';
+  const role = SLUG_ROLE[rawSlug] || rawSlug.replace(/-/g, ' ');
+  const country = parts[2] ? decodeURIComponent(parts[2]).toUpperCase() : '';
+  const skill = role;
+
+  const fmt = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+
+  if (kind === 'salary' && role) {
+    const r = await post('/api/public/rate-check', { role, years: 7, country: country || null, skills: [] });
+    if (r.error) { document.getElementById('landing').innerHTML = '<div class="land-wrap"><h1>Not found</h1></div>'; return; }
+    const b = r.benchmark;
+    const title = `${role} salary${country ? ' in ' + country : ' in Europe'} — what the live market pays (${new Date().getFullYear()})`;
+    document.title = title;
+    document.getElementById('landing').innerHTML = `
+      <div class="land-wrap">
+        <div class="land-nav"><div class="land-brand"><span class="mark">C</span> CareerOS</div>
+          <a class="btn ghost sm" href="/">Check your own <span style="opacity:.7">&gt;</span></a></div>
+        <span class="land-kicker">Live market data · ${b.sampleSize} postings · updated continuously</span>
+        <h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${esc(role)} salary${country ? ' in ' + esc(country) : ''}</h1>
+        <p class="land-sub">What employers are actually publishing right now — not a survey, not self-reported.</p>
+        <div class="card" style="margin-top:26px">
+          <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:16px">
+            <div><div class="muted" style="font-size:11px">Median</div><div class="big mono">${fmt(b.p50)}</div></div>
+            <div><div class="muted" style="font-size:11px">p25</div><div class="mono" style="font-size:18px">${fmt(b.p25)}</div></div>
+            <div><div class="muted" style="font-size:11px">p75</div><div class="mono" style="font-size:18px">${fmt(b.p75)}</div></div>
+            <div><div class="muted" style="font-size:11px">p90</div><div class="mono" style="font-size:18px">${fmt(b.p90)}</div></div>
+          </div>
+          <div style="margin-top:16px;font-size:12.5px;color:var(--muted)">${esc(b.segment)} · ${b.exactComparables} exact-profile comparables · ${esc(b.confidence)} confidence</div>
+        </div>
+        <h2 style="font-size:17px;margin:32px 0 10px">Where the money is</h2>
+        <div class="card">${(b.byChannel || []).filter((c) => c.n >= 5).map((c) => `<div class="kv"><span>${esc(c.channel)} <span class="muted">(${c.n})</span></span><span class="mono">${fmt(c.median)}</span></div>`).join('')}</div>
+        <h2 style="font-size:17px;margin:32px 0 10px">Skills that pay more</h2>
+        <div class="card">${r.levers.slice(0, 6).map((l) => `<div class="kv"><span>${esc(l.skill)}</span><span class="mono" style="color:#6fe3a4">+${l.premium}%</span></div>`).join('')}</div>
+        <div class="card" style="margin-top:26px;text-align:center;background:linear-gradient(135deg,#1a1030,#101a2e)">
+          <div style="font-size:15px;font-weight:600">Where do you sit against this?</div>
+          <div class="dim" style="font-size:12.5px;margin-top:6px">Find out in 60 seconds. Free, no account.</div>
+          <a class="btn" href="/" style="margin-top:14px;display:inline-block">Check my market value <span style="opacity:.7">&gt;</span></a>
+        </div>
+        <div class="muted" style="font-size:11.5px;margin-top:22px">Source: ${b.sampleSize} live postings disclosing pay, annualised to EUR. Discipline-level segments with fewer than eight postings are omitted rather than shown with false precision.</div>
+      </div>`;
+    return;
+  }
+
+  if (kind === 'skills' && skill) {
+    const d = await api('/api/skills');
+    const s1 = d.skills.find((x) => x.canonical.toLowerCase() === skill.toLowerCase());
+    if (!s1) { document.getElementById('landing').innerHTML = '<div class="land-wrap"><h1>Not found</h1></div>'; return; }
+    document.title = `${s1.canonical} demand, salary premium and growth — CareerOS`;
+    document.getElementById('landing').innerHTML = `
+      <div class="land-wrap">
+        <div class="land-nav"><div class="land-brand"><span class="mark">C</span> CareerOS</div>
+          <a class="btn ghost sm" href="/">Check your own <span style="opacity:.7">&gt;</span></a></div>
+        <span class="land-kicker">Skill intelligence · live</span>
+        <h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${esc(s1.canonical)}</h1>
+        <p class="land-sub">${esc(s1.category)} · demand index ${s1.demand_index} · salary premium +${s1.salary_premium}% · growth ${s1.growth_rate > 0 ? '+' : ''}${s1.growth_rate}%</p>
+        <div class="card" style="margin-top:24px">
+          <div class="kv"><span>Market demand index</span><span class="mono">${s1.demand_index}/200</span></div>
+          <div class="kv"><span>Salary premium</span><span class="mono" style="color:#6fe3a4">+${s1.salary_premium}%</span></div>
+          <div class="kv"><span>90-day growth</span><span class="mono">${s1.growth_rate > 0 ? '+' : ''}${s1.growth_rate}%</span></div>
+          <div class="kv"><span>Emerging</span><span class="mono">${s1.is_emerging ? 'yes' : 'no'}</span></div>
+        </div>
+        <div class="card" style="margin-top:22px;text-align:center">
+          <div style="font-size:14px;font-weight:600">Do you have ${esc(s1.canonical)}?</div>
+          <div class="dim" style="font-size:12.5px;margin-top:6px">See what it's worth on your profile, and what it's costing you to not have it.</div>
+          <a class="btn" href="/" style="margin-top:14px;display:inline-block">Check my market value <span style="opacity:.7">&gt;</span></a>
+        </div>
+      </div>`;
+    return;
+  }
+
+  document.getElementById('landing').innerHTML = '<div class="land-wrap"><h1>Not found</h1><a href="/">Back to CareerOS</a></div>';
+}
+
 /* ---------------- shared result card ---------------- */
 async function renderSharedCard(id) {
   const r = await api('/api/public/share/' + id);
@@ -2304,6 +2389,8 @@ $('#logout') && ($('#logout').onclick = async () => {
 (async () => {
   const shared = location.pathname.match(/^\/s\/([a-f0-9]+)$/);
   if (shared) { await renderSharedCard(shared[1]); return; }
+
+  if (/^\/(salary|skills)\//.test(location.pathname)) { await renderSeo(); return; }
 
   const params = new URLSearchParams(location.search);
   const authed = await api('/api/auth/me');
