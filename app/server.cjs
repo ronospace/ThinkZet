@@ -1331,6 +1331,27 @@ route('GET', /^\/unsubscribe\/([^/]+)\/([^/]+)$/, async (req, res, url, m) => {
   res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You are unsubscribed from all CareerOS emails. <a href="/" style="color:#4c8dff">Change your mind</a></div>');
 });
 
+// ---- which opportunities have expired or disappeared ----
+// A feed that shows dead roles destroys trust faster than a feed that shows fewer roles.
+route('GET', /^\/api\/opportunities\/lifecycle$/, async (req, res) => {
+  const uid = resolveUser(req);
+  const stale = db.prepare(`SELECT COUNT(*) n FROM opportunities
+    WHERE status='open' AND posted_at < datetime('now','-60 days')`).get().n;
+  const noComp = db.prepare(`SELECT COUNT(*) n FROM opportunities
+    WHERE status='open' AND comp_min IS NULL`).get().n;
+  const ghost = db.prepare(`SELECT COUNT(*) n FROM opportunities
+    WHERE status='open' AND comp_min IS NULL AND LENGTH(COALESCE(description,'')) < 200`).get().n;
+  const total = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open'").get().n;
+  const fresh7 = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open' AND posted_at > datetime('now','-7 days')").get().n;
+  const tracked = db.prepare('SELECT COUNT(*) n FROM applications WHERE user_id=?').get(uid).n;
+
+  json(res, 200, {
+    total, fresh7, stale, noComp, ghost, tracked,
+    health: total ? Math.round(((total - ghost) / total) * 100) : 0,
+    note: 'Ghost listings — no compensation and a thin description — are excluded from your feed automatically. This is what was filtered.',
+  });
+});
+
 // ---- referral recommendations: where a gap has a partner fix ----
 // The rule that cannot be broken: this only ever decorates a gap the engine already found.
 // It never creates a recommendation, never reorders one, and never touches a score.

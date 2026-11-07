@@ -2227,6 +2227,7 @@ async function renderReferrals() {
 async function renderOps() {
   const o = await api('/api/ops');
   const live = await api('/api/ingest');
+  const lc = await api('/api/opportunities/lifecycle');
   const last = live.last;
   $('#view').innerHTML = `
     <h2 class="section">Live ingestion</h2>
@@ -2256,6 +2257,14 @@ async function renderOps() {
         <div class="note" style="margin-top:12px">Classification is deterministic: title must contain core tech vocabulary, exclude internships/trades/sales, then map to one of 11 role families by signal priority.</div>
       </div>
     </div>
+    <h2 class="section">Listing health</h2>
+    <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="card"><h3>Live opportunities</h3><div class="big mono">${lc.total}</div><div class="muted" style="font-size:11px">${lc.fresh7} posted this week</div></div>
+      <div class="card"><h3>Feed health</h3><div class="big mono">${lc.health}%</div><div class="muted" style="font-size:11px">after removing ghosts</div></div>
+      <div class="card"><h3>Ghost listings filtered</h3><div class="big mono">${lc.ghost}</div><div class="muted" style="font-size:11px">no comp + thin description</div></div>
+      <div class="card"><h3>Stale (&gt;60 days)</h3><div class="big mono">${lc.stale}</div><div class="muted" style="font-size:11px">deprioritised in ranking</div></div>
+    </div>
+    <div class="card" style="margin-top:14px"><div class="dim" style="font-size:12.5px">${esc(lc.note)}</div></div>
     <h2 class="section">Corpus</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="card"><h3>Raw listings ingested</h3><div class="big mono">${o.ingest.raw}</div></div>
