@@ -11,6 +11,19 @@
   --accent:#4c8dff; --accent2:#1f6feb; --good:#2fbf71; --warn:#f5a524; --bad:#f2545b;
   --radius:12px;
 }
+html[data-theme="light"]{
+  --bg:#f7f9fc; --panel:#ffffff; --panel2:#f2f5f9; --line:#e2e8f0; --line2:#cdd7e3;
+  --ink:#0e141b; --ink2:#41505f; --muted:#74828f;
+  --accent:#1f6feb; --accent2:#1554c0;
+}
+html[data-theme="light"] body{color-scheme:light}
+html[data-theme="light"] .rate-gap{background:linear-gradient(135deg,#efeaff,#e8f0ff 55%,#eaf7f1);border-color:#d7d0f0}
+html[data-theme="light"] .rate-gap::after{background:radial-gradient(circle,rgba(139,92,246,.13),transparent 70%)}
+html[data-theme="light"] .rate-gap .k{color:#6a52c8}
+html[data-theme="light"] .score{box-shadow:none !important}
+html[data-theme="light"] .palette{background:rgba(240,244,250,.75)}
+html[data-theme="light"] pre{background:#0e1116}
+html[data-theme="light"] .reveal{animation:none}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
@@ -207,6 +220,7 @@ kbd{background:#1b2431;border:1px solid var(--line2);border-bottom-width:2px;bor
       <div class="spacer"></div>
       <span class="pill live" id="live-pill">● live feeds</span>
       <span class="pill" id="profile-pill">no profile</span>
+      <button class="pill" id="theme" style="cursor:pointer" title="Toggle theme">◐ theme</button>
       <button class="pill" id="cmdk" style="cursor:pointer">⌘K search</button>
       <button class="btn ghost sm" id="run-ingest">Run ingest</button>
       <button class="btn ghost sm" id="load-demo">Load demo persona</button>
@@ -718,6 +732,24 @@ async function renderScores() {
         <div class="dim" style="margin-top:4px;max-width:520px">Composite of six scores, benchmarked against a modelled distribution of professionals at your level. Recomputed on every action — the number moves when you act.</div>
         <div class="muted" style="font-size:11.5px;margin-top:8px">${history.length} computation${history.length === 1 ? '' : 's'} recorded</div>
       </div>
+    </div>
+    <div class="card" style="margin-bottom:14px">
+      <h3>Where you sit against people at your level</h3>
+      <div style="margin-top:12px">${[
+        ['Employability', scores.employability],
+        ['Interview readiness', scores.interview_readiness],
+        ['Market demand', scores.market_demand],
+        ['Salary potential', scores.salary_potential],
+        ['Future growth', scores.future_growth],
+        ['Momentum', scores.career_momentum],
+      ].map(([label, v]) => {
+        const pct = Math.max(0, Math.min(100, Math.round(100 / (1 + Math.exp(-1.15 * ((v - 58) / 14))))));
+        return `<div style="margin:10px 0">
+          <div class="row" style="justify-content:space-between;font-size:12.5px"><span>${label}</span><span class="mono muted">${v}/100 · p${pct}</span></div>
+          <div class="bar" style="margin-top:5px;position:relative"><i style="width:${v}%"></i><span style="position:absolute;left:58%;top:-3px;width:1px;height:12px;background:var(--line2)"></span></div>
+        </div>`;
+      }).join('')}</div>
+      <div class="note" style="margin-top:10px">The vertical tick marks the benchmark median for your level. Being right of it is the point.</div>
     </div>
     <div class="scores-grid">
       ${cards.map(([label, v]) => {
@@ -1413,6 +1445,18 @@ document.addEventListener('keydown', (e) => {
 $('#palette').addEventListener('click', (e) => { if (e.target.id === 'palette') closePalette(); });
 
 document.querySelectorAll('#nav button').forEach((b) => { b.onclick = () => go(b.dataset.view); });
+// Theme: follows the system on first visit, then remembers an explicit choice.
+(function initTheme() {
+  const saved = localStorage.getItem('careeros-theme');
+  const system = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
+  document.documentElement.dataset.theme = saved || system;
+})();
+$('#theme').onclick = () => {
+  const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem('careeros-theme', next);
+  toast(next === 'light' ? 'Light theme' : 'Dark theme');
+};
 $('#cmdk').onclick = openPalette;
 $('#load-demo').onclick = loadDemo;
 $('#run-ingest').onclick = async () => {
