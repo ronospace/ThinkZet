@@ -1247,6 +1247,51 @@ route('GET', /^\/unsubscribe\/([^/]+)\/([^/]+)$/, async (req, res, url, m) => {
   res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You are unsubscribed from all CareerOS emails. <a href="/" style="color:#4c8dff">Change your mind</a></div>');
 });
 
+// ---- referral recommendations: where a gap has a partner fix ----
+// The rule that cannot be broken: this only ever decorates a gap the engine already found.
+// It never creates a recommendation, never reorders one, and never touches a score.
+route('GET', /^\/api\/referrals\/recommendations$/, async (req, res) => {
+  const uid = resolveUser(req);
+  const profile = getProfile(uid);
+  if (!profile) return json(res, 200, { recommendations: [] });
+  const twin = E.buildTwin(uid);
+  const mine = new Set(twin.skills);
+  const top = opportunitiesWithMatch(uid, { limit: 40, minScore: 55 });
+
+  const gapCount = new Map();
+  for (const o of top) for (const sk of o.missing_skills) gapCount.set(sk, (gapCount.get(sk) || 0) + 1);
+  const gaps = [...gapCount.entries()].sort((a, b) => b[1] - a[1]).slice(0, 8);
+
+  const meta = new Map(db.prepare('SELECT canonical, salary_premium, growth_rate FROM skills').all().map((r) => [r.canonical, r]));
+  const recs = [];
+  for (const [skill, blocking] of gaps) {
+    const program = REF.programForSkill(skill);
+    if (!program) continue;
+    const m = meta.get(skill) || {};
+    recs.push({
+      skill,
+      blocking,
+      salaryPremium: m.salary_premium || 0,
+      growth: m.growth_rate || 0,
+      partner: { name: program.name, slug: program.slug, category: program.category, payoutModel: program.payout_model },
+      disclosure: 'Partner recommendation. It never affects your ranking, your scores or which opportunities you see.',
+    });
+  }
+
+  // Relocation partner only when the user has actually signalled relocation intent.
+  if (profile.willing_to_relocate) {
+    const prog = db.prepare("SELECT * FROM referral_programs WHERE slug='relocation'").get();
+    if (prog) recs.push({
+      skill: 'Relocation support', blocking: null, salaryPremium: null, growth: null,
+      partner: { name: prog.name, slug: prog.slug, category: prog.category, payoutModel: prog.payout_model },
+      disclosure: 'Partner recommendation. It never affects your ranking or your scores.',
+      reason: `You said you are willing to relocate to ${JSON.parse(profile.target_countries || '[]').join(', ') || 'another country'}.`,
+    });
+  }
+
+  json(res, 200, { recommendations: recs, rule: 'Partners are attached to gaps the engine already found. Nothing here can create or reorder a recommendation.' });
+});
+
 // ---- Career Score v2: expanded, and explaining itself ----
 // Six scores became eight: Skill Strength and Opportunity Quality added, and every score
 // now reports what would move it most. A number without a lever is just a grade.

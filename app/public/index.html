@@ -1529,6 +1529,8 @@ async function renderRates() {
 async function renderGaps() {
   const { gaps, sampleOf } = await api('/api/gaps');
   const plan = await api('/api/gaps/plan');
+  let partnerRecs = [];
+  try { partnerRecs = (await api('/api/referrals/recommendations')).recommendations || []; } catch (e) {}
   $('#view').innerHTML = `
     <div class="card" style="margin-bottom:14px">
       <h3>Skill gap detection</h3>
@@ -1549,6 +1551,19 @@ async function renderGaps() {
       </div>
       <div class="muted" style="font-size:11px;margin-top:12px">${esc(plan.rule)}</div>
     </div>
+    ${partnerRecs.length ? `<div class="card" style="margin-bottom:14px">
+      <h3>How to close them</h3>
+      <div class="dim" style="font-size:12.5px;margin-top:6px">Each gap below has a route. Partners are attached to gaps the engine already found — they never change what you see or how it is ranked.</div>
+      <div style="margin-top:12px">
+        ${partnerRecs.slice(0, 5).map((r) => `<div style="display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)">
+          <div style="flex:1">
+            <div style="font-size:13px">${esc(r.skill)}${r.blocking ? ` <span class="muted" style="font-size:11px">· unblocks ${r.blocking}</span>` : ''}</div>
+            <div class="muted" style="font-size:11px;margin-top:2px">${esc(r.reason || r.disclosure)}</div>
+          </div>
+          <button class="chip pr" data-slug="${esc(r.partner.slug)}" data-skill="${esc(r.skill)}" style="cursor:pointer">${esc(r.partner.name)} <span style="opacity:.7">&gt;</span></button>
+        </div>`).join('')}
+      </div>
+    </div>` : ''}
     ${gaps.length ? `<div class="card"><table class="t">
       <thead><tr><th>Skill</th><th>Blocks</th><th>Share of matches</th><th>Market demand</th><th>Salary premium</th><th>Growth</th><th>Effort</th></tr></thead>
       <tbody>${gaps.map((g) => `<tr>
@@ -1562,6 +1577,13 @@ async function renderGaps() {
       </tr>`).join('')}</tbody>
     </table></div>` : '<div class="empty">No systematic gaps detected.</div>'}
   `;
+  document.querySelectorAll('.pr').forEach((b) => {
+    b.onclick = async () => {
+      const r = await post('/api/referrals/link', { skill: b.dataset.skill, surface: 'gaps' });
+      if (r.referral) window.open(r.referral.url, '_blank', 'noopener');
+      else toast('No partner route for that skill yet');
+    };
+  });
 }
 
 /* ---------------- tracker ---------------- */
