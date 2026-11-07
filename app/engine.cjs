@@ -4,6 +4,7 @@
 const { db } = require('./db.cjs');
 const { SKILLS, resolveSkill } = require('./taxonomy.cjs');
 const { CURRENCY_RATES, SENIORITY_MULT, BASE_ANNUAL_EUR } = require('./corpus.cjs');
+const { extractYearsRequired } = require('./classify.cjs');
 
 const SENIORITY_RANK = { junior: 1, mid: 2, senior: 3, staff: 4, lead: 4, principal: 5 };
 
@@ -152,13 +153,29 @@ function skillFit(userSkills, oppSkills, importance = 0.75) {
   return { score: Math.round(Math.min(100, 30 + raw * 90)), matched, missing };
 }
 
+// Experience fit uses the years of experience actually stated in the posting when it is
+// available, and falls back to a seniority-label comparison when it is not. The stated
+// requirement is the ground truth; the label is an inference.
 function experienceFit(profile, opp) {
+  const required = extractYearsRequired(opp.description);
+  const have = profile.years_experience;
+
+  if (required != null && have != null) {
+    const gap = have - required;
+    if (gap >= 6) return 88;                 // comfortably overqualified
+    if (gap >= 1) return 100;                // right band
+    if (gap === 0) return 96;
+    if (gap >= -2) return 76;                // close stretch
+    if (gap >= -4) return 54;
+    return 30;                               // genuinely too junior for the stated bar
+  }
+
   const pr = SENIORITY_RANK[profile.seniority] || 2;
   const or = SENIORITY_RANK[opp.seniority] || 2;
   const diff = or - pr;
   if (diff === 0) return 100;
-  if (diff === -1) return 86;   // slightly overqualified
-  if (diff === 1) return 74;    // stretch
+  if (diff === -1) return 86;
+  if (diff === 1) return 74;
   if (diff === -2) return 58;
   if (diff <= -2) return 66;
   return 38;

@@ -528,6 +528,7 @@ function oppCard(o) {
         <span>${esc(o.city)}${o.country ? ', ' + esc(o.country) : ''} · ${esc(o.remote_type)}</span>
         ${o.visa_sponsorship === 'yes' ? '<span class="chip have">visa sponsorship</span>' : ''}
         ${o.source_count > 1 ? `<span class="chip">${o.source_count} sources</span>` : ''}
+        ${o.confidence ? `<span class="chip" title="${esc(o.confidence.factors.map((f) => f.k + ' ' + f.d).join(' · '))}" style="border-color:${o.confidence.level === 'high' ? '#24462f' : o.confidence.level === 'medium' ? '#3d3a24' : '#4a2b30'};color:${o.confidence.level === 'high' ? '#71d69c' : o.confidence.level === 'medium' ? '#e0c273' : '#f08b91'}">${o.confidence.level} evidence</span>` : ''}
         ${(o.missing_skills || []).slice(0, 3).map((m) => `<span class="chip miss">${esc(m)}</span>`).join('')}
       </div>
       <div class="why">${esc(top)}</div>
@@ -603,6 +604,10 @@ function openDetail(id) {
         </div>
         <h3 style="margin-top:18px">What would move you up</h3>
         <div style="font-size:12.5px" class="dim">${(o.missing_skills || []).length ? 'Close: <b>' + o.missing_skills.map(esc).join(', ') + '</b> — each one raises both match and interview probability.' : 'You cover every listed skill. Your edge here is speed of application.'}</div>
+        ${o.confidence ? `<div style="margin-top:16px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)">
+          <div class="row" style="justify-content:space-between"><span style="font-size:12px">Evidence quality</span><span class="mono" style="color:${o.confidence.level === 'high' ? '#71d69c' : o.confidence.level === 'medium' ? '#e0c273' : '#f08b91'}">${o.confidence.score}/100 · ${o.confidence.level}</span></div>
+          <div style="margin-top:8px;font-size:11.5px;color:var(--muted);line-height:1.7">${o.confidence.factors.map((f) => `${esc(f.k)} <span class="mono">${esc(f.d)}</span>${f.note ? ' <span style="opacity:.7">— ' + esc(f.note) + '</span>' : ''}`).join('<br/>')}</div>
+        </div>` : ''}
         <div class="kv" style="margin-top:16px"><span>Income potential</span><span class="mono">${o.income_potential}/100</span></div>
         <div class="kv"><span>Skill fit</span><span class="mono">${o.skill_fit}/100</span></div>
         <div class="kv"><span>Seniority fit</span><span class="mono">${o.experience_fit}/100</span></div>
@@ -754,6 +759,11 @@ async function renderRates() {
             `).join('') || '<div class="muted">not enough data</div>'}
           </div>
           <div class="note" style="margin-top:12px">This is the number nobody gives you: the same profile pays differently on a marketplace, a contract and a full-time role.</div>
+        ${r.confidenceDetail ? `<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px">
+          <div class="row" style="justify-content:space-between"><span style="font-size:12px">Benchmark confidence</span><span class="mono">${esc(r.confidenceDetail.level)}</span></div>
+          <div style="margin-top:8px;font-size:11.5px;color:var(--muted);line-height:1.7">${r.confidenceDetail.factors.map((f) => `${esc(f.k)} <span class="mono">${esc(f.d)}</span>`).join('<br/>')}</div>
+          ${r.confidenceDetail.caveat ? `<div style="margin-top:8px;font-size:11.5px;color:#e0c273">${esc(r.confidenceDetail.caveat)}</div>` : ''}
+        </div>` : ''}
         </div>
         <div class="card" style="margin-top:14px">
           <h3>Highest-premium skills in your adjacency</h3>

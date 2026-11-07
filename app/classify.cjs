@@ -109,16 +109,62 @@ function detectSponsorship(description) {
   return 'unknown';
 }
 
+// Salary extraction is deliberately conservative: a wrong number is worse than no number,
+// because every wrong number poisons the rate benchmark that the whole product rests on.
 function extractComp(text) {
   const d = String(text || '');
-  const cur = /(€|eur)/i.test(d) ? 'EUR' : /(£|gbp)/i.test(d) ? 'GBP' : /(\$|usd)/i.test(d) ? 'USD' : null;
-  const kRange = d.match(/([€£$])?\s?(\d{2,3})(?:[.,]\d{1,2})?\s?[kK]\s?(?:-|–|to|—)\s?([€£$])?\s?(\d{2,3})(?:[.,]\d{1,2})?\s?[kK]/);
-  if (kRange) {
-    return { currency: cur || 'EUR', min: Number(kRange[2]) * 1000, max: Number(kRange[4]) * 1000, period: 'year' };
+
+  const curFrom = (s) => {
+    if (/€|\beur\b/i.test(s)) return 'EUR';
+    if (/£|\bgbp\b/i.test(s)) return 'GBP';
+    if (/\$|\busd\b/i.test(s)) return 'USD';
+    return null;
+  };
+
+  const num = (raw, suffix) => {
+    const cleaned = raw.replace(/[,\s]/g, '');
+    const n = parseFloat(cleaned);
+    if (isNaN(n)) return null;
+    return /k/i.test(suffix || '') ? n * 1000 : n;
+  };
+
+  // 1. explicit hourly:  "$85/hr", "€60 per hour", "£45/hour"
+  const hourly = d.match(/([€£$]|\beur\b|\busd\b|\bgbp\b)\s?(\d{1,4}(?:[.,]\d{1,2})?)\s?(?:k)?\s*(?:\/|per\s*)\s?(?:h|hr|hrs|hour|hours)\b/i);
+  if (hourly) {
+    const v = num(hourly[2], hourly[0]);
+    if (v && v >= 10 && v <= 500) return { currency: curFrom(hourly[1]) || 'EUR', min: v, max: v, period: 'hour' };
   }
-  const hourly = d.match(/([€£$])\s?(\d{2,3})(?:\.\d{1,2})?\s?(?:\/|per\s?)(?:h|hr|hour)/i);
-  if (hourly) return { currency: cur || 'EUR', min: Number(hourly[2]), max: Number(hourly[2]), period: 'hour' };
+
+  // 2. explicit annual range: "$185K - $215K", "€80,000 – €95,000", "85k-110k"
+  const range = d.match(/([€£$])?\s?(\d{2,3}(?:[.,]\d{3})?|\d{2,3})\s?([kK])?\s*(?:-|–|to|—)\s*([€£$])?\s?(\d{2,3}(?:[.,]\d{3})?|\d{2,3})\s?([kK])?/);
+  if (range) {
+    const lo = num(range[2], range[3]);
+    const hi = num(range[5], range[6]);
+    const currency = curFrom(range[0]);
+    // sanity: an annual salary lives between 8k and 900k in any of these currencies
+    if (lo && hi && lo >= 8000 && hi <= 900000 && hi >= lo && hi / lo < 3.5) {
+      return { currency: currency || 'EUR', min: lo, max: hi, period: 'year' };
+    }
+  }
+
+  // 3. single annual figure with an explicit currency and k-suffix: "$200k", "€120K"
+  const single = d.match(/([€£$])\s?(\d{2,3})\s?[kK]\b/);
+  if (single) {
+    const v = num(single[2], 'k');
+    if (v >= 20000 && v <= 900000) return { currency: curFrom(single[1]) || 'EUR', min: v, max: v, period: 'year' };
+  }
+
   return null;
+}
+
+// Experience requirement extracted from the body, used to sanity-check the seniority label.
+function extractYearsRequired(description) {
+  const d = String(description || '');
+  const m = d.match(/(\d{1,2})\s*(?:\+|-|to|–)?\s*(\d{1,2})?\s*\+?\s*years?\s*(?:of\s*)?(?:relevant\s*|professional\s*|industry\s*)?experience/i);
+  if (!m) return null;
+  const lo = parseInt(m[1], 10);
+  if (isNaN(lo) || lo > 30) return null;
+  return lo;
 }
 
 function extractSkills(title, description, tags) {
@@ -136,4 +182,4 @@ function extractSkills(title, description, tags) {
   return Array.from(found).slice(0, 12);
 }
 
-module.exports = { classifyFamily, classifySeniority, normaliseLocation, detectSponsorship, extractComp, extractSkills };
+module.exports = { classifyFamily, classifySeniority, normaliseLocation, detectSponsorship, extractComp, extractSkills, extractYearsRequired };

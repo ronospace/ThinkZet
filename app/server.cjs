@@ -11,6 +11,7 @@ const SOURCES = require('./sources.cjs');
 const E = require('./engine.cjs');
 const AUTH = require('./auth.cjs');
 const REF = require('./referrals.cjs');
+const CONF = require('./confidence.cjs');
 
 const PORT = Number(process.env.PORT || 4173);
 const PUBLIC = path.join(__dirname, 'public');
@@ -57,19 +58,25 @@ function opportunitiesWithMatch(userId, { limit = 200, types, minScore = 0 } = {
     WHERE m.user_id = ? AND m.match_score >= ?
       AND o.status = 'open'
       AND (o.comp_min IS NULL OR o.comp_min > 0)
-      AND NOT (o.comp_min > 900000 OR (o.comp_period='hour' AND o.comp_min > 400))
+      AND NOT (o.comp_min > 900000 OR (o.comp_period='hour' AND o.comp_min > 400)
+               OR (o.comp_period='year' AND o.comp_min < 8000)
+               OR (o.comp_period='hour' AND o.comp_min < 8))
       AND (o.posted_at IS NULL OR o.posted_at > datetime('now','-120 days'))
       AND NOT (o.comp_min IS NULL AND LENGTH(COALESCE(o.description,'')) < 120)`;
   const params = [userId, minScore];
   if (types && types.length) { sql += ` AND o.type IN (${types.map(() => '?').join(',')})`; params.push(...types); }
   sql += ' ORDER BY m.match_score DESC LIMIT ?';
   params.push(limit);
-  return db.prepare(sql).all(...params).map((r) => ({
-    ...r,
-    skills: JSON.parse(r.skills || '[]'),
-    missing_skills: JSON.parse(r.missing_skills || '[]'),
-    reasons: JSON.parse(r.reasons || '[]'),
-  }));
+  return db.prepare(sql).all(...params).map((r) => {
+    const o = {
+      ...r,
+      skills: JSON.parse(r.skills || '[]'),
+      missing_skills: JSON.parse(r.missing_skills || '[]'),
+      reasons: JSON.parse(r.reasons || '[]'),
+    };
+    o.confidence = CONF.opportunityConfidence(o);
+    return o;
+  });
 }
 
 const DEMO_CV = `GEOFFREY MORGAN - Senior Data Scientist / ML Engineer
@@ -332,7 +339,7 @@ route('GET', /^\/api\/scores$/, async (req, res) => {
 route('GET', /^\/api\/rates$/, async (req, res) => {
   const rates = E.rateIntelligence(resolveUser(req));
   if (!rates) return json(res, 404, { error: 'no profile' });
-  json(res, 200, rates);
+  json(res, 200, { ...rates, confidenceDetail: CONF.rateConfidence(rates.exactComparables || 0, rates.sampleSize, rates.confidence) });
 });
 
 route('GET', /^\/api\/twin$/, async (req, res) => {
