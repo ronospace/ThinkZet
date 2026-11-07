@@ -751,6 +751,16 @@ function openDetail(id) {
       </div>
       <div id="d-reply" class="dim" style="font-size:13px;margin-top:6px"></div>
     </div>
+    <div class="card" style="margin-top:14px">
+      <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
+        <h3 style="margin:0">Cover letter</h3>
+        <div class="row" style="gap:6px">
+          ${['direct', 'warm', 'formal'].map((t) => `<button class="chip cl-tone" data-t="${t}" style="cursor:pointer">${t}</button>`).join('')}
+          <button class="chip cl-copy" style="cursor:pointer">copy</button>
+        </div>
+      </div>
+      <div id="cl-body" class="dim" style="font-size:13px;margin-top:10px">Choose a tone to generate a letter from your profile and this posting.</div>
+    </div>
     <div class="card" style="margin-top:14px" id="ref-card"></div>
     <div class="card" style="margin-top:14px"><h3>Listing</h3><div class="dim" style="margin-top:8px">${esc(o.description)}</div>
       <div style="margin-top:12px"><a class="btn sm ghost" href="${esc(o.apply_url)}" target="_blank" rel="noopener">Open original listing <span style="opacity:.7">&gt;</span></a></div>
@@ -765,6 +775,23 @@ function openDetail(id) {
       box.innerHTML = `<div style="white-space:pre-wrap;line-height:1.65">${esc(r.reply)}</div>${cites ? `<div class="cite" style="margin-top:8px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:7px">Grounded in — ${esc(cites)}</div>` : ''}`;
     };
   });
+  document.querySelectorAll('.cl-tone').forEach((b) => {
+    b.onclick = async () => {
+      const box = $('#cl-body');
+      box.innerHTML = '<span class="spin"></span>Composing…';
+      const r = await post('/api/cover-letter', { opportunityId: o.id, tone: b.dataset.t, name: STATE.userRecord?.name || '' });
+      if (r.error) { box.textContent = r.error; return; }
+      box.innerHTML = `<div style="white-space:pre-wrap;line-height:1.75;color:var(--ink)">${esc(r.text)}</div>
+        <div class="muted" style="font-size:11px;margin-top:12px;border-top:1px solid var(--line);padding-top:8px">
+          ${esc(r.factCheck.note)} · matched: ${r.evidence.matchedSkills.map(esc).join(', ') || 'none listed'}${r.evidence.gaps.length ? ' · gaps acknowledged: ' + r.evidence.gaps.map(esc).join(', ') : ''}
+        </div>`;
+      $('#cl-body').dataset.text = r.text;
+      document.querySelectorAll('.cl-tone').forEach((x) => { x.style.borderColor = x.dataset.t === b.dataset.t ? '#33507a' : ''; });
+    };
+  });
+  const cc = document.querySelector('.cl-copy');
+  if (cc) cc.onclick = () => { const t = $('#cl-body').dataset.text; if (t) { navigator.clipboard.writeText(t); toast('Copied'); } else toast('Generate one first'); };
+
   (async () => {
     try {
       const r = await post('/api/referrals/link', { sourceKey: o.source, opportunityId: o.id, surface: 'detail' });

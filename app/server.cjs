@@ -13,6 +13,7 @@ const AUTH = require('./auth.cjs');
 const REF = require('./referrals.cjs');
 const CONF = require('./confidence.cjs');
 const TRAJ = require('./trajectory.cjs');
+const COVER = require('./coverletter.cjs');
 
 const PORT = Number(process.env.PORT || 4173);
 const PUBLIC = path.join(__dirname, 'public');
@@ -447,6 +448,20 @@ route('POST', /^\/api\/applications\/status$/, async (req, res) => {
 route('DELETE', /^\/api\/applications\/([^/]+)$/, async (req, res, url, m) => {
   db.prepare('DELETE FROM applications WHERE user_id=? AND opportunity_id=?').run(resolveUser(req), m[1]);
   json(res, 200, { ok: true });
+});
+
+// ---- cover letter ----
+route('POST', /^\/api\/cover-letter$/, async (req, res) => {
+  const body = await readBody(req);
+  const uid = resolveUser(req);
+  const profile = getProfile(uid);
+  if (!profile) return json(res, 400, { error: 'no profile' });
+  const opp = db.prepare('SELECT * FROM opportunities WHERE id=?').get(body.opportunityId);
+  if (!opp) return json(res, 404, { error: 'opportunity not found' });
+  const twin = E.buildTwin(uid);
+  const letter = await COVER.generate(profile, twin, opp, { tone: body.tone || 'direct', name: body.name || '' });
+  log(uid, 'coverletter.generated', 'opportunity', opp.id, { tone: body.tone || 'direct', source: letter.source });
+  json(res, 200, letter);
 });
 
 // ---- market pulse: what the whole corpus says right now ----
