@@ -214,7 +214,24 @@ textarea.cv:focus{border-color:var(--accent2)}
 .facet-row:last-child{border-bottom:none}
 .facet-mini{height:4px;border-radius:3px;background:#1c2431;margin-top:3px;overflow:hidden}
 .facet-mini > i{display:block;height:100%;background:linear-gradient(90deg,#4c8dff,#8b5cf6)}
-.filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.refine{margin-bottom:var(--sp-4)}
+.refine-bar{display:flex;align-items:center;gap:var(--sp-3);flex-wrap:wrap;margin-bottom:var(--sp-2)}
+.refine-toggle{display:inline-flex;align-items:center;gap:7px;font-size:var(--text-sm);font-weight:550;padding:7px 13px;border-radius:var(--radius-sm);border:1px solid var(--line);background:var(--panel);color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
+.refine-toggle:hover{color:var(--ink);border-color:var(--line2)}
+.refine-toggle[aria-expanded="true"]{color:var(--ink);border-color:var(--line2);background:var(--panel2)}
+.refine-count{display:none;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:999px;background:var(--accent);color:#fff;place-items:center;padding:0 4px}
+.refine-count.on{display:grid}
+.refine-summary{display:flex;gap:6px;flex-wrap:wrap;font-size:var(--text-xs);color:var(--muted)}
+.refine-summary span{background:var(--panel2);border-radius:999px;padding:2px 8px}
+.refine-panel{display:none;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-4);box-shadow:var(--shadow-sm)}
+.refine-panel.open{display:block;animation:rise .16s ease both}
+.refine-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;padding:6px 0}
+.refine-row + .refine-row{border-top:1px solid var(--line)}
+.refine-label{font-size:var(--text-2xs);letter-spacing:.11em;text-transform:uppercase;color:var(--muted);font-weight:600;width:104px;flex-shrink:0}
+.seg{font-size:var(--text-sm);padding:5px 11px;border-radius:999px;border:1px solid transparent;background:var(--panel2);color:var(--ink2);transition:color .12s,background .12s}
+.seg:hover{color:var(--ink);background:var(--panel3)}
+.seg.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
+.filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
 .filters input,.filters select{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12.5px;outline:none}
 .filters input{flex:1;min-width:200px}
 .filters input:focus,.filters select:focus{border-color:var(--accent2)}
@@ -1125,31 +1142,46 @@ async function renderRadar() {
     ${planBanner}
     ${briefHtml}
     ${gapHtml}
-    <div class="row" style="margin-bottom:10px;gap:10px;flex-wrap:wrap">
-      <span class="muted" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase">Optimising for</span>
-      ${['balanced', 'income', 'growth', 'stability'].map((h) => `<button class="horizon ${STATE.horizon === h ? 'on' : ''}" data-h="${h}" style="font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid ${STATE.horizon === h ? '#33507a' : 'var(--line2)'};background:${STATE.horizon === h ? '#1b2637' : 'transparent'};color:${STATE.horizon === h ? '#cfe0ff' : 'var(--ink2)'}">${h}</button>`).join('')}
-    </div>
-    <div class="row" style="gap:6px;margin-bottom:12px;flex-wrap:wrap">
-      <span class="muted" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-right:2px">Sort</span>
-      ${[['score', 'Match'], ['income', 'Income'], ['odds', 'Odds'], ['fresh', 'Newest']].map(([k, l]) => `<button class="sortbtn ${STATE.sort === k ? 'on' : ''}" data-s="${k}" style="font-size:12px;padding:4px 10px;border-radius:7px;border:1px solid ${STATE.sort === k ? '#33507a' : 'var(--line2)'};background:${STATE.sort === k ? '#1b2637' : 'transparent'};color:${STATE.sort === k ? '#cfe0ff' : 'var(--ink2)'}">${l}</button>`).join('')}
-    </div>
-    <div class="types" id="types">
-      <button data-t="" class="${STATE.types.length ? '' : 'on'}">All types</button>
-      ${Object.keys(s.counts).map((t) => `<button data-t="${t}" class="${STATE.types.includes(t) ? 'on' : ''}">${TYPE_LABEL[t] || t} <span class="muted">${s.counts[t]}</span></button>`).join('')}
-    </div>
-    <div class="filters">
-      <input id="f-q" placeholder="Filter by title, company or skill…" value="${esc(FILTERS.q)}"/>
-      <select id="f-country"><option value="">All countries</option>${[...new Set(feed.opportunities.map((o) => o.country).filter(Boolean))].sort().map((c) => `<option value="${c}" ${FILTERS.country === c ? 'selected' : ''}>${c}</option>`).join('')}</select>
-      <select id="f-family"><option value="">All roles</option>${[...new Set(feed.opportunities.map((o) => o.role_family).filter(Boolean))].sort().map((c) => `<option value="${c}" ${FILTERS.family === c ? 'selected' : ''}>${c.replace(/_/g, ' ')}</option>`).join('')}</select>
-      <select id="f-seniority"><option value="">All levels</option>${['junior', 'mid', 'senior', 'staff', 'lead', 'principal'].map((c) => `<option value="${c}" ${FILTERS.seniority === c ? 'selected' : ''}>${c}</option>`).join('')}</select>
-      <select id="f-degree">
-        <option value="">Any education</option>
-        <option value="open" ${FILTERS.degree === 'open' ? 'selected' : ''}>no degree required</option>
-        <option value="unknown" ${FILTERS.degree === 'unknown' ? 'selected' : ''}>requirement unstated</option>
-        <option value="required" ${FILTERS.degree === 'required' ? 'selected' : ''}>degree required</option>
-      </select>
-      <label class="chk"><input type="checkbox" id="f-visa" ${FILTERS.visa ? 'checked' : ''}/> visa sponsorship only</label>
-      <span class="muted" id="f-count" style="font-size:12px"></span>
+    <div class="refine">
+      <div class="refine-bar">
+        <button class="refine-toggle" id="refine-toggle" aria-expanded="false">
+          <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" style="width:13px;height:13px"><path d="M2.5 4.5h11M4.5 8h7M6.5 11.5h3"/></svg>
+          Refine
+          <span class="refine-count" id="refine-count"></span>
+        </button>
+        <div class="refine-summary" id="refine-summary"></div>
+        <div style="flex:1"></div>
+        <span class="muted" id="f-count" style="font-size:12px"></span>
+      </div>
+      <div class="refine-panel" id="refine-panel">
+        <div class="refine-row">
+          <span class="refine-label">Optimising for</span>
+          ${['balanced', 'income', 'growth', 'stability'].map((h) => `<button class="seg ${STATE.horizon === h ? 'on' : ''}" data-h="${h}">${h}</button>`).join('')}
+        </div>
+        <div class="refine-row">
+          <span class="refine-label">Sort</span>
+          ${[['score', 'Match'], ['income', 'Income'], ['odds', 'Odds'], ['fresh', 'Newest']].map(([k, l]) => `<button class="seg sortbtn ${STATE.sort === k ? 'on' : ''}" data-s="${k}">${l}</button>`).join('')}
+        </div>
+        <div class="refine-row">
+          <span class="refine-label">Type</span>
+          <button class="seg ${STATE.types.length ? '' : 'on'}" data-t="">All</button>
+          ${Object.keys(s.counts).map((t) => `<button class="seg ${STATE.types.includes(t) ? 'on' : ''}" data-t="${t}">${TYPE_LABEL[t] || t} <span class="muted">${s.counts[t]}</span></button>`).join('')}
+        </div>
+        <div class="refine-row" id="types" style="display:contents"></div>
+        <div class="refine-row filters">
+          <input id="f-q" placeholder="Title, company or skill" value="${esc(FILTERS.q)}"/>
+          <select id="f-country"><option value="">All countries</option>${[...new Set(feed.opportunities.map((o) => o.country).filter(Boolean))].sort().map((c) => `<option value="${c}" ${FILTERS.country === c ? 'selected' : ''}>${c}</option>`).join('')}</select>
+          <select id="f-family"><option value="">All roles</option>${[...new Set(feed.opportunities.map((o) => o.role_family).filter(Boolean))].sort().map((c) => `<option value="${c}" ${FILTERS.family === c ? 'selected' : ''}>${c.replace(/_/g, ' ')}</option>`).join('')}</select>
+          <select id="f-seniority"><option value="">All levels</option>${['junior', 'mid', 'senior', 'staff', 'lead', 'principal'].map((c) => `<option value="${c}" ${FILTERS.seniority === c ? 'selected' : ''}>${c}</option>`).join('')}</select>
+          <select id="f-degree">
+            <option value="">Any education</option>
+            <option value="open" ${FILTERS.degree === 'open' ? 'selected' : ''}>no degree required</option>
+            <option value="unknown" ${FILTERS.degree === 'unknown' ? 'selected' : ''}>requirement unstated</option>
+            <option value="required" ${FILTERS.degree === 'required' ? 'selected' : ''}>degree required</option>
+          </select>
+          <label class="chk"><input type="checkbox" id="f-visa" ${FILTERS.visa ? 'checked' : ''}/> visa sponsorship</label>
+        </div>
+      </div>
     </div>
     <div id="habit" style="margin-bottom:12px"></div>
     <div id="teach" style="margin-bottom:12px"></div>
@@ -1279,9 +1311,29 @@ async function renderRadar() {
   const up = $('#upgrade');
   if (up) up.onclick = () => go('plan');
   document.querySelectorAll('.sortbtn').forEach((b) => {
-    b.onclick = () => { STATE.sort = b.dataset.s; apply(); document.querySelectorAll('.sortbtn').forEach((x) => x.classList.toggle('on', x.dataset.s === STATE.sort)); renderRadar; };
+    b.onclick = () => { STATE.sort = b.dataset.s; apply(); document.querySelectorAll('.sortbtn').forEach((x) => x.classList.toggle('on', x.dataset.s === STATE.sort)); };
   });
-  document.querySelectorAll('.horizon').forEach((b) => {
+  const rt = $('#refine-toggle');
+  const rp = $('#refine-panel');
+  if (rt && rp) {
+    rt.onclick = () => {
+      const open = rp.classList.toggle('open');
+      rt.setAttribute('aria-expanded', String(open));
+    };
+    const active = [];
+    if (FILTERS.q) active.push(FILTERS.q);
+    if (FILTERS.country) active.push(FILTERS.country);
+    if (FILTERS.family) active.push(FILTERS.family.replace(/_/g, ' '));
+    if (FILTERS.seniority) active.push(FILTERS.seniority);
+    if (FILTERS.degree) active.push('education: ' + FILTERS.degree);
+    if (FILTERS.visa) active.push('visa only');
+    if (STATE.types.length) active.push(STATE.types.map((t) => TYPE_LABEL[t] || t).join(', '));
+    const cnt = $('#refine-count');
+    if (cnt) { cnt.textContent = active.length; cnt.classList.toggle('on', active.length > 0); }
+    const sum = $('#refine-summary');
+    if (sum) sum.innerHTML = active.slice(0, 4).map((a) => `<span>${esc(a)}</span>`).join('');
+  }
+  document.querySelectorAll('.horizon, .seg[data-h]').forEach((b) => {
     b.onclick = async () => {
       STATE.horizon = b.dataset.h;
       await post('/api/horizon', { horizon: b.dataset.h });
@@ -1314,13 +1366,14 @@ async function renderRadar() {
   STATE._keys = keyHandler;
   document.addEventListener('keydown', keyHandler);
 
-  $('#types').onclick = (e) => {
-    const b = e.target.closest('button'); if (!b) return;
+  document.querySelectorAll('.seg[data-t]').forEach((b) => {
+    b.onclick = (e) => {
     const t = b.dataset.t;
     if (!t) STATE.types = [];
     else STATE.types = STATE.types.includes(t) ? STATE.types.filter((x) => x !== t) : [...STATE.types, t];
     renderRadar();
-  };
+    };
+  });
 }
 
 function renderFacets(rows) {
