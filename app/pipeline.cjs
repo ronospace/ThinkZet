@@ -4,7 +4,7 @@
 const { db } = require('./db.cjs');
 const { makeOpportunities, CURRENCY_RATES } = require('./corpus.cjs');
 const { resolveSkill } = require('./taxonomy.cjs');
-const { classifyFamily, classifySeniority, normaliseLocation, detectSponsorship, extractComp, extractSkills } = require('./classify.cjs');
+const { classifyFamily, classifySeniority, normaliseLocation, detectSponsorship, extractComp, extractSkills, detectDegree } = require('./classify.cjs');
 const sources = require('./sources.cjs');
 
 const normTitle = (t) => String(t || '').toLowerCase()
@@ -190,6 +190,7 @@ function normaliseLive(row, sourceKey, quality) {
     currency: comp ? comp.currency : null,
     comp_period: comp ? comp.period : 'year',
     visa_sponsorship: detectSponsorship(row.description),
+    degree_requirement: detectDegree(row.description),
     skills,
     description: row.description || '',
     apply_url: row.url,
@@ -232,9 +233,9 @@ async function ingestLive({ keys, pages } = {}) {
 
   const insOpp = db.prepare(`INSERT INTO opportunities
     (id,type,title,company,role_family,seniority,remote_type,city,country,comp_min,comp_max,currency,comp_period,
-     visa_sponsorship,skills,description,apply_url,source,source_count,source_quality,posted_at,closes_at,status,
+     visa_sponsorship,degree_requirement,skills,description,apply_url,source,source_count,source_quality,posted_at,closes_at,status,
      content_hash,dedupe_group)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
     ON CONFLICT(id) DO UPDATE SET last_seen=datetime('now'), description=excluded.description, source_quality=excluded.source_quality`);
   const updOpp = db.prepare(`UPDATE opportunities SET
       comp_min=COALESCE(?,comp_min), comp_max=COALESCE(?,comp_max), currency=COALESCE(?,currency),
@@ -267,7 +268,7 @@ async function ingestLive({ keys, pages } = {}) {
       }
     } else {
       insOpp.run(o.id, o.type, o.title, o.company, o.role_family, o.seniority, o.remote_type, o.city, o.country,
-        o.comp_min, o.comp_max, o.currency, o.comp_period, o.visa_sponsorship, JSON.stringify(o.skills),
+        o.comp_min, o.comp_max, o.currency, o.comp_period, o.visa_sponsorship, o.degree_requirement, JSON.stringify(o.skills),
         o.description, o.apply_url, o.source, 1, o.source_quality, o.posted_at, o.closes_at, 'open',
         null, o.dedupe_group);
       insSrc.run(o.id, o.source, o.id, o.apply_url);

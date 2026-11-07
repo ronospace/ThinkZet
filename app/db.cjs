@@ -82,6 +82,7 @@ CREATE TABLE IF NOT EXISTS opportunities (
   currency TEXT,
   comp_period TEXT,
   visa_sponsorship TEXT DEFAULT 'unknown',
+  degree_requirement TEXT DEFAULT 'unknown',
   skills TEXT,
   description TEXT,
   apply_url TEXT,

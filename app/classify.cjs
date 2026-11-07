@@ -99,6 +99,19 @@ function normaliseLocation(rawCity, description) {
   return { country, remote };
 }
 
+// Education requirement is a first-class filter in this market: a large share of senior
+// European roles state a degree requirement, and an unstated requirement is not a no.
+const DEGREE_RE = /\b(bachelor'?s?|master'?s?|msc|bsc|phd|doctorate|degree in|university degree|abitur|diplom|ingenieur)\b/i;
+const DEGREE_NOT_REQUIRED_RE = /(no degree required|degree not required|no formal (?:degree|qualification)|degree optional|bootcamp)/i;
+
+function detectDegree(description) {
+  const d = String(description || '');
+  if (DEGREE_NOT_REQUIRED_RE.test(d)) return 'not_required';
+  if (/\bphd|doctorate\b/i.test(d)) return 'phd';
+  if (DEGREE_RE.test(d)) return 'required';
+  return 'unknown';
+}
+
 const SPONSORSHIP_NEGATIVE = /(no visa sponsorship|unable to sponsor|cannot sponsor|not able to sponsor|no sponsorship|must be (?:authorized|authorised) to work|without sponsorship|no relocation support)/i;
 const SPONSORSHIP_POSITIVE = /(visa sponsorship|we sponsor|sponsorship available|relocation package|relocation support|blue card|skilled worker visa|work permit provided|help with relocation)/i;
 
@@ -182,4 +195,4 @@ function extractSkills(title, description, tags) {
   return Array.from(found).slice(0, 12);
 }
 
-module.exports = { classifyFamily, classifySeniority, normaliseLocation, detectSponsorship, extractComp, extractSkills, extractYearsRequired };
+module.exports = { classifyFamily, classifySeniority, normaliseLocation, detectSponsorship, extractComp, extractSkills, extractYearsRequired, detectDegree };

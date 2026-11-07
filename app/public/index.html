@@ -104,6 +104,9 @@ textarea.cv:focus{border-color:var(--accent2)}
 .filters input{flex:1;min-width:200px}
 .filters input:focus,.filters select:focus{border-color:var(--accent2)}
 .filters .chk{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink2);white-space:nowrap}
+.reveal{animation:rise .32s cubic-bezier(.2,.7,.3,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.reveal{animation:none}}
 .opp{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:10px;display:grid;grid-template-columns:64px 1fr auto;gap:16px;align-items:center;transition:border-color .12s}
 .opp:hover{border-color:var(--line2)}
 .score{width:64px;height:64px;border-radius:50%;display:grid;place-items:center;font-weight:750;font-size:19px;position:relative;letter-spacing:-.02em}
@@ -342,7 +345,7 @@ async function loadDemo() {
 }
 
 /* ---------------- radar ---------------- */
-const FILTERS = { q: '', country: '', family: '', seniority: '', visa: false, minScore: 45 };
+const FILTERS = { q: '', country: '', family: '', seniority: '', visa: false, degree: '', minScore: 45 };
 
 async function renderRadar() {
   const feed = await api('/api/feed?limit=60' + (STATE.types.length ? '&types=' + STATE.types.join(',') : ''));
@@ -439,6 +442,12 @@ async function renderRadar() {
       <select id="f-country"><option value="">All countries</option>${[...new Set(feed.opportunities.map((o) => o.country).filter(Boolean))].sort().map((c) => `<option value="${c}" ${FILTERS.country === c ? 'selected' : ''}>${c}</option>`).join('')}</select>
       <select id="f-family"><option value="">All roles</option>${[...new Set(feed.opportunities.map((o) => o.role_family).filter(Boolean))].sort().map((c) => `<option value="${c}" ${FILTERS.family === c ? 'selected' : ''}>${c.replace(/_/g, ' ')}</option>`).join('')}</select>
       <select id="f-seniority"><option value="">All levels</option>${['junior', 'mid', 'senior', 'staff', 'lead', 'principal'].map((c) => `<option value="${c}" ${FILTERS.seniority === c ? 'selected' : ''}>${c}</option>`).join('')}</select>
+      <select id="f-degree">
+        <option value="">Any education</option>
+        <option value="open" ${FILTERS.degree === 'open' ? 'selected' : ''}>no degree required</option>
+        <option value="unknown" ${FILTERS.degree === 'unknown' ? 'selected' : ''}>requirement unstated</option>
+        <option value="required" ${FILTERS.degree === 'required' ? 'selected' : ''}>degree required</option>
+      </select>
       <label class="chk"><input type="checkbox" id="f-visa" ${FILTERS.visa ? 'checked' : ''}/> visa sponsorship only</label>
       <span class="muted" id="f-count" style="font-size:12px"></span>
     </div>
@@ -452,9 +461,10 @@ async function renderRadar() {
       (!FILTERS.country || o.country === FILTERS.country) &&
       (!FILTERS.family || o.role_family === FILTERS.family) &&
       (!FILTERS.seniority || o.seniority === FILTERS.seniority) &&
-      (!FILTERS.visa || o.visa_sponsorship === 'yes'));
+      (!FILTERS.visa || o.visa_sponsorship === 'yes') &&
+      (!FILTERS.degree || (FILTERS.degree === 'open' ? (o.degree_requirement === 'not_required' || o.degree_requirement === 'unknown') : o.degree_requirement === FILTERS.degree)));
     const capped = STATE.plan && STATE.plan.plan !== 'pro' ? rows.slice(0, STATE.plan.limits.matches) : rows;
-    $('#opps').innerHTML = capped.length ? capped.map(oppCard).join('') + (capped.length < rows.length ? `<div class="card" style="text-align:center;border-color:#2f2a4d"><div class="dim" style="font-size:13px">${rows.length - capped.length} more scored opportunities are hidden on the Free plan.</div><div style="margin-top:10px"><button class="btn sm" onclick="go('plan')">See what Pro unlocks</button></div></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
+    $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="card" style="text-align:center;border-color:#2f2a4d"><div class="dim" style="font-size:13px">${rows.length - capped.length} more scored opportunities are hidden on the Free plan.</div><div style="margin-top:10px"><button class="btn sm" onclick="go('plan')">See what Pro unlocks</button></div></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
     $('#f-count').textContent = `${rows.length} of ${feed.opportunities.length} shown`;
     bindOppActions();
   };
@@ -463,6 +473,7 @@ async function renderRadar() {
   $('#f-family').onchange = (e) => { FILTERS.family = e.target.value; apply(); };
   $('#f-seniority').onchange = (e) => { FILTERS.seniority = e.target.value; apply(); };
   $('#f-visa').onchange = (e) => { FILTERS.visa = e.target.checked; apply(); };
+  $('#f-degree').onchange = (e) => { FILTERS.degree = e.target.value; apply(); };
   apply();
 
   document.querySelectorAll('.action').forEach((a) => {
@@ -512,12 +523,13 @@ async function renderRadar() {
   };
 }
 
-function oppCard(o) {
+function oppCard(o, idx = 0) {
   const [c, bg] = scoreColor(o.match_score);
+  const delay = Math.min(idx, 12) * 18;
   const comp = o.comp_min != null ? `${money(o.comp_min)}${o.comp_max && o.comp_max !== o.comp_min ? '–' + money(o.comp_max) : ''}${PERIOD_LABEL[o.comp_period] || ''}` : '<span class="muted">comp not disclosed</span>';
   const top = (o.reasons || []).slice(0, 2).map((r) => r.detail).join(' · ');
   return `
-  <div class="opp" data-id="${o.id}">
+  <div class="opp reveal" style="animation-delay:${delay}ms" data-id="${o.id}">
     <div class="score" style="color:${c};background:${bg};box-shadow:inset 0 0 0 2px ${c}44">${o.match_score}<small>MATCH</small></div>
     <div>
       <h4>${esc(o.title)} <span class="muted" style="font-weight:400">· ${esc(o.company)}</span></h4>
@@ -577,6 +589,7 @@ function openDetail(id) {
             <span class="chip">${comp}</span>
             <span class="chip">${esc(o.seniority || '—')}</span>
             <span class="chip ${o.visa_sponsorship === 'yes' ? 'have' : ''}">visa: ${esc(o.visa_sponsorship)}</span>
+            <span class="chip ${o.degree_requirement === 'not_required' ? 'have' : ''}">degree: ${esc(o.degree_requirement || 'unknown')}</span>
             <span class="chip">${esc(o.source)} · quality ${Math.round((o.source_quality || 0) * 100)}</span>
             ${o.source_count > 1 ? `<span class="chip">seen on ${o.source_count} boards</span>` : ''}
           </div>
