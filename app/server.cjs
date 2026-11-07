@@ -1170,7 +1170,7 @@ route('POST', /^\/api\/onboarding\/preview$/, async (req, res) => {
   if (!role) return json(res, 400, { error: 'role required' });
   const r = await fetch(`http://127.0.0.1:${PORT}/api/public/rate-check`, {
     method: 'POST',
-    headers: { 'content-type': 'application/json' },
+    headers: { 'content-type': 'application/json', 'x-forwarded-for': 'internal-onboarding' },
     body: JSON.stringify({
       role, years: body.years, country: body.country,
       currentSalary: body.currentSalary, unit: body.unit, skills: body.skills || [],
