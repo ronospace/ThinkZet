@@ -1,0 +1,72 @@
+// Smoke test: every route the UI depends on must answer, and the core invariants must hold.
+// Run: node scripts/check.cjs   (server must be running)
+'use strict';
+const BASE = process.env.BASE || 'http://127.0.0.1:4173';
+
+const GETS = [
+  '/api/health', '/api/me', '/api/auth/me', '/api/feed?limit=5', '/api/scores', '/api/rates',
+  '/api/twin', '/api/tracker', '/api/gaps', '/api/gaps/plan', '/api/brief', '/api/learning',
+  '/api/outcomes/intel', '/api/plan', '/api/referrals', '/api/ops', '/api/pulse', '/api/ingest',
+  '/api/saved-searches', '/api/negotiation', '/api/trajectory',
+];
+const POSTS = [
+  ['/api/demo', {}],
+  ['/api/copilot', { message: 'Am I underpaid?' }],
+  ['/api/horizon', { horizon: 'balanced' }],
+  ['/api/brief/ack', {}],
+];
+
+let pass = 0, fail = 0;
+const failures = [];
+
+async function call(method, path, body) {
+  const res = await fetch(BASE + path, {
+    method,
+    headers: body ? { 'content-type': 'application/json' } : undefined,
+    body: body ? JSON.stringify(body) : undefined,
+  });
+  const text = await res.text();
+  let json = null;
+  try { json = JSON.parse(text); } catch { /* non-json is fine for static */ }
+  return { status: res.status, json, text };
+}
+
+(async () => {
+  for (const p of GETS) {
+    try {
+      const r = await call('GET', p);
+      const ok = r.status === 200 && r.json && !r.json.error;
+      if (ok) pass++; else { fail++; failures.push(`${p} -> ${r.status} ${r.json?.error || ''}`); }
+    } catch (e) { fail++; failures.push(`${p} -> ${e.message}`); }
+  }
+  for (const [p, b] of POSTS) {
+    try {
+      const r = await call('POST', p, b);
+      const ok = r.status === 200 && r.json && !r.json.error;
+      if (ok) pass++; else { fail++; failures.push(`POST ${p} -> ${r.status} ${r.json?.error || ''}`); }
+    } catch (e) { fail++; failures.push(`POST ${p} -> ${e.message}`); }
+  }
+
+  // Invariants
+  const feed = await call('GET', '/api/feed?limit=20');
+  const opps = feed.json?.opportunities || [];
+  const scoresOk = opps.every((o) => o.match_score >= 0 && o.match_score <= 100);
+  const probsOk = opps.every((o) => o.interview_probability >= 0 && o.interview_probability <= 100
+    && o.offer_probability >= 0 && o.offer_probability <= o.interview_probability + 0.001);
+  const confOk = opps.every((o) => o.confidence && o.confidence.level);
+  const compOk = opps.every((o) => o.comp_min == null || (o.comp_period === 'hour' ? o.comp_min >= 8 && o.comp_min <= 400 : o.comp_min >= 8000));
+  for (const [name, ok] of [['scores in range', scoresOk], ['offer <= interview', probsOk], ['confidence present', confOk], ['comp sanity', compOk]]) {
+    if (ok) pass++; else { fail++; failures.push(`invariant failed: ${name}`); }
+  }
+
+  const rates = await call('GET', '/api/rates');
+  const rateOk = rates.json && rates.json.p25 <= rates.json.p50 && rates.json.p50 <= rates.json.p75 && rates.json.p75 <= rates.json.p90;
+  if (rateOk) pass++; else { fail++; failures.push('invariant failed: rate percentiles ordered'); }
+
+  const traj = await call('GET', '/api/trajectory');
+  const trajOk = traj.json && traj.json.paths?.length === 5 && traj.json.paths.every((p) => p.endSalary > 0);
+  if (trajOk) pass++; else { fail++; failures.push('invariant failed: five trajectory paths'); }
+
+  console.log(`\n${pass} passed, ${fail} failed`);
+  if (failures.length) { console.log('\nFailures:'); failures.forEach((f) => console.log('  - ' + f)); process.exitCode = 1; }
+})();
