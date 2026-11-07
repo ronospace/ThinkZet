@@ -116,6 +116,13 @@ textarea.cv:focus{border-color:var(--accent2)}
 .types{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 .types button{font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2)}
 .types button.on{background:#1b2637;border-color:#33507a;color:#cfe0ff}
+.feed-wrap{display:grid;grid-template-columns:1fr 268px;gap:16px;align-items:start}
+.facets{position:sticky;top:74px}
+@media(max-width:1180px){.feed-wrap{grid-template-columns:1fr}.facets{position:static}}
+.facet-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--line)}
+.facet-row:last-child{border-bottom:none}
+.facet-mini{height:4px;border-radius:3px;background:#1c2431;margin-top:3px;overflow:hidden}
+.facet-mini > i{display:block;height:100%;background:linear-gradient(90deg,#4c8dff,#8b5cf6)}
 .filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
 .filters input,.filters select{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12.5px;outline:none}
 .filters input{flex:1;min-width:200px}
@@ -263,7 +270,7 @@ const money = (n, cur = 'EUR', d = 0) => n == null ? '—' : new Intl.NumberForm
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2600); };
 
-let STATE = { profile: null, view: 'radar', feed: null, types: [], horizon: 'balanced' };
+let STATE = { profile: null, view: 'radar', feed: null, types: [], horizon: 'balanced', sort: 'score' };
 const PERIOD_LABEL = { hour: '/hr', year: '/yr', month: '/mo', stipend: ' stipend', oneoff: ' one-off', prize: ' prize', fee: ' fee', investment: ' investment', equity: ' equity' };
 const TYPE_LABEL = { job: 'Jobs', contract: 'Contracts', fellowship: 'Fellowships', grant: 'Grants', accelerator: 'Accelerators', cofounder: 'Co-founder', research: 'Research', hackathon: 'Hackathons', speaking: 'Speaking', mentorship: 'Mentorship' };
 
@@ -464,6 +471,10 @@ async function renderRadar() {
       <span class="muted" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase">Optimising for</span>
       ${['balanced', 'income', 'growth', 'stability'].map((h) => `<button class="horizon ${STATE.horizon === h ? 'on' : ''}" data-h="${h}" style="font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid ${STATE.horizon === h ? '#33507a' : 'var(--line2)'};background:${STATE.horizon === h ? '#1b2637' : 'transparent'};color:${STATE.horizon === h ? '#cfe0ff' : 'var(--ink2)'}">${h}</button>`).join('')}
     </div>
+    <div class="row" style="gap:6px;margin-bottom:12px;flex-wrap:wrap">
+      <span class="muted" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;margin-right:2px">Sort</span>
+      ${[['score', 'Match'], ['income', 'Income'], ['odds', 'Odds'], ['fresh', 'Newest']].map(([k, l]) => `<button class="sortbtn ${STATE.sort === k ? 'on' : ''}" data-s="${k}" style="font-size:12px;padding:4px 10px;border-radius:7px;border:1px solid ${STATE.sort === k ? '#33507a' : 'var(--line2)'};background:${STATE.sort === k ? '#1b2637' : 'transparent'};color:${STATE.sort === k ? '#cfe0ff' : 'var(--ink2)'}">${l}</button>`).join('')}
+    </div>
     <div class="types" id="types">
       <button data-t="" class="${STATE.types.length ? '' : 'on'}">All types</button>
       ${Object.keys(s.counts).map((t) => `<button data-t="${t}" class="${STATE.types.includes(t) ? 'on' : ''}">${TYPE_LABEL[t] || t} <span class="muted">${s.counts[t]}</span></button>`).join('')}
@@ -482,7 +493,24 @@ async function renderRadar() {
       <label class="chk"><input type="checkbox" id="f-visa" ${FILTERS.visa ? 'checked' : ''}/> visa sponsorship only</label>
       <span class="muted" id="f-count" style="font-size:12px"></span>
     </div>
-    <div id="opps"></div>
+    <div class="feed-wrap">
+      <div id="opps"></div>
+      <div class="facets">
+        <div class="card">
+          <h3>Your market right now</h3>
+          <div id="facet-body" style="margin-top:10px"><span class="muted" style="font-size:12px">Loading…</span></div>
+        </div>
+        <div class="card" style="margin-top:12px">
+          <h3>Shortcuts</h3>
+          <div style="margin-top:8px;font-size:12px;line-height:2">
+            <div><kbd>J</kbd> <kbd>K</kbd> move · <kbd>↵</kbd> open</div>
+            <div><kbd>S</kbd> save · <kbd>A</kbd> applied</div>
+            <div><kbd>⌘</kbd><kbd>K</kbd> search everything</div>
+            <div><kbd>?</kbd> all shortcuts</div>
+          </div>
+        </div>
+      </div>
+    </div>
   `;
 
   const apply = () => {
@@ -495,9 +523,17 @@ async function renderRadar() {
       (!FILTERS.visa || o.visa_sponsorship === 'yes') &&
       (!FILTERS.degree || (FILTERS.degree === 'open' ? (o.degree_requirement === 'not_required' || o.degree_requirement === 'unknown') : o.degree_requirement === FILTERS.degree)));
     const capped = STATE.plan && STATE.plan.plan !== 'pro' ? rows.slice(0, STATE.plan.limits.matches) : rows;
+    const sortKey = STATE.sort || 'score';
+    rows.sort((a, b) => {
+      if (sortKey === 'income') return (b.income_potential - a.income_potential) || (b.match_score - a.match_score);
+      if (sortKey === 'odds') return (b.interview_probability - a.interview_probability) || (b.match_score - a.match_score);
+      if (sortKey === 'fresh') return new Date(b.posted_at) - new Date(a.posted_at);
+      return b.match_score - a.match_score;
+    });
     $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="card" style="text-align:center;border-color:#2f2a4d"><div class="dim" style="font-size:13px">${rows.length - capped.length} more scored opportunities are hidden on the Free plan.</div><div style="margin-top:10px"><button class="btn sm" onclick="go('plan')">See what Pro unlocks</button></div></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
     $('#f-count').textContent = `${rows.length} of ${feed.opportunities.length} shown`;
     bindOppActions();
+    renderFacets(rows);
   };
   $('#f-q').oninput = (e) => { FILTERS.q = e.target.value; apply(); };
   $('#f-country').onchange = (e) => { FILTERS.country = e.target.value; apply(); };
@@ -512,6 +548,9 @@ async function renderRadar() {
   });
   const up = $('#upgrade');
   if (up) up.onclick = () => go('plan');
+  document.querySelectorAll('.sortbtn').forEach((b) => {
+    b.onclick = () => { STATE.sort = b.dataset.s; apply(); document.querySelectorAll('.sortbtn').forEach((x) => x.classList.toggle('on', x.dataset.s === STATE.sort)); renderRadar; };
+  });
   document.querySelectorAll('.horizon').forEach((b) => {
     b.onclick = async () => {
       STATE.horizon = b.dataset.h;
@@ -552,6 +591,48 @@ async function renderRadar() {
     else STATE.types = STATE.types.includes(t) ? STATE.types.filter((x) => x !== t) : [...STATE.types, t];
     renderRadar();
   };
+}
+
+function renderFacets(rows) {
+  const body = $('#facet-body');
+  if (!body) return;
+  if (!rows.length) { body.innerHTML = '<span class="muted" style="font-size:12px">No rows match.</span>'; return; }
+  const CUR = { EUR: 1, USD: 0.92, GBP: 1.17, CHF: 1.05, CAD: 0.68, PLN: 0.23, INR: 0.011 };
+  const annual = (o) => {
+    if (o.comp_min == null) return null;
+    const v = ((Number(o.comp_min) + Number(o.comp_max || o.comp_min)) / 2) * (CUR[o.currency] || 1);
+    if (o.comp_period === 'hour') return v * 1600;
+    if (o.comp_period === 'month') return v * 12;
+    if (o.comp_period === 'day') return v * 220;
+    return v;
+  };
+  const comps = rows.map(annual).filter((v) => v && v > 15000 && v < 600000).sort((a, b) => a - b);
+  const med = comps.length ? comps[Math.floor(comps.length / 2)] : null;
+  const top = rows[0];
+
+  const byCountry = {};
+  rows.forEach((o) => { if (o.country) byCountry[o.country] = (byCountry[o.country] || 0) + 1; });
+  const countries = Object.entries(byCountry).sort((a, b) => b[1] - a[1]).slice(0, 5);
+  const maxC = Math.max(...countries.map((c) => c[1]), 1);
+
+  const byFamily = {};
+  rows.forEach((o) => { if (o.role_family) byFamily[o.role_family] = (byFamily[o.role_family] || 0) + 1; });
+  const families = Object.entries(byFamily).sort((a, b) => b[1] - a[1]).slice(0, 4);
+  const maxF = Math.max(...families.map((f) => f[1]), 1);
+
+  const strong = rows.filter((o) => o.interview_probability >= 40).length;
+  const remote = rows.filter((o) => o.remote_type === 'remote').length;
+
+  body.innerHTML = `
+    <div class="facet-row"><span class="muted">Median pay</span><span class="mono">${med ? money(med) : '—'}</span></div>
+    <div class="facet-row"><span class="muted">Best match</span><span class="mono">${top.match_score}/100</span></div>
+    <div class="facet-row"><span class="muted">≥40% interview odds</span><span class="mono">${strong} of ${rows.length}</span></div>
+    <div class="facet-row"><span class="muted">Remote</span><span class="mono">${Math.round((remote / rows.length) * 100)}%</span></div>
+    <div style="margin-top:12px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Top locations</div>
+    ${countries.map(([c, n]) => `<div style="margin-top:6px"><div class="facet-row" style="border:none;padding:0"><span>${esc(c)}</span><span class="mono muted">${n}</span></div><div class="facet-mini"><i style="width:${Math.round((n / maxC) * 100)}%"></i></div></div>`).join('')}
+    <div style="margin-top:12px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Disciplines</div>
+    ${families.map(([f, n]) => `<div style="margin-top:6px"><div class="facet-row" style="border:none;padding:0"><span>${esc(f.replace(/_/g, ' '))}</span><span class="mono muted">${n}</span></div><div class="facet-mini"><i style="width:${Math.round((n / maxF) * 100)}%"></i></div></div>`).join('')}
+  `;
 }
 
 function oppCard(o, idx = 0) {
