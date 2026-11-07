@@ -4,6 +4,12 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>CareerOS AI — Opportunity Operating System</title>
+<meta name="theme-color" content="#0b0d10"/>
+<meta name="description" content="Discover how much opportunity you're leaving on the table. Free market value check from live postings — then every opportunity scored against your profile."/>
+<link rel="manifest" href="/manifest.webmanifest"/>
+<meta property="og:title" content="Find out how much you're underpaid"/>
+<meta property="og:description" content="CareerOS reads the live market and tells you what your exact profile is worth."/>
+<meta property="og:type" content="website"/>
 <style>
 :root{
   --bg:#0b0d10; --panel:#12161c; --panel2:#171c24; --line:#222a35; --line2:#2d3743;
@@ -193,6 +199,46 @@ kbd{background:#1b2431;border:1px solid var(--line2);border-bottom-width:2px;bor
 .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:s .7s linear infinite;vertical-align:-2px;margin-right:6px}
 @keyframes s{to{transform:rotate(360deg)}}
 
+
+/* ---------- mobile polish ---------- */
+@media(max-width:900px){
+  .shell{grid-template-columns:1fr;height:auto;min-height:100vh}
+  .rail{position:fixed;left:0;right:0;bottom:0;top:auto;height:auto;border-right:none;border-top:1px solid var(--line);
+        padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:60;background:var(--panel)}
+  .rail .logo,.rail-foot{display:none}
+  .nav{flex-direction:row;overflow-x:auto;gap:2px;padding:0;scrollbar-width:none}
+  .nav::-webkit-scrollbar{display:none}
+  .nav-group{flex-direction:row;margin:0;gap:2px}
+  .nav-label{display:none}
+  .nav button{flex-direction:column;gap:3px;padding:7px 10px;font-size:9.5px;white-space:nowrap;border-radius:9px}
+  .nav button .ico{width:18px;height:18px}
+  .nav button .ico svg{width:17px;height:17px}
+  .nav button.active{box-shadow:none;background:#1b2637}
+  main{overflow:visible;padding-bottom:78px}
+  .topbar{padding:10px 14px;gap:8px;flex-wrap:wrap}
+  .topbar h1{font-size:15px}
+  .topbar .sub{display:none}
+  .topbar .spacer{display:none}
+  .pill{font-size:10px;padding:3px 7px}
+  .view{padding:16px 14px 90px}
+  .hello{flex-direction:column;align-items:flex-start;gap:8px}
+  .hello h2{font-size:18px}
+  .rate-gap{padding:16px}
+  .rate-gap .amount{font-size:24px}
+  .opp{grid-template-columns:52px 1fr;gap:10px;padding:12px}
+  .opp .right{display:none}
+  .score{width:52px;height:52px;font-size:16px}
+  .scores-grid{grid-template-columns:1fr 1fr!important}
+  .overall{flex-direction:column;text-align:center;gap:14px}
+  .grid{grid-template-columns:1fr!important}
+  .form-grid,.row3,.row2{grid-template-columns:1fr!important}
+  .chat{height:auto;min-height:60vh}
+  .msgs{max-height:55vh}
+  table.t{font-size:12px}
+  table.t th,table.t td{padding:7px 6px}
+  .palette-box{width:96vw;margin-top:6vh}
+  .msg{max-width:92%}
+}
 /* ---------- landing ---------- */
 .landing{min-height:100vh;background:radial-gradient(1200px 600px at 50% -10%,#16233c 0%,#0b0d10 60%)}
 html[data-theme="light"] .landing{background:radial-gradient(1200px 600px at 50% -10%,#e8f0ff 0%,#f7f9fc 60%)}
