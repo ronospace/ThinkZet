@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>MirrorSpread AI — Opportunity Operating System</title>
 <meta name="theme-color" content="#0b0d10"/>
-<meta name="description" content="Discover how much opportunity you're leaving on the table. Free market value check from live postings — then every opportunity scored against your profile."/>
+<meta name="description" content="The market has been pricing you without you. MirrorSpread reads live postings and shows you the number your employer never did — then every opportunity scored against your profile."/>
 <link rel="manifest" href="/manifest.webmanifest"/>
-<meta property="og:title" content="Find out how much you're underpaid"/>
-<meta property="og:description" content="MirrorSpread reads the live market and tells you what your exact profile is worth."/>
+<meta property="og:title" content="The market has been pricing you without you"/>
+<meta property="og:description" content="See the number your employer never showed you. Sixty seconds, no account."/>
 <meta property="og:type" content="website"/>
 <style>
 :root{
@@ -292,12 +292,12 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
     </div>
 
     <span class="land-kicker">Free · 60 seconds · no account needed</span>
-    <h1 class="land-h1">Find out how much<br/><span class="accent">you're underpaid.</span></h1>
-    <p class="land-sub">MirrorSpread reads the live market — real postings from real companies — and tells you what your exact profile is worth, which opportunities you're missing, and the fastest path to more income.</p>
+    <h1 class="land-h1">The market has been<br/><span class="accent">pricing you without you.</span></h1>
+    <p class="land-sub">Somewhere out there, a salary band exists with your name on it. Your employer knows it. The recruiter who called last month knew it. You've never seen it. MirrorSpread reads live postings and shows you the number — then every opportunity that pays it.</p>
 
     <div class="check">
-      <h2>What are you worth right now?</h2>
-      <p class="sub">Four fields. No login. We compare you against live postings that disclose pay.</p>
+      <h2>What should you be earning?</h2>
+      <p class="sub">Four fields, one number, no login. We price you against live postings that actually disclose pay.</p>
       <div class="row3">
         <div><label>Your role</label><input id="c-role" placeholder="e.g. Senior Data Scientist" value=""/></div>
         <div><label>Years of experience</label><input id="c-years" type="number" min="0" max="45" placeholder="8"/></div>
@@ -319,7 +319,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
         <div><label>What you're paid now (EUR)</label><input id="c-current" type="number" placeholder="78000"/></div>
         <div><label>Your strongest skills (comma separated)</label><input id="c-skills" placeholder="Python, SQL, Machine Learning"/></div>
       </div>
-      <button class="btn go" id="c-run">Show me what I'm worth <span style="opacity:.7">&gt;</span></button>
+      <button class="btn go" id="c-run">Show me the number <span style="opacity:.7">&gt;</span></button>
       <div class="muted" id="c-err" style="font-size:12px;margin-top:10px"></div>
 
       <div class="result" id="c-result"></div>
@@ -328,44 +328,44 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
     <div style="margin-top:56px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
       <div>
         <div style="font-size:26px;font-weight:750;letter-spacing:-.02em;color:#ff8f96">1 in 3</div>
-        <div style="font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.6">professionals we check are more than 15% below the market median for their own profile.</div>
+        <div style="font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.6">of the professionals we check are being paid below the median for the work they already do.</div>
       </div>
       <div>
         <div style="font-size:26px;font-weight:750;letter-spacing:-.02em">€13,500</div>
-        <div style="font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.6">the typical annual gap between what people are paid and what the live market pays for the same work.</div>
+        <div style="font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.6">the average distance between a salary and the one next to it, for identical work. Nobody sends you that letter.</div>
       </div>
       <div>
         <div style="font-size:26px;font-weight:750;letter-spacing:-.02em">72%</div>
-        <div style="font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.6">of live postings never state a salary. You are negotiating blind against a market you cannot see.</div>
+        <div style="font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.6">of live postings hide the salary. The employer knows the number. The recruiter knows it. Only you are guessing.</div>
       </div>
     </div>
 
     <div style="margin-top:52px">
-      <h2 style="font-size:22px;letter-spacing:-.02em;margin:0 0 8px">Three questions nobody answers well</h2>
-      <p style="color:var(--muted);font-size:13.5px;margin:0 0 20px">Job boards answer a fourth question — "what exists?" — and stop there.</p>
+      <h2 style="font-size:22px;letter-spacing:-.02em;margin:0 0 8px">Job boards tell you what's open. Nobody tells you what you're worth.</h2>
+      <p style="color:var(--muted);font-size:13.5px;margin:0 0 20px">Three questions, and the silence after each one.</p>
       <div style="display:grid;gap:12px">
         <div class="card" style="display:flex;gap:16px;align-items:flex-start">
           <div style="font-size:11px;color:#6ea8ff;font-weight:700;letter-spacing:.1em;padding-top:2px">01</div>
-          <div><div style="font-size:14px;font-weight:600">What am I actually worth?</div>
-          <div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">Not a range from a survey. The median for your exact profile — seniority, skills, country — from postings that disclose pay, right now.</div></div>
+          <div><div style="font-size:14px;font-weight:600">What number would you say out loud?</div>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">Most people cannot answer that in a negotiation, so they accept the first number they hear. We give you the median for your exact profile — seniority, skills, country — from postings that disclose pay, today.</div></div>
         </div>
         <div class="card" style="display:flex;gap:16px;align-items:flex-start">
           <div style="font-size:11px;color:#6ea8ff;font-weight:700;letter-spacing:.1em;padding-top:2px">02</div>
-          <div><div style="font-size:14px;font-weight:600">What am I missing?</div>
-          <div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">The opportunities that fit you and are invisible to you, because they sit on platforms you do not check, in formats you do not search for.</div></div>
+          <div><div style="font-size:14px;font-weight:600">What is being posted while you sleep?</div>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">The roles that fit you and are invisible to you, because they live on platforms you do not check and close in 72 hours.</div></div>
         </div>
         <div class="card" style="display:flex;gap:16px;align-items:flex-start">
           <div style="font-size:11px;color:#6ea8ff;font-weight:700;letter-spacing:.1em;padding-top:2px">03</div>
-          <div><div style="font-size:14px;font-weight:600">What is the fastest path to more?</div>
-          <div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">Which skill, which channel, which move — ranked by what it actually pays, not by what is trending.</div></div>
+          <div><div style="font-size:14px;font-weight:600">Which move actually pays?</div>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">Stay, switch, contract, relocate, pivot — priced against your real market, with the risk attached. Not the trending path. The profitable one.</div></div>
         </div>
       </div>
     </div>
 
     <div class="trust">
-      <div class="card"><h3>Live market, not a survey</h3><p>Benchmarks are computed from postings that disclose pay, refreshed continuously. Nothing is self-reported.</p></div>
-      <div class="card"><h3>Honest confidence</h3><p>Every number carries its evidence. If there are too few comparables, we say so instead of guessing.</p></div>
-      <div class="card"><h3>Yours to delete</h3><p>Your career data is yours. Export it, delete it, take it elsewhere. No selling, ever.</p></div>
+      <div class="card"><h3>Priced from the market, not from surveys</h3><p>Every number comes from postings that name a salary, refreshed continuously. Nobody was asked to guess.</p></div>
+      <div class="card"><h3>We show our working</h3><p>Every figure carries its sample size and confidence. If there are too few comparables to defend a number, we say that instead of inventing one.</p></div>
+      <div class="card"><h3>Your data leaves when you do</h3><p>Export everything, delete everything, take it elsewhere. We have never sold a record and never will.</p></div>
     </div>
 
     <div style="margin-top:40px;display:flex;gap:18px;flex-wrap:wrap;font-size:12px;color:var(--muted)">
@@ -615,7 +615,7 @@ async function runRateCheck() {
     const r = await post('/api/public/rate-check', {
       role, years: Number(years), country, currentSalary: current ? Number(current) : null, skills,
     });
-    btn.disabled = false; btn.innerHTML = 'Show me what I\'m worth <span style="opacity:.7">&gt;</span>';
+    btn.disabled = false; btn.innerHTML = 'Show me the number <span style="opacity:.7">&gt;</span>';
     if (r.error) { err.textContent = r.error; return; }
 
     const b = r.benchmark, v = r.verdict;
@@ -627,9 +627,18 @@ async function runRateCheck() {
     const tone = v.level === 'underpaid' ? '#ff8f96' : v.level === 'slightly_under' ? '#e0c273' : v.level === 'above_market' ? '#6fe3a4' : '#8fb4ee';
     const box = document.getElementById('c-result');
     box.className = 'result show';
+    const line = (() => {
+      const g = v.gapPct;
+      if (g == null) return 'Here is the band your profile sits in.';
+      if (g >= 25) return `Someone with your CV was worth ${Math.abs(g)}% more than you are being paid.`;
+      if (g >= 15) return `There is a version of your job paying ${fmt(b.p50)}${per}. You are not in it.`;
+      if (g >= 5) return `You are being paid under the median. Not by a lot — but every month.`;
+      if (g > -10) return `You are priced correctly. Now the question is whether you are moving.`;
+      return `You are ahead of the median. That is leverage, and it expires if you sit still.`;
+    })();
     box.innerHTML = `
       <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a99bf0">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
-      <div class="big-gap" style="color:${tone}">${esc(v.headline)}</div>
+      <div class="big-gap" style="color:${tone}">${esc(line)}</div>
       <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b>${v.gapAbs != null ? ` · you report ${fmt(r.input.current)}${per}` : ''}</div>
       <div class="scale">
         <div class="band" style="left:${pos(b.p25)}%;width:${pos(b.p75) - pos(b.p25)}%"></div>
@@ -653,7 +662,7 @@ async function runRateCheck() {
         <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px">${esc(r.next.detail)}</div>
         <div class="row" style="gap:8px;flex-wrap:wrap">
           <input id="c-email" type="email" placeholder="you@example.com" style="flex:1;min-width:200px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:9px;padding:11px 13px;color:var(--ink);outline:none;font-size:13.5px"/>
-          <button class="btn" id="c-signup">Email me my report <span style="opacity:.7">&gt;</span></button>
+          <button class="btn" id="c-signup">Send me the full breakdown <span style="opacity:.7">&gt;</span></button>
         </div>
         <div class="muted" id="c-lead-msg" style="font-size:11.5px;margin-top:8px"></div>
       </div>`;
@@ -704,7 +713,7 @@ async function runRateCheck() {
     };
     box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   } catch (e) {
-    btn.disabled = false; btn.innerHTML = 'Show me what I\'m worth <span style="opacity:.7">&gt;</span>';
+    btn.disabled = false; btn.innerHTML = 'Show me the number <span style="opacity:.7">&gt;</span>';
     err.textContent = 'Something broke: ' + e.message;
   }
 }
@@ -1484,7 +1493,7 @@ async function renderScores() {
       </div>
       <div>
         <div style="font-size:15px;font-weight:600">${percentileV}th percentile</div>
-        <div class="dim" style="margin-top:4px;max-width:520px">Composite of six scores, benchmarked against a modelled distribution of professionals at your level. Recomputed on every action — the number moves when you act.</div>
+        <div class="dim" style="margin-top:4px;max-width:520px">Eight scores, benchmarked against professionals at your level. It moves when you move — that is the entire point of it being a score and not a certificate.</div>
         <div class="muted" style="font-size:11.5px;margin-top:8px">${history.length} computation${history.length === 1 ? '' : 's'} recorded</div>
       </div>
     </div>
@@ -1552,7 +1561,7 @@ async function renderRates() {
         </div>
         ${r.gapPct != null ? `<div class="card" style="margin-top:20px;background:#161b24;border-color:#2f2a4d">
           <div class="k" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#a99bf0">Verdict</div>
-          <div style="font-size:17px;font-weight:650;margin-top:6px">${r.verdict === 'underpaid' ? 'Underpaid by ' + r.gapPct + '%' : r.verdict === 'slightly_under' ? 'Slightly under market (' + r.gapPct + '%)' : r.verdict === 'at_market' ? 'At market' : 'Above market'}</div>
+          <div style="font-size:17px;font-weight:650;margin-top:6px">${r.verdict === 'underpaid' ? 'The market disagrees with your payslip — by ' + r.gapPct + '%' : r.verdict === 'slightly_under' ? 'Just under the line (' + r.gapPct + '%) — and it compounds' : r.verdict === 'at_market' ? 'Priced correctly. Not the same as paid well.' : 'Ahead of the market. Now use it.'}</div>
           <div class="dim" style="margin-top:4px">${r.gapAbs > 0 ? money(r.gapAbs) + ' per year of headroom at the median — ' + money(r.gapAbs * 2) + ' over two years.' : 'Your rate is defensible. The lever now is growth, not price.'}</div>
         </div>` : ''}
       </div>
@@ -1921,7 +1930,7 @@ async function renderNegotiation() {
       </div>
     </div>
 
-    <h2 class="section">What to actually say</h2>
+    <h2 class="section">What to say when they name a number</h2>
     <div class="card">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">The ask</h3><button class="chip cp" data-t="${esc(n.askScript)}" style="cursor:pointer">copy</button></div>
       <div style="margin-top:10px;font-size:13.5px;line-height:1.75;font-style:italic;color:#cfe0ff">${esc(n.askScript)}</div>

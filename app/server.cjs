@@ -1135,15 +1135,18 @@ route('POST', /^\/api\/public\/rate-check$/, async (req, res) => {
     verdict: {
       gapAbs, gapPct,
       level: gapPct == null ? 'unknown' : gapPct >= 15 ? 'underpaid' : gapPct >= 5 ? 'slightly_under' : gapPct > -10 ? 'at_market' : 'above_market',
-      headline: gapPct == null
-        ? `The median for ${seniority} ${family.replace(/_/g, ' ')} work is €${rates.p50.toLocaleString('en-GB')}${rates.period === 'hour' ? '/hr' : '/yr'}.`
-        : gapPct >= 15
-          ? `You are ${gapPct}% below market — about €${Math.abs(gapAbs).toLocaleString('en-GB')} a year.`
-          : gapPct >= 5
-            ? `You are ${gapPct}% under the median — about €${Math.abs(gapAbs).toLocaleString('en-GB')} a year.`
-            : gapPct > -10
-              ? `You are at market. The upside is growth, not rate.`
-              : `You are ${Math.abs(gapPct)}% above the median. Your leverage is positioning, not price.`,
+      headline: (() => {
+        const p = rates.period === 'hour' ? '/hr' : '/yr';
+        const money = (n) => '€' + Math.round(Math.abs(n)).toLocaleString('en-GB') + p;
+        const seg = `${seniority} ${family.replace(/_/g, ' ')}`;
+        if (gapPct == null) return `The market pays ${money(rates.p50)} for ${seg} work like yours.`;
+        if (gapPct >= 25) return `Someone with your CV was worth ${Math.abs(gapPct)}% more than you are being paid.`;
+        if (gapPct >= 15) return `There is a version of your job paying ${money(rates.p50)}. You are not in it.`;
+        if (gapPct >= 5) return `You are ${money(gapAbs)} under the median. Not a scandal — a leak.`;
+        if (gapPct > -10) return `You are priced correctly. Whether you are moving is a different question.`;
+        return `You are ahead of the median by ${Math.abs(gapPct)}%. That is leverage, and it expires if you sit still.`;
+      })(),
+      gapLine: gapAbs != null && gapAbs > 0 ? `€${Math.round(gapAbs).toLocaleString('en-GB')} a year — ${Math.round(gapAbs * 2).toLocaleString('en-GB')} across two.` : null,
     },
     levers: skillMeta.map((s) => ({ skill: s.canonical, premium: s.salary_premium, growth: s.growth_rate })),
     next: {
