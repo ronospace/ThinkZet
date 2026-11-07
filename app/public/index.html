@@ -900,6 +900,7 @@ async function renderRadar() {
       <label class="chk"><input type="checkbox" id="f-visa" ${FILTERS.visa ? 'checked' : ''}/> visa sponsorship only</label>
       <span class="muted" id="f-count" style="font-size:12px"></span>
     </div>
+    <div id="teach" style="margin-bottom:12px"></div>
     <div class="feed-wrap">
       <div id="opps"></div>
       <div class="facets">
@@ -919,6 +920,21 @@ async function renderRadar() {
       </div>
     </div>
   `;
+
+  // First-run teachable moment: explain the one number that matters before showing the feed.
+  const teach = $('#teach');
+  if (teach && !localStorage.getItem('careeros-taught')) {
+    teach.innerHTML = `<div class="card" style="border-color:#253247;background:linear-gradient(90deg,#131a24,#11161d)">
+      <div class="row" style="justify-content:space-between;gap:16px;flex-wrap:wrap">
+        <div style="flex:1;min-width:280px">
+          <div style="font-size:13.5px;font-weight:600">Every card here is scored against your twin.</div>
+          <div class="dim" style="font-size:12.5px;margin-top:4px">The big number is <b>match</b>. The two small numbers are <b>interview</b> and <b>offer</b> probability — calibrated from real outcomes, not guesses. Start with the highest interview odds, not the highest match.</div>
+        </div>
+        <button class="btn sm" id="teach-ok">Got it</button>
+      </div>
+    </div>`;
+    $('#teach-ok').onclick = () => { localStorage.setItem('careeros-taught', '1'); teach.innerHTML = ''; };
+  }
 
   const apply = () => {
     const q = FILTERS.q.toLowerCase();
