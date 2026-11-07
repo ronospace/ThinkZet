@@ -157,7 +157,7 @@ function briefEmail({ user, brief, rates, scores, prefs }) {
   }
   lines.push(`Open your radar: ${CONFIG.appUrl}/?app=1`);
   lines.push('');
-  lines.push(`— MirrorSpread, a product of ZyraFlow GmbH
+  lines.push(`— MirrorSpread, a product of ZyraFlow GmbH™
 You get this because you asked for the daily brief. Unsubscribe: ${unsub}`);
 
   const text = `Good morning ${name},\n\n${lines.join('\n')}`;
@@ -209,7 +209,7 @@ function renderHtml({ name, brief, rates, scores, unsub }) {
     <div style="padding:16px 24px;border-top:1px solid #222a35;font-size:11px;color:#6b7683">
       You get this because you turned on the daily brief.
       <a href="${unsub}" style="color:#6b7683">Unsubscribe</a> · <a href="${CONFIG.appUrl}/?app=1" style="color:#6b7683">Manage preferences</a>
-      <div style="margin-top:8px;opacity:.7">© 2026 ZyraFlow GmbH. All rights reserved.</div>
+      <div style="margin-top:8px;opacity:.7">© 2026 ZyraFlow GmbH™. All rights reserved.</div>
     </div>
   </div>
 </body></html>`;

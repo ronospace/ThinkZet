@@ -31,6 +31,14 @@ const AN = require('./analytics.cjs');
 const BILLING = require('./billing.cjs');
 const MAIL = require('./mailer.cjs');
 
+const COMPANY = {
+  name: 'ZyraFlow GmbH',
+  mark: 'ZyraFlow GmbH™',
+  product: 'MirrorSpread',
+  copyright: (year = new Date().getFullYear()) => `© ${year} ZyraFlow GmbH™. All rights reserved.`,
+  legalLine: (year = new Date().getFullYear()) => `© ${year} ZyraFlow GmbH™. All rights reserved. MirrorSpread is a product of ZyraFlow GmbH™.`,
+};
+
 const PORT = Number(process.env.PORT || 4173);
 const PUBLIC = path.join(__dirname, 'public');
 // Every route resolves the acting user from the session cookie.

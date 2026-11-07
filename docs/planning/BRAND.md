@@ -17,10 +17,10 @@ the technology company
 
 **The rule: the company name appears only in the legal footer.**
 
-MirrorSpread stands alone as a brand. ZyraFlow GmbH appears exactly once per surface —
+MirrorSpread stands alone as a brand. ZyraFlow GmbH™ appears exactly once per surface —
 at the very bottom, as the copyright and legal entity:
 
-> © 2026 ZyraFlow GmbH. All rights reserved. MirrorSpread is a product of ZyraFlow GmbH.
+> © 2026 ZyraFlow GmbH™. All rights reserved. MirrorSpread is a product of ZyraFlow GmbH™.
 
 Never in the header. Never "by ZyraFlow" next to the logo. Never "a ZyraFlow product" in the
 product chrome. A customer is buying MirrorSpread, not a division of a holding company.
@@ -36,9 +36,9 @@ product chrome. A customer is buying MirrorSpread, not a division of a holding c
 | Sidebar brand | MirrorSpread |
 | App manifest | MirrorSpread |
 | Email sender | MirrorSpread <brief@…> |
-| Email footer | © 2026 ZyraFlow GmbH. All rights reserved. |
-| Landing footer | © 2026 ZyraFlow GmbH. All rights reserved. MirrorSpread is a product of ZyraFlow GmbH. |
-| Privacy / Terms | ZyraFlow GmbH operates MirrorSpread and is the data controller. + copyright line |
+| Email footer | © 2026 ZyraFlow GmbH™. All rights reserved. |
+| Landing footer | © 2026 ZyraFlow GmbH™. All rights reserved. MirrorSpread is a product of ZyraFlow GmbH™. |
+| Privacy / Terms | ZyraFlow GmbH™ operates MirrorSpread and is the data controller. + copyright line |
 | Anything above the fold | **Never the company name** |
 
 ---
@@ -48,7 +48,7 @@ product chrome. A customer is buying MirrorSpread, not a division of a holding c
 | Item | Value |
 |---|---|
 | Product brand | **MirrorSpread** |
-| Legal entity | **ZyraFlow GmbH** |
+| Legal entity | **ZyraFlow GmbH™** |
 | Renamed across | 32 files, including browser storage keys |
 | Command | `node scripts/rebrand.cjs "New Name"` |
 
@@ -112,6 +112,6 @@ which is the point of having one.
 ## Naming discipline
 
 - Product names are **ownable, short, sayable**: MirrorSpread, Flow Ai.
-- Company name is **structural and legal**: ZyraFlow GmbH.
-- Never mix them in product chrome. The product is MirrorSpread. The company is ZyraFlow GmbH,
+- Company name is **structural and legal**: ZyraFlow GmbH™.
+- Never mix them in product chrome. The product is MirrorSpread. The company is ZyraFlow GmbH™,
   and it belongs in the footer.
