@@ -984,10 +984,26 @@ async function renderRates() {
 /* ---------------- gaps ---------------- */
 async function renderGaps() {
   const { gaps, sampleOf } = await api('/api/gaps');
+  const plan = await api('/api/gaps/plan');
   $('#view').innerHTML = `
     <div class="card" style="margin-bottom:14px">
       <h3>Skill gap detection</h3>
       <div class="dim" style="margin-top:6px">Computed by comparing your skills against the required skills of your top ${sampleOf} realistic opportunities — weighted by how many roles each gap blocks, its salary premium and its growth rate.</div>
+    </div>
+    <div class="card" style="margin-bottom:14px;border-color:#253247;background:linear-gradient(135deg,#12182a,#101a1e)">
+      <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">The shortest path</div>
+      <div style="font-size:15px;font-weight:600;margin-top:8px;line-height:1.5">${esc(plan.insight)}</div>
+      <div style="margin-top:16px">
+        ${plan.sequence.map((g) => `<div style="display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)">
+          <div class="mono" style="width:20px;color:var(--muted)">${g.order}</div>
+          <div style="flex:1">
+            <div style="font-size:13px">${esc(g.skill)} ${g.emerging ? '<span class="chip have" style="margin-left:6px">emerging</span>' : ''}</div>
+            <div class="muted" style="font-size:11px;margin-top:2px">unblocks ${g.blocking} · ${g.effortWeeks} weeks · ${g.adjacency === 'direct' ? 'in a category you already work in' : 'a lateral move'} · +${g.salaryPremium}% premium</div>
+          </div>
+          <div style="text-align:right"><div class="mono" style="font-size:12px">${g.cumulativeBlocking}</div><div class="muted" style="font-size:10px">cumulative</div></div>
+        </div>`).join('')}
+      </div>
+      <div class="muted" style="font-size:11px;margin-top:12px">${esc(plan.rule)}</div>
     </div>
     ${gaps.length ? `<div class="card"><table class="t">
       <thead><tr><th>Skill</th><th>Blocks</th><th>Share of matches</th><th>Market demand</th><th>Salary premium</th><th>Growth</th><th>Effort</th></tr></thead>

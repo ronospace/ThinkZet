@@ -478,6 +478,74 @@ route('POST', /^\/api\/cover-letter$/, async (req, res) => {
   json(res, 200, letter);
 });
 
+// ---- skill gap detail: the shortest path from here to there ----
+route('GET', /^\/api\/gaps\/plan$/, async (req, res) => {
+  const uid = resolveUser(req);
+  const profile = getProfile(uid);
+  if (!profile) return json(res, 400, { error: 'no profile' });
+  const twin = E.buildTwin(uid);
+  const mine = new Set(twin.skills);
+  const top = opportunitiesWithMatch(uid, { limit: 60, minScore: 55 });
+
+  const freq = new Map();
+  const valueAtStake = new Map();
+  for (const o of top) {
+    for (const s of o.missing_skills) {
+      freq.set(s, (freq.get(s) || 0) + 1);
+      valueAtStake.set(s, (valueAtStake.get(s) || 0) + (o.income_potential || 0));
+    }
+  }
+
+  const meta = new Map(db.prepare('SELECT canonical, category, demand_index, salary_premium, growth_rate, is_emerging FROM skills').all()
+    .map((r) => [r.canonical, r]));
+
+  // Skills that share a category with something the user already has are the cheapest wins.
+  const myCategories = new Set((twin.skillDetail || []).map((s) => s.category));
+  const adjacent = new Set((twin.skillDetail || []).map((s) => s.canonical));
+
+  const gaps = [...freq.entries()].map(([skill, blocking]) => {
+    const m = meta.get(skill) || {};
+    const share = Math.round((blocking / Math.max(1, top.length)) * 100);
+    const effortWeeks = m.demand_index > 75 ? 6 : m.demand_index > 60 ? 5 : 4;
+    const adjacency = myCategories.has(m.category) ? 'direct' : 'lateral';
+    const priority = Math.round(blocking * 3 + (m.salary_premium || 0) * 0.6 + (m.growth_rate || 0) * 0.3 + (adjacency === 'direct' ? 8 : 0));
+    return {
+      skill, blocking, share, effortWeeks, adjacency,
+      demand: m.demand_index || 50,
+      salaryPremium: m.salary_premium || 0,
+      growth: m.growth_rate || 0,
+      emerging: !!m.is_emerging,
+      category: m.category,
+      priority,
+    };
+  }).sort((a, b) => b.priority - a.priority).slice(0, 12);
+
+  // The compounding sequence: order by priority but respect prerequisites (category adjacency first)
+  const sequence = [];
+  const used = new Set();
+  for (const g of gaps) {
+    if (used.has(g.skill)) continue;
+    sequence.push({ ...g, order: sequence.length + 1 });
+    used.add(g.skill);
+    if (sequence.length >= 4) break;
+  }
+  const cumulative = sequence.map((g, i) => ({
+    ...g,
+    cumulativeBlocking: sequence.slice(0, i + 1).reduce((a, x) => a + x.blocking, 0),
+    cumulativeWeeks: sequence.slice(0, i + 1).reduce((a, x) => a + x.effortWeeks, 0),
+  }));
+
+  json(res, 200, {
+    sampleOf: top.length,
+    gaps,
+    sequence: cumulative,
+    insight: cumulative.length
+      ? `Closing ${cumulative[0].skill} alone unblocks ${cumulative[0].blocking} of your ${top.length} realistic opportunities. The full sequence of ${cumulative.length} skills takes about ${cumulative[cumulative.length - 1].cumulativeWeeks} weeks and addresses ${cumulative[cumulative.length - 1].cumulativeBlocking} blocked opportunities in total.`
+      : 'No systematic gaps detected across your realistic opportunities.',
+    rule: 'Priority = how many opportunities it blocks × 3, plus salary premium × 0.6, plus growth rate × 0.3, plus 8 if the skill sits in a category you already work in (cheapest to learn).',
+  });
+});
+
 // ---- market pulse: what the whole corpus says right now ----
 route('GET', /^\/api\/pulse$/, async (req, res) => {
   const CUR = { EUR: 1, USD: 0.92, GBP: 1.17, CHF: 1.05, CAD: 0.68, PLN: 0.23, INR: 0.011 };
