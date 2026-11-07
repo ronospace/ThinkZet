@@ -28,11 +28,11 @@ let pass = 0, fail = 0;
 const failures = [];
 
 async function call(method, path, body) {
-  const res = await fetch(BASE + path, {
-    method,
-    headers: body ? { 'content-type': 'application/json' } : undefined,
-    body: body ? JSON.stringify(body) : undefined,
-  });
+  // A stable forwarded-for so the suite does not trip its own rate limiter, and so repeated
+  // runs are not blocked by a previous run.
+  const headers = { 'x-forwarded-for': '10.0.0.1' };
+  if (body) headers['content-type'] = 'application/json';
+  const res = await fetch(BASE + path, { method, headers, body: body ? JSON.stringify(body) : undefined });
   const text = await res.text();
   let json = null;
   try { json = JSON.parse(text); } catch { /* non-json is fine for static */ }

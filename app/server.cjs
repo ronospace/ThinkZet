@@ -38,6 +38,26 @@ const PUBLIC = path.join(__dirname, 'public');
 const DEMO_USER = 'demo-user';
 // acting user is resolved per-request
 
+// Simple fixed-window rate limiter for the public surface. In-memory is right for a single
+// process; swap for Redis the moment there is more than one instance.
+const RL = { buckets: new Map() };
+function rateLimit(key, limit, windowMs) {
+  const now = Date.now();
+  const b = RL.buckets.get(key) || { count: 0, reset: now + windowMs };
+  if (now > b.reset) { b.count = 0; b.reset = now + windowMs; }
+  b.count++;
+  RL.buckets.set(key, b);
+  return { allowed: b.count <= limit, remaining: Math.max(0, limit - b.count), reset: b.reset };
+}
+function clientKey(req) {
+  return (req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown').toString().split(',')[0].trim();
+}
+// Housekeeping so the bucket map cannot grow without bound.
+setInterval(() => {
+  const now = Date.now();
+  for (const [k, v] of RL.buckets) if (now > v.reset + 60000) RL.buckets.delete(k);
+}, 5 * 60 * 1000);
+
 const routes = [];
 const route = (method, pattern, handler) => routes.push({ method, pattern, handler });
 
@@ -129,6 +149,8 @@ Move to a senior/staff role at a product company. Target EUR 100,000+. Want to m
 
 // ---- auth ----
 route('POST', /^\/api\/auth\/request$/, async (req, res) => {
+  const rl = rateLimit('auth:' + clientKey(req), 10, 15 * 60 * 1000);
+  if (!rl.allowed) return json(res, 429, { error: 'Too many code requests. Wait a few minutes.' });
   const body = await readBody(req);
   try {
     const r = AUTH.requestCode(body.email);
@@ -1045,6 +1067,8 @@ route('POST', /^\/api\/brief\/ack$/, async (req, res) => {
 // This is the acquisition hook. It answers one question with a number, in about a minute,
 // and it never asks for a login first.
 route('POST', /^\/api\/public\/rate-check$/, async (req, res) => {
+  const rl = rateLimit('rate-check:' + clientKey(req), 30, 10 * 60 * 1000);
+  if (!rl.allowed) return json(res, 429, { error: 'Too many checks. Try again in a few minutes.' });
   const body = await readBody(req);
   const role = String(body.role || '').trim();
   const years = body.years != null ? Number(body.years) : null;
@@ -1462,6 +1486,8 @@ route('GET', /^\/api\/habit$/, async (req, res) => {
 
 // ---- lead capture + shareable cards (the acquisition loop) ----
 route('POST', /^\/api\/public\/lead$/, async (req, res) => {
+  const rl = rateLimit('lead:' + clientKey(req), 10, 60 * 60 * 1000);
+  if (!rl.allowed) return json(res, 429, { error: 'Too many attempts. Try again later.' });
   const body = await readBody(req);
   const email = String(body.email || '').trim().toLowerCase();
   if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json(res, 400, { error: 'invalid email' });
@@ -1492,6 +1518,8 @@ route('POST', /^\/api\/public\/lead$/, async (req, res) => {
 // Shareable result card. The user controls what is on it; nothing identifying is ever stored
 // in the payload, and the id is random so a card cannot be enumerated.
 route('POST', /^\/api\/public\/share$/, async (req, res) => {
+  const rl = rateLimit('share:' + clientKey(req), 20, 60 * 60 * 1000);
+  if (!rl.allowed) return json(res, 429, { error: 'Too many shares from this address.' });
   const body = await readBody(req);
   const id = crypto.randomBytes(8).toString('hex');
   const payload = {
@@ -1755,6 +1783,13 @@ route('GET', /^\/api\/ops$/, async (req, res) => {
 // ---------------- static ----------------
 const MIME = { '.webmanifest': 'application/manifest+json', '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon' };
 
+function applySecurityHeaders(res) {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+}
+
 function serveStatic(req, res, pathname) {
   let p = pathname === '/' ? '/index.html' : pathname;
   const file = path.join(PUBLIC, p);
@@ -1774,6 +1809,7 @@ function serveStatic(req, res, pathname) {
 }
 
 const server = http.createServer(async (req, res) => {
+  applySecurityHeaders(res);
   const url = new URL(req.url, `http://${req.headers.host}`);
   const pathname = url.pathname;
   // Shared cards live at /s/<id>; the client renders them from the API.
