@@ -1034,6 +1034,86 @@ route('POST', /^\/api\/brief\/ack$/, async (req, res) => {
 });
 
 
+// ---- public rate check: the free diagnostic, no account required ----
+// This is the acquisition hook. It answers one question with a number, in about a minute,
+// and it never asks for a login first.
+route('POST', /^\/api\/public\/rate-check$/, async (req, res) => {
+  const body = await readBody(req);
+  const role = String(body.role || '').trim();
+  const years = body.years != null ? Number(body.years) : null;
+  const country = String(body.country || '').toUpperCase().slice(0, 2) || null;
+  const current = body.currentSalary != null ? Number(body.currentSalary) : null;
+  const unit = body.unit === 'hour' ? 'hour' : 'year';
+  const skills = Array.isArray(body.skills) ? body.skills : [];
+
+  if (!role || years == null) return json(res, 400, { error: 'role and years are required' });
+
+  AN.track(null, 'public.rate_check', { role, years, country, unit });
+
+  // Map the free-text role to a role family using the same classifier the product uses.
+  const { classifyFamily, classifySeniority } = require('./classify.cjs');
+  const family = classifyFamily(role, skills, role);
+  const seniority = classifySeniority(`${role}`, null, '') !== 'mid' ? classifySeniority(role, null, '') : (years >= 12 ? 'staff' : years >= 7 ? 'senior' : years >= 4 ? 'mid' : 'junior');
+
+  // Build a synthetic profile and reuse the real rate engine — no second implementation.
+  const fakeUser = `public-check-${Date.now()}`;
+  const skillsResolved = Array.from(new Set(skills.map((x) => require('./taxonomy.cjs').resolveSkill(x)).filter(Boolean)));
+  db.prepare('INSERT OR IGNORE INTO users (id,email,name) VALUES (?,?,?)').run(fakeUser, `${fakeUser}@anon.local`, 'Anonymous');
+  db.prepare(`INSERT INTO profiles (user_id,headline,summary,years_experience,seniority,current_rate,rate_unit,rate_currency,
+      remote_preference,willing_to_relocate,target_countries,visa_needed,completeness)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`)
+    .run(fakeUser, role, role, years, seniority, current, unit, 'EUR', 'any', 1, JSON.stringify(country ? [country] : []), 0, 60);
+  const insPs = db.prepare(`INSERT OR IGNORE INTO profile_skills (user_id,skill_id,proficiency,confidence,source)
+    SELECT ?, id, 'working', 0.8, 'public' FROM skills WHERE canonical=?`);
+  for (const sk of skillsResolved) insPs.run(fakeUser, sk);
+
+  const rates = E.rateIntelligence(fakeUser);
+
+  // Clean up the throwaway profile; the aggregate result is what matters.
+  db.prepare('DELETE FROM profile_skills WHERE user_id=?').run(fakeUser);
+  db.prepare('DELETE FROM career_twin WHERE user_id=?').run(fakeUser);
+  db.prepare('DELETE FROM profiles WHERE user_id=?').run(fakeUser);
+  db.prepare('DELETE FROM users WHERE id=?').run(fakeUser);
+
+  if (!rates) return json(res, 500, { error: 'could not build a benchmark' });
+
+  const gapAbs = current ? Math.round(rates.p50 - current) : null;
+  const gapPct = current ? Math.round(((rates.p50 - current) / current) * 100) : null;
+
+  // The three strongest levers from the same skill vocabulary.
+  const skillMeta = db.prepare('SELECT canonical, salary_premium, growth_rate FROM skills WHERE salary_premium > 8 ORDER BY salary_premium DESC LIMIT 6').all();
+
+  json(res, 200, {
+    ok: true,
+    input: { role, years, country, current, unit, seniority, family },
+    benchmark: {
+      p25: rates.p25, p50: rates.p50, p75: rates.p75, p90: rates.p90,
+      period: rates.period, currency: 'EUR',
+      sampleSize: rates.sampleSize, exactComparables: rates.exactComparables,
+      confidence: rates.confidence, segment: rates.segment,
+      byChannel: rates.byChannel,
+    },
+    verdict: {
+      gapAbs, gapPct,
+      level: gapPct == null ? 'unknown' : gapPct >= 15 ? 'underpaid' : gapPct >= 5 ? 'slightly_under' : gapPct > -10 ? 'at_market' : 'above_market',
+      headline: gapPct == null
+        ? `The median for ${seniority} ${family.replace(/_/g, ' ')} work is €${rates.p50.toLocaleString('en-GB')}${rates.period === 'hour' ? '/hr' : '/yr'}.`
+        : gapPct >= 15
+          ? `You are ${gapPct}% below market — about €${Math.abs(gapAbs).toLocaleString('en-GB')} a year.`
+          : gapPct >= 5
+            ? `You are ${gapPct}% under the median — about €${Math.abs(gapAbs).toLocaleString('en-GB')} a year.`
+            : gapPct > -10
+              ? `You are at market. The upside is growth, not rate.`
+              : `You are ${Math.abs(gapPct)}% above the median. Your leverage is positioning, not price.`,
+    },
+    levers: skillMeta.map((s) => ({ skill: s.canonical, premium: s.salary_premium, growth: s.growth_rate })),
+    next: {
+      headline: 'See the opportunities that pay this.',
+      detail: `We score every live opportunity against a profile like yours. Create a free account and the radar fills in.`,
+    },
+  });
+});
+
 // ---- opportunity open (funnel step) ----
 route('POST', /^\/api\/opportunities\/opened$/, async (req, res) => {
   const body = await readBody(req);

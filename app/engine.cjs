@@ -441,7 +441,9 @@ function rateIntelligence(userId) {
   const twin = buildTwin(userId);
   const userSkills = new Set(twin.skills);
 
-  const recs = db.prepare('SELECT * FROM salary_records').all();
+  // Comparables must be actual salary/rate data. A grant, a prize, an equity-only founding
+  // role and a fellowship stipend are not salaries, and including them inflates the benchmark.
+  const recs = db.prepare("SELECT * FROM salary_records WHERE period IN ('year','hour','month','day')").all();
   const targetPeriod = profile.rate_unit === 'hour' ? 'hour' : 'year';
 
   const myFamily = guessFamily(profile, twin);
@@ -485,6 +487,13 @@ function rateIntelligence(userId) {
   }
 
   converted.sort((a, b) => a.value - b.value);
+
+  // Trim the top and bottom 5% by count. A handful of outlier postings (a $250k role in a
+  // low-cost market, a mis-parsed number) should not move a benchmark people act on.
+  const trimN = Math.floor(converted.length * 0.05);
+  const trimmed = converted.length > 20 ? converted.slice(trimN, converted.length - trimN) : converted;
+  converted.length = 0;
+  converted.push(...trimmed);
   const values = converted.map((c) => c.value);
 
   // Weighted percentiles: each comparable contributes in proportion to its tier + skill similarity.

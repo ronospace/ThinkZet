@@ -8,9 +8,11 @@ const GETS = [
   '/api/twin', '/api/tracker', '/api/gaps', '/api/gaps/plan', '/api/brief', '/api/learning',
   '/api/outcomes/intel', '/api/plan', '/api/referrals', '/api/ops', '/api/pulse', '/api/ingest',
   '/api/saved-searches', '/api/negotiation', '/api/trajectory', '/api/analytics',
+  '/api/billing/status',
 ];
 const POSTS = [
   ['/api/demo', {}],
+  ['/api/public/rate-check', { role: 'Senior Data Scientist', years: 8, country: 'DE', currentSalary: 78000, skills: ['Python', 'SQL'] }],
   ['/api/copilot', { message: 'Am I underpaid?' }],
   ['/api/horizon', { horizon: 'balanced' }],
   ['/api/brief/ack', {}],
@@ -32,6 +34,9 @@ async function call(method, path, body) {
 }
 
 (async () => {
+  // Seed the demo persona first: the personalised routes are supposed to 404 without it.
+  try { await call('POST', '/api/demo', {}); } catch { /* reported below */ }
+
   for (const p of GETS) {
     try {
       const r = await call('GET', p);
@@ -62,6 +67,11 @@ async function call(method, path, body) {
   const rates = await call('GET', '/api/rates');
   const rateOk = rates.json && rates.json.p25 <= rates.json.p50 && rates.json.p50 <= rates.json.p75 && rates.json.p75 <= rates.json.p90;
   if (rateOk) pass++; else { fail++; failures.push('invariant failed: rate percentiles ordered'); }
+
+  const rc = await call('POST', '/api/public/rate-check', { role: 'Backend Engineer', years: 5, currentSalary: 60000, skills: ['Go'] });
+  const rcOk = rc.json && rc.json.benchmark && rc.json.benchmark.p25 <= rc.json.benchmark.p50
+    && rc.json.benchmark.p50 <= rc.json.benchmark.p75 && rc.json.verdict && rc.json.levers;
+  if (rcOk) pass++; else { fail++; failures.push('invariant failed: public rate check returns ordered benchmark + verdict'); }
 
   const traj = await call('GET', '/api/trajectory');
   const trajOk = traj.json && traj.json.paths?.length === 5 && traj.json.paths.every((p) => p.endSalary > 0);

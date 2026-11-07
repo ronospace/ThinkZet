@@ -137,8 +137,12 @@ function seedIfEmpty() {
   const insSal = db.prepare(`INSERT INTO salary_records
     (role_family,seniority,country,city,remote,channel,skills,amount,currency,period,source,sample_size,verified,observed_at)
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
+  // Only job and contract compensation belongs in the salary benchmark.
+  const SALARY_TYPES = new Set(['job', 'contract']);
   for (const o of canonical) {
     if (o.comp_min == null) continue;
+    if (!SALARY_TYPES.has(o.type)) continue;
+    if (!['year', 'hour', 'month', 'day'].includes(o.comp_period)) continue;
     const amount = (Number(o.comp_min) + Number(o.comp_max || o.comp_min)) / 2;
     const remote = o.remote_type === 'remote' ? 1 : 0;
     insSal.run(o.role_family, o.seniority, o.country, o.city, remote, o.channel || 'fulltime',
@@ -262,7 +266,7 @@ async function ingestLive({ keys, pages } = {}) {
         JSON.stringify(Array.from(new Set([...match.skills, ...o.skills]))), match.id);
       insSrc.run(match.id, o.source, o.id, o.apply_url);
       merged++;
-      if (o.comp_min != null) {
+      if (o.comp_min != null && (o.type === 'job' || o.type === 'contract')) {
         insSal.run(o.role_family, o.seniority, o.country, o.city, o.remote_type === 'remote' ? 1 : 0, o.channel,
           JSON.stringify(o.skills), (o.comp_min + (o.comp_max || o.comp_min)) / 2, o.currency, o.comp_period, o.source, 1, 0, o.posted_at);
       }

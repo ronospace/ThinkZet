@@ -192,11 +192,101 @@ kbd{background:#1b2431;border:1px solid var(--line2);border-bottom-width:2px;bor
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:s .7s linear infinite;vertical-align:-2px;margin-right:6px}
 @keyframes s{to{transform:rotate(360deg)}}
+
+/* ---------- landing ---------- */
+.landing{min-height:100vh;background:radial-gradient(1200px 600px at 50% -10%,#16233c 0%,#0b0d10 60%)}
+html[data-theme="light"] .landing{background:radial-gradient(1200px 600px at 50% -10%,#e8f0ff 0%,#f7f9fc 60%)}
+.land-wrap{max-width:940px;margin:0 auto;padding:38px 24px 90px}
+.land-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:64px}
+.land-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:.02em}
+.land-brand .mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#4c8dff,#8b5cf6);display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff}
+.land-kicker{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#9fb4d4;border:1px solid #24344d;background:#111a28;padding:5px 11px;border-radius:999px}
+html[data-theme="light"] .land-kicker{color:#3d5a86;border-color:#cdddf2;background:#eaf1fb}
+.land-h1{font-size:clamp(32px,5.2vw,52px);line-height:1.08;letter-spacing:-.03em;margin:20px 0 0;font-weight:750}
+.land-h1 .accent{background:linear-gradient(100deg,#6ea8ff,#a78bfa 55%,#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent}
+.land-sub{font-size:17px;line-height:1.6;color:var(--ink2);margin:18px 0 0;max-width:620px}
+.land-cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap;align-items:center}
+.land-cta .btn{font-size:14px;padding:12px 20px;border-radius:10px}
+.land-cta .tiny{font-size:12px;color:var(--muted)}
+.check{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px;margin-top:44px;box-shadow:0 24px 70px rgba(0,0,0,.35)}
+html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
+.check h2{margin:0;font-size:17px;font-weight:650;letter-spacing:-.01em}
+.check p.sub{color:var(--muted);font-size:12.5px;margin:5px 0 18px}
+.check .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+.check .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+.check label{display:block;font-size:11.5px;color:var(--ink2);margin-bottom:5px}
+.check input,.check select{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 12px;font-size:14px;outline:none;color:var(--ink)}
+.check input:focus,.check select:focus{border-color:var(--accent2)}
+.check .go{margin-top:16px;width:100%;padding:13px;font-size:14px;border-radius:10px}
+.result{margin-top:22px;border-radius:14px;padding:22px;border:1px solid #2f2a4d;background:linear-gradient(135deg,#1a1030,#101a2e 60%,#0f1c1a);display:none}
+.result.show{display:block;animation:rise .35s cubic-bezier(.2,.7,.3,1) both}
+.result .big-gap{font-size:clamp(26px,4.4vw,38px);font-weight:780;letter-spacing:-.03em;line-height:1.12;margin:6px 0 4px}
+.result .scale{margin-top:20px;height:10px;border-radius:6px;background:#221d38;position:relative}
+.result .scale .band{position:absolute;height:100%;border-radius:6px;background:linear-gradient(90deg,#3d2f6b,#6d5bd0)}
+.result .scale .you{position:absolute;top:-6px;width:3px;height:22px;border-radius:2px;background:#fff}
+.result .legend{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:9px}
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px}
+.trust .card{background:rgba(255,255,255,.02)}
+.trust h3{margin:0 0 6px;font-size:13px;color:var(--ink)}
+.trust p{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
+@media(max-width:760px){.check .row3,.check .row2,.trust{grid-template-columns:1fr}.land-wrap{padding:24px 18px 60px}.land-nav{margin-bottom:40px}}
 @media(max-width:900px){.shell{grid-template-columns:1fr}.rail{display:none}.scores-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.opp{grid-template-columns:52px 1fr}.opp .right{display:none}}
 </style>
 </head>
 <body>
-<div class="shell">
+
+<div class="landing" id="landing">
+  <div class="land-wrap">
+    <div class="land-nav">
+      <div class="land-brand"><span class="mark">C</span> CareerOS</div>
+      <div class="row" style="gap:10px">
+        <button class="btn ghost sm" id="land-theme" title="Toggle theme">◐</button>
+        <button class="btn ghost sm" id="land-signin">Sign in</button>
+      </div>
+    </div>
+
+    <span class="land-kicker">Free · 60 seconds · no account needed</span>
+    <h1 class="land-h1">Find out how much<br/><span class="accent">you're underpaid.</span></h1>
+    <p class="land-sub">CareerOS reads the live market — real postings from real companies — and tells you what your exact profile is worth, which opportunities you're missing, and the fastest path to more income.</p>
+
+    <div class="check">
+      <h2>What are you worth right now?</h2>
+      <p class="sub">Four fields. No login. We compare you against live postings that disclose pay.</p>
+      <div class="row3">
+        <div><label>Your role</label><input id="c-role" placeholder="e.g. Senior Data Scientist" value=""/></div>
+        <div><label>Years of experience</label><input id="c-years" type="number" min="0" max="45" placeholder="8"/></div>
+        <div><label>Country</label>
+          <select id="c-country">
+            <option value="">Any</option>
+            <option value="DE">Germany</option><option value="NL">Netherlands</option>
+            <option value="GB">United Kingdom</option><option value="PT">Portugal</option>
+            <option value="ES">Spain</option><option value="FR">France</option>
+            <option value="PL">Poland</option><option value="CH">Switzerland</option>
+            <option value="SE">Sweden</option><option value="IE">Ireland</option>
+            <option value="CA">Canada</option><option value="US">United States</option>
+            <option value="IN">India</option><option value="AE">UAE</option>
+            <option value="WW">Remote (anywhere)</option>
+          </select>
+        </div>
+      </div>
+      <div class="row2">
+        <div><label>What you're paid now (EUR)</label><input id="c-current" type="number" placeholder="78000"/></div>
+        <div><label>Your strongest skills (comma separated)</label><input id="c-skills" placeholder="Python, SQL, Machine Learning"/></div>
+      </div>
+      <button class="btn go" id="c-run">Show me what I'm worth <span style="opacity:.7">&gt;</span></button>
+      <div class="muted" id="c-err" style="font-size:12px;margin-top:10px"></div>
+
+      <div class="result" id="c-result"></div>
+    </div>
+
+    <div class="trust">
+      <div class="card"><h3>Live market, not a survey</h3><p>Benchmarks are computed from postings that disclose pay, refreshed continuously. Nothing is self-reported.</p></div>
+      <div class="card"><h3>Honest confidence</h3><p>Every number carries its evidence. If there are too few comparables, we say so instead of guessing.</p></div>
+      <div class="card"><h3>Yours to delete</h3><p>Your career data is yours. Export it, delete it, take it elsewhere. No selling, ever.</p></div>
+    </div>
+  </div>
+</div>
+<div class="shell" id="app-shell" style="display:none">
   <aside class="rail">
     <div class="logo">
       <div class="mark">C</div>
@@ -281,6 +371,95 @@ function scoreColor(s) {
   if (s >= 55) return ['#f5a524', '#2a2113'];
   return ['#f2545b', '#2a1719'];
 }
+
+
+/* ---------------- landing: the free rate check ---------------- */
+function showApp() {
+  const l = document.getElementById('landing');
+  if (l) l.style.display = 'none';
+  document.getElementById('app-shell').style.display = '';
+}
+function showLanding() {
+  const l = document.getElementById('landing');
+  if (l) l.style.display = '';
+  document.getElementById('app-shell').style.display = 'none';
+}
+
+async function runRateCheck() {
+  const role = document.getElementById('c-role').value.trim();
+  const years = document.getElementById('c-years').value;
+  const country = document.getElementById('c-country').value;
+  const current = document.getElementById('c-current').value;
+  const skills = document.getElementById('c-skills').value.split(',').map((x) => x.trim()).filter(Boolean);
+  const err = document.getElementById('c-err');
+  err.textContent = '';
+
+  if (!role) { err.textContent = 'Tell us your role first.'; return; }
+  if (years === '') { err.textContent = 'How many years of experience?'; return; }
+
+  const btn = document.getElementById('c-run');
+  btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Reading the market…';
+
+  try {
+    const r = await post('/api/public/rate-check', {
+      role, years: Number(years), country, currentSalary: current ? Number(current) : null, skills,
+    });
+    btn.disabled = false; btn.innerHTML = 'Show me what I\'m worth <span style="opacity:.7">&gt;</span>';
+    if (r.error) { err.textContent = r.error; return; }
+
+    const b = r.benchmark, v = r.verdict;
+    const min = b.p25 * 0.9, max = b.p90 * 1.06;
+    const pos = (x) => Math.max(0, Math.min(100, ((x - min) / (max - min)) * 100));
+    const fmt = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+    const per = b.period === 'hour' ? '/hr' : '/yr';
+
+    const tone = v.level === 'underpaid' ? '#ff8f96' : v.level === 'slightly_under' ? '#e0c273' : v.level === 'above_market' ? '#6fe3a4' : '#8fb4ee';
+    const box = document.getElementById('c-result');
+    box.className = 'result show';
+    box.innerHTML = `
+      <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a99bf0">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
+      <div class="big-gap" style="color:${tone}">${esc(v.headline)}</div>
+      <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b>${v.gapAbs != null ? ` · you report ${fmt(r.input.current)}${per}` : ''}</div>
+      <div class="scale">
+        <div class="band" style="left:${pos(b.p25)}%;width:${pos(b.p75) - pos(b.p25)}%"></div>
+        ${r.input.current ? `<div class="you" style="left:${pos(r.input.current)}%"></div>` : ''}
+      </div>
+      <div class="legend"><span>p25 ${fmt(b.p25)}</span><span>p50 ${fmt(b.p50)}</span><span>p75 ${fmt(b.p75)}</span><span>p90 ${fmt(b.p90)}</span></div>
+      <div style="margin-top:18px;font-size:13px;color:var(--ink2)">
+        <b style="color:var(--ink)">Where the money is:</b>
+        ${b.byChannel.filter((c) => c.n >= 5).map((c) => `${esc(c.channel)} ${fmt(c.median)}`).join(' · ') || 'not enough channel data'}
+      </div>
+      <div style="margin-top:12px;font-size:13px;color:var(--ink2)">
+        <b style="color:var(--ink)">Skills that pay more than yours:</b>
+        ${r.levers.slice(0, 4).map((l) => `${esc(l.skill)} <span style="color:#6fe3a4">+${l.premium}%</span>`).join(' · ')}
+      </div>
+      <div style="margin-top:20px;border-top:1px solid rgba(255,255,255,.12);padding-top:16px">
+        <div style="font-size:14px;font-weight:600;margin-bottom:8px">${esc(r.next.headline)}</div>
+        <div style="font-size:12.5px;color:var(--muted);margin-bottom:12px">${esc(r.next.detail)}</div>
+        <button class="btn" id="c-signup">Create a free account <span style="opacity:.7">&gt;</span></button>
+      </div>`;
+    document.getElementById('c-signup').onclick = () => {
+      document.getElementById('landing').style.display = 'none';
+      document.getElementById('app-shell').style.display = '';
+      go('auth');
+      toast('Sign in to see the opportunities that pay this');
+    };
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  } catch (e) {
+    btn.disabled = false; btn.innerHTML = 'Show me what I\'m worth <span style="opacity:.7">&gt;</span>';
+    err.textContent = 'Something broke: ' + e.message;
+  }
+}
+
+document.getElementById('c-run').onclick = runRateCheck;
+document.getElementById('c-skills').onkeydown = (e) => { if (e.key === 'Enter') runRateCheck(); };
+document.getElementById('c-current').onkeydown = (e) => { if (e.key === 'Enter') runRateCheck(); };
+document.getElementById('land-signin').onclick = () => {
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('app-shell').style.display = '';
+  go('auth');
+};
+document.getElementById('land-theme').onclick = () => document.getElementById('theme').click();
 
 /* ---------------- auth ---------------- */
 async function renderAuth() {
@@ -1741,6 +1920,8 @@ document.addEventListener('keydown', (e) => {
 });
 $('#palette').addEventListener('click', (e) => { if (e.target.id === 'palette') closePalette(); });
 
+window.go = go;
+window.showLanding = showLanding;
 document.querySelectorAll('#nav button').forEach((b) => { b.onclick = () => go(b.dataset.view); });
 // Theme: follows the system on first visit, then remembers an explicit choice.
 (function initTheme() {
@@ -1768,9 +1949,21 @@ $('#run-ingest').onclick = async () => {
 
 $('#palette-input').addEventListener('input', (e) => buildPalette(e.target.value));
 
-$('#logout') && ($('#logout').onclick = async () => { await post('/api/auth/logout', {}); STATE.authed = false; await boot(); go('auth'); });
+$('#logout') && ($('#logout').onclick = async () => {
+  await post('/api/auth/logout', {});
+  STATE.authed = false;
+  await boot();
+  showLanding();
+});
 
 (async () => {
+  const params = new URLSearchParams(location.search);
+  const authed = await api('/api/auth/me');
+  if (!authed.user && !params.get('app')) {
+    // Not signed in: the landing page is the product. The app stays behind it.
+    showLanding();
+    return;
+  }
   try {
     if (!sessionStorage.getItem('careeros-visit')) {
       sessionStorage.setItem('careeros-visit', '1');
