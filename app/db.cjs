@@ -18,6 +18,7 @@ CREATE TABLE IF NOT EXISTS users (
   name TEXT,
   country TEXT,
   locale TEXT DEFAULT 'en',
+  status TEXT DEFAULT 'active',
   created_at TEXT DEFAULT (datetime('now'))
 );
 
@@ -377,4 +378,24 @@ CREATE INDEX IF NOT EXISTS idx_salary_seg ON salary_records(role_family, country
 CREATE INDEX IF NOT EXISTS idx_apps_user ON applications(user_id, status);
 `);
 
-module.exports = { db, DB_PATH };
+// ---- tiny migration runner ----
+// SQLite cannot add a column with a conditional in pure SQL, so migrations are expressed as
+// guarded statements. Each runs once, is idempotent, and is safe on an existing database.
+function columnExists(table, column) {
+  return db.prepare(`PRAGMA table_info(${table})`).all().some((c) => c.name === column);
+}
+
+const MIGRATIONS = [
+  ['users.status', () => { if (!columnExists('users', 'status')) db.exec("ALTER TABLE users ADD COLUMN status TEXT DEFAULT 'active'"); }],
+  ['opportunities.degree_requirement', () => { if (!columnExists('opportunities', 'degree_requirement')) db.exec("ALTER TABLE opportunities ADD COLUMN degree_requirement TEXT DEFAULT 'unknown'"); }],
+  ['opportunities.last_seen', () => { if (!columnExists('opportunities', 'last_seen')) db.exec("ALTER TABLE opportunities ADD COLUMN last_seen TEXT"); }],
+];
+
+function migrate() {
+  for (const [name, fn] of MIGRATIONS) {
+    try { fn(); } catch (e) { if (!/duplicate column/i.test(String(e.message))) console.error('migration failed:', name, e.message); }
+  }
+}
+migrate();
+
+module.exports = { db, DB_PATH, migrate };

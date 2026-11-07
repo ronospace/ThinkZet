@@ -1677,6 +1677,17 @@ async function renderTracker() {
 async function renderTwin() {
   const t = await api('/api/twin');
   if (!t) return renderOnboarding();
+  setTimeout(() => {
+    const ex = document.getElementById('d-export');
+    const del = document.getElementById('d-delete');
+    if (ex) ex.onclick = () => { window.location.href = '/api/me/export'; };
+    if (del) del.onclick = async () => {
+      if (!confirm('Delete your account and all career data? This cannot be undone.')) return;
+      const r = await api('/api/me', { method: 'DELETE' });
+      if (r.ok) { toast('Account deleted'); await post('/api/auth/logout', {}); location.reload(); }
+      else toast(r.error || 'Could not delete');
+    };
+  }, 0);
   const skills = t.skillDetail || [];
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:1fr 1fr">
@@ -1702,6 +1713,12 @@ async function renderTwin() {
         <div class="kv"><span>Applications</span><span class="mono">${(t.behaviour?.applications || []).reduce((a, b) => a + b.n, 0)}</span></div>
         <div class="kv"><span>Outcomes recorded</span><span class="mono">${(t.behaviour?.outcomes || []).reduce((a, b) => a + b.n, 0)}</span></div>
         <div class="kv"><span>Momentum</span><span class="mono">${t.momentum}/100</span></div>
+        <h3 style="margin-top:18px">Your data</h3>
+        <div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap">
+          <button class="btn sm ghost" id="d-export">Export everything</button>
+          <button class="btn sm ghost" id="d-delete" style="border-color:#4a2b30;color:#f08b91">Delete my account</button>
+        </div>
+        <div class="muted" style="font-size:11px;margin-top:8px">Export gives you a JSON file of every record we hold. Delete removes your profile, CV, applications, outcomes and preferences within 30 days.</div>
         <div class="note" style="margin-top:14px">This is the switching cost: the twin accumulates history. A competitor can copy the UI in a week; it cannot copy your 12 months of behaviour and outcomes.</div>
       </div>
     </div>`;

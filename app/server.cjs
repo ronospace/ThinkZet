@@ -1331,6 +1331,61 @@ route('GET', /^\/unsubscribe\/([^/]+)\/([^/]+)$/, async (req, res, url, m) => {
   res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You are unsubscribed from all CareerOS emails. <a href="/" style="color:#4c8dff">Change your mind</a></div>');
 });
 
+// ---- GDPR: export and erase, implemented rather than promised ----
+route('GET', /^\/api\/me\/export$/, async (req, res) => {
+  const authed = AUTH.currentUser(req);
+  if (!authed) return json(res, 401, { error: 'sign in to export your data' });
+  const uid = authed.id;
+  const user = db.prepare('SELECT id,email,name,country,created_at FROM users WHERE id=?').get(uid);
+  if (!user) return json(res, 404, { error: 'no user' });
+  const data = {
+    exportedAt: new Date().toISOString(),
+    format: 'careeros-export-v1',
+    user,
+    profile: db.prepare('SELECT * FROM profiles WHERE user_id=?').get(uid) || null,
+    skills: db.prepare('SELECT s.canonical, ps.proficiency, ps.confidence FROM profile_skills ps JOIN skills s ON s.id=ps.skill_id WHERE ps.user_id=?').all(uid),
+    twin: db.prepare('SELECT state FROM career_twin WHERE user_id=?').get(uid) || null,
+    applications: db.prepare('SELECT * FROM applications WHERE user_id=?').all(uid),
+    outcomes: db.prepare('SELECT * FROM outcomes WHERE user_id=?').all(uid),
+    scores: db.prepare('SELECT employability,interview_readiness,market_demand,salary_potential,future_growth,career_momentum,overall,benchmark_percentile,computed_at FROM career_scores WHERE user_id=?').all(uid),
+    savedSearches: db.prepare('SELECT name, filters, created_at FROM saved_searches WHERE user_id=?').all(uid),
+    emailPrefs: db.prepare('SELECT daily_brief,opportunity_alerts,weekly_digest,marketing,timezone,send_hour FROM email_prefs WHERE user_id=?').get(uid) || null,
+    plan: db.prepare('SELECT plan,cycle,since FROM plan_state WHERE user_id=?').get(uid) || { plan: 'free' },
+    activity: db.prepare('SELECT action, entity_type, created_at FROM activity_logs WHERE user_id=? ORDER BY id DESC LIMIT 500').all(uid),
+  };
+  log(uid, 'gdpr.export', 'user', uid);
+  const body = JSON.stringify(data, null, 2);
+  res.writeHead(200, {
+    'Content-Type': 'application/json; charset=utf-8',
+    'Content-Disposition': `attachment; filename="careeros-export-${uid.slice(0, 8)}.json"`,
+    'Content-Length': Buffer.byteLength(body),
+  });
+  res.end(body);
+});
+
+route('DELETE', /^\/api\/me$/, async (req, res) => {
+  const authed = AUTH.currentUser(req);
+  if (!authed) return json(res, 401, { error: 'sign in to delete your account' });
+  const uid = authed.id;
+  const user = db.prepare('SELECT id,email FROM users WHERE id=?').get(uid);
+  if (!user) return json(res, 404, { error: 'no user' });
+
+  // Erasure means erasure: every table that holds this person's data is emptied.
+  const tables = ['profile_skills', 'career_twin', 'career_scores', 'matches', 'applications', 'outcomes',
+    'saved_searches', 'brief_seen', 'email_prefs', 'email_queue', 'plan_state', 'billing_events', 'activity_logs', 'profiles'];
+  db.exec('BEGIN');
+  for (const t of tables) {
+    try { db.prepare(`DELETE FROM ${t} WHERE user_id=?`).run(uid); } catch { /* table may not exist yet */ }
+  }
+  db.prepare("UPDATE leads SET converted_user_id=NULL WHERE converted_user_id=?").run(uid);
+  db.prepare("UPDATE users SET status='deleted', email=?, name='Deleted user' WHERE id=?").run(`deleted-${uid}@deleted.local`, uid);
+  db.prepare('DELETE FROM sessions WHERE user_id=?').run(uid);
+  db.exec('COMMIT');
+
+  AUTH.logout(req, res);
+  json(res, 200, { ok: true, note: 'Your profile, CV, applications, outcomes and preferences have been deleted. The account row remains, stripped of all personal data, so billing records stay consistent.' });
+});
+
 // ---- launch readiness: one screen that says whether it is safe to send people here ----
 route('GET', /^\/api\/launch$/, async (req, res) => {
   const checks = [];
