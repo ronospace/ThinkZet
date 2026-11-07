@@ -1310,7 +1310,10 @@ const server = http.createServer(async (req, res) => {
   json(res, 404, { error: 'no route', path: pathname });
 });
 
-server.listen(PORT, '127.0.0.1', () => {
+// Bind to all interfaces so a tunnel (cloudflared/ngrok) or your phone on the same
+// network can reach it. Localhost still works exactly as before.
+const HOST = process.env.HOST || '0.0.0.0';
+server.listen(PORT, HOST, () => {
   console.log(`CareerOS engine on http://127.0.0.1:${PORT}`);
   console.log(`seed: ${ingest.raw ?? 0} raw → ${ingest.canonical ?? ingest.count} canonical, ${ingest.merged ?? 0} merged (${ingest.duplicateRate ?? 0}% dup) in ${ingestMs}ms`);
   // Live ingestion on boot, then every 30 minutes. Failures are isolated per source.

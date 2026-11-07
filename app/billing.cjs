@@ -182,16 +182,44 @@ function verifySignature(rawBody, signatureHeader) {
   return crypto.timingSafeEqual(a, b) ? { ok: true } : { ok: false, reason: 'signature mismatch' };
 }
 
+// Subscription objects carry metadata only if we set it at checkout time. If a webhook
+// arrives without it, resolve the user from the subscription or customer id we stored.
+function resolveUserId(obj) {
+  const direct = obj.metadata?.user_id || obj.client_reference_id || null;
+  if (direct) return direct;
+
+  const subId = obj.object === 'subscription' ? obj.id : obj.subscription;
+  if (subId) {
+    const row = db.prepare("SELECT user_id FROM billing_events WHERE external_id=? AND user_id IS NOT NULL LIMIT 1").get(subId);
+    if (row) return row.user_id;
+  }
+  const customerId = typeof obj.customer === 'string' ? obj.customer : obj.customer?.id;
+  if (customerId) {
+    const row = db.prepare("SELECT user_id FROM billing_events WHERE external_id=? AND user_id IS NOT NULL LIMIT 1").get(customerId);
+    if (row) return row.user_id;
+  }
+  return null;
+}
+
 // ---- webhook handling ----
 function handleEvent(event) {
   const obj = event.data?.object || {};
-  const userId = obj.metadata?.user_id || obj.client_reference_id || null;
+  const userId = resolveUserId(obj);
   const periodEnd = obj.current_period_end ? new Date(obj.current_period_end * 1000).toISOString() : null;
 
   switch (event.type) {
-    case 'checkout.session.completed':
-      if (userId) setPlan(userId, 'pro', { cycle: obj.metadata?.plan === 'annual' ? 'annual' : 'monthly', source: 'stripe', externalId: obj.id, status: 'active' });
+    case 'checkout.session.completed': {
+      if (!userId) return { handled: false, reason: 'no user id on checkout session' };
+      setPlan(userId, 'pro', { cycle: obj.metadata?.plan === 'annual' ? 'annual' : 'monthly', source: 'stripe', externalId: obj.id, status: 'active' });
+      // Remember the subscription and customer so later lifecycle events can find the user.
+      const subId = typeof obj.subscription === 'string' ? obj.subscription : obj.subscription?.id;
+      const custId = typeof obj.customer === 'string' ? obj.customer : obj.customer?.id;
+      for (const id of [subId, custId].filter(Boolean)) {
+        db.prepare('INSERT INTO billing_events (user_id,kind,plan,cycle,source,external_id,status) VALUES (?,?,?,?,?,?,?)')
+          .run(userId, 'link', 'pro', obj.metadata?.plan === 'annual' ? 'annual' : 'monthly', 'stripe', id, 'linked');
+      }
       return { handled: true, effect: 'granted pro' };
+    }
     case 'customer.subscription.created':
     case 'customer.subscription.updated':
       if (userId) {
