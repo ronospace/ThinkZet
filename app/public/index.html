@@ -785,7 +785,7 @@ document.getElementById('land-signin').onclick = () => {
 };
 document.querySelectorAll('#land-themebar button').forEach((b) => {
   b.onclick = () => { setTheme(b.dataset.mode); applyTheme(b.dataset.mode); };
-  b.setAttribute('aria-pressed', String(b.dataset.mode === (localStorage.getItem(THEME_KEY) || 'system')));
+  b.setAttribute('aria-pressed', String(b.dataset.mode === (localStorage.getItem('mirrorspread-theme') || 'system')));
 });
 
 /* ---------------- auth ---------------- */
@@ -2624,18 +2624,33 @@ $('#palette').addEventListener('click', (e) => { if (e.target.id === 'palette') 
 window.go = go;
 window.showLanding = showLanding;
 document.querySelectorAll('#nav button').forEach((b) => { b.onclick = () => go(b.dataset.view); });
-// Theme: follows the system on first visit, then remembers an explicit choice.
+// Appearance: three modes. 'system' follows the OS and reacts live; light/dark are explicit
+// and persisted. Applied before first paint so there is never a flash of the wrong theme.
+const THEME_KEY = 'mirrorspread-theme';
+function osTheme() { return (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark'; }
+function resolveTheme(mode) { return mode === 'system' ? osTheme() : mode; }
+function applyTheme(mode) {
+  const resolved = resolveTheme(mode);
+  document.documentElement.dataset.theme = resolved;
+  document.documentElement.dataset.mode = mode;
+  document.documentElement.style.colorScheme = resolved;
+  const meta = document.querySelector('meta[name="theme-color"]');
+  if (meta) meta.setAttribute('content', resolved === 'light' ? '#f6f8fb' : '#0a0d13');
+  document.querySelectorAll('.themebar button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+}
+function setTheme(mode) { try { localStorage.setItem(THEME_KEY, mode); } catch (e) {} applyTheme(mode); }
 (function initTheme() {
-  const saved = localStorage.getItem('karyvo-theme');
-  const system = window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-  document.documentElement.dataset.theme = saved || system;
+  const saved = localStorage.getItem(THEME_KEY) || 'system';
+  applyTheme(saved);
+  if (window.matchMedia) {
+    const mq = window.matchMedia('(prefers-color-scheme: light)');
+    const onChange = () => { if ((localStorage.getItem(THEME_KEY) || 'system') === 'system') applyTheme('system'); };
+    if (mq.addEventListener) mq.addEventListener('change', onChange); else if (mq.addListener) mq.addListener(onChange);
+  }
 })();
-$('#theme').onclick = () => {
-  const next = document.documentElement.dataset.theme === 'light' ? 'dark' : 'light';
-  document.documentElement.dataset.theme = next;
-  localStorage.setItem('karyvo-theme', next);
-  toast(next === 'light' ? 'Light theme' : 'Dark theme');
-};
+document.querySelectorAll('#theme button').forEach((b) => {
+  b.onclick = () => { setTheme(b.dataset.mode); toast({ system: 'Following your system', light: 'Light', dark: 'Dark' }[b.dataset.mode] + ' appearance'); };
+});
 $('#cmdk').onclick = openPalette;
 $('#load-demo').onclick = loadDemo;
 $('#run-ingest').onclick = async () => {
