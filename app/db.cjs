@@ -237,6 +237,26 @@ CREATE TABLE IF NOT EXISTS referral_earnings (
   UNIQUE (program_id, external_id)
 );
 
+CREATE TABLE IF NOT EXISTS billing_events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT,
+  kind TEXT,
+  plan TEXT,
+  cycle TEXT,
+  source TEXT,
+  external_id TEXT,
+  status TEXT,
+  period_end TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS webhook_events (
+  id TEXT PRIMARY KEY,
+  type TEXT,
+  outcome TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS plan_state (
   user_id TEXT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
   plan TEXT DEFAULT 'free',

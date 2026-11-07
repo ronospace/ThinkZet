@@ -1236,12 +1236,22 @@ async function renderPlan() {
       <div class="dim" style="font-size:13px;margin-top:8px">The rate gap is free, always. That is the moment that earns trust — you should be able to find out you are underpaid without paying. What you pay for is the ongoing system: the full radar, saved searches, the daily brief, and a copilot that remembers your whole situation.</div>
       <div class="kv" style="margin-top:14px"><span>Match scores computed</span><span class="mono">${p.usage.matchScores}</span></div>
       <div class="kv"><span>Opportunities tracked</span><span class="mono">${p.usage.tracked}</span></div>
-      <div class="note" style="margin-top:12px">Stripe checkout is not connected in this environment — these buttons flip the local entitlement the paywall reads, so the gating is real and testable.</div>
+      <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:12px">
+        <div class="row" style="justify-content:space-between"><span style="font-size:12.5px">Billing mode</span><span class="mono" style="color:${p.billing.ready ? '#6fe3a4' : '#e0c273'}">${esc(p.billing.mode)}</span></div>
+        <div class="dim" style="font-size:12px;margin-top:6px">${esc(p.billing.note)}</div>
+        ${p.billing.missing && p.billing.missing.length ? `<div class="muted" style="font-size:11px;margin-top:8px">Missing: <span class="mono">${p.billing.missing.map(esc).join(', ')}</span></div>` : ''}
+      </div>
     </div>`;
-  const setPlan = async (plan, cycle) => { await post('/api/plan', { plan, cycle }); toast(plan === 'pro' ? 'Pro unlocked — full radar is live' : 'Switched to Free'); go('plan'); };
-  if ($('#up-month')) $('#up-month').onclick = () => setPlan('pro', 'monthly');
-  if ($('#up-year')) $('#up-year').onclick = () => setPlan('pro', 'annual');
-  if ($('#downgrade')) $('#downgrade').onclick = () => setPlan('free', 'monthly');
+  const checkout = async (cycle) => {
+    const r = await post('/api/billing/checkout', { cycle });
+    if (r.error) return toast(r.error);
+    if (r.url) { window.location.href = r.url; return; }
+    toast(r.fallback ? 'Pro unlocked locally — Stripe not configured yet' : 'Pro unlocked');
+    go('plan');
+  };
+  if ($('#up-month')) $('#up-month').onclick = () => checkout('monthly');
+  if ($('#up-year')) $('#up-year').onclick = () => checkout('annual');
+  if ($('#downgrade')) $('#downgrade').onclick = async () => { await post('/api/billing/cancel', {}); toast('Switched to Free'); go('plan'); };
 }
 
 /* ---------------- negotiation ---------------- */

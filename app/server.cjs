@@ -1,9 +1,21 @@
 // CareerOS AI — API server. Node built-ins only (http + node:sqlite). Zero dependencies.
 'use strict';
+// Minimal .env loader: KEY=value lines, no dependency, ignored if the file is absent.
+try {
+  const envPath = require('node:path').join(__dirname, '.env');
+  if (require('node:fs').existsSync(envPath)) {
+    for (const line of require('node:fs').readFileSync(envPath, 'utf8').split('\n')) {
+      const m = line.match(/^\s*([A-Z0-9_]+)\s*=\s*(.*)\s*$/);
+      if (m && !process.env[m[1]]) process.env[m[1]] = m[2].replace(/^["']|["']$/g, '');
+    }
+  }
+} catch { /* .env is optional */ }
 const http = require('node:http');
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
+
+
 const { db } = require('./db.cjs');
 const { SKILLS, resolveSkill } = require('./taxonomy.cjs');
 const { seedIfEmpty, ingestLive, lastRun } = require('./pipeline.cjs');
@@ -16,6 +28,7 @@ const TRAJ = require('./trajectory.cjs');
 const COVER = require('./coverletter.cjs');
 const INTERVIEW = require('./interview.cjs');
 const AN = require('./analytics.cjs');
+const BILLING = require('./billing.cjs');
 
 const PORT = Number(process.env.PORT || 4173);
 const PUBLIC = path.join(__dirname, 'public');
@@ -1111,35 +1124,62 @@ route('POST', /^\/api\/referrals\/link$/, async (req, res) => {
 });
 
 // ---- billing / plans ----
-const PLANS = {
-  free: { key: 'free', label: 'Free', price: 0, period: null, features: ['Top 10 scored opportunities', '5 match scores / month', 'Rate gap check', 'Tracker (5 items)'] },
-  pro: { key: 'pro', label: 'Pro', price: 19, period: 'month', annual: 149, features: ['Unlimited scored opportunities', 'Career Twin + all six scores', 'Full Radar with filters', 'Saved searches & the daily brief', 'AI Copilot (grounded)', 'Rate intelligence, full sample', 'Unlimited tracker & outcomes'] },
-};
-
 route('GET', /^\/api\/plan$/, async (req, res) => {
   const uid = resolveUser(req);
+  const plan = BILLING.planFor(uid);
   const row = db.prepare('SELECT * FROM plan_state WHERE user_id=?').get(uid);
-  const plan = row ? row.plan : 'free';
   const usage = {
     matchScores: db.prepare('SELECT COUNT(*) n FROM matches WHERE user_id=?').get(uid).n,
     tracked: db.prepare('SELECT COUNT(*) n FROM applications WHERE user_id=?').get(uid).n,
   };
-  json(res, 200, { plan, plans: PLANS, usage, limits: plan === 'pro' ? null : { matches: 10, tracked: 5 }, since: row ? row.since : null });
+  json(res, 200, {
+    plan,
+    plans: BILLING.PLANS,
+    usage,
+    limits: plan === 'pro' ? null : { matches: 10, tracked: 5 },
+    since: row ? row.since : null,
+    billing: BILLING.status(),
+  });
 });
 
-route('POST', /^\/api\/plan$/, async (req, res) => {
+// Checkout: real Stripe when configured, honest local switch when not.
+route('POST', /^\/api\/billing\/checkout$/, async (req, res) => {
   const body = await readBody(req);
   const uid = resolveUser(req);
-  const plan = body.plan === 'pro' ? 'pro' : 'free';
+  const user = db.prepare('SELECT * FROM users WHERE id=?').get(uid);
   const cycle = body.cycle === 'annual' ? 'annual' : 'monthly';
-  db.prepare(`INSERT INTO plan_state (user_id,plan,cycle,since) VALUES (?,?,?,datetime('now'))
-    ON CONFLICT(user_id) DO UPDATE SET plan=excluded.plan, cycle=excluded.cycle, since=datetime('now')`)
-    .run(uid, plan, cycle);
-  log(uid, 'plan.changed', 'billing', uid, { plan, cycle });
-  if (plan === 'pro') AN.track(uid, 'plan.activated', { cycle });
-  json(res, 200, { ok: true, plan, cycle, note: plan === 'pro' ? 'Stripe checkout is not wired in this environment — this is the local entitlement switch the paywall reads.' : 'Downgraded.' });
+
+  try {
+    const r = await BILLING.createCheckout({ userId: uid, email: user?.email, cycle });
+    if (r.fallback) {
+      // No keys: grant locally so the product is testable, and say so plainly.
+      BILLING.setPlan(uid, 'pro', { cycle, source: 'local-fallback' });
+      AN.track(uid, 'plan.activated', { cycle, source: 'local-fallback' });
+      return json(res, 200, { ok: true, mode: r.mode, fallback: true, note: r.note });
+    }
+    log(uid, 'billing.checkout_created', 'billing', uid, { cycle, mode: r.mode });
+    AN.track(uid, 'billing.checkout_started', { cycle, mode: r.mode });
+    json(res, 200, { ok: true, mode: r.mode, url: r.url });
+  } catch (e) {
+    json(res, 502, { error: String(e.message || e) });
+  }
 });
 
+route('POST', /^\/api\/billing\/cancel$/, async (req, res) => {
+  const uid = resolveUser(req);
+  BILLING.setPlan(uid, 'free', { source: 'user' });
+  log(uid, 'billing.cancelled', 'billing', uid);
+  json(res, 200, { ok: true, plan: 'free' });
+});
+
+route('GET', /^\/api\/billing\/status$/, async (req, res) => {
+  const uid = resolveUser(req);
+  const events = db.prepare('SELECT kind,plan,cycle,source,status,created_at FROM billing_events WHERE user_id=? ORDER BY id DESC LIMIT 10').all(uid);
+  const webhooks = db.prepare('SELECT id,type,outcome,created_at FROM webhook_events ORDER BY created_at DESC LIMIT 10').all();
+  json(res, 200, { status: BILLING.status(), plan: BILLING.planFor(uid), events, webhooks });
+});
+
+// Stripe webhook. Needs the raw body, so it is handled before JSON parsing.
 // ---- live ingestion ----
 route('POST', /^\/api\/ingest$/, async (req, res) => {
   const body = await readBody(req);
@@ -1219,6 +1259,30 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const pathname = url.pathname;
   if (!pathname.startsWith('/api/') && !pathname.startsWith('/go/')) return serveStatic(req, res, pathname);
+
+  // Stripe webhook needs the raw body for signature verification, so it bypasses the
+  // normal JSON route pipeline entirely.
+  if (pathname === '/api/billing/webhook' && req.method === 'POST') {
+    let raw = '';
+    req.on('data', (c) => { raw += c; if (raw.length > 1e6) req.destroy(); });
+    req.on('end', () => {
+      const check = BILLING.verifySignature(raw, req.headers['stripe-signature']);
+      if (!check.ok) {
+        console.log(`  ! webhook rejected: ${check.reason}`);
+        return json(res, 400, { error: check.reason });
+      }
+      let event;
+      try { event = JSON.parse(raw); } catch { return json(res, 400, { error: 'bad json' }); }
+      const seen = db.prepare('SELECT id FROM webhook_events WHERE id=?').get(event.id);
+      if (seen) return json(res, 200, { received: true, duplicate: true });
+      const result = BILLING.handleEvent(event);
+      db.prepare('INSERT INTO webhook_events (id,type,outcome) VALUES (?,?,?)')
+        .run(event.id, event.type, result.handled ? result.effect : result.reason);
+      console.log(`  webhook ${event.type}: ${result.handled ? result.effect : 'ignored (' + result.reason + ')'}`);
+      json(res, 200, { received: true, ...result });
+    });
+    return;
+  }
 
   for (const r of routes) {
     if (r.method !== req.method) continue;
