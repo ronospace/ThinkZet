@@ -144,6 +144,7 @@ route('POST', /^\/api\/auth\/verify$/, async (req, res) => {
   AUTH.setCookie(res, AUTH.COOKIE, r.token, AUTH.SESSION_DAYS * 86400);
   log(r.user.id, 'auth.login', 'user', r.user.id);
   AN.track(r.user.id, 'auth.verified', { hasProfile: !!getProfile(r.user.id) });
+  try { scheduleSequence(r.user.id); } catch (e) { /* sequence is best-effort */ }
   json(res, 200, { ok: true, user: r.user, hasProfile: !!getProfile(r.user.id) });
 });
 
@@ -266,6 +267,7 @@ route('POST', /^\/api\/onboarding$/, async (req, res) => {
   const rates = E.rateIntelligence(resolveUser(req));
   log(resolveUser(req), 'onboarding.completed', 'profile', resolveUser(req), { skills: resolved.length, matched });
   AN.track(resolveUser(req), 'profile.created', { source: 'cv', skills: resolved.length });
+  try { scheduleSequence(resolveUser(req)); } catch (e) { /* sequence is best-effort */ }
 
   json(res, 200, {
     profile: { ...getProfile(resolveUser(req)), target_countries: targetCountries },
@@ -1153,6 +1155,59 @@ route('POST', /^\/api\/onboarding\/preview$/, async (req, res) => {
   json(res, r.status, await r.json());
 });
 
+// ---- lifecycle email sequence: the 7 days after signup ----
+const SEQUENCE = [
+  { day: 0, key: 'welcome', subject: 'Your number, and the three things to do about it' },
+  { day: 2, key: 'first_move', subject: 'The one opportunity you should open today' },
+  { day: 4, key: 'gap', subject: 'What is actually blocking your next €20k' },
+  { day: 7, key: 'proof', subject: 'What one honest week of this looks like' },
+];
+
+function sequenceEmail({ user, key, ctx }) {
+  const name = (user.name || 'there').split(' ')[0];
+  const app = MAIL.CONFIG.appUrl + '/?app=1';
+  const unsub = `${MAIL.CONFIG.appUrl}/unsubscribe/${user.id}/${MAIL.unsubscribeToken(user.id)}`;
+  const gapLine = ctx.rateGapPct != null && ctx.rateGapPct > 3
+    ? `You are ${ctx.rateGapPct}% below the median for your profile — ${MAIL.money(Math.abs(ctx.rateGapAbs || 0))} a year.`
+    : 'You are at or above the median for your profile. The upside now is growth, not price.';
+
+  const bodies = {
+    welcome: `Good to have you, ${name}.\n\nHere is the one number that matters: ${gapLine}\n\nThree things worth doing this week:\n\n1. Open the radar and sort by interview odds, not match score. Odds are what decide whether your time was worth it.\n2. Open Negotiation and read the ask out loud once. The number you cannot say out loud is the number you will not get.\n3. Pick one skill gap. Just one. The gaps screen ranks them by how many of your realistic opportunities they block.\n\n${app}\n\n— CareerOS\n\nYou can turn these off any time: ${unsub}`,
+    first_move: `Two days in, ${name}.\n\nMost people open a feed and scroll. You have something better: a score per opportunity and a probability of getting it.\n\nSo the move is not "apply to more". It is "apply to the ones you can actually win".\n\nOpen the radar, filter to 60%+ interview odds, and pick the top one. Apply today, while it is open.\n\n${app}\n\n— CareerOS\n\n${unsub}`,
+    gap: `Four days in, ${name}.\n\n${ctx.topGap ? `${ctx.topGap.skill} is blocking ${ctx.topGap.blocking} of your realistic opportunities. Not the market — your specific set of matches.` : 'Your skill coverage is unusually complete. The next lever is not learning, it is positioning.'}\n\nThat distinction matters. Most advice tells you to learn what is trending. The useful version is: learn what is blocking *your* next move.\n\nThe gaps screen has the sequence, with the weeks and the cumulative unblocking.\n\n${app}\n\n— CareerOS\n\n${unsub}`,
+    proof: `One week, ${name}.\n\nHere is what the honest version looks like: three applications to roles you can actually win, one conversation about your number, one gap being closed.\n\nThat is not a productivity system. It is the difference between a job search that runs on hope and one that runs on evidence.\n\nYour streak is ${ctx.streak || 1}. Keep it.\n\n${app}\n\n— CareerOS\n\n${unsub}`,
+  };
+
+  return { subject: SEQUENCE.find((x) => x.key === key)?.subject || 'CareerOS', text: bodies[key] || bodies.welcome };
+}
+
+function scheduleSequence(userId) {
+  const user = db.prepare('SELECT * FROM users WHERE id=?').get(userId);
+  if (!user || user.email.includes('@anon.local')) return 0;
+  const existing = db.prepare("SELECT COUNT(*) n FROM email_queue WHERE user_id=? AND kind LIKE 'sequence_%'").get(userId).n;
+  if (existing > 0) return 0;
+  let queued = 0;
+  for (const step of SEQUENCE) {
+    const when = new Date(Date.now() + step.day * 86400000).toISOString().replace('T', ' ').slice(0, 19);
+    const ctx = {};
+    try {
+      const rates = E.rateIntelligence(userId);
+      if (rates) { ctx.rateGapPct = rates.gapPct; ctx.rateGapAbs = rates.gapAbs; }
+      const twin = E.buildTwin(userId);
+      const mine = new Set(twin.skills);
+      const top = opportunitiesWithMatch(userId, { limit: 40, minScore: 55 });
+      const freq = new Map();
+      for (const o of top) for (const sk of o.missing_skills) freq.set(sk, (freq.get(sk) || 0) + 1);
+      const g = [...freq.entries()].sort((a, b) => b[1] - a[1])[0];
+      if (g) ctx.topGap = { skill: g[0], blocking: g[1] };
+    } catch { /* context is best-effort */ }
+    const composed = sequenceEmail({ user, key: step.key, ctx });
+    MAIL.enqueue({ userId, to: user.email, kind: `sequence_${step.key}`, subject: composed.subject, text: composed.text, scheduledFor: when });
+    queued++;
+  }
+  return queued;
+}
+
 // ---- email: delivery, preferences, the brief loop ----
 route('GET', /^\/api\/email\/status$/, async (req, res) => {
   const rows = db.prepare('SELECT status, COUNT(*) n FROM email_queue GROUP BY status').all();
@@ -1166,6 +1221,11 @@ route('GET', /^\/api\/email\/prefs$/, async (req, res) => {
 route('POST', /^\/api\/email\/prefs$/, async (req, res) => {
   const body = await readBody(req);
   json(res, 200, MAIL.setPrefs(resolveUser(req), body));
+});
+
+route('GET', /^\/api\/email\/sequence$/, async (req, res) => {
+  const rows = db.prepare("SELECT kind, subject, scheduled_for, status FROM email_queue WHERE kind LIKE 'sequence_%' ORDER BY scheduled_for").all();
+  json(res, 200, { steps: SEQUENCE, queued: rows });
 });
 
 route('GET', /^\/api\/email\/outbox$/, async (req, res) => {
@@ -1559,6 +1619,17 @@ route('POST', /^\/api\/referrals\/link$/, async (req, res) => {
 });
 
 // ---- billing / plans ----
+// Pro+ is the expansion tier: the same intelligence, plus a human and a relocation pack.
+// It exists because the top 10% of users will happily pay 3x for someone to review their plan.
+const PLUS_FEATURES = [
+  'Everything in Pro',
+  'One 1:1 session with a vetted career coach',
+  'Relocation readiness pack (visa, cost of living, salary by city)',
+  'Multi-profile: full-time, contract and freelance twins',
+  'Priority alerts on 90+ matches',
+  'Quarterly trajectory re-run with a written review',
+];
+
 route('GET', /^\/api\/plan$/, async (req, res) => {
   const uid = resolveUser(req);
   const plan = BILLING.planFor(uid);
@@ -1569,9 +1640,9 @@ route('GET', /^\/api\/plan$/, async (req, res) => {
   };
   json(res, 200, {
     plan,
-    plans: BILLING.PLANS,
+    plans: { ...BILLING.PLANS, plus: { key: 'plus', label: 'Pro+', price: 49, period: 'month', features: PLUS_FEATURES } },
     usage,
-    limits: plan === 'pro' ? null : { matches: 10, tracked: 5 },
+    limits: plan === 'pro' || plan === 'plus' ? null : { matches: 10, tracked: 5 },
     since: row ? row.since : null,
     billing: BILLING.status(),
   });
