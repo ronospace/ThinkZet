@@ -336,6 +336,67 @@ route('GET', /^\/api\/scores$/, async (req, res) => {
   json(res, 200, { scores: row ? { ...row, breakdown: JSON.parse(row.breakdown || '{}') } : null, history });
 });
 
+// Negotiation brief: the highest-value output in the product. It turns a benchmark into a
+// number you can say out loud, with the evidence and the fallback attached.
+route('GET', /^\/api\/negotiation$/, async (req, res) => {
+  const uid = resolveUser(req);
+  const profile = getProfile(uid);
+  if (!profile) return json(res, 404, { error: 'no profile' });
+  const rates = E.rateIntelligence(uid);
+  const twin = E.buildTwin(uid);
+  if (!rates) return json(res, 404, { error: 'no benchmark' });
+  const top = opportunitiesWithMatch(uid, { limit: 5, minScore: 60 });
+  const best = top[0] || null;
+
+  const fmt = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+  const periodLabel = rates.period === 'hour' ? 'per hour' : 'per year';
+
+  const current = rates.current;
+  const target = Math.round(rates.p75);
+  const floor = Math.round(rates.p50);
+  const stretch = Math.round(rates.p90);
+
+  const levers = twin.skillDetail
+    .filter((s) => s.salary_premium >= 10)
+    .sort((a, b) => b.salary_premium - a.salary_premium)
+    .slice(0, 4)
+    .map((s) => `${s.canonical} (+${s.salary_premium}% market premium)`);
+
+  // Only call out a channel if it is backed by a real sample, not a handful of outliers.
+  const strongChannel = (rates.byChannel || []).find((c) => c.n >= 10 && c.median > floor);
+  const channelUpside = strongChannel
+    ? `The ${strongChannel.channel} channel pays a median of ${fmt(strongChannel.median)} across ${strongChannel.n} comparable postings — ${fmt(strongChannel.median - floor)} above your segment median.`
+    : null;
+
+  const askScript = current
+    ? `"Based on what I'm seeing for senior ${E.guessFamily(profile, twin).replace(/_/g, ' ')} profiles with this stack, the range is ${fmt(rates.p25)} to ${fmt(rates.p75)} ${periodLabel}. I'm targeting ${fmt(target)} — that's the upper half of the band, and it reflects ${levers[0] ? levers[0].split(' (')[0] : 'the scope of the role'} on top of the core requirements. What's the band you've set for this level?"`
+    : `"Before we go further, what band have you set for this level? I want to make sure we're in the same range."`;
+
+  const counterScript = `If they offer below ${fmt(floor)}: "That's below the median for this profile. I can work with the lower number if we revisit it at six months against a written scope — otherwise I'd need to be closer to ${fmt(target)}."`;
+
+  json(res, 200, {
+    period: rates.period,
+    currency: 'EUR',
+    current,
+    floor, target, stretch,
+    gapPct: rates.gapPct,
+    confidence: rates.confidence,
+    exactComparables: rates.exactComparables,
+    levers,
+    channelUpside,
+    askScript,
+    counterScript,
+    anchorOpportunity: best ? { id: best.id, title: best.title, company: best.company, compMin: best.comp_min, compMax: best.comp_max, currency: best.currency, period: best.comp_period } : null,
+    rules: [
+      'Never name a number before they do — ask for their band first.',
+      `Anchor on the p75 (${fmt(target)}), not the median. The median is a floor, not a target.`,
+      'Tie every number to evidence from your own market data, not to your current salary.',
+      'Negotiate the whole package: base, equity, sign-on, remote allowance, learning budget.',
+      'Get the number in writing before you accept verbally.',
+    ],
+  });
+});
+
 route('GET', /^\/api\/rates$/, async (req, res) => {
   const rates = E.rateIntelligence(resolveUser(req));
   if (!rates) return json(res, 404, { error: 'no profile' });

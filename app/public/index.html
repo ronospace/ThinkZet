@@ -1033,6 +1033,52 @@ async function renderPlan() {
   if ($('#downgrade')) $('#downgrade').onclick = () => setPlan('free', 'monthly');
 }
 
+/* ---------------- negotiation ---------------- */
+async function renderNegotiation() {
+  const n = await api('/api/negotiation');
+  if (!n || n.error) return renderOnboarding();
+  const copy = (t) => { navigator.clipboard.writeText(t); toast('Copied — go say it'); };
+  $('#view').innerHTML = `
+    <div class="card" style="border-color:#253247;background:linear-gradient(135deg,#12182a,#101a1e)">
+      <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Negotiation brief · ${esc(n.confidence)} confidence · ${n.exactComparables} exact comparables</div>
+      <div class="row" style="gap:26px;margin-top:14px;flex-wrap:wrap">
+        <div><div class="muted" style="font-size:11px">Floor (p50)</div><div class="big mono" style="font-size:24px">${money(n.floor)}</div></div>
+        <div><div class="muted" style="font-size:11px">Your target (p75)</div><div class="big mono" style="font-size:24px;color:#6fe3a4">${money(n.target)}</div></div>
+        <div><div class="muted" style="font-size:11px">Stretch (p90)</div><div class="big mono" style="font-size:24px">${money(n.stretch)}</div></div>
+        ${n.current ? `<div><div class="muted" style="font-size:11px">You today</div><div class="big mono" style="font-size:24px;color:#ff8f96">${money(n.current)}</div></div>` : ''}
+      </div>
+    </div>
+
+    <h2 class="section">What to actually say</h2>
+    <div class="card">
+      <div class="row" style="justify-content:space-between"><h3 style="margin:0">The ask</h3><button class="chip cp" data-t="${esc(n.askScript)}" style="cursor:pointer">copy</button></div>
+      <div style="margin-top:10px;font-size:13.5px;line-height:1.75;font-style:italic;color:#cfe0ff">${esc(n.askScript)}</div>
+    </div>
+    <div class="card" style="margin-top:12px">
+      <div class="row" style="justify-content:space-between"><h3 style="margin:0">If they come in low</h3><button class="chip cp" data-t="${esc(n.counterScript)}" style="cursor:pointer">copy</button></div>
+      <div style="margin-top:10px;font-size:13.5px;line-height:1.75;font-style:italic;color:#cfe0ff">${esc(n.counterScript)}</div>
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
+      <div class="card">
+        <h3>Your leverage</h3>
+        <div style="margin-top:10px">
+          ${n.levers.map((l) => `<div class="kv"><span>${esc(l.split(' (')[0])}</span><span class="mono" style="color:#6fe3a4">${esc(l.split('(')[1].replace(')', ''))}</span></div>`).join('')}
+        </div>
+        ${n.channelUpside ? `<div class="note" style="margin-top:12px">${esc(n.channelUpside)}</div>` : ''}
+      </div>
+      <div class="card">
+        <h3>The five rules</h3>
+        <div style="margin-top:10px">${n.rules.map((r, i) => `<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:12.5px"><span class="mono muted">${i + 1}</span><span>${esc(r)}</span></div>`).join('')}</div>
+      </div>
+    </div>
+    ${n.anchorOpportunity ? `<div class="card" style="margin-top:14px"><h3>Anchor this to a live opportunity</h3>
+      <div class="dim" style="font-size:12.5px;margin-top:6px">${esc(n.anchorOpportunity.title)} at ${esc(n.anchorOpportunity.company)} — listed at ${n.anchorOpportunity.compMin ? money(n.anchorOpportunity.compMin) + '–' + money(n.anchorOpportunity.compMax) + ' ' + esc(n.anchorOpportunity.currency) : 'compensation not disclosed'}.</div>
+      <div style="margin-top:10px"><button class="btn sm ghost" onclick="go('radar')">Back to the radar <span style="opacity:.7">&gt;</span></button></div>
+    </div>` : ''}`;
+  document.querySelectorAll('.cp').forEach((b) => { b.onclick = () => copy(b.dataset.t); });
+}
+
 /* ---------------- referrals ---------------- */
 async function renderReferrals() {
   const r = await api('/api/referrals');
@@ -1148,6 +1194,7 @@ const VIEWS = {
   learning: [renderLearning, 'Learning Loop', 'Outcomes recalibrate the model — the flywheel'],
   searches: [renderSearches, 'Saved Searches', 'Standing questions the engine keeps answering'],
   brief: [renderBrief, 'Morning Brief', 'What changed since you last looked'],
+  negotiation: [renderNegotiation, 'Negotiation', 'The number to say, the evidence, and the fallback'],
   referrals: [renderReferrals, 'Partners', 'Referral routing, isolated from ranking'],
   plan: [renderPlan, 'Plan', 'Free vs Pro — and why the paywall sits there'],
   ops: [renderOps, 'Engine', 'What the system actually did'],
