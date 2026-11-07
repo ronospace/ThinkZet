@@ -18,18 +18,66 @@
   --radius:12px;
 }
 html[data-theme="light"]{
-  --bg:#f7f9fc; --panel:#ffffff; --panel2:#f2f5f9; --line:#e2e8f0; --line2:#cdd7e3;
-  --ink:#0e141b; --ink2:#41505f; --muted:#74828f;
-  --accent:#1f6feb; --accent2:#1554c0;
+  --bg:#f4f6fa; --panel:#ffffff; --panel2:#f7f9fc; --line:#e4e9f1; --line2:#cfd8e5;
+  --ink:#0b1220; --ink2:#3f4c5d; --muted:#78879b;
+  --accent:#2563eb; --accent2:#1d4ed8;
+  --good:#0f9d58; --warn:#c77700; --bad:#d92d3f;
+  --shadow:0 1px 2px rgba(16,32,64,.06), 0 8px 24px -12px rgba(16,32,64,.18);
+  --glow:none;
 }
 html[data-theme="light"] body{color-scheme:light}
-html[data-theme="light"] .rate-gap{background:linear-gradient(135deg,#efeaff,#e8f0ff 55%,#eaf7f1);border-color:#d7d0f0}
-html[data-theme="light"] .rate-gap::after{background:radial-gradient(circle,rgba(139,92,246,.13),transparent 70%)}
-html[data-theme="light"] .rate-gap .k{color:#6a52c8}
-html[data-theme="light"] .score{box-shadow:none !important}
-html[data-theme="light"] .palette{background:rgba(240,244,250,.75)}
-html[data-theme="light"] pre{background:#0e1116}
+html[data-theme="light"] .card{box-shadow:var(--shadow);border-color:#e6ebf3}
+html[data-theme="light"] .opp{box-shadow:0 1px 2px rgba(16,32,64,.05)}
+html[data-theme="light"] .opp:hover{box-shadow:0 6px 20px -10px rgba(16,32,64,.28);border-color:#c9d6ea}
+html[data-theme="light"] .rail{background:#ffffff;border-right-color:#e6ebf3}
+html[data-theme="light"] .topbar{background:rgba(255,255,255,.86);border-bottom-color:#e6ebf3}
+html[data-theme="light"] .nav button.active{background:#eaf1ff;color:#1d4ed8;box-shadow:inset 2px 0 0 #2563eb}
+html[data-theme="light"] .nav button:hover{background:#f1f5fb}
+html[data-theme="light"] .chip{background:#f2f5fa;border-color:#dde5f0;color:#4a5a6e}
+html[data-theme="light"] .chip.have{background:#e8f7ef;border-color:#b9e6cd;color:#0b7a45}
+html[data-theme="light"] .chip.miss{background:#fdecee;border-color:#f7c9cf;color:#b3243a}
+html[data-theme="light"] .chip.type{background:#eef2ff;border-color:#d3ddff;color:#3b5bdb}
+html[data-theme="light"] .pill{background:#fff;border-color:#dde5f0;color:#4a5a6e}
+html[data-theme="light"] .pill.live{background:#e8f7ef;border-color:#b9e6cd;color:#0b7a45}
+html[data-theme="light"] kbd{background:#fff;border-color:#d3dce9;color:#3f4c5d}
+html[data-theme="light"] .bar{background:#e8edf5}
+html[data-theme="light"] .facet-mini{background:#e8edf5}
+html[data-theme="light"] .rate-gap{--tone-ink:#1f2c3d;--tone-kicker:#5b45b8;
+  background:linear-gradient(135deg,#f6f2ff 0%,#eef4ff 52%,#eefaf4 100%);
+  border-color:#e0d9f5;
+  box-shadow:0 1px 2px rgba(16,32,64,.05), 0 12px 30px -18px rgba(80,60,160,.35);
+}
+html[data-theme="light"] .rate-gap::after{background:radial-gradient(circle,rgba(139,92,246,.12),transparent 70%)}
+html[data-theme="light"] .rate-gap .k{color:#5b45b8}
+html[data-theme="light"] .rate-gap .scale{background:#e6e0f6}
+html[data-theme="light"] .rate-gap .scale .you{background:#1e2235}
+html[data-theme="light"] .result{--tone-ink:#1f2c3d;linear-gradient(135deg,#f6f2ff 0%,#eef4ff 55%,#eefaf4 100%);border-color:#e0d9f5}
+html[data-theme="light"] .result .scale{background:#e6e0f6}
+html[data-theme="light"] .result .scale .you{background:#1e2235}
+html[data-theme="light"] .score{box-shadow:none !important;filter:saturate(.92)}
+html[data-theme="light"] .score small{color:rgba(10,20,35,.62)}
+html[data-theme="light"] .palette{background:rgba(232,238,247,.72)}
+html[data-theme="light"] .palette-box{box-shadow:0 30px 80px -30px rgba(16,32,64,.45)}
+html[data-theme="light"] .palette-item.sel{background:#eaf1ff}
+html[data-theme="light"] pre{background:#0f1621}
+html[data-theme="light"] .toast{background:#0b1220;border-color:#0b1220;color:#f4f7fb}
+html[data-theme="light"] .chat .msg.user{background:#eaf1ff;border-color:#d3ddff}
+html[data-theme="light"] .chat .msg.bot{background:#fff;border-color:#e6ebf3;box-shadow:var(--shadow)}
+html[data-theme="light"] .btn{box-shadow:0 1px 2px rgba(29,78,216,.24)}
+html[data-theme="light"] .btn.ghost{box-shadow:none;background:#fff}
+html[data-theme="light"] .btn.ghost:hover{background:#f7f9fc;border-color:#c9d6ea}
 html[data-theme="light"] .reveal{animation:none}
+/* the dark-only "hero" blocks need a light treatment, not a dark one */
+html[data-theme="light"] .hero{background:linear-gradient(135deg,#1d4ed8,#2563eb 55%,#7c6bf5);color:#fff}
+html[data-theme="light"] .landing{background:radial-gradient(1100px 520px at 50% -12%,#e3ecff 0%,#f4f6fa 58%)}
+html[data-theme="light"] .land-kicker{background:#fff;border-color:#d6e0f0;color:#3f5f95}
+html[data-theme="light"] .check{box-shadow:0 1px 2px rgba(16,32,64,.05), 0 24px 60px -30px rgba(16,32,64,.35)}
+html[data-theme="light"] .trust .card{background:#fff}
+html[data-theme="light"] .filters input,.html[data-theme="light"] .filters select{background:#fff}
+html[data-theme="light"] .composer input{background:#fff}
+html[data-theme="light"] textarea.cv{background:#fff}
+html[data-theme="light"] .onboard input,html[data-theme="light"] .onboard select{background:#fff}
+html[data-theme="light"] .hero-block{background:#f6f2ff;border-color:#e0d9f5}
 *{box-sizing:border-box}
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
@@ -71,6 +119,14 @@ main{overflow:auto;padding:0}
 
 /* ---------- shared ---------- */
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px}
+.card.tone-violet{background:linear-gradient(135deg,#1a1030,#101a2e 60%,#0f1c1a);border-color:#2f2a4d;--tone-ink:#cfe0ff;--tone-kicker:#a99bf0}
+.rate-gap{--tone-ink:#e8edf4;--tone-kicker:#a99bf0}
+.card.tone-blue{background:linear-gradient(135deg,#12182a,#101a1e);border-color:#253247}
+html[data-theme="light"] .card.tone-violet{--tone-ink:#1f2c3d;--tone-kicker:#5b45b8;background:linear-gradient(135deg,#f7f3ff 0%,#eef4ff 55%,#eefaf5 100%);border-color:#e2dbf6;box-shadow:0 1px 2px rgba(16,32,64,.05),0 14px 34px -22px rgba(80,60,160,.4)}
+html[data-theme="light"] .card.tone-blue{background:linear-gradient(135deg,#f5f8ff,#fbfcfe);border-color:#e4eaf4;box-shadow:0 1px 2px rgba(16,32,64,.05),0 12px 30px -20px rgba(16,32,64,.28)}
+html[data-theme="light"] .card.tone-violet .muted,html[data-theme="light"] .card.tone-blue .muted{color:#6d7c90}
+html[data-theme="light"] .card.tone-violet [style*="#a99bf0"]{color:#5b45b8 !important}
+html[data-theme="light"] .card.tone-blue [style*="#cfe0ff"]{color:#1d4ed8 !important}
 .card h3{margin:0 0 4px;font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--ink2)}
 .grid{display:grid;gap:14px}
 .row{display:flex;gap:12px;align-items:center}
@@ -112,7 +168,7 @@ textarea.cv:focus{border-color:var(--accent2)}
 .hello .date{color:var(--muted);font-size:12.5px}
 .rate-gap{background:linear-gradient(135deg,#1a1030 0%,#101a2e 55%,#0f1c1a 100%);border:1px solid #2f2a4d;border-radius:14px;padding:20px 22px;margin-bottom:18px;position:relative;overflow:hidden}
 .rate-gap::after{content:"";position:absolute;right:-40px;top:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(139,92,246,.22),transparent 70%)}
-.rate-gap .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#a99bf0;font-weight:600}
+.rate-gap .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, #a99bf0);font-weight:600}
 .rate-gap .amount{font-size:34px;font-weight:750;letter-spacing:-.025em;margin:6px 0 2px}
 .rate-gap .amount .neg{color:#ff8f96}
 .rate-gap .scale{margin-top:16px;height:8px;border-radius:5px;background:#221d38;position:relative}
@@ -121,7 +177,7 @@ textarea.cv:focus{border-color:var(--accent2)}
 .rate-gap .legend{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px}
 .types{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 .types button{font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2)}
-.types button.on{background:#1b2637;border-color:#33507a;color:#cfe0ff}
+.types button.on{background:#1b2637;border-color:#33507a;color:var(--tone-ink, #cfe0ff)}
 .feed-wrap{display:grid;grid-template-columns:1fr 268px;gap:16px;align-items:start}
 .facets{position:sticky;top:74px}
 @media(max-width:1180px){.feed-wrap{grid-template-columns:1fr}.facets{position:static}}
@@ -194,7 +250,7 @@ table.t tr:hover td{background:var(--panel2)}
 .palette-item .s{margin-left:auto;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
 .palette-foot{display:flex;gap:16px;padding:9px 16px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
 kbd{background:#1b2431;border:1px solid var(--line2);border-bottom-width:2px;border-radius:4px;padding:0 4px;font-size:10px;font-family:inherit;color:var(--ink2)}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1b2637;border:1px solid #33507a;color:#cfe0ff;padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:50}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1b2637;border:1px solid #33507a;color:var(--tone-ink, #cfe0ff);padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:50}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:s .7s linear infinite;vertical-align:-2px;margin-right:6px}
 @keyframes s{to{transform:rotate(360deg)}}
@@ -264,7 +320,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .check input,.check select{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 12px;font-size:14px;outline:none;color:var(--ink)}
 .check input:focus,.check select:focus{border-color:var(--accent2)}
 .check .go{margin-top:16px;width:100%;padding:13px;font-size:14px;border-radius:10px}
-.result{margin-top:22px;border-radius:14px;padding:22px;border:1px solid #2f2a4d;background:linear-gradient(135deg,#1a1030,#101a2e 60%,#0f1c1a);display:none}
+.result{margin-top:22px;border-radius:14px;padding:22px;border:1px solid #2f2a4d;display:none}
 .result.show{display:block;animation:rise .35s cubic-bezier(.2,.7,.3,1) both}
 .result .big-gap{font-size:clamp(26px,4.4vw,38px);font-weight:780;letter-spacing:-.03em;line-height:1.12;margin:6px 0 4px}
 .result .scale{margin-top:20px;height:10px;border-radius:6px;background:#221d38;position:relative}
@@ -513,7 +569,7 @@ async function renderSeo() {
         <div class="card">${(b.byChannel || []).filter((c) => c.n >= 5).map((c) => `<div class="kv"><span>${esc(c.channel)} <span class="muted">(${c.n})</span></span><span class="mono">${fmt(c.median)}</span></div>`).join('')}</div>
         <h2 style="font-size:17px;margin:32px 0 10px">Skills that pay more</h2>
         <div class="card">${r.levers.slice(0, 6).map((l) => `<div class="kv"><span>${esc(l.skill)}</span><span class="mono" style="color:#6fe3a4">+${l.premium}%</span></div>`).join('')}</div>
-        <div class="card" style="margin-top:26px;text-align:center;background:linear-gradient(135deg,#1a1030,#101a2e)">
+        <div class="card" style="margin-top:26px;text-align:center;">
           <div style="font-size:15px;font-weight:600">Where do you sit against this?</div>
           <div class="dim" style="font-size:12.5px;margin-top:6px">Find out in 60 seconds. Free, no account.</div>
           <a class="btn" href="/" style="margin-top:14px;display:inline-block">Check my market value <span style="opacity:.7">&gt;</span></a>
@@ -567,8 +623,8 @@ async function renderSharedCard(id) {
   document.getElementById('landing').innerHTML = `
     <div class="land-wrap" style="max-width:620px">
       <div class="land-nav"><div class="land-brand"><span class="mark">M</span> MirrorSpread</div></div>
-      <div class="card" style="padding:34px;background:linear-gradient(135deg,#1a1030,#101a2e 60%,#0f1c1a);border-color:#2f2a4d">
-        <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a99bf0">Market value report</div>
+      <div class="card tone-violet" style="padding:34px;border-color:#2f2a4d">
+        <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, #a99bf0)">Market value report</div>
         <div style="font-size:clamp(26px,4.6vw,36px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:12px 0 8px;color:${under ? '#ff8f96' : '#6fe3a4'}">
           ${p.gapPct != null ? (under ? `${p.gapPct}% below market` : `${Math.abs(p.gapPct)}% above market`) : 'Market value'}
         </div>
@@ -637,7 +693,7 @@ async function runRateCheck() {
       return `You are ahead of the median. That is leverage, and it expires if you sit still.`;
     })();
     box.innerHTML = `
-      <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a99bf0">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
+      <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, #a99bf0)">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
       <div class="big-gap" style="color:${tone}">${esc(line)}</div>
       <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b>${v.gapAbs != null ? ` · you report ${fmt(r.input.current)}${per}` : ''}</div>
       <div class="scale">
@@ -759,7 +815,7 @@ async function renderAuth() {
     if (r.error) return toast(r.error);
     $('#auth-step1').style.display = 'none';
     $('#auth-step2').style.display = 'block';
-    $('#auth-hint').innerHTML = `Code for <b>${esc(r.sentTo)}</b> — <span class="mono" style="color:#cfe0ff;font-size:15px;letter-spacing:.2em">${esc(r.devCode)}</span> <span class="muted">(dev only — this would be an email)</span>`;
+    $('#auth-hint').innerHTML = `Code for <b>${esc(r.sentTo)}</b> — <span class="mono" style="color:var(--tone-ink, #cfe0ff);font-size:15px;letter-spacing:.2em">${esc(r.devCode)}</span> <span class="muted">(dev only — this would be an email)</span>`;
     $('#auth-code').focus();
   };
   $('#auth-verify').onclick = async () => {
@@ -912,7 +968,7 @@ function renderOnboarding() {
       const per = b.period === 'hour' ? '/hr' : '/yr';
       const tone = v.gapPct > 15 ? '#ff8f96' : v.gapPct > 5 ? '#e0c273' : '#6fe3a4';
       box.innerHTML = `
-        <div class="card" style="border-color:#2f2a4d;background:linear-gradient(135deg,#1a1030,#101a2e 60%,#0f1c1a)">
+        <div class="card tone-violet" style="border-color:#2f2a4d;">
           <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
           <div style="font-size:clamp(24px,4.4vw,34px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:10px 0 6px;color:${tone}">${esc(v.headline)}</div>
           <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b></div>
@@ -958,7 +1014,7 @@ async function renderRadar() {
     const plan = await api('/api/plan');
     STATE.plan = plan;
     if (plan.plan !== 'pro') {
-      planBanner = `<div class="card" style="margin-bottom:14px;border-color:#2f2a4d;background:linear-gradient(90deg,#151129,#101a2e)">
+      planBanner = `<div class="card tone-violet" style="margin-bottom:14px;border-color:#2f2a4d;">
         <div class="row" style="justify-content:space-between;gap:16px;flex-wrap:wrap">
           <div style="flex:1;min-width:260px">
             <div style="font-size:13.5px;font-weight:600">You are on Free — showing your top ${plan.limits.matches} scored opportunities</div>
@@ -975,7 +1031,7 @@ async function renderRadar() {
     if (brief && !brief.needsOnboarding) {
       STATE.brief = brief;
       briefHtml = `
-      <div class="card" style="margin-bottom:14px;background:linear-gradient(180deg,#131a24,#11151b);border-color:#253247">
+      <div class="card tone-violet" style="margin-bottom:14px;border-color:#253247">
         <div class="row" style="justify-content:space-between;align-items:flex-start">
           <div style="flex:1">
             <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Today's brief · ${brief.counts.newSinceYesterday} new · ${brief.counts.closingSoon} closing soon</div>
@@ -1097,7 +1153,7 @@ async function renderRadar() {
   // First-run teachable moment: explain the one number that matters before showing the feed.
   const teach = $('#teach');
   if (teach && !localStorage.getItem('karyvo-taught')) {
-    teach.innerHTML = `<div class="card" style="border-color:#253247;background:linear-gradient(90deg,#131a24,#11161d)">
+    teach.innerHTML = `<div class="card tone-violet" style="border-color:#253247;background:linear-gradient(90deg,#131a24,#11161d)">
       <div class="row" style="justify-content:space-between;gap:16px;flex-wrap:wrap">
         <div style="flex:1;min-width:280px">
           <div style="font-size:13.5px;font-weight:600">Every card here is scored against your twin.</div>
@@ -1126,7 +1182,7 @@ async function renderRadar() {
       if (sortKey === 'fresh') return new Date(b.posted_at) - new Date(a.posted_at);
       return b.match_score - a.match_score;
     });
-    $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="card" style="text-align:center;border-color:#2f2a4d"><div class="dim" style="font-size:13px">${rows.length - capped.length} more scored opportunities are hidden on the Free plan.</div><div style="margin-top:10px"><button class="btn sm" onclick="go('plan')">See what Pro unlocks</button></div></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
+    $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="card tone-violet" style="text-align:center;border-color:#2f2a4d"><div class="dim" style="font-size:13px">${rows.length - capped.length} more scored opportunities are hidden on the Free plan.</div><div style="margin-top:10px"><button class="btn sm" onclick="go('plan')">See what Pro unlocks</button></div></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
     $('#f-count').textContent = `${rows.length} of ${feed.opportunities.length} shown`;
     bindOppActions();
     renderFacets(rows);
@@ -1559,8 +1615,8 @@ async function renderRates() {
         <div class="legend" style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:10px">
           <span>p25 ${money(r.p25)}</span><span>p50 ${money(r.p50)}</span><span>p75 ${money(r.p75)}</span><span>p90 ${money(r.p90)}</span>
         </div>
-        ${r.gapPct != null ? `<div class="card" style="margin-top:20px;background:#161b24;border-color:#2f2a4d">
-          <div class="k" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#a99bf0">Verdict</div>
+        ${r.gapPct != null ? `<div class="card tone-violet" style="margin-top:20px;background:#161b24;border-color:#2f2a4d">
+          <div class="k" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tone-kicker, #a99bf0)">Verdict</div>
           <div style="font-size:17px;font-weight:650;margin-top:6px">${r.verdict === 'underpaid' ? 'The market disagrees with your payslip — by ' + r.gapPct + '%' : r.verdict === 'slightly_under' ? 'Just under the line (' + r.gapPct + '%) — and it compounds' : r.verdict === 'at_market' ? 'Priced correctly. Not the same as paid well.' : 'Ahead of the market. Now use it.'}</div>
           <div class="dim" style="margin-top:4px">${r.gapAbs > 0 ? money(r.gapAbs) + ' per year of headroom at the median — ' + money(r.gapAbs * 2) + ' over two years.' : 'Your rate is defensible. The lever now is growth, not price.'}</div>
         </div>` : ''}
@@ -1601,7 +1657,7 @@ async function renderGaps() {
       <h3>Skill gap detection</h3>
       <div class="dim" style="margin-top:6px">Computed by comparing your skills against the required skills of your top ${sampleOf} realistic opportunities — weighted by how many roles each gap blocks, its salary premium and its growth rate.</div>
     </div>
-    <div class="card" style="margin-bottom:14px;border-color:#253247;background:linear-gradient(135deg,#12182a,#101a1e)">
+    <div class="card tone-violet" style="margin-bottom:14px;border-color:#253247;">
       <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">The shortest path</div>
       <div style="font-size:15px;font-weight:600;margin-top:8px;line-height:1.5">${esc(plan.insight)}</div>
       <div style="margin-top:16px">
@@ -1861,13 +1917,13 @@ async function renderPlan() {
   const p = await api('/api/plan');
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:1fr 1fr 1fr">
-      <div class="card" style="${p.plan === 'free' ? 'border-color:#2f2a4d' : ''}">
+      <div class="card tone-violet" style="${p.plan === 'free' ? 'border-color:#2f2a4d' : ''}">
         <h3>Free</h3>
         <div class="big mono" style="margin:8px 0">€0</div>
         <div style="margin-top:12px">${p.plans.free.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span class="muted">—</span></div>`).join('')}</div>
         ${p.plan === 'free' ? '<div class="chip have" style="margin-top:14px;display:inline-block">current plan</div>' : `<div style="margin-top:14px"><button class="btn ghost sm" id="downgrade">Switch to Free</button></div>`}
       </div>
-      <div class="card" style="border-color:#33507a;background:linear-gradient(180deg,#131a24,#10141a)">
+      <div class="card tone-violet" style="border-color:#33507a;">
         <h3>Pro</h3>
         <div class="big mono" style="margin:8px 0">€19.99<span style="font-size:14px;color:var(--muted)">/month</span></div>
         <div class="dim" style="font-size:12.5px">or €149.99/year — two months free</div>
@@ -1876,11 +1932,11 @@ async function renderPlan() {
           ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
           : `<div style="margin-top:14px" class="row"><button class="btn sm" id="up-month">€19.99 monthly</button><button class="btn sm ghost" id="up-year">€149.99 yearly</button></div>`}
       </div>
-      <div class="card" style="border-color:#3a2f5a;background:linear-gradient(180deg,#171227,#10141a)">
+      <div class="card tone-violet" style="border-color:#3a2f5a;background:linear-gradient(180deg,#171227,#10141a)">
         <h3>Pro+</h3>
         <div class="big mono" style="margin:8px 0">€49<span style="font-size:14px;color:var(--muted)">/month</span></div>
         <div class="dim" style="font-size:12.5px">For people making a move this quarter</div>
-        <div style="margin-top:12px">${(p.plans.plus?.features || []).map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:#a99bf0">✦</span></div>`).join('')}</div>
+        <div style="margin-top:12px">${(p.plans.plus?.features || []).map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--tone-kicker, #a99bf0)">✦</span></div>`).join('')}</div>
         ${p.plan === 'plus'
           ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
           : `<div style="margin-top:14px"><button class="btn sm ghost" id="up-plus" style="border-color:#3a2f5a;color:#c9b8ff">Talk to us about Pro+ <span style="opacity:.7">&gt;</span></button></div>`}
@@ -1920,7 +1976,7 @@ async function renderNegotiation() {
   if (!n || n.error) return renderOnboarding();
   const copy = (t) => { navigator.clipboard.writeText(t); toast('Copied — go say it'); };
   $('#view').innerHTML = `
-    <div class="card" style="border-color:#253247;background:linear-gradient(135deg,#12182a,#101a1e)">
+    <div class="card tone-violet" style="border-color:#253247;">
       <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Negotiation brief · ${esc(n.confidence)} confidence · ${n.exactComparables} exact comparables</div>
       <div class="row" style="gap:26px;margin-top:14px;flex-wrap:wrap">
         <div><div class="muted" style="font-size:11px">Floor (p50)</div><div class="big mono" style="font-size:24px">${money(n.floor)}</div></div>
@@ -1933,11 +1989,11 @@ async function renderNegotiation() {
     <h2 class="section">What to say when they name a number</h2>
     <div class="card">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">The ask</h3><button class="chip cp" data-t="${esc(n.askScript)}" style="cursor:pointer">copy</button></div>
-      <div style="margin-top:10px;font-size:13.5px;line-height:1.75;font-style:italic;color:#cfe0ff">${esc(n.askScript)}</div>
+      <div style="margin-top:10px;font-size:13.5px;line-height:1.75;font-style:italic;color:var(--tone-ink, #cfe0ff)">${esc(n.askScript)}</div>
     </div>
     <div class="card" style="margin-top:12px">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">If they come in low</h3><button class="chip cp" data-t="${esc(n.counterScript)}" style="cursor:pointer">copy</button></div>
-      <div style="margin-top:10px;font-size:13.5px;line-height:1.75;font-style:italic;color:#cfe0ff">${esc(n.counterScript)}</div>
+      <div style="margin-top:10px;font-size:13.5px;line-height:1.75;font-style:italic;color:var(--tone-ink, #cfe0ff)">${esc(n.counterScript)}</div>
     </div>
 
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
@@ -2116,7 +2172,7 @@ async function renderAnalytics() {
   const daily = a.summary.daily || [];
   const maxDay = Math.max(...daily.map((d) => d.n), 1);
   $('#view').innerHTML = `
-    <div class="card" style="border-color:#253247;background:linear-gradient(135deg,#12182a,#101a1e)">
+    <div class="card tone-violet" style="border-color:#253247;">
       <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Funnel · last ${f.windowDays} days · measured from real events</div>
       <div style="font-size:15px;font-weight:600;margin-top:8px;line-height:1.5">${esc(f.verdict)}</div>
       <div class="row" style="margin-top:14px;gap:24px">
@@ -2223,7 +2279,7 @@ async function renderTrajectory(months) {
   const max = Math.max(...t.paths.map((p) => p.endSalary));
   const bar = (v) => Math.max(4, Math.round((v / max) * 100));
   $('#view').innerHTML = `
-    <div class="card" style="border-color:#253247;background:linear-gradient(135deg,#12182a,#101a1e)">
+    <div class="card tone-violet" style="border-color:#253247;">
       <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Trajectory · ${months} months · transparent model, not a forecast</div>
       <div style="font-size:16px;font-weight:600;margin-top:8px;line-height:1.5">${esc(t.insight)}</div>
       <div class="row" style="margin-top:16px;gap:8px">
@@ -2465,7 +2521,7 @@ async function renderBrief() {
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:1fr 300px">
       <div>
-        <div class="card" style="border-color:#253247;background:linear-gradient(180deg,#131a24,#11151b)">
+        <div class="card tone-violet" style="border-color:#253247;">
           <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Brief · ${new Date(b.generatedAt).toLocaleString('en-GB', { weekday: 'long', hour: '2-digit', minute: '2-digit' })}</div>
           <div style="font-size:20px;font-weight:650;margin-top:8px;letter-spacing:-.02em;line-height:1.35">${esc(b.headline)}</div>
           <div class="row" style="margin-top:16px;gap:20px;flex-wrap:wrap">
