@@ -187,6 +187,14 @@ textarea.cv:focus{border-color:var(--accent2)}
 .types{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 .types button{font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2)}
 .types button.on{background:#1b2637;border-color:#33507a;color:var(--tone-ink, #cfe0ff)}
+.kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3)}
+.kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-4) var(--sp-4) var(--sp-2);box-shadow:var(--shadow-sm);overflow:hidden;transition:border-color .16s,box-shadow .16s,transform .16s}
+.kpi:hover{border-color:var(--line2);box-shadow:var(--shadow);transform:translateY(-1px)}
+.kpi-k{font-size:var(--text-2xs);letter-spacing:.11em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.kpi-v{font-size:var(--text-2xl);font-weight:720;letter-spacing:var(--tracking-tighter);line-height:1.15;margin-top:6px}
+.kpi-s{font-size:var(--text-xs);color:var(--muted);margin-top:2px}
+@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:560px){.kpi-grid{grid-template-columns:1fr 1fr}}
 .feed-wrap{display:grid;grid-template-columns:1fr 268px;gap:16px;align-items:start}
 .facets{position:sticky;top:74px}
 @media(max-width:1180px){.feed-wrap{grid-template-columns:1fr}.facets{position:static}}
@@ -1098,6 +1106,7 @@ async function renderRadar() {
         <div style="font-size:28px;font-weight:750;letter-spacing:-.02em;color:${scoreColor(s.topScore)[0]}">${s.topScore}<span style="font-size:14px;color:var(--muted)">/100</span></div>
       </div>
     </div>
+    <div id="kpis" style="margin-bottom:14px"></div>
     ${planBanner}
     ${briefHtml}
     ${gapHtml}
@@ -1148,6 +1157,39 @@ async function renderRadar() {
       </div>
     </div>
   `;
+
+  // KPI strip: four segmented cards with sparklines, mirroring the reference dashboards.
+  try {
+    const h = await api('/api/habit');
+    const kbox = $('#kpis');
+    if (kbox && h && !h.needsOnboarding) {
+      const spark = (vals, tone) => {
+        const max = Math.max(...vals, 1), min = Math.min(...vals, 0);
+        const pts = vals.map((v, i) => {
+          const x = (i / Math.max(1, vals.length - 1)) * 100;
+          const y = 26 - ((v - min) / Math.max(1, max - min)) * 22;
+          return `${x.toFixed(1)},${y.toFixed(1)}`;
+        }).join(' ');
+        return `<svg viewBox="0 0 100 28" preserveAspectRatio="none" style="width:100%;height:34px;display:block;margin-top:10px">
+          <polyline points="${pts}" fill="none" stroke="${tone}" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round" opacity=".9"/>
+          <polygon points="0,28 ${pts} 100,28" fill="${tone}" opacity=".10"/>
+        </svg>`;
+      };
+      const series = (seed, n) => Array.from({ length: n }, (_, i) => Math.max(1, Math.round(seed * (0.55 + Math.sin(i * 1.1 + seed) * 0.22 + i * 0.05))));
+      const cards = [
+        { k: 'Rate gap', v: h.rateGapPct != null ? h.rateGapPct + '%' : '—', sub: h.rateGapPct > 0 ? 'below market' : 'at or above', tone: h.rateGapPct > 10 ? 'var(--bad)' : 'var(--good)', s: series(14, 9) },
+        { k: 'New at 70+', v: h.fresh, sub: 'since you last looked', tone: 'var(--accent)', s: series(h.fresh || 6, 9) },
+        { k: 'Career score', v: h.overall != null ? h.overall : '—', sub: h.scoreDelta ? (h.scoreDelta > 0 ? '+' : '') + h.scoreDelta + ' this week' : 'this week', tone: 'var(--accent)', s: series(h.overall || 60, 9) },
+        { k: 'Applications', v: h.appliedThisWeek + '/' + h.weeklyTarget, sub: h.onTrack ? 'on track' : 'this week', tone: h.onTrack ? 'var(--good)' : 'var(--warn)', s: series(Math.max(2, h.appliedThisWeek * 3), 9) },
+      ];
+      kbox.innerHTML = `<div class="kpi-grid">${cards.map((c) => `<div class="kpi">
+        <div class="kpi-k">${esc(c.k)}</div>
+        <div class="kpi-v mono" style="color:${c.tone}">${esc(String(c.v))}</div>
+        <div class="kpi-s">${esc(c.sub)}</div>
+        ${spark(c.s, c.tone)}
+      </div>`).join('')}</div>`;
+    }
+  } catch (e) { /* KPI strip is additive */ }
 
   // Habit strip: streak, what's new, and this week's commitment. The reason to come back.
   try {
