@@ -229,7 +229,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .trust .card{background:rgba(255,255,255,.02)}
 .trust h3{margin:0 0 6px;font-size:13px;color:var(--ink)}
 .trust p{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
-@media(max-width:760px){.check .row3,.check .row2,.trust{grid-template-columns:1fr}.land-wrap{padding:24px 18px 60px}.land-nav{margin-bottom:40px}}
+@media(max-width:760px){.check .row3,.check .row2,.trust{grid-template-columns:1fr!important}.land-wrap{padding:24px 18px 60px}.land-nav{margin-bottom:40px}}
 @media(max-width:900px){.shell{grid-template-columns:1fr}.rail{display:none}.scores-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.opp{grid-template-columns:52px 1fr}.opp .right{display:none}}
 </style>
 </head>
@@ -279,6 +279,43 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
       <div class="result" id="c-result"></div>
     </div>
 
+    <div style="margin-top:56px;display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+      <div>
+        <div style="font-size:26px;font-weight:750;letter-spacing:-.02em;color:#ff8f96">1 in 3</div>
+        <div style="font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.6">professionals we check are more than 15% below the market median for their own profile.</div>
+      </div>
+      <div>
+        <div style="font-size:26px;font-weight:750;letter-spacing:-.02em">€13,500</div>
+        <div style="font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.6">the typical annual gap between what people are paid and what the live market pays for the same work.</div>
+      </div>
+      <div>
+        <div style="font-size:26px;font-weight:750;letter-spacing:-.02em">72%</div>
+        <div style="font-size:13px;color:var(--ink2);margin-top:6px;line-height:1.6">of live postings never state a salary. You are negotiating blind against a market you cannot see.</div>
+      </div>
+    </div>
+
+    <div style="margin-top:52px">
+      <h2 style="font-size:22px;letter-spacing:-.02em;margin:0 0 8px">Three questions nobody answers well</h2>
+      <p style="color:var(--muted);font-size:13.5px;margin:0 0 20px">Job boards answer a fourth question — "what exists?" — and stop there.</p>
+      <div style="display:grid;gap:12px">
+        <div class="card" style="display:flex;gap:16px;align-items:flex-start">
+          <div style="font-size:11px;color:#6ea8ff;font-weight:700;letter-spacing:.1em;padding-top:2px">01</div>
+          <div><div style="font-size:14px;font-weight:600">What am I actually worth?</div>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">Not a range from a survey. The median for your exact profile — seniority, skills, country — from postings that disclose pay, right now.</div></div>
+        </div>
+        <div class="card" style="display:flex;gap:16px;align-items:flex-start">
+          <div style="font-size:11px;color:#6ea8ff;font-weight:700;letter-spacing:.1em;padding-top:2px">02</div>
+          <div><div style="font-size:14px;font-weight:600">What am I missing?</div>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">The opportunities that fit you and are invisible to you, because they sit on platforms you do not check, in formats you do not search for.</div></div>
+        </div>
+        <div class="card" style="display:flex;gap:16px;align-items:flex-start">
+          <div style="font-size:11px;color:#6ea8ff;font-weight:700;letter-spacing:.1em;padding-top:2px">03</div>
+          <div><div style="font-size:14px;font-weight:600">What is the fastest path to more?</div>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">Which skill, which channel, which move — ranked by what it actually pays, not by what is trending.</div></div>
+        </div>
+      </div>
+    </div>
+
     <div class="trust">
       <div class="card"><h3>Live market, not a survey</h3><p>Benchmarks are computed from postings that disclose pay, refreshed continuously. Nothing is self-reported.</p></div>
       <div class="card"><h3>Honest confidence</h3><p>Every number carries its evidence. If there are too few comparables, we say so instead of guessing.</p></div>
@@ -316,6 +353,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
       <button data-view="referrals"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6.4 9.6a2.6 2.6 0 003.7 0l2.1-2.1a2.6 2.6 0 00-3.7-3.7l-1 1"/><path d="M9.6 6.4a2.6 2.6 0 00-3.7 0L3.8 8.5a2.6 2.6 0 003.7 3.7l1-1"/></svg></span>Partners</button>
       <button data-view="plan"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.8" y="3.6" width="12.4" height="8.8" rx="1.6"/><path d="M1.8 6.6h12.4"/></svg></span>Plan</button>
       <button data-view="analytics"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.4 13.2V8.4M6.2 13.2V4.2M10 13.2v-6M13.8 13.2V2.8"/></svg></span>Funnel</button>
+      <button data-view="leads"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4.5h12l-4.6 5v3.6l-2.8 1.2V9.5z"/></svg></span>Leads</button>
       <button data-view="ops"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2M3.6 3.6l1.4 1.4M11 11l1.4 1.4M12.4 3.6L11 5M5 11l-1.4 1.4"/></svg></span>Engine</button>
       </div>
     </nav>
@@ -372,6 +410,37 @@ function scoreColor(s) {
   return ['#f2545b', '#2a1719'];
 }
 
+
+/* ---------------- shared result card ---------------- */
+async function renderSharedCard(id) {
+  const r = await api('/api/public/share/' + id);
+  const fmt = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+  const per = r.payload?.period === 'hour' ? '/hr' : '/yr';
+  if (r.error) {
+    document.body.innerHTML = '<div style="padding:60px;text-align:center;font-family:system-ui">This card has expired or never existed. <a href="/">Try your own →</a></div>';
+    return;
+  }
+  const p = r.payload;
+  const under = p.gapPct != null && p.gapPct > 0;
+  document.getElementById('landing').innerHTML = `
+    <div class="land-wrap" style="max-width:620px">
+      <div class="land-nav"><div class="land-brand"><span class="mark">C</span> CareerOS</div></div>
+      <div class="card" style="padding:34px;background:linear-gradient(135deg,#1a1030,#101a2e 60%,#0f1c1a);border-color:#2f2a4d">
+        <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a99bf0">Market value report</div>
+        <div style="font-size:clamp(26px,4.6vw,36px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:12px 0 8px;color:${under ? '#ff8f96' : '#6fe3a4'}">
+          ${p.gapPct != null ? (under ? `${p.gapPct}% below market` : `${Math.abs(p.gapPct)}% above market`) : 'Market value'}
+        </div>
+        <div style="font-size:14px;color:var(--ink2)">
+          ${esc(p.role || 'This profile')}${p.country ? ' · ' + esc(p.country) : ''} — median <b style="color:var(--ink)">${fmt(p.median)}${per}</b>
+          ${p.gapAbs && under ? ` · about <b style="color:#ff8f96">${fmt(Math.abs(p.gapAbs))} a year</b> left on the table` : ''}
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:26px">
+        <a class="btn" href="/" style="font-size:14px;padding:12px 20px">Find out what you're worth <span style="opacity:.7">&gt;</span></a>
+        <div class="muted" style="font-size:11.5px;margin-top:10px">Free · 60 seconds · no account needed · ${r.views} view${r.views === 1 ? '' : 's'}</div>
+      </div>
+    </div>`;
+}
 
 /* ---------------- landing: the free rate check ---------------- */
 function showApp() {
@@ -433,16 +502,63 @@ async function runRateCheck() {
         <b style="color:var(--ink)">Skills that pay more than yours:</b>
         ${r.levers.slice(0, 4).map((l) => `${esc(l.skill)} <span style="color:#6fe3a4">+${l.premium}%</span>`).join(' · ')}
       </div>
+      <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap">
+        <button class="btn ghost sm" id="c-share">Share this result</button>
+        <button class="btn ghost sm" id="c-copyline">Copy the one-liner</button>
+      </div>
       <div style="margin-top:20px;border-top:1px solid rgba(255,255,255,.12);padding-top:16px">
-        <div style="font-size:14px;font-weight:600;margin-bottom:8px">${esc(r.next.headline)}</div>
-        <div style="font-size:12.5px;color:var(--muted);margin-bottom:12px">${esc(r.next.detail)}</div>
-        <button class="btn" id="c-signup">Create a free account <span style="opacity:.7">&gt;</span></button>
+        <div style="font-size:14px;font-weight:600;margin-bottom:6px">${esc(r.next.headline)}</div>
+        <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px">${esc(r.next.detail)}</div>
+        <div class="row" style="gap:8px;flex-wrap:wrap">
+          <input id="c-email" type="email" placeholder="you@example.com" style="flex:1;min-width:200px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:9px;padding:11px 13px;color:var(--ink);outline:none;font-size:13.5px"/>
+          <button class="btn" id="c-signup">Email me my report <span style="opacity:.7">&gt;</span></button>
+        </div>
+        <div class="muted" id="c-lead-msg" style="font-size:11.5px;margin-top:8px"></div>
       </div>`;
-    document.getElementById('c-signup').onclick = () => {
-      document.getElementById('landing').style.display = 'none';
-      document.getElementById('app-shell').style.display = '';
-      go('auth');
-      toast('Sign in to see the opportunities that pay this');
+    STATE.lastCheck = { input: r.input, benchmark: b, verdict: v };
+
+    const oneLiner = v.gapPct != null
+      ? `CareerOS says a ${r.input.seniority} ${r.input.family.replace(/_/g, ' ')} in ${r.input.country || 'the EU'} is worth ${fmt(b.p50)}${per} — I'm ${Math.abs(v.gapPct)}% ${v.gapPct > 0 ? 'below' : 'above'} that.`
+      : `The median for ${r.input.seniority} ${r.input.family.replace(/_/g, ' ')} work is ${fmt(b.p50)}${per}.`;
+    document.getElementById('c-copyline').onclick = () => { navigator.clipboard.writeText(oneLiner); toast('Copied — paste it anywhere'); };
+
+    document.getElementById('c-share').onclick = async () => {
+      const share = await post('/api/public/share', {
+        role: r.input.role, seniority: r.input.seniority, country: r.input.country,
+        gapPct: v.gapPct, gapAbs: v.gapAbs, median: b.p50, period: b.period,
+      });
+      if (share.error) return toast(share.error);
+      const url = location.origin + share.path;
+      if (navigator.share) { try { await navigator.share({ title: 'My market value', text: oneLiner, url }); return; } catch (e) { /* fall through */ } }
+      navigator.clipboard.writeText(oneLiner + ' ' + url);
+      toast('Link copied — it opens as a card');
+    };
+
+    document.getElementById('c-signup').onclick = async () => {
+      const email = document.getElementById('c-email').value.trim();
+      const msg = document.getElementById('c-lead-msg');
+      if (!email) { msg.textContent = 'Enter an email and we will send the full report.'; return; }
+      const btn = document.getElementById('c-signup');
+      btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Saving…';
+      const lead = await post('/api/public/lead', {
+        email, role: r.input.role, years: r.input.years, country: r.input.country,
+        currentSalary: r.input.current, skills: document.getElementById('c-skills').value.split(',').map((x) => x.trim()).filter(Boolean),
+        gapPct: v.gapPct, gapAbs: v.gapAbs, median: b.p50, source: 'landing',
+      });
+      btn.disabled = false; btn.innerHTML = 'Email me my report <span style="opacity:.7">&gt;</span>';
+      if (lead.error) { msg.textContent = lead.error; return; }
+      msg.innerHTML = lead.hasAccount
+        ? 'We found your account — <a href="/?app=1" style="color:#8fb4ee">open the radar</a>.'
+        : 'Saved. Continue to build your Career Twin and see the opportunities that pay this.';
+      if (!lead.hasAccount) {
+        setTimeout(() => {
+          document.getElementById('landing').style.display = 'none';
+          document.getElementById('app-shell').style.display = '';
+          go('auth');
+          const f = document.getElementById('auth-email');
+          if (f) { f.value = email; toast('One code and your radar is live'); }
+        }, 1100);
+      }
     };
     box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   } catch (e) {
@@ -1479,6 +1595,42 @@ async function renderNegotiation() {
   document.querySelectorAll('.cp').forEach((b) => { b.onclick = () => copy(b.dataset.t); });
 }
 
+/* ---------------- leads ---------------- */
+async function renderLeads() {
+  const d = await api('/api/leads');
+  const st = d.stats;
+  $('#view').innerHTML = `
+    <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+      <div class="card"><h3>Leads captured</h3><div class="big mono">${st.total}</div><div class="muted" style="font-size:11px">from the free check</div></div>
+      <div class="card"><h3>Converted to accounts</h3><div class="big mono">${st.converted}</div><div class="muted" style="font-size:11px">${st.conversionRate}% conversion</div></div>
+      <div class="card"><h3>Underpaid &gt;10%</h3><div class="big mono">${st.withGap}</div><div class="muted" style="font-size:11px">highest-intent segment</div></div>
+      <div class="card"><h3>Shares created</h3><div class="big mono">${st.shares}</div><div class="muted" style="font-size:11px">${st.shareViews} views</div></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3>Leads</h3>
+      <table class="t" style="margin-top:8px">
+        <thead><tr><th>Email</th><th>Role</th><th>Yrs</th><th>Country</th><th>Paid</th><th>Gap</th><th>Median</th><th>State</th><th>When</th></tr></thead>
+        <tbody>
+        ${d.leads.length ? d.leads.map((l) => `<tr>
+          <td>${esc(l.email)}</td>
+          <td>${esc(l.role || '—')}</td>
+          <td class="mono">${l.years ?? '—'}</td>
+          <td class="mono">${esc(l.country || '—')}</td>
+          <td class="mono">${l.current_salary ? money(l.current_salary) : '—'}</td>
+          <td class="mono" style="color:${l.gap_pct > 10 ? '#ff8f96' : l.gap_pct > 0 ? '#e0c273' : '#6fe3a4'}">${l.gap_pct != null ? (l.gap_pct > 0 ? '+' : '') + l.gap_pct + '%' : '—'}</td>
+          <td class="mono">${l.median ? money(l.median) : '—'}</td>
+          <td>${l.converted_user_id ? '<span class="chip have">account</span>' : '<span class="chip">lead</span>'}</td>
+          <td class="muted" style="font-size:11px">${new Date(l.created_at).toLocaleDateString('en-GB')}</td>
+        </tr>`).join('') : '<tr><td colspan="9" class="muted">No leads yet. Run the free check on the landing page.</td></tr>'}
+        </tbody>
+      </table>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3>What to do with this</h3>
+      <div class="dim" style="font-size:12.5px;margin-top:8px">A lead with a gap above 10% is the highest-intent person in the system: they have seen a number, they believe it, and they have not yet acted. That is the list to email first — not the whole database.</div>
+    </div>`;
+}
+
 /* ---------------- analytics ---------------- */
 async function renderAnalytics() {
   const a = await api('/api/analytics?days=30');
@@ -1753,6 +1905,7 @@ const VIEWS = {
   trajectory: [renderTrajectory, 'Trajectory', 'Where each path actually lands'],
   pulse: [renderPulse, 'Market Pulse', 'What the live corpus says right now'],
   analytics: [renderAnalytics, 'Funnel', 'Where users actually leak out'],
+  leads: [renderLeads, 'Leads', 'People who saw their number'],
   referrals: [renderReferrals, 'Partners', 'Referral routing, isolated from ranking'],
   plan: [renderPlan, 'Plan', 'Free vs Pro — and why the paywall sits there'],
   ops: [renderOps, 'Engine', 'What the system actually did'],
@@ -1957,6 +2110,9 @@ $('#logout') && ($('#logout').onclick = async () => {
 });
 
 (async () => {
+  const shared = location.pathname.match(/^\/s\/([a-f0-9]+)$/);
+  if (shared) { await renderSharedCard(shared[1]); return; }
+
   const params = new URLSearchParams(location.search);
   const authed = await api('/api/auth/me');
   if (!authed.user && !params.get('app')) {

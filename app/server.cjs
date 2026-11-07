@@ -1114,6 +1114,75 @@ route('POST', /^\/api\/public\/rate-check$/, async (req, res) => {
   });
 });
 
+// ---- lead capture + shareable cards (the acquisition loop) ----
+route('POST', /^\/api\/public\/lead$/, async (req, res) => {
+  const body = await readBody(req);
+  const email = String(body.email || '').trim().toLowerCase();
+  if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email)) return json(res, 400, { error: 'invalid email' });
+
+  const existing = db.prepare('SELECT * FROM leads WHERE email=?').get(email);
+  const id = existing ? existing.id : crypto.randomUUID();
+  if (existing) {
+    db.prepare('UPDATE leads SET role=COALESCE(?,role), years=COALESCE(?,years), country=COALESCE(?,country), current_salary=COALESCE(?,current_salary), skills=COALESCE(?,skills), gap_pct=COALESCE(?,gap_pct), gap_abs=COALESCE(?,gap_abs), median=COALESCE(?,median) WHERE id=?')
+      .run(body.role || null, body.years ?? null, body.country || null, body.currentSalary ?? null,
+        body.skills ? JSON.stringify(body.skills) : null, body.gapPct ?? null, body.gapAbs ?? null, body.median ?? null, id);
+  } else {
+    db.prepare(`INSERT INTO leads (id,email,role,years,country,current_salary,skills,gap_pct,gap_abs,median,source)
+      VALUES (?,?,?,?,?,?,?,?,?,?,?)`)
+      .run(id, email, body.role || null, body.years ?? null, body.country || null, body.currentSalary ?? null,
+        body.skills ? JSON.stringify(body.skills) : null, body.gapPct ?? null, body.gapAbs ?? null, body.median ?? null,
+        body.source || 'landing');
+  }
+  AN.track(null, 'lead.captured', { role: body.role, gapPct: body.gapPct, source: body.source || 'landing' });
+  log(null, 'lead.captured', 'lead', id, { source: body.source || 'landing' });
+
+  // The user may already have an account under this email — link it.
+  const user = db.prepare('SELECT id FROM users WHERE email=?').get(email);
+  if (user) db.prepare('UPDATE leads SET converted_user_id=? WHERE id=?').run(user.id, id);
+
+  json(res, 200, { ok: true, id, returning: !!existing, hasAccount: !!user });
+});
+
+// Shareable result card. The user controls what is on it; nothing identifying is ever stored
+// in the payload, and the id is random so a card cannot be enumerated.
+route('POST', /^\/api\/public\/share$/, async (req, res) => {
+  const body = await readBody(req);
+  const id = crypto.randomBytes(8).toString('hex');
+  const payload = {
+    role: String(body.role || '').slice(0, 80),
+    seniority: String(body.seniority || '').slice(0, 20),
+    country: String(body.country || '').slice(0, 2),
+    gapPct: body.gapPct != null ? Number(body.gapPct) : null,
+    gapAbs: body.gapAbs != null ? Number(body.gapAbs) : null,
+    median: body.median != null ? Number(body.median) : null,
+    period: body.period === 'hour' ? 'hour' : 'year',
+  };
+  db.prepare('INSERT INTO share_cards (id,lead_id,kind,payload) VALUES (?,?,?,?)')
+    .run(id, body.leadId || null, 'rate-gap', JSON.stringify(payload));
+  AN.track(null, 'share.created', { gapPct: payload.gapPct });
+  json(res, 200, { ok: true, id, path: `/s/${id}` });
+});
+
+route('GET', /^\/api\/public\/share\/([a-f0-9]+)$/, async (req, res, url, m) => {
+  const row = db.prepare('SELECT * FROM share_cards WHERE id=?').get(m[1]);
+  if (!row) return json(res, 404, { error: 'not found' });
+  db.prepare('UPDATE share_cards SET views=views+1 WHERE id=?').run(m[1]);
+  json(res, 200, { id: row.id, kind: row.kind, payload: JSON.parse(row.payload), views: row.views + 1 });
+});
+
+route('GET', /^\/api\/leads$/, async (req, res) => {
+  const rows = db.prepare('SELECT id,email,role,years,country,current_salary,gap_pct,gap_abs,median,source,converted_user_id,created_at FROM leads ORDER BY created_at DESC LIMIT 200').all();
+  const total = db.prepare('SELECT COUNT(*) n FROM leads').get().n;
+  const converted = db.prepare('SELECT COUNT(*) n FROM leads WHERE converted_user_id IS NOT NULL').get().n;
+  const withGap = db.prepare('SELECT COUNT(*) n FROM leads WHERE gap_pct > 10').get().n;
+  const shares = db.prepare('SELECT COUNT(*) n FROM share_cards').get().n;
+  const shareViews = db.prepare('SELECT COALESCE(SUM(views),0) n FROM share_cards').get().n;
+  json(res, 200, {
+    leads: rows,
+    stats: { total, converted, withGap, shares, shareViews, conversionRate: total ? Math.round((converted / total) * 100) : 0 },
+  });
+});
+
 // ---- opportunity open (funnel step) ----
 route('POST', /^\/api\/opportunities\/opened$/, async (req, res) => {
   const body = await readBody(req);
@@ -1350,6 +1419,9 @@ function serveStatic(req, res, pathname) {
 const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const pathname = url.pathname;
+  // Shared cards live at /s/<id>; the client renders them from the API.
+  if (/^\/s\/[a-f0-9]+$/.test(pathname)) return serveStatic(req, res, '/index.html');
+
   if (!pathname.startsWith('/api/') && !pathname.startsWith('/go/')) return serveStatic(req, res, pathname);
 
   // Stripe webhook needs the raw body for signature verification, so it bypasses the

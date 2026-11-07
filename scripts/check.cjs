@@ -8,11 +8,13 @@ const GETS = [
   '/api/twin', '/api/tracker', '/api/gaps', '/api/gaps/plan', '/api/brief', '/api/learning',
   '/api/outcomes/intel', '/api/plan', '/api/referrals', '/api/ops', '/api/pulse', '/api/ingest',
   '/api/saved-searches', '/api/negotiation', '/api/trajectory', '/api/analytics',
-  '/api/billing/status',
+  '/api/billing/status', '/api/leads',
 ];
 const POSTS = [
   ['/api/demo', {}],
   ['/api/public/rate-check', { role: 'Senior Data Scientist', years: 8, country: 'DE', currentSalary: 78000, skills: ['Python', 'SQL'] }],
+  ['/api/public/lead', { email: 'smoke@careeros.test', role: 'Senior Data Scientist', years: 8, gapPct: 17, median: 90000 }],
+  ['/api/public/share', { role: 'Senior Data Scientist', gapPct: 17, gapAbs: 13000, median: 90000 }],
   ['/api/copilot', { message: 'Am I underpaid?' }],
   ['/api/horizon', { horizon: 'balanced' }],
   ['/api/brief/ack', {}],
@@ -72,6 +74,13 @@ async function call(method, path, body) {
   const rcOk = rc.json && rc.json.benchmark && rc.json.benchmark.p25 <= rc.json.benchmark.p50
     && rc.json.benchmark.p50 <= rc.json.benchmark.p75 && rc.json.verdict && rc.json.levers;
   if (rcOk) pass++; else { fail++; failures.push('invariant failed: public rate check returns ordered benchmark + verdict'); }
+
+  const badLead = await call('POST', '/api/public/lead', { email: 'not-an-email' });
+  if (badLead.status === 400) pass++; else { fail++; failures.push('invariant failed: invalid lead email rejected'); }
+
+  const share = await call('POST', '/api/public/share', { role: 'X', gapPct: 5, median: 1000 });
+  const card = share.json?.id ? await call('GET', '/api/public/share/' + share.json.id) : { json: null };
+  if (card.json?.payload && card.json.views >= 1) pass++; else { fail++; failures.push('invariant failed: share card round-trip'); }
 
   const traj = await call('GET', '/api/trajectory');
   const trajOk = traj.json && traj.json.paths?.length === 5 && traj.json.paths.every((p) => p.endSalary > 0);

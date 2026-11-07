@@ -179,6 +179,31 @@ CREATE TABLE IF NOT EXISTS ingestion_runs (
   created_at TEXT DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS leads (
+  id TEXT PRIMARY KEY,
+  email TEXT,
+  role TEXT,
+  years INTEGER,
+  country TEXT,
+  current_salary REAL,
+  skills TEXT,
+  gap_pct REAL,
+  gap_abs REAL,
+  median REAL,
+  source TEXT,
+  converted_user_id TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS share_cards (
+  id TEXT PRIMARY KEY,
+  lead_id TEXT,
+  kind TEXT,
+  payload TEXT,
+  views INTEGER DEFAULT 0,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS events (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   user_id TEXT,
@@ -306,6 +331,7 @@ CREATE INDEX IF NOT EXISTS idx_opp_country ON opportunities(country);
 CREATE INDEX IF NOT EXISTS idx_opp_family ON opportunities(role_family, seniority);
 CREATE INDEX IF NOT EXISTS idx_matches_user ON matches(user_id, match_score DESC);
 CREATE INDEX IF NOT EXISTS idx_events_name ON events(name, created_at);
+CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(email);
 CREATE INDEX IF NOT EXISTS idx_events_user ON events(user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_salary_seg ON salary_records(role_family, country, period);
 CREATE INDEX IF NOT EXISTS idx_apps_user ON applications(user_id, status);
