@@ -625,48 +625,158 @@ async function renderAuth() {
 
 /* ---------------- onboarding ---------------- */
 function renderOnboarding() {
-  $('#view-title').textContent = 'Set up your Career Twin';
-  $('#view-sub').textContent = 'One profile. Every opportunity.';
-  $('#profile-pill').textContent = 'no profile';
+  const draft = STATE.draft || { step: 1 };
+  const D = draft;
+  $('#view-title').textContent = 'Build your Career Twin';
+  $('#view-sub').textContent = 'Ninety seconds to your first real number.';
+  $('#profile-pill').textContent = 'setting up';
+
+  const stepDots = [1, 2, 3].map((n) => `<span style="width:${n === D.step ? 26 : 8}px;height:8px;border-radius:4px;background:${n <= D.step ? 'var(--accent)' : 'var(--line2)'};transition:.25s"></span>`).join('');
+
+  const stepOne = `
+    <p class="lead">What do you do?</p>
+    <p class="sub">This is what everything else is scored against.</p>
+    <div class="field"><label>Your role</label><input id="ob-role" placeholder="e.g. Senior Data Scientist" value="${esc(D.role || '')}" autofocus/></div>
+    <div class="form-grid">
+      <div class="field"><label>Years of experience</label><input id="ob-years" type="number" min="0" max="45" placeholder="8" value="${D.years ?? ''}"/></div>
+      <div class="field"><label>Country</label>
+        <select id="ob-country">
+          <option value="">Any</option>
+          ${['DE','NL','GB','PT','ES','FR','PL','CH','SE','IE','CA','US','IN','AE','WW'].map((c) => `<option value="${c}" ${D.country === c ? 'selected' : ''}>${c}</option>`).join('')}
+        </select>
+      </div>
+      <div class="field"><label>Remote preference</label>
+        <select id="ob-remote">
+          <option value="any" ${D.remote === 'any' || !D.remote ? 'selected' : ''}>Any</option>
+          <option value="remote" ${D.remote === 'remote' ? 'selected' : ''}>Remote only</option>
+          <option value="hybrid" ${D.remote === 'hybrid' ? 'selected' : ''}>Hybrid</option>
+          <option value="onsite" ${D.remote === 'onsite' ? 'selected' : ''}>Onsite</option>
+        </select>
+      </div>
+    </div>
+    <div class="row" style="margin-top:20px;gap:10px">
+      <button class="btn" id="ob-next">Continue <span style="opacity:.7">&gt;</span></button>
+      <button class="btn ghost" id="ob-demo">Skip — use the demo persona</button>
+    </div>`;
+
+  const stepTwo = `
+    <p class="lead">What are you paid now?</p>
+    <p class="sub">This is the only way to tell you what you're leaving on the table. It never leaves your account.</p>
+    <div class="form-grid" style="grid-template-columns:1.2fr .8fr .8fr">
+      <div class="field"><label>Current pay</label><input id="ob-current" type="number" placeholder="78000" value="${D.currentSalary ?? ''}" autofocus/></div>
+      <div class="field"><label>Unit</label>
+        <select id="ob-unit"><option value="year" ${D.unit === 'year' || !D.unit ? 'selected' : ''}>Per year</option><option value="hour" ${D.unit === 'hour' ? 'selected' : ''}>Per hour</option><option value="month" ${D.unit === 'month' ? 'selected' : ''}>Per month</option></select>
+      </div>
+      <div class="field"><label>Target minimum</label><input id="ob-target" type="number" placeholder="100000" value="${D.target ?? ''}"/></div>
+    </div>
+    <div class="field" style="margin-top:4px"><label>Your strongest skills (comma separated)</label><input id="ob-skills" placeholder="Python, SQL, Machine Learning" value="${esc(D.skills || '')}"/></div>
+    <div class="row" style="margin-top:20px;gap:10px">
+      <button class="btn" id="ob-next2">See my market value <span style="opacity:.7">&gt;</span></button>
+      <button class="btn ghost" id="ob-back">Back</button>
+    </div>
+    <div class="note" style="margin-top:14px">Prefer to paste a CV? <a href="#" id="ob-cvlink" style="color:var(--accent)">Do that instead</a> — we'll parse it and fill this in.</div>`;
+
+  const stepThree = `
+    <p class="lead">Here's what you're leaving on the table.</p>
+    <p class="sub">Computed from live postings that disclose pay, right now.</p>
+    <div id="ob-preview"><div class="empty"><span class="spin"></span>Reading the market…</div></div>`;
+
+  const cvMode = `
+    <p class="lead">Paste your CV.</p>
+    <p class="sub">We parse it deterministically and pre-fill everything. Nothing is invented.</p>
+    <textarea class="cv" id="cv" placeholder="Paste your CV — experience, skills, current salary, target countries…"></textarea>
+    <div class="row" style="margin-top:14px;gap:10px">
+      <button class="btn" id="parse">Parse &amp; build my twin</button>
+      <button class="btn ghost" id="ob-back2">Back to the quick version</button>
+    </div>`;
+
   $('#view').innerHTML = `
   <div class="onboard">
-    <p class="lead">Paste your CV. We'll build your Career Twin.</p>
-    <p class="sub">Everything below is computed from your real profile against ${STATE.engineCounts?.opportunities || '—'} live opportunities. No mock numbers.</p>
-    <textarea class="cv" id="cv" placeholder="Paste your CV here — experience, skills, current salary, target countries…"></textarea>
-    <div style="margin:14px 0 22px" class="row">
-      <button class="btn" id="parse">Parse &amp; build my twin</button>
-      <button class="btn ghost" id="demo-inline">Or load the demo persona</button>
-      <span class="note" id="parse-note"></span>
-    </div>
-    <div class="form-grid">
-      <div class="field"><label>Seniority</label><select id="seniority"><option value="junior">Junior</option><option value="mid">Mid</option><option value="senior" selected>Senior</option><option value="staff">Staff</option><option value="lead">Lead</option><option value="principal">Principal</option></select></div>
-      <div class="field"><label>Current rate (EUR)</label><input id="currentRate" type="number" placeholder="78000"/></div>
-      <div class="field"><label>Rate unit</label><select id="rateUnit"><option value="year" selected>Per year</option><option value="hour">Per hour</option><option value="month">Per month</option></select></div>
-      <div class="field"><label>Target minimum (EUR)</label><input id="targetRateMin" type="number" placeholder="100000"/></div>
-      <div class="field"><label>Remote preference</label><select id="remotePreference"><option value="remote">Remote only</option><option value="any" selected>Any</option><option value="hybrid">Hybrid</option><option value="onsite">Onsite</option></select></div>
-      <div class="field"><label>Visa sponsorship needed</label><select id="visaNeeded"><option value="1">Yes</option><option value="0">No</option></select></div>
-    </div>
-    <div class="note">The engine parses your CV deterministically (skill vocabulary of 58 canonical skills with aliases), then scores every opportunity on skill fit, seniority fit, income potential, location, freshness and channel quality — and calibrates interview/offer probability against priors.</div>
+    <div class="row" style="gap:8px;margin-bottom:24px">${stepDots}<span class="muted" style="font-size:11.5px;margin-left:8px">Step ${D.step} of 3</span></div>
+    ${D.cvMode ? cvMode : D.step === 1 ? stepOne : D.step === 2 ? stepTwo : stepThree}
   </div>`;
-  $('#parse').onclick = async () => {
-    const btn = $('#parse'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Parsing…';
-    const cv = $('#cv').value;
-    if (cv.trim().length < 40) { toast('Paste a CV first (or load the demo)'); btn.disabled = false; btn.textContent = 'Parse & build my twin'; return; }
-    const res = await post('/api/onboarding', {
-      cv,
-      seniority: $('#seniority').value,
-      currentRate: $('#currentRate').value || null,
-      rateUnit: $('#rateUnit').value,
-      targetRateMin: $('#targetRateMin').value || null,
-      remotePreference: $('#remotePreference').value,
-      visaNeeded: $('#visaNeeded').value === '1',
-    });
-    btn.disabled = false; btn.textContent = 'Parse & build my twin';
-    if (res.parsed) toast(`Parsed ${res.parsed.skills.length} skills · ${res.matched} opportunities scored`);
-    await boot();
-    go('radar');
+
+  const save = async (step, data) => {
+    STATE.draft = { ...(STATE.draft || {}), ...data, step };
+    await post('/api/onboarding/draft', { step, data: STATE.draft });
   };
-  $('#demo-inline').onclick = loadDemo;
+
+  if (D.cvMode) {
+    $('#parse').onclick = async () => {
+      const btn = $('#parse'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Parsing…';
+      const cv = $('#cv').value;
+      if (cv.trim().length < 40) { toast('Paste a CV first'); btn.disabled = false; btn.textContent = 'Parse & build my twin'; return; }
+      const res = await post('/api/onboarding', { cv, seniority: D.seniority || 'senior' });
+      btn.disabled = false; btn.textContent = 'Parse & build my twin';
+      if (res.parsed) toast(`Parsed ${res.parsed.skills.length} skills · ${res.matched} opportunities scored`);
+      STATE.draft = null;
+      await boot();
+      go('radar');
+    };
+    $('#ob-back2').onclick = async () => { STATE.draft = { ...D, cvMode: false, step: 1 }; await save(1, STATE.draft); renderOnboarding(); };
+    return;
+  }
+
+  if (D.step === 1) {
+    $('#ob-demo').onclick = loadDemo;
+    $('#ob-next').onclick = async () => {
+      const role = $('#ob-role').value.trim();
+      const years = $('#ob-years').value;
+      if (!role) return toast('What is your role?');
+      if (years === '') return toast('How many years of experience?');
+      await save(2, { role, years: Number(years), country: $('#ob-country').value, remote: $('#ob-remote').value });
+      renderOnboarding();
+    };
+    $('#ob-role').onkeydown = (e) => { if (e.key === 'Enter') $('#ob-next').click(); };
+  }
+
+  if (D.step === 2) {
+    $('#ob-back').onclick = async () => { await save(1, {}); renderOnboarding(); };
+    $('#ob-cvlink').onclick = async (e) => { e.preventDefault(); STATE.draft = { ...D, cvMode: true }; await save(D.step, STATE.draft); renderOnboarding(); };
+    $('#ob-next2').onclick = async () => {
+      const btn = $('#ob-next2'); btn.disabled = true; btn.innerHTML = '<span class="spin"></span>Scoring…';
+      const data = {
+        currentSalary: $('#ob-current').value ? Number($('#ob-current').value) : null,
+        unit: $('#ob-unit').value,
+        target: $('#ob-target').value ? Number($('#ob-target').value) : null,
+        skills: $('#ob-skills').value,
+      };
+      await save(3, data);
+      // Build the profile now so the preview and the app agree.
+      await post('/api/onboarding', {
+        headline: D.role, seniority: D.seniority || 'senior', years: D.years,
+        currentRate: data.currentSalary, rateUnit: data.unit, targetRateMin: data.target,
+        remotePreference: D.remote, targetCountries: D.country ? [D.country] : [],
+        skills: data.skills.split(',').map((x) => x.trim()).filter(Boolean),
+      });
+      renderOnboarding();
+      const preview = await post('/api/onboarding/preview', {
+        role: D.role, years: D.years, country: D.country,
+        currentSalary: data.currentSalary, unit: data.unit,
+        skills: data.skills.split(',').map((x) => x.trim()).filter(Boolean),
+      });
+      const box = $('#ob-preview');
+      if (preview.error) { box.innerHTML = `<div class="card muted">${esc(preview.error)}</div>`; btn.disabled = false; return; }
+      const b = preview.benchmark, v = preview.verdict;
+      const fmt = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
+      const per = b.period === 'hour' ? '/hr' : '/yr';
+      const tone = v.gapPct > 15 ? '#ff8f96' : v.gapPct > 5 ? '#e0c273' : '#6fe3a4';
+      box.innerHTML = `
+        <div class="card" style="border-color:#2f2a4d;background:linear-gradient(135deg,#1a1030,#101a2e 60%,#0f1c1a)">
+          <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
+          <div style="font-size:clamp(24px,4.4vw,34px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:10px 0 6px;color:${tone}">${esc(v.headline)}</div>
+          <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b></div>
+        </div>
+        <div class="row" style="margin-top:18px;gap:10px">
+          <button class="btn" id="ob-finish">Open my radar <span style="opacity:.7">&gt;</span></button>
+          <button class="btn ghost" id="ob-edit">Edit details</button>
+        </div>`;
+      $('#ob-finish').onclick = async () => { STATE.draft = null; await boot(); go('radar'); };
+      $('#ob-edit').onclick = async () => { await save(2, {}); renderOnboarding(); };
+      btn.disabled = false;
+    };
+    $('#ob-current').onkeydown = (e) => { if (e.key === 'Enter') $('#ob-next2').click(); };
+  }
 }
 
 async function loadDemo() {
@@ -1954,7 +2064,7 @@ async function renderOps() {
 
 /* ---------------- router ---------------- */
 const VIEWS = {
-  onboard: [renderOnboarding, 'Set up your Career Twin', 'One profile. Every opportunity.'],
+  onboard: [async () => { if (!STATE.draft) { try { STATE.draft = await api('/api/onboarding/draft'); } catch (e) { STATE.draft = { step: 1 }; } } renderOnboarding(); }, 'Build your Career Twin', 'Ninety seconds to your first real number.'],
   radar: [renderRadar, 'Opportunity Radar', 'Continuously scored against your Career Twin'],
   scores: [renderScores, 'Career Score', 'Six scores, benchmarked and recomputed on every action'],
   rates: [renderRates, 'Rate Intelligence', 'What your exact profile is worth — the wedge'],

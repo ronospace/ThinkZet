@@ -179,6 +179,13 @@ CREATE TABLE IF NOT EXISTS ingestion_runs (
   created_at TEXT DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS onboarding_drafts (
+  user_id TEXT PRIMARY KEY,
+  step INTEGER DEFAULT 1,
+  payload TEXT,
+  updated_at TEXT DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS email_queue (
   id TEXT PRIMARY KEY,
   user_id TEXT,

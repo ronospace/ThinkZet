@@ -9,12 +9,14 @@ const GETS = [
   '/api/outcomes/intel', '/api/plan', '/api/referrals', '/api/ops', '/api/pulse', '/api/ingest',
   '/api/saved-searches', '/api/negotiation', '/api/trajectory', '/api/analytics',
   '/api/billing/status', '/api/leads', '/api/email/status', '/api/email/prefs', '/api/email/outbox',
+  '/api/onboarding/draft',
 ];
 const POSTS = [
   ['/api/demo', {}],
   ['/api/public/rate-check', { role: 'Senior Data Scientist', years: 8, country: 'DE', currentSalary: 78000, skills: ['Python', 'SQL'] }],
   ['/api/public/lead', { email: 'smoke@careeros.test', role: 'Senior Data Scientist', years: 8, gapPct: 17, median: 90000 }],
   ['/api/public/share', { role: 'Senior Data Scientist', gapPct: 17, gapAbs: 13000, median: 90000 }],
+  ['/api/onboarding/preview', { role: 'Backend Engineer', years: 6, currentSalary: 70000, skills: ['Go'] }],
   ['/api/email/brief', {}],
   ['/api/email/flush', {}],
   ['/api/copilot', { message: 'Am I underpaid?' }],

@@ -1119,6 +1119,40 @@ route('POST', /^\/api\/public\/rate-check$/, async (req, res) => {
   });
 });
 
+// ---- onboarding draft: step-by-step, saved as you go ----
+route('GET', /^\/api\/onboarding\/draft$/, async (req, res) => {
+  const uid = resolveUser(req);
+  const row = db.prepare('SELECT * FROM onboarding_drafts WHERE user_id=?').get(uid);
+  json(res, 200, row ? { ...JSON.parse(row.payload), step: row.step } : { step: 1 });
+});
+
+route('POST', /^\/api\/onboarding\/draft$/, async (req, res) => {
+  const body = await readBody(req);
+  const uid = resolveUser(req);
+  const step = Number(body.step || 1);
+  const payload = JSON.stringify(body.data || {});
+  db.prepare(`INSERT INTO onboarding_drafts (user_id,step,payload,updated_at) VALUES (?,?,?,datetime('now'))
+    ON CONFLICT(user_id) DO UPDATE SET step=excluded.step, payload=excluded.payload, updated_at=datetime('now')`)
+    .run(uid, step, payload);
+  json(res, 200, { ok: true, step });
+});
+
+// Live preview of the rate gap mid-onboarding — the payoff before the form is finished.
+route('POST', /^\/api\/onboarding\/preview$/, async (req, res) => {
+  const body = await readBody(req);
+  const role = String(body.role || '').trim();
+  if (!role) return json(res, 400, { error: 'role required' });
+  const r = await fetch(`http://127.0.0.1:${PORT}/api/public/rate-check`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({
+      role, years: body.years, country: body.country,
+      currentSalary: body.currentSalary, unit: body.unit, skills: body.skills || [],
+    }),
+  });
+  json(res, r.status, await r.json());
+});
+
 // ---- email: delivery, preferences, the brief loop ----
 route('GET', /^\/api\/email\/status$/, async (req, res) => {
   const rows = db.prepare('SELECT status, COUNT(*) n FROM email_queue GROUP BY status').all();
