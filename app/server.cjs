@@ -12,6 +12,7 @@ const E = require('./engine.cjs');
 const AUTH = require('./auth.cjs');
 const REF = require('./referrals.cjs');
 const CONF = require('./confidence.cjs');
+const TRAJ = require('./trajectory.cjs');
 
 const PORT = Number(process.env.PORT || 4173);
 const PUBLIC = path.join(__dirname, 'public');
@@ -446,6 +447,38 @@ route('POST', /^\/api\/applications\/status$/, async (req, res) => {
 route('DELETE', /^\/api\/applications\/([^/]+)$/, async (req, res, url, m) => {
   db.prepare('DELETE FROM applications WHERE user_id=? AND opportunity_id=?').run(resolveUser(req), m[1]);
   json(res, 200, { ok: true });
+});
+
+// ---- trajectory simulator ----
+route('GET', /^\/api\/trajectory$/, async (req, res, url) => {
+  const uid = resolveUser(req);
+  const profile = getProfile(uid);
+  if (!profile) return json(res, 404, { error: 'no profile' });
+  const twin = E.buildTwin(uid);
+  const rates = E.rateIntelligence(uid);
+
+  const annualise = (amount, unit) => {
+    if (amount == null) return null;
+    if (unit === 'hour') return Math.round(amount * 1600);
+    if (unit === 'month') return Math.round(amount * 12);
+    return Math.round(amount);
+  };
+
+  const currentAnnual = annualise(profile.current_rate, profile.rate_unit) || (rates ? rates.p50 : 80000);
+  const months = Math.max(6, Math.min(60, Number(url.searchParams.get('months') || 24)));
+  const result = TRAJ.simulate({
+    currentAnnual,
+    level: profile.seniority || 'mid',
+    skills: twin.skillDetail || [],
+    months,
+  });
+  const riskAdjustedById = Object.fromEntries((result.riskAdjusted || []).map((r) => [r.path, r.riskAdjusted]));
+  const paths = result.paths.map((p) => ({ ...p, riskAdjusted: riskAdjustedById[p.path] ?? null }));
+  json(res, 200, {
+    ...result,
+    paths,
+    benchmark: rates ? { p50: rates.p50, p75: rates.p75, p90: rates.p90, period: rates.period } : null,
+  });
 });
 
 // ---- outcome intelligence: rates from real results ----

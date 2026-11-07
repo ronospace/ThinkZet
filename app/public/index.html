@@ -1079,6 +1079,55 @@ async function renderNegotiation() {
   document.querySelectorAll('.cp').forEach((b) => { b.onclick = () => copy(b.dataset.t); });
 }
 
+/* ---------------- trajectory ---------------- */
+async function renderTrajectory(months) {
+  months = months || STATE.trajMonths || 24;
+  STATE.trajMonths = months;
+  const t = await api('/api/trajectory?months=' + months);
+  if (!t || t.error) return renderOnboarding();
+  const max = Math.max(...t.paths.map((p) => p.endSalary));
+  const bar = (v) => Math.max(4, Math.round((v / max) * 100));
+  $('#view').innerHTML = `
+    <div class="card" style="border-color:#253247;background:linear-gradient(135deg,#12182a,#101a1e)">
+      <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Trajectory · ${months} months · transparent model, not a forecast</div>
+      <div style="font-size:16px;font-weight:600;margin-top:8px;line-height:1.5">${esc(t.insight)}</div>
+      <div class="row" style="margin-top:16px;gap:8px">
+        ${[12, 24, 36, 60].map((m) => `<button class="tm" data-m="${m}" style="font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid ${m === months ? '#33507a' : 'var(--line2)'};background:${m === months ? '#1b2637' : 'transparent'};color:${m === months ? '#cfe0ff' : 'var(--ink2)'}">${m} months</button>`).join('')}
+      </div>
+    </div>
+
+    <h2 class="section">The five paths</h2>
+    <div class="card">
+      ${t.paths.map((p) => `<div style="padding:12px 0;border-bottom:1px solid var(--line)">
+        <div class="row" style="justify-content:space-between;align-items:baseline">
+          <div><b style="font-size:13.5px">${esc(p.label)}</b><div class="muted" style="font-size:11.5px;margin-top:2px">${esc(p.note)}</div></div>
+          <div style="text-align:right"><div class="mono" style="font-size:16px;font-weight:650">${money(p.endSalary)}</div><div class="mono" style="font-size:11px;color:${p.deltaPct > 0 ? '#6fe3a4' : '#f08b91'}">${p.deltaPct > 0 ? '+' : ''}${p.deltaPct}%</div></div>
+        </div>
+        <div class="bar" style="margin-top:9px"><i style="width:${bar(p.endSalary)}%"></i></div>
+        <div class="row" style="justify-content:space-between;margin-top:6px;font-size:11px;color:var(--muted)">
+          <span>risk ${Math.round(p.risk * 100)}/100 · ${p.promotions} promotion${p.promotions === 1 ? '' : 's'} · ends at ${esc(p.endLevel)}</span>
+          <span>risk-adjusted ${money(p.riskAdjusted)}</span>
+        </div>
+      </div>`).join('')}
+    </div>
+
+    <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
+      <div class="card">
+        <h3>Why the model says this</h3>
+        <div style="margin-top:10px">
+          <div class="kv"><span>Skill velocity</span><span class="mono">${t.velocity.velocity.toFixed(2)}x</span></div>
+          ${t.velocity.drivers.map((d) => `<div class="kv"><span>${esc(d.k)}</span><span class="mono">${esc(d.v)}</span></div>`).join('')}
+        </div>
+        <div class="note" style="margin-top:12px">Velocity above 1.0 means your skill mix is appreciating; it shortens time-to-promotion. Below 1.0 means the market is moving away from your stack.</div>
+      </div>
+      <div class="card">
+        <h3>Assumptions (all of them)</h3>
+        <div style="margin-top:10px">${t.assumptions.map((a) => `<div style="padding:6px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--ink2)">${esc(a)}</div>`).join('')}</div>
+      </div>
+    </div>`;
+  document.querySelectorAll('.tm').forEach((b) => { b.onclick = () => renderTrajectory(Number(b.dataset.m)); });
+}
+
 /* ---------------- referrals ---------------- */
 async function renderReferrals() {
   const r = await api('/api/referrals');
@@ -1195,6 +1244,7 @@ const VIEWS = {
   searches: [renderSearches, 'Saved Searches', 'Standing questions the engine keeps answering'],
   brief: [renderBrief, 'Morning Brief', 'What changed since you last looked'],
   negotiation: [renderNegotiation, 'Negotiation', 'The number to say, the evidence, and the fallback'],
+  trajectory: [renderTrajectory, 'Trajectory', 'Where each path actually lands'],
   referrals: [renderReferrals, 'Partners', 'Referral routing, isolated from ranking'],
   plan: [renderPlan, 'Plan', 'Free vs Pro — and why the paywall sits there'],
   ops: [renderOps, 'Engine', 'What the system actually did'],
