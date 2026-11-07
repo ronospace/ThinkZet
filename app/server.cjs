@@ -1247,6 +1247,64 @@ route('GET', /^\/unsubscribe\/([^/]+)\/([^/]+)$/, async (req, res, url, m) => {
   res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You are unsubscribed from all CareerOS emails. <a href="/" style="color:#4c8dff">Change your mind</a></div>');
 });
 
+// ---- Career Score v2: expanded, and explaining itself ----
+// Six scores became eight: Skill Strength and Opportunity Quality added, and every score
+// now reports what would move it most. A number without a lever is just a grade.
+route('GET', /^\/api\/scores\/v2$/, async (req, res) => {
+  const uid = resolveUser(req);
+  const profile = getProfile(uid);
+  if (!profile) return json(res, 404, { error: 'no profile' });
+  const twin = E.buildTwin(uid);
+  const base = db.prepare('SELECT * FROM career_scores WHERE user_id=? ORDER BY id DESC LIMIT 1').get(uid);
+  if (!base) return json(res, 404, { error: 'no score yet' });
+
+  const skills = twin.skillDetail || [];
+  const top = opportunitiesWithMatch(uid, { limit: 40, minScore: 50 });
+
+  // Skill Strength: how deep and how current the stack is, not just how many skills exist.
+  const breadth = Math.min(100, skills.length * 6);
+  const depth = Math.min(100, (profile.years_experience || 0) * 8);
+  const currency = Math.min(100, 40 + skills.filter((s) => (s.growth_rate || 0) > 10).length * 12);
+  const skillStrength = Math.round(0.4 * breadth + 0.3 * depth + 0.3 * currency);
+
+  // Opportunity Quality: are the things you are looking at actually worth your time?
+  const avgMatch = top.length ? top.reduce((a, o) => a + o.match_score, 0) / top.length : 0;
+  const avgOdds = top.length ? top.reduce((a, o) => a + o.interview_probability, 0) / top.length : 0;
+  const disclosed = top.length ? top.filter((o) => o.comp_min != null).length / top.length : 0;
+  const opportunityQuality = Math.round(0.5 * avgMatch + 0.3 * Math.min(100, avgOdds * 2) + 0.2 * disclosed * 100);
+
+  const scores = {
+    employability: base.employability,
+    interview_readiness: base.interview_readiness,
+    market_demand: base.market_demand,
+    salary_potential: base.salary_potential,
+    future_growth: base.future_growth,
+    career_momentum: base.career_momentum,
+    skill_strength: skillStrength,
+    opportunity_quality: opportunityQuality,
+  };
+
+  // Each score gets one concrete lever, ranked by how much it would move.
+  const rates = E.rateIntelligence(uid);
+  const gapCount = new Map();
+  for (const o of top) for (const sk of o.missing_skills) gapCount.set(sk, (gapCount.get(sk) || 0) + 1);
+  const topGap = [...gapCount.entries()].sort((a, b) => b[1] - a[1])[0];
+
+  const levers = [
+    { score: 'career_momentum', value: scores.career_momentum, lever: 'Apply to three opportunities this week', why: 'Momentum is the only score you fully control, and it moves within a session.' },
+    { score: 'skill_strength', value: scores.skill_strength, lever: topGap ? `Close ${topGap[0]}` : 'Add a high-growth skill', why: topGap ? `It blocks ${topGap[1]} of your top 40 opportunities.` : 'Depth in a rising skill compounds faster than breadth in a flat one.' },
+    { score: 'salary_potential', value: scores.salary_potential, lever: rates && rates.gapPct > 5 ? `Take the ${rates.gapPct}% gap into your next conversation` : 'Target the upper half of the band', why: 'Salary potential rises when you stop anchoring on your current number.' },
+    { score: 'opportunity_quality', value: scores.opportunityQuality || opportunityQuality, lever: 'Filter to 70%+ interview odds', why: 'Higher odds per application beats more applications.' },
+  ].sort((a, b) => a.value - b.value);
+
+  const weights = { employability: 0.18, interview_readiness: 0.12, market_demand: 0.12, salary_potential: 0.16, future_growth: 0.12, career_momentum: 0.10, skill_strength: 0.12, opportunity_quality: 0.08 };
+  const overall = Math.round(Object.entries(weights).reduce((a, [k, w]) => a + (scores[k] || 0) * w, 0));
+  const z = (overall - 58) / 14;
+  const percentile = Math.round(100 / (1 + Math.exp(-1.15 * z)));
+
+  json(res, 200, { scores, overall, percentile, levers, previousOverall: base.overall });
+});
+
 // ---- daily habit: streaks, what changed, and a reason to return ----
 route('GET', /^\/api\/habit$/, async (req, res) => {
   const uid = resolveUser(req);
