@@ -9,7 +9,8 @@ const GETS = [
   '/api/outcomes/intel', '/api/plan', '/api/referrals', '/api/ops', '/api/pulse', '/api/ingest',
   '/api/saved-searches', '/api/negotiation', '/api/trajectory', '/api/analytics',
   '/api/billing/status', '/api/leads', '/api/email/status', '/api/email/prefs', '/api/email/outbox',
-  '/api/onboarding/draft',
+  '/api/onboarding/draft', '/api/launch', '/api/opportunities/lifecycle', '/api/email/sequence',
+  '/api/habit', '/api/scores/v2', '/api/referrals/recommendations',
 ];
 const POSTS = [
   ['/api/demo', {}],
@@ -92,6 +93,14 @@ async function call(method, path, body) {
   const outbox = await call('GET', '/api/email/outbox');
   const composedOk = (outbox.json?.messages || []).some((m) => m.kind === 'daily_brief' && m.subject);
   if (composedOk) pass++; else { fail++; failures.push('invariant failed: daily brief composed into the outbox'); }
+
+  const launch = await call('GET', '/api/launch');
+  const launchOk = launch.json && Array.isArray(launch.json.checks) && launch.json.checks.length >= 8
+    && typeof launch.json.ready === 'boolean' && launch.json.verdict;
+  if (launchOk) pass++; else { fail++; failures.push('invariant failed: launch readiness reports checks and a verdict'); }
+
+  const legal = await call('GET', '/legal/privacy.html');
+  if (legal.status === 200 && /Privacy/.test(legal.text || '')) pass++; else { fail++; failures.push('invariant failed: privacy page served'); }
 
   const traj = await call('GET', '/api/trajectory');
   const trajOk = traj.json && traj.json.paths?.length === 5 && traj.json.paths.every((p) => p.endSalary > 0);
