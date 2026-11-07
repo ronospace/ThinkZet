@@ -1,4 +1,4 @@
-// Karyvo AI — API server. Node built-ins only (http + node:sqlite). Zero dependencies.
+// MirrorSpread AI — API server. Node built-ins only (http + node:sqlite). Zero dependencies.
 'use strict';
 // Minimal .env loader: KEY=value lines, no dependency, ignored if the file is absent.
 try {
@@ -1196,13 +1196,13 @@ function sequenceEmail({ user, key, ctx }) {
     : 'You are at or above the median for your profile. The upside now is growth, not price.';
 
   const bodies = {
-    welcome: `Good to have you, ${name}.\n\nHere is the one number that matters: ${gapLine}\n\nThree things worth doing this week:\n\n1. Open the radar and sort by interview odds, not match score. Odds are what decide whether your time was worth it.\n2. Open Negotiation and read the ask out loud once. The number you cannot say out loud is the number you will not get.\n3. Pick one skill gap. Just one. The gaps screen ranks them by how many of your realistic opportunities they block.\n\n${app}\n\n— Karyvo\n\nYou can turn these off any time: ${unsub}`,
-    first_move: `Two days in, ${name}.\n\nMost people open a feed and scroll. You have something better: a score per opportunity and a probability of getting it.\n\nSo the move is not "apply to more". It is "apply to the ones you can actually win".\n\nOpen the radar, filter to 60%+ interview odds, and pick the top one. Apply today, while it is open.\n\n${app}\n\n— Karyvo\n\n${unsub}`,
-    gap: `Four days in, ${name}.\n\n${ctx.topGap ? `${ctx.topGap.skill} is blocking ${ctx.topGap.blocking} of your realistic opportunities. Not the market — your specific set of matches.` : 'Your skill coverage is unusually complete. The next lever is not learning, it is positioning.'}\n\nThat distinction matters. Most advice tells you to learn what is trending. The useful version is: learn what is blocking *your* next move.\n\nThe gaps screen has the sequence, with the weeks and the cumulative unblocking.\n\n${app}\n\n— Karyvo\n\n${unsub}`,
-    proof: `One week, ${name}.\n\nHere is what the honest version looks like: three applications to roles you can actually win, one conversation about your number, one gap being closed.\n\nThat is not a productivity system. It is the difference between a job search that runs on hope and one that runs on evidence.\n\nYour streak is ${ctx.streak || 1}. Keep it.\n\n${app}\n\n— Karyvo\n\n${unsub}`,
+    welcome: `Good to have you, ${name}.\n\nHere is the one number that matters: ${gapLine}\n\nThree things worth doing this week:\n\n1. Open the radar and sort by interview odds, not match score. Odds are what decide whether your time was worth it.\n2. Open Negotiation and read the ask out loud once. The number you cannot say out loud is the number you will not get.\n3. Pick one skill gap. Just one. The gaps screen ranks them by how many of your realistic opportunities they block.\n\n${app}\n\n— MirrorSpread\n\nYou can turn these off any time: ${unsub}`,
+    first_move: `Two days in, ${name}.\n\nMost people open a feed and scroll. You have something better: a score per opportunity and a probability of getting it.\n\nSo the move is not "apply to more". It is "apply to the ones you can actually win".\n\nOpen the radar, filter to 60%+ interview odds, and pick the top one. Apply today, while it is open.\n\n${app}\n\n— MirrorSpread\n\n${unsub}`,
+    gap: `Four days in, ${name}.\n\n${ctx.topGap ? `${ctx.topGap.skill} is blocking ${ctx.topGap.blocking} of your realistic opportunities. Not the market — your specific set of matches.` : 'Your skill coverage is unusually complete. The next lever is not learning, it is positioning.'}\n\nThat distinction matters. Most advice tells you to learn what is trending. The useful version is: learn what is blocking *your* next move.\n\nThe gaps screen has the sequence, with the weeks and the cumulative unblocking.\n\n${app}\n\n— MirrorSpread\n\n${unsub}`,
+    proof: `One week, ${name}.\n\nHere is what the honest version looks like: three applications to roles you can actually win, one conversation about your number, one gap being closed.\n\nThat is not a productivity system. It is the difference between a job search that runs on hope and one that runs on evidence.\n\nYour streak is ${ctx.streak || 1}. Keep it.\n\n${app}\n\n— MirrorSpread\n\n${unsub}`,
   };
 
-  return { subject: SEQUENCE.find((x) => x.key === key)?.subject || 'Karyvo', text: bodies[key] || bodies.welcome };
+  return { subject: SEQUENCE.find((x) => x.key === key)?.subject || 'MirrorSpread', text: bodies[key] || bodies.welcome };
 }
 
 function scheduleSequence(userId) {
@@ -1321,14 +1321,14 @@ route('GET', /^\/unsubscribe\/([^/]+)\/([^/]+)$/, async (req, res, url, m) => {
   if (kind === 'lead') {
     db.prepare("UPDATE email_queue SET status='suppressed' WHERE lead_id=?").run(idOrToken);
     res.writeHead(200, { 'Content-Type': 'text/html' });
-    return res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You will not receive further emails. <a href="/" style="color:#4c8dff">Karyvo</a></div>');
+    return res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You will not receive further emails. <a href="/" style="color:#4c8dff">MirrorSpread</a></div>');
   }
   const userId = kind;
   const token = idOrToken;
   if (!MAIL.verifyUnsubscribe(userId, token)) { res.writeHead(403); return res.end('invalid link'); }
   MAIL.setPrefs(userId, { daily_brief: false, opportunity_alerts: false, weekly_digest: false });
   res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You are unsubscribed from all Karyvo emails. <a href="/" style="color:#4c8dff">Change your mind</a></div>');
+  res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You are unsubscribed from all MirrorSpread emails. <a href="/" style="color:#4c8dff">Change your mind</a></div>');
 });
 
 // ---- GDPR: export and erase, implemented rather than promised ----
@@ -2011,7 +2011,7 @@ const server = http.createServer(async (req, res) => {
 // network can reach it. Localhost still works exactly as before.
 const HOST = process.env.HOST || '0.0.0.0';
 server.listen(PORT, HOST, () => {
-  console.log(`Karyvo engine on http://127.0.0.1:${PORT}`);
+  console.log(`MirrorSpread engine on http://127.0.0.1:${PORT}`);
   console.log(`seed: ${ingest.raw ?? 0} raw → ${ingest.canonical ?? ingest.count} canonical, ${ingest.merged ?? 0} merged (${ingest.duplicateRate ?? 0}% dup) in ${ingestMs}ms`);
   // Live ingestion on boot, then every 30 minutes. Failures are isolated per source.
   const runLive = async (label) => {

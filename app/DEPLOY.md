@@ -1,4 +1,4 @@
-# Deploying Karyvo
+# Deploying MirrorSpread
 
 The app is a single Node process with a SQLite database. No build step, no dependencies.
 That makes deployment simple — the real choice is who owns the machine.

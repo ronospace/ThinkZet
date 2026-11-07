@@ -92,7 +92,7 @@ All figures EUR, base case, solo-founder-led with disciplined hiring. Assumption
 
 **Cash break-even (cumulative) = Month 11** in the base case: cumulative spend of ~€60k is recovered by M11–M12 revenue. Peak cash requirement: **€25–35k** (well within a founder's ability to self-fund).
 
-**This is the most important financial fact in this document:** Karyvo does not need venture capital to reach €10k MRR and profitability.
+**This is the most important financial fact in this document:** MirrorSpread does not need venture capital to reach €10k MRR and profitability.
 
 ---
 

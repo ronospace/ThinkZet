@@ -38,7 +38,7 @@ Global spend on **career decision-making** by individuals and the institutions t
 ## 2. SAM — Serviceable Addressable Market
 
 ### Definition
-The portion Karyvo can realistically serve **within 3 years** with its product surface, languages, geographies, and go-to-market: English-speaking + EU professionals in AI/tech-adjacent knowledge work, reachable digitally, with a cross-border or multi-opportunity career reality.
+The portion MirrorSpread can realistically serve **within 3 years** with its product surface, languages, geographies, and go-to-market: English-speaking + EU professionals in AI/tech-adjacent knowledge work, reachable digitally, with a cross-border or multi-opportunity career reality.
 
 | Filter | Value |
 |---|---|

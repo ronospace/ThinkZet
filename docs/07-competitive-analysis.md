@@ -26,7 +26,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | Recruiter seats, ads, Premium, Learning, Sales Navigator. |
 | **Defensible advantages** | Identity graph, recruiter relationships, habit, data volume. |
 | **Blind spots** | Cannot recommend opportunities outside LinkedIn. Cannot be honest about odds (advertisers + employers are the customer). Structurally incapable of cross-platform comparison. |
-| **Gaps Karyvo exploits** | Neutrality across all 15 opportunity types; probability scoring; outcome tracking; non-social, decision-first UX. **We are not competing with LinkedIn — we consume it.** |
+| **Gaps MirrorSpread exploits** | Neutrality across all 15 opportunity types; probability scoring; outcome tracking; non-social, decision-first UX. **We are not competing with LinkedIn — we consume it.** |
 
 ---
 
@@ -40,7 +40,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | Take rate / margin on placements (typically 15–30%+). |
 | **Defensible advantages** | Evaluation data + enterprise customer relationships + brand with labs. |
 | **Blind spots** | Zero incentive to tell a user "you'd earn more at micro1" or "a fellowship is better for you." No long-term career relationship — the relationship ends when the contract ends. |
-| **Gaps Karyvo exploits** | **Rate comparison across Mercor/micro1/Turing/direct** is a killer feature. Career Twin continuity across platforms. Referral revenue from Mercor *as a partner*, not a competitor. |
+| **Gaps MirrorSpread exploits** | **Rate comparison across Mercor/micro1/Turing/direct** is a killer feature. Career Twin continuity across platforms. Referral revenue from Mercor *as a partner*, not a competitor. |
 
 ---
 
@@ -54,7 +54,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | Take rate on engagements. |
 | **Defensible advantages** | Screening IP, enterprise logos, velocity. |
 | **Blind spots** | No individual career ownership, no cross-platform intelligence, no non-job opportunities. |
-| **Gaps Karyvo exploits** | Same as Mercor: cross-platform rate intelligence + continuity. Micro1 becomes a *referral partner*, not a rival. |
+| **Gaps MirrorSpread exploits** | Same as Mercor: cross-platform rate intelligence + continuity. Micro1 becomes a *referral partner*, not a rival. |
 
 ---
 
@@ -68,7 +68,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | Margin on staffed developers. |
 | **Defensible advantages** | Supply volume, vetting ops, enterprise sales. |
 | **Blind spots** | Candidate trust. Turing's incentive is to place you at the lowest acceptable rate. It can never show you that. |
-| **Gaps Karyvo exploits** | **Rate transparency as a trust product.** "Turing offered €X; the market for your profile is €X+30%." This is a wedge with a real emotional payload. |
+| **Gaps MirrorSpread exploits** | **Rate transparency as a trust product.** "Turing offered €X; the market for your profile is €X+30%." This is a wedge with a real emotional payload. |
 
 ---
 
@@ -82,7 +82,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | Employer postings + recruiting subscriptions. |
 | **Defensible advantages** | Startup ecosystem brand, founder relationships. |
 | **Blind spots** | Can't serve the contract/relocation/fellowship universe. Equity modelling is shallow. |
-| **Gaps Karyvo exploits** | Include startup opportunities as one type among fifteen; add real equity/risk modelling. |
+| **Gaps MirrorSpread exploits** | Include startup opportunities as one type among fifteen; add real equity/risk modelling. |
 
 ---
 
@@ -96,7 +96,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | Placement margin / take rate. |
 | **Defensible advantages** | Curation quality, community. |
 | **Blind spots** | Scope. It's a channel, not a decision layer. |
-| **Gaps Karyvo exploits** | Be the neutral layer above Arc; referral partner. |
+| **Gaps MirrorSpread exploits** | Be the neutral layer above Arc; referral partner. |
 
 ---
 
@@ -110,7 +110,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | 10% client fee. |
 | **Defensible advantages** | Community goodwill, low-fee positioning. |
 | **Blind spots** | Liquidity solved with incentives instead of utility. |
-| **Gaps Karyvo exploits** | **Lesson: don't build a marketplace first.** Build the decision layer, monetise, then consider liquidity. |
+| **Gaps MirrorSpread exploits** | **Lesson: don't build a marketplace first.** Build the decision layer, monetise, then consider liquidity. |
 
 ---
 
@@ -124,7 +124,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | Take rate (10%) + connects + ads + enterprise. |
 | **Defensible advantages** | Two-sided liquidity, payments rails, brand. |
 | **Blind spots** | Cannot tell a user "you'd earn 2x off-platform." Structural conflict. |
-| **Gaps Karyvo exploits** | Rate benchmarking and channel comparison; referral partner for high-end categories. |
+| **Gaps MirrorSpread exploits** | Rate benchmarking and channel comparison; referral partner for high-end categories. |
 
 ---
 
@@ -138,7 +138,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | 20% seller commission + buyer fees + Pro. |
 | **Defensible advantages** | SEO moat, brand, buyer habit. |
 | **Blind spots** | Not a career platform at all; no professional identity. |
-| **Gaps Karyvo exploits** | Adjacent; useful for micro-opportunity capture (e.g. "productise your skill") — later. |
+| **Gaps MirrorSpread exploits** | Adjacent; useful for micro-opportunity capture (e.g. "productise your skill") — later. |
 
 ---
 
@@ -152,7 +152,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | $15–25/mo subscription. |
 | **Defensible advantages** | SEO + brand + subscription habit. |
 | **Blind spots** | **This is the closest analogue to our pricing model — and the most important lesson.** They proved people pay for curation. They never added intelligence. |
-| **Gaps Karyvo exploits** | Intelligence + personalisation + cross-type. We are FlexJobs + a brain. |
+| **Gaps MirrorSpread exploits** | Intelligence + personalisation + cross-type. We are FlexJobs + a brain. |
 
 ---
 
@@ -166,7 +166,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | Ads + employer branding + Indeed integration. |
 | **Defensible advantages** | Review corpus + SEO. |
 | **Blind spots** | Static data, no per-user decisioning, no cross-type opportunities. |
-| **Gaps Karyvo exploits** | Live, per-user, outcome-informed salary intelligence; employer health signals; combine with match. |
+| **Gaps MirrorSpread exploits** | Live, per-user, outcome-informed salary intelligence; employer health signals; combine with match. |
 
 ---
 
@@ -180,7 +180,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | Pay-per-click job ads + sponsored listings. |
 | **Defensible advantages** | Index scale + SEO + employer habit. |
 | **Blind spots** | Cannot curate down (kills ad revenue). Cannot be honest (kills ad revenue). |
-| **Gaps Karyvo exploits** | Curate *up*. Use Indeed as an input, be the output layer. |
+| **Gaps MirrorSpread exploits** | Curate *up*. Use Indeed as an input, be the output layer. |
 
 ---
 
@@ -194,7 +194,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | Employer subscriptions. |
 | **Defensible advantages** | Brand/design taste, employer relationships. |
 | **Blind spots** | Employer-funded = cannot rank purely in candidate's interest. |
-| **Gaps Karyvo exploits** | Candidate-funded = we can. Also: take their design taste as the *floor*, not the ceiling. |
+| **Gaps MirrorSpread exploits** | Candidate-funded = we can. Also: take their design taste as the *floor*, not the ceiling. |
 
 ---
 
@@ -208,7 +208,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | Employer placement fees. |
 | **Defensible advantages** | Brand residual, salary transparency heritage. |
 | **Blind spots** | Never pivoted to intelligence; still employer-funded. |
-| **Gaps Karyvo exploits** | Own the transparency brand position, but candidate-funded and cross-type. |
+| **Gaps MirrorSpread exploits** | Own the transparency brand position, but candidate-funded and cross-type. |
 
 ---
 
@@ -222,7 +222,7 @@ Every competitor answers one of three questions:
 | **Revenue model** | Freelancer Pro subscriptions + client fees. |
 | **Defensible advantages** | Brand, UX, commission-free narrative. |
 | **Blind spots** | No intelligence, no cross-platform view, no career arc. |
-| **Gaps Karyvo exploits** | Same as Upwork: neutrality + intelligence. |
+| **Gaps MirrorSpread exploits** | Same as Upwork: neutrality + intelligence. |
 
 ---
 
@@ -236,13 +236,13 @@ Every competitor answers one of three questions:
 | **Revenue model** | Job postings ($299+) + sponsorships. |
 | **Defensible advantages** | SEO + brand + niche. |
 | **Blind spots** | Single-type, static, no personalisation. |
-| **Gaps Karyvo exploits** | Programmatic SEO can beat them on long-tail *decision* queries ("is €X enough to relocate to Berlin"). |
+| **Gaps MirrorSpread exploits** | Programmatic SEO can beat them on long-tail *decision* queries ("is €X enough to relocate to Berlin"). |
 
 ---
 
 ## 3. Competitive summary matrix
 
-| Competitor | Opportunity breadth | Personalisation | Honest probability | Outcome tracking | Cross-platform | Candidate-funded | **Karyvo threat** |
+| Competitor | Opportunity breadth | Personalisation | Honest probability | Outcome tracking | Cross-platform | Candidate-funded | **MirrorSpread threat** |
 |---|---|---|---|---|---|---|---|
 | LinkedIn | ●●○ | ●○○ | ○○○ | ●○○ | ○○○ | ○○○ | 🟡 Medium (could copy) |
 | Mercor | ●○○ | ●●○ | ●○○ | ●○○ | ○○○ | ○○○ | 🟢 Low (partner) |
@@ -260,7 +260,7 @@ Every competitor answers one of three questions:
 | Hired | ●●○ | ●●○ | ●○○ | ●●○ | ○○○ | ○○○ | 🟢 Low |
 | Contra | ●○○ | ●○○ | ○○○ | ●○○ | ○○○ | ●●○ | 🟢 Low |
 | RemoteOK | ●○○ | ○○○ | ○○○ | ○○○ | ○○○ | ○○○ | 🟢 Low |
-| **Karyvo** | **●●●** | **●●●** | **●●●** | **●●●** | **●●●** | **●●●** | — |
+| **MirrorSpread** | **●●●** | **●●●** | **●●●** | **●●●** | **●●●** | **●●●** | — |
 
 ## 4. Overcrowded vs. underserved — final verdict
 

@@ -1,6 +1,6 @@
 # Naming — the constraint and the candidates
 
-`Karyvo` is taken. That is not a setback; it is a chance to pick a better name than the
+`MirrorSpread` is taken. That is not a setback; it is a chance to pick a better name than the
 obvious one. **One command does the rename when we land:** `node scripts/rebrand.cjs "New Name"`
 — it rewrites the brand across all 28 text files, including the browser storage keys, and
 refuses to run with the current name.
@@ -9,7 +9,7 @@ refuses to run with the current name.
 
 ## The naming test (apply to every candidate)
 
-1. **One syllable or two.** People say it in a Discord message. "Karyvo" is three and clumsy.
+1. **One syllable or two.** People say it in a Discord message. "MirrorSpread" is three and clumsy.
 2. **It implies a number.** The product's promise is *"you are X% below market"*. The name
    should hint at measurement, not at job hunting.
 3. **Not a job board.** Any name containing "career", "job", "hire", "talent", "work" or "role"

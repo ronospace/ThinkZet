@@ -92,8 +92,8 @@ const hero = fs.readFileSync(path.join(__dirname, 'hero.html'), 'utf8');
 
 const html = '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"/>' +
 '<meta name="viewport" content="width=device-width, initial-scale=1"/>' +
-'<title>Karyvo AI — Strategy</title><style>' + css + '</style></head><body>' +
-'<div class="wrap"><aside><div class="brand">Karyvo AI<small>Strategy documents<br/>7 November 2026</small></div>' +
+'<title>MirrorSpread AI — Strategy</title><style>' + css + '</style></head><body>' +
+'<div class="wrap"><aside><div class="brand">MirrorSpread AI<small>Strategy documents<br/>7 November 2026</small></div>' +
 '<a class="navlink" href="/">&larr; Back to the product</a>' +
 '</aside><main>' + hero + sections.join('\n') + '</main></div></body></html>';
 

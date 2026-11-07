@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Karyvo AI — Opportunity Operating System</title>
+<title>MirrorSpread AI — Opportunity Operating System</title>
 <meta name="theme-color" content="#0b0d10"/>
 <meta name="description" content="Discover how much opportunity you're leaving on the table. Free market value check from live postings — then every opportunity scored against your profile."/>
 <link rel="manifest" href="/manifest.webmanifest"/>
 <meta property="og:title" content="Find out how much you're underpaid"/>
-<meta property="og:description" content="Karyvo reads the live market and tells you what your exact profile is worth."/>
+<meta property="og:description" content="MirrorSpread reads the live market and tells you what your exact profile is worth."/>
 <meta property="og:type" content="website"/>
 <style>
 :root{
@@ -284,7 +284,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 <div class="landing" id="landing">
   <div class="land-wrap">
     <div class="land-nav">
-      <div class="land-brand"><span class="mark">K</span> Karyvo<span style="font-weight:400;color:var(--muted);font-size:11px;margin-left:6px">by ZyraFlow</span></div>
+      <div class="land-brand"><span class="mark">M</span> MirrorSpread</div>
       <div class="row" style="gap:10px">
         <button class="btn ghost sm" id="land-theme" title="Toggle theme">◐</button>
         <button class="btn ghost sm" id="land-signin">Sign in</button>
@@ -293,7 +293,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 
     <span class="land-kicker">Free · 60 seconds · no account needed</span>
     <h1 class="land-h1">Find out how much<br/><span class="accent">you're underpaid.</span></h1>
-    <p class="land-sub">Karyvo reads the live market — real postings from real companies — and tells you what your exact profile is worth, which opportunities you're missing, and the fastest path to more income.</p>
+    <p class="land-sub">MirrorSpread reads the live market — real postings from real companies — and tells you what your exact profile is worth, which opportunities you're missing, and the fastest path to more income.</p>
 
     <div class="check">
       <h2>What are you worth right now?</h2>
@@ -372,15 +372,15 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
       <a href="/legal/privacy.html" style="color:var(--muted)">Privacy</a>
       <a href="/legal/terms.html" style="color:var(--muted)">Terms</a>
       <span>Referral partners are always labelled and never change your ranking.</span>
-      <span style="width:100%;margin-top:6px;opacity:.8">Karyvo is a product of ZyraFlow GmbH</span>
+      <span style="width:100%;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);opacity:.75">© 2026 ZyraFlow GmbH. All rights reserved. MirrorSpread is a product of ZyraFlow GmbH.</span>
     </div>
   </div>
 </div>
 <div class="shell" id="app-shell" style="display:none">
   <aside class="rail">
     <div class="logo">
-      <div class="mark">C</div>
-      <div><b>Karyvo</b><span>Opportunity OS</span></div>
+      <div class="mark">M</div>
+      <div><b>MirrorSpread</b><span>Opportunity OS</span></div>
     </div>
     <nav class="nav" id="nav">
       <div class="nav-group"><span class="nav-label">Today</span>
@@ -417,6 +417,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
       <div id="engine-counts">—</div>
       <div style="margin-top:8px"><a href="/strategy.html">Strategy documents <span style="opacity:.7">&gt;</span></a></div>
       <div style="margin-top:4px"><a href="/legal/privacy.html">Privacy</a> · <a href="/legal/terms.html">Terms</a></div>
+      <div style="margin-top:6px;opacity:.7;font-size:10px;line-height:1.5">© 2026 ZyraFlow GmbH</div>
     </div>
   </aside>
 
@@ -494,7 +495,7 @@ async function renderSeo() {
     document.title = title;
     document.getElementById('landing').innerHTML = `
       <div class="land-wrap">
-        <div class="land-nav"><div class="land-brand"><span class="mark">K</span> Karyvo<span style="font-weight:400;color:var(--muted);font-size:11px;margin-left:6px">by ZyraFlow</span></div>
+        <div class="land-nav"><div class="land-brand"><span class="mark">M</span> MirrorSpread</div>
           <a class="btn ghost sm" href="/">Check your own <span style="opacity:.7">&gt;</span></a></div>
         <span class="land-kicker">Live market data · ${b.sampleSize} postings · updated continuously</span>
         <h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${esc(role)} salary${country ? ' in ' + esc(country) : ''}</h1>
@@ -526,10 +527,10 @@ async function renderSeo() {
     const d = await api('/api/skills');
     const s1 = d.skills.find((x) => x.canonical.toLowerCase() === skill.toLowerCase());
     if (!s1) { document.getElementById('landing').innerHTML = '<div class="land-wrap"><h1>Not found</h1></div>'; return; }
-    document.title = `${s1.canonical} demand, salary premium and growth — Karyvo`;
+    document.title = `${s1.canonical} demand, salary premium and growth — MirrorSpread`;
     document.getElementById('landing').innerHTML = `
       <div class="land-wrap">
-        <div class="land-nav"><div class="land-brand"><span class="mark">K</span> Karyvo<span style="font-weight:400;color:var(--muted);font-size:11px;margin-left:6px">by ZyraFlow</span></div>
+        <div class="land-nav"><div class="land-brand"><span class="mark">M</span> MirrorSpread</div>
           <a class="btn ghost sm" href="/">Check your own <span style="opacity:.7">&gt;</span></a></div>
         <span class="land-kicker">Skill intelligence · live</span>
         <h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${esc(s1.canonical)}</h1>
@@ -549,7 +550,7 @@ async function renderSeo() {
     return;
   }
 
-  document.getElementById('landing').innerHTML = '<div class="land-wrap"><h1>Not found</h1><a href="/">Back to Karyvo</a></div>';
+  document.getElementById('landing').innerHTML = '<div class="land-wrap"><h1>Not found</h1><a href="/">Back to MirrorSpread</a></div>';
 }
 
 /* ---------------- shared result card ---------------- */
@@ -565,7 +566,7 @@ async function renderSharedCard(id) {
   const under = p.gapPct != null && p.gapPct > 0;
   document.getElementById('landing').innerHTML = `
     <div class="land-wrap" style="max-width:620px">
-      <div class="land-nav"><div class="land-brand"><span class="mark">K</span> Karyvo<span style="font-weight:400;color:var(--muted);font-size:11px;margin-left:6px">by ZyraFlow</span></div></div>
+      <div class="land-nav"><div class="land-brand"><span class="mark">M</span> MirrorSpread</div></div>
       <div class="card" style="padding:34px;background:linear-gradient(135deg,#1a1030,#101a2e 60%,#0f1c1a);border-color:#2f2a4d">
         <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:#a99bf0">Market value report</div>
         <div style="font-size:clamp(26px,4.6vw,36px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:12px 0 8px;color:${under ? '#ff8f96' : '#6fe3a4'}">
@@ -659,7 +660,7 @@ async function runRateCheck() {
     STATE.lastCheck = { input: r.input, benchmark: b, verdict: v };
 
     const oneLiner = v.gapPct != null
-      ? `Karyvo says a ${r.input.seniority} ${r.input.family.replace(/_/g, ' ')} in ${r.input.country || 'the EU'} is worth ${fmt(b.p50)}${per} — I'm ${Math.abs(v.gapPct)}% ${v.gapPct > 0 ? 'below' : 'above'} that.`
+      ? `MirrorSpread says a ${r.input.seniority} ${r.input.family.replace(/_/g, ' ')} in ${r.input.country || 'the EU'} is worth ${fmt(b.p50)}${per} — I'm ${Math.abs(v.gapPct)}% ${v.gapPct > 0 ? 'below' : 'above'} that.`
       : `The median for ${r.input.seniority} ${r.input.family.replace(/_/g, ' ')} work is ${fmt(b.p50)}${per}.`;
     document.getElementById('c-copyline').onclick = () => { navigator.clipboard.writeText(oneLiner); toast('Copied — paste it anywhere'); };
 
@@ -724,7 +725,7 @@ async function renderAuth() {
   $('#view-sub').textContent = 'Passwordless. One code, no passwords stored.';
   $('#view').innerHTML = `
   <div class="onboard" style="max-width:460px">
-    <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#4c8dff,#8b5cf6);display:grid;place-items:center;font-weight:800;color:#fff;margin-bottom:20px">C</div>
+    <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#4c8dff,#8b5cf6);display:grid;place-items:center;font-weight:800;color:#fff;margin-bottom:20px">M</div>
     <p class="lead">Your career, with a memory.</p>
     <p class="sub">One profile. Every opportunity. Sign in and the engine starts watching.</p>
     <div id="auth-step1">

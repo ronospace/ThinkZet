@@ -1,4 +1,4 @@
-# Karyvo — Status & Completion Report
+# MirrorSpread — Status & Completion Report
 
 **Last updated:** 7 November 2026
 **Tests:** 49 passing, 0 failing (`node scripts/check.cjs`)

@@ -32,7 +32,7 @@ Exit planning at pre-seed is mostly a discipline: it forces you to ask **"who wo
 
 **Why they'd buy:**
 - They are in a **supply war**. Their biggest cost is candidate acquisition and their biggest weakness is candidate loyalty.
-- Karyvo owns the **decision moment** — precisely the moment a contractor chooses which platform to work on.
+- MirrorSpread owns the **decision moment** — precisely the moment a contractor chooses which platform to work on.
 - The **outcome dataset** (person → opportunity → outcome across platforms) is the single most valuable asset in this category and they structurally cannot build it.
 - Buying us converts a neutral referral partner into a proprietary funnel, overnight.
 
@@ -44,9 +44,9 @@ Exit planning at pre-seed is mostly a discipline: it forces you to ask **"who wo
 
 ### 3.2 Strategic acquisition — job boards / careers (10%)
 
-**Why they'd buy:** Indeed and LinkedIn cannot build the neutral decision layer, but they can buy it and run it as a premium candidate-funded tier (exactly as LinkedIn did with Lynda/Learning, Indeed with Glassdoor's salary data). Karyvo = the "intelligence tier" they can't create internally.
+**Why they'd buy:** Indeed and LinkedIn cannot build the neutral decision layer, but they can buy it and run it as a premium candidate-funded tier (exactly as LinkedIn did with Lynda/Learning, Indeed with Glassdoor's salary data). MirrorSpread = the "intelligence tier" they can't create internally.
 
-**Anti-trust/conflict risk:** the buyer may have to keep us operationally independent (a "Karyvo, a LinkedIn company" model) — which is fine for us.
+**Anti-trust/conflict risk:** the buyer may have to keep us operationally independent (a "MirrorSpread, a LinkedIn company" model) — which is fine for us.
 
 **Valuation driver:** ARR multiple + strategic defensive value.
 

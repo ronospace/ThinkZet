@@ -520,7 +520,7 @@ Referral link:  careeros.ai/go/{code}?src={surface}&opp={id}
 
 ## 14. GDPR compliance
 
-Karyvo processes CVs, employment history, salary, and sometimes special-category-adjacent data. Compliance is a **product feature and a marketing asset** ("your career data is yours").
+MirrorSpread processes CVs, employment history, salary, and sometimes special-category-adjacent data. Compliance is a **product feature and a marketing asset** ("your career data is yours").
 
 | Requirement | Implementation |
 |---|---|

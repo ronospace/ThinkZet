@@ -26,7 +26,7 @@ Twelve modules. For each: inputs, outputs, data requirements, models, evaluation
 | **User value** | Never scrolls past the best option; time-to-decision drops from hours to minutes |
 | **Business value** | The core retention driver. Higher rank quality → higher D7/D30 → lower CAC payback |
 
-**Key detail:** the ranking model must be trained on *outcomes*, not clicks. Optimising for clicks makes us LinkedIn. Optimising for interviews makes us Karyvo.
+**Key detail:** the ranking model must be trained on *outcomes*, not clicks. Optimising for clicks makes us LinkedIn. Optimising for interviews makes us MirrorSpread.
 
 ---
 
@@ -44,7 +44,7 @@ Twelve modules. For each: inputs, outputs, data requirements, models, evaluation
 | **User value** | The product gets smarter the longer you use it — the definition of a switching cost |
 | **Business value** | **The retention moat.** Twin history cannot be ported to a competitor. Directly increases LTV |
 
-**Key detail:** the twin must be *inspectable*. A "here's what Karyvo knows about you" page builds trust, catches errors, and is a GDPR asset.
+**Key detail:** the twin must be *inspectable*. A "here's what MirrorSpread knows about you" page builds trust, catches errors, and is a GDPR asset.
 
 ---
 
