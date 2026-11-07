@@ -39,6 +39,11 @@
   --tone-ink:#d7e3f7;
   --tone-kicker:#9fb4dc;
   --ring:0 0 0 3px rgba(107,147,247,.35);
+  --topbar-bg:rgba(10,13,19,.82);
+  --nav-active:#1b2637;
+  --kbd-bg:#1b2431;
+  --nav-active-ink:#ffffff;
+  --rail-bg:#0f141c;
   /* type scale */
   --text-2xs:10.5px; --text-xs:11.5px; --text-sm:12.5px; --text-base:14px;
   --text-md:15px; --text-lg:17px; --text-xl:20px; --text-2xl:25px; --text-3xl:32px; --text-4xl:42px;
@@ -72,6 +77,11 @@ html[data-theme="light"]{
   --tone-ink:#22303f;
   --tone-kicker:#4a5fa8;
   --ring:0 0 0 3px rgba(53,103,224,.28);
+  --topbar-bg:rgba(251,252,254,.9);
+  --nav-active:#eaf0fb;
+  --kbd-bg:#eef2f8;
+  --nav-active-ink:#1d4ed8;
+  --rail-bg:#fbfcfe;
 }
 *{box-sizing:border-box}
 :focus-visible{outline:none;box-shadow:var(--ring);border-radius:8px}
@@ -89,7 +99,7 @@ a{color:var(--accent);text-decoration:none}
 .shell.rail-collapsed .logo{justify-content:center;padding-bottom:14px}
 .rail-toggle{position:absolute;right:-11px;top:22px;width:22px;height:22px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);color:var(--muted);display:grid;place-items:center;font-size:11px;z-index:20;transition:color .14s,background .14s}
 .rail-toggle:hover{color:var(--ink);background:var(--panel3)}
-.rail{position:relative}
+.rail{position:relative;background:var(--rail-bg)}
 /* ---------- rail ---------- */
 .rail{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px}
 .logo{display:flex;align-items:center;gap:9px;padding:4px 8px 18px}
@@ -103,7 +113,7 @@ a{color:var(--accent);text-decoration:none}
 .nav::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px}
 .nav button{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:var(--ink2);text-align:left;width:100%;font-size:13.5px}
 .nav button:hover{background:var(--panel2);color:var(--ink)}
-.nav button.active{background:#1b2637;color:#fff;box-shadow:inset 2px 0 0 var(--accent)}
+.nav button.active{background:var(--nav-active);color:var(--nav-active-ink);box-shadow:inset 2px 0 0 var(--accent)}
 .nav .ico{width:16px;height:16px;display:grid;place-items:center;opacity:.72;flex-shrink:0}
 .nav .ico svg{width:15px;height:15px}
 .nav button.active .ico{opacity:1;color:var(--accent)}
@@ -113,25 +123,16 @@ a{color:var(--accent);text-decoration:none}
 
 /* ---------- main ---------- */
 main{overflow:auto;padding:0}
-.topbar{position:sticky;top:0;z-index:5;background:rgba(11,13,16,.86);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:14px 28px;display:flex;align-items:center;gap:16px}
+.topbar{position:sticky;top:0;z-index:5;background:var(--topbar-bg);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:14px 28px;display:flex;align-items:center;gap:16px}
 .topbar h1{font-size:17px;margin:0;font-weight:650;letter-spacing:-.01em}
 .topbar .sub{font-size:12px;color:var(--muted)}
 .topbar .spacer{flex:1}
-.themepick{position:relative}
 .theme-btn{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
 .theme-btn:hover{color:var(--ink);border-color:var(--line2);background:var(--panel3)}
 .theme-btn svg{width:15px;height:15px;display:none}
-html[data-theme="dark"] .theme-btn .ico-moon{display:block}
-html[data-theme="light"] .theme-btn .ico-sun{display:block}
-html[data-mode="system"] .theme-btn svg{display:none}
 html[data-mode="system"] .theme-btn .ico-auto{display:block}
-.theme-menu{position:absolute;right:0;top:calc(100% + 8px);min-width:196px;background:var(--panel);border:1px solid var(--line2);border-radius:var(--radius);box-shadow:var(--shadow);padding:5px;display:none;z-index:80}
-.theme-menu.open{display:block;animation:rise .14s ease both}
-.theme-menu button{display:flex;flex-direction:column;gap:1px;width:100%;text-align:left;padding:7px 10px;border-radius:8px;color:var(--ink2)}
-.theme-menu button:hover{background:var(--panel2);color:var(--ink)}
-.theme-menu button[aria-checked="true"]{background:var(--accent-soft);color:var(--ink)}
-.theme-menu button span{font-size:12.5px;font-weight:550}
-.theme-menu button small{font-size:10.5px;color:var(--muted)}
+html[data-mode="light"] .theme-btn .ico-sun{display:block}
+html[data-mode="dark"] .theme-btn .ico-moon{display:block}
 .pill{font-size:11px;padding:4px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2);white-space:nowrap}
 .pill.live{border-color:#1f4d33;background:#0f2419;color:#6fe3a4}
 .view{padding:26px 28px 90px;max-width:1180px}
@@ -186,10 +187,10 @@ textarea.cv:focus{border-color:var(--accent2)}
 .hello{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin-bottom:18px}
 .hello h2{margin:0;font-size:22px;letter-spacing:-.02em;font-weight:650}
 .hello .date{color:var(--muted);font-size:12.5px}
-.rate-gap{background:linear-gradient(135deg,#1a1030 0%,#101a2e 55%,#0f1c1a 100%);border:1px solid #2f2a4d;border-radius:14px;padding:20px 22px;margin-bottom:18px;position:relative;overflow:hidden}
+.rate-gap{background:linear-gradient(135deg,#161033 0%,#101827 58%,#0e1a17 100%);border:1px solid #2b2547;border-radius:var(--radius-lg);padding:26px 28px;margin-bottom:var(--sp-4);position:relative;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.4),0 22px 50px -34px rgba(90,60,180,.7)}
 .rate-gap::after{content:"";position:absolute;right:-40px;top:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(139,92,246,.22),transparent 70%)}
 .rate-gap .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, #a99bf0);font-weight:600}
-.rate-gap .amount{font-size:34px;font-weight:750;letter-spacing:-.025em;margin:6px 0 2px}
+.rate-gap .amount{font-size:clamp(30px,4.2vw,44px);font-weight:780;letter-spacing:-.035em;line-height:1.06;margin:8px 0 4px}
 .rate-gap .amount .neg{color:#ff8f96}
 .rate-gap .scale{margin-top:16px;height:8px;border-radius:5px;background:#221d38;position:relative}
 .rate-gap .scale .band{position:absolute;height:100%;border-radius:5px;background:linear-gradient(90deg,#3d2f6b,#6d5bd0)}
@@ -277,7 +278,7 @@ table.t tr:hover td{background:var(--panel2)}
 .palette-item.sel{background:#1b2637}
 .palette-item .s{margin-left:auto;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
 .palette-foot{display:flex;gap:16px;padding:9px 16px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
-kbd{background:#1b2431;border:1px solid var(--line2);border-bottom-width:2px;border-radius:4px;padding:0 4px;font-size:10px;font-family:inherit;color:var(--ink2)}
+kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2px;border-radius:4px;padding:0 4px;font-size:10px;font-family:inherit;color:var(--ink2)}
 .toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1b2637;border:1px solid #33507a;color:var(--tone-ink, #cfe0ff);padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:50}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:s .7s linear infinite;vertical-align:-2px;margin-right:6px}
@@ -521,18 +522,11 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
       <div class="spacer"></div>
       <span class="pill live" id="live-pill">● live feeds</span>
       <span class="pill" id="profile-pill">no profile</span>
-      <div class="themepick" id="theme">
-        <button class="theme-btn" id="theme-btn" aria-haspopup="true" aria-expanded="false" title="Appearance" aria-label="Appearance">
-          <svg class="ico-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1.4v1.6M8 13v1.6M1.4 8h1.6M13 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M12.6 3.4l-1.1 1.1M4.5 11.5l-1.1 1.1"/></svg>
-          <svg class="ico-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.2 9.6A5.6 5.6 0 016.4 2.8a5.6 5.6 0 106.8 6.8z"/></svg>
-          <svg class="ico-auto" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.6"/><path d="M8 2.4v11.2" /><path d="M8 2.4a5.6 5.6 0 010 11.2z" fill="currentColor" stroke="none" opacity=".55"/></svg>
-        </button>
-        <div class="theme-menu" id="theme-menu" role="menu">
-          <button role="menuitemradio" data-mode="system"><span>Auto</span><small>Follows your system</small></button>
-          <button role="menuitemradio" data-mode="light"><span>Light</span><small>Always light</small></button>
-          <button role="menuitemradio" data-mode="dark"><span>Dark</span><small>Always dark</small></button>
-        </div>
-      </div>
+      <button class="theme-btn" id="theme-btn" title="Appearance: auto" aria-label="Appearance: auto">
+        <svg class="ico-auto" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="5.6"/><path d="M8 2.4v11.2"/></svg>
+        <svg class="ico-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="3"/><path d="M8 1.6v1.5M8 12.9v1.5M1.6 8h1.5M12.9 8h1.5M3.5 3.5l1 1M11.5 11.5l1 1M12.5 3.5l-1 1M4.5 11.5l-1 1"/></svg>
+        <svg class="ico-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 9.8A5.8 5.8 0 016.2 2.6a5.8 5.8 0 107.2 7.2z"/></svg>
+      </button>
       <button class="pill" id="cmdk" style="cursor:pointer">⌘K search</button>
       <button class="btn ghost sm" id="run-ingest">Run ingest</button>
       <button class="btn ghost sm" id="load-demo">Load demo persona</button>
@@ -831,9 +825,7 @@ document.getElementById('land-signin').onclick = () => {
 document.getElementById('land-theme').onclick = () => {
   const order = ['system', 'light', 'dark'];
   const cur = localStorage.getItem('mirrorspread-theme') || 'system';
-  const next = order[(order.indexOf(cur) + 1) % order.length];
-  setTheme(next);
-  toast({ system: 'Following your system', light: 'Light', dark: 'Dark' }[next] + ' appearance');
+  setTheme(order[(order.indexOf(cur) + 1) % order.length]);
 };
 
 /* ---------------- auth ---------------- */
@@ -2718,7 +2710,8 @@ function applyTheme(mode) {
   document.documentElement.style.colorScheme = resolved;
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) meta.setAttribute('content', resolved === 'light' ? '#f6f8fb' : '#0a0d13');
-  document.querySelectorAll('#theme-menu button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.mode === mode)));
+  const tb = document.getElementById('theme-btn');
+  if (tb) { tb.title = 'Appearance: ' + mode; tb.setAttribute('aria-label', 'Appearance: ' + mode); }
 }
 function setTheme(mode) { try { localStorage.setItem(THEME_KEY, mode); } catch (e) {} applyTheme(mode); }
 (function initTheme() {
@@ -2730,21 +2723,15 @@ function setTheme(mode) { try { localStorage.setItem(THEME_KEY, mode); } catch (
     if (mq.addEventListener) mq.addEventListener('change', onChange); else if (mq.addListener) mq.addListener(onChange);
   }
 })();
-(function initThemeMenu() {
+(function initThemeToggle() {
   const btn = document.getElementById('theme-btn');
-  const menu = document.getElementById('theme-menu');
-  if (!btn || !menu) return;
-  const close = () => { menu.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); };
-  btn.onclick = (e) => {
-    e.stopPropagation();
-    const open = menu.classList.toggle('open');
-    btn.setAttribute('aria-expanded', String(open));
+  if (!btn) return;
+  btn.onclick = () => {
+    const order = ['system', 'light', 'dark'];
+    const cur = localStorage.getItem(THEME_KEY) || 'system';
+    const next = order[(order.indexOf(cur) + 1) % order.length];
+    setTheme(next);
   };
-  menu.querySelectorAll('button').forEach((b) => {
-    b.onclick = () => { setTheme(b.dataset.mode); close(); toast({ system: 'Following your system', light: 'Light', dark: 'Dark' }[b.dataset.mode] + ' appearance'); };
-  });
-  document.addEventListener('click', (e) => { if (!menu.contains(e.target) && e.target !== btn) close(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 })();
 // Collapsible sidebar, remembered across sessions.
 (function initRail() {
