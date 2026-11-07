@@ -12,73 +12,62 @@
 <meta property="og:type" content="website"/>
 <style>
 :root{
-  --bg:#0b0d10; --panel:#12161c; --panel2:#171c24; --line:#222a35; --line2:#2d3743;
-  --ink:#e8edf4; --ink2:#9aa7b8; --muted:#68758a;
-  --accent:#4c8dff; --accent2:#1f6feb; --good:#2fbf71; --warn:#f5a524; --bad:#f2545b;
+  /* semantic tokens — dark is the primary identity, light is a full peer, not an afterthought */
+  --rgb-panel: 18,23,31;
+  --bg:#0a0d13;
+  --bg-grad: radial-gradient(1200px 640px at 50% -10%, #111a2b 0%, #0a0d13 62%);
+  --panel:#12171f;
+  --panel2:#171d27;
+  --panel3:#1c2430;
+  --line:#232c38;
+  --line2:#2f3a49;
+  --ink:#eef2f8;
+  --ink2:#a3b0c2;
+  --muted:#6f7d90;
+  --accent:#6b93f7;
+  --accent2:#3b6fe0;
+  --accent-soft:rgba(107,147,247,.13);
+  --good:#38c98a;
+  --warn:#e2a83a;
+  --bad:#f05666;
+  --up:#38c98a;
+  --down:#f05666;
+  --shadow:0 1px 2px rgba(0,0,0,.4), 0 18px 40px -24px rgba(0,0,0,.9);
+  --shadow-sm:0 1px 2px rgba(0,0,0,.35);
   --radius:12px;
+  --radius-lg:16px;
+  --tone-ink:#d7e3f7;
+  --tone-kicker:#9fb4dc;
+  --ring:0 0 0 3px rgba(107,147,247,.35);
 }
 html[data-theme="light"]{
-  --bg:#f4f6fa; --panel:#ffffff; --panel2:#f7f9fc; --line:#e4e9f1; --line2:#cfd8e5;
-  --ink:#0b1220; --ink2:#3f4c5d; --muted:#78879b;
-  --accent:#2563eb; --accent2:#1d4ed8;
-  --good:#0f9d58; --warn:#c77700; --bad:#d92d3f;
-  --shadow:0 1px 2px rgba(16,32,64,.06), 0 8px 24px -12px rgba(16,32,64,.18);
-  --glow:none;
+  --bg:#f6f8fb;
+  --bg-grad: radial-gradient(1000px 520px at 50% -12%, #e7eefb 0%, #f6f8fb 60%);
+  --panel:#ffffff;
+  --panel2:#f7f9fc;
+  --panel3:#eef2f8;
+  --line:#e6ebf3;
+  --line2:#d3dce8;
+  --ink:#0c1320;
+  --ink2:#3d4a5c;
+  --muted:#77869a;
+  --accent:#3567e0;
+  --accent2:#2752c4;
+  --accent-soft:rgba(53,103,224,.09);
+  --good:#0e9d63;
+  --warn:#b97a06;
+  --bad:#cf3448;
+  --up:#0e9d63;
+  --down:#cf3448;
+  --shadow:0 1px 2px rgba(16,32,64,.05), 0 14px 36px -26px rgba(16,32,64,.5);
+  --shadow-sm:0 1px 2px rgba(16,32,64,.06);
+  --tone-ink:#22303f;
+  --tone-kicker:#4a5fa8;
+  --ring:0 0 0 3px rgba(53,103,224,.28);
 }
-html[data-theme="light"] body{color-scheme:light}
-html[data-theme="light"] .card{box-shadow:var(--shadow);border-color:#e6ebf3}
-html[data-theme="light"] .opp{box-shadow:0 1px 2px rgba(16,32,64,.05)}
-html[data-theme="light"] .opp:hover{box-shadow:0 6px 20px -10px rgba(16,32,64,.28);border-color:#c9d6ea}
-html[data-theme="light"] .rail{background:#ffffff;border-right-color:#e6ebf3}
-html[data-theme="light"] .topbar{background:rgba(255,255,255,.86);border-bottom-color:#e6ebf3}
-html[data-theme="light"] .nav button.active{background:#eaf1ff;color:#1d4ed8;box-shadow:inset 2px 0 0 #2563eb}
-html[data-theme="light"] .nav button:hover{background:#f1f5fb}
-html[data-theme="light"] .chip{background:#f2f5fa;border-color:#dde5f0;color:#4a5a6e}
-html[data-theme="light"] .chip.have{background:#e8f7ef;border-color:#b9e6cd;color:#0b7a45}
-html[data-theme="light"] .chip.miss{background:#fdecee;border-color:#f7c9cf;color:#b3243a}
-html[data-theme="light"] .chip.type{background:#eef2ff;border-color:#d3ddff;color:#3b5bdb}
-html[data-theme="light"] .pill{background:#fff;border-color:#dde5f0;color:#4a5a6e}
-html[data-theme="light"] .pill.live{background:#e8f7ef;border-color:#b9e6cd;color:#0b7a45}
-html[data-theme="light"] kbd{background:#fff;border-color:#d3dce9;color:#3f4c5d}
-html[data-theme="light"] .bar{background:#e8edf5}
-html[data-theme="light"] .facet-mini{background:#e8edf5}
-html[data-theme="light"] .rate-gap{--tone-ink:#1f2c3d;--tone-kicker:#5b45b8;
-  background:linear-gradient(135deg,#f6f2ff 0%,#eef4ff 52%,#eefaf4 100%);
-  border-color:#e0d9f5;
-  box-shadow:0 1px 2px rgba(16,32,64,.05), 0 12px 30px -18px rgba(80,60,160,.35);
-}
-html[data-theme="light"] .rate-gap::after{background:radial-gradient(circle,rgba(139,92,246,.12),transparent 70%)}
-html[data-theme="light"] .rate-gap .k{color:#5b45b8}
-html[data-theme="light"] .rate-gap .scale{background:#e6e0f6}
-html[data-theme="light"] .rate-gap .scale .you{background:#1e2235}
-html[data-theme="light"] .result{--tone-ink:#1f2c3d;linear-gradient(135deg,#f6f2ff 0%,#eef4ff 55%,#eefaf4 100%);border-color:#e0d9f5}
-html[data-theme="light"] .result .scale{background:#e6e0f6}
-html[data-theme="light"] .result .scale .you{background:#1e2235}
-html[data-theme="light"] .score{box-shadow:none !important;filter:saturate(.92)}
-html[data-theme="light"] .score small{color:rgba(10,20,35,.62)}
-html[data-theme="light"] .palette{background:rgba(232,238,247,.72)}
-html[data-theme="light"] .palette-box{box-shadow:0 30px 80px -30px rgba(16,32,64,.45)}
-html[data-theme="light"] .palette-item.sel{background:#eaf1ff}
-html[data-theme="light"] pre{background:#0f1621}
-html[data-theme="light"] .toast{background:#0b1220;border-color:#0b1220;color:#f4f7fb}
-html[data-theme="light"] .chat .msg.user{background:#eaf1ff;border-color:#d3ddff}
-html[data-theme="light"] .chat .msg.bot{background:#fff;border-color:#e6ebf3;box-shadow:var(--shadow)}
-html[data-theme="light"] .btn{box-shadow:0 1px 2px rgba(29,78,216,.24)}
-html[data-theme="light"] .btn.ghost{box-shadow:none;background:#fff}
-html[data-theme="light"] .btn.ghost:hover{background:#f7f9fc;border-color:#c9d6ea}
-html[data-theme="light"] .reveal{animation:none}
-/* the dark-only "hero" blocks need a light treatment, not a dark one */
-html[data-theme="light"] .hero{background:linear-gradient(135deg,#1d4ed8,#2563eb 55%,#7c6bf5);color:#fff}
-html[data-theme="light"] .landing{background:radial-gradient(1100px 520px at 50% -12%,#e3ecff 0%,#f4f6fa 58%)}
-html[data-theme="light"] .land-kicker{background:#fff;border-color:#d6e0f0;color:#3f5f95}
-html[data-theme="light"] .check{box-shadow:0 1px 2px rgba(16,32,64,.05), 0 24px 60px -30px rgba(16,32,64,.35)}
-html[data-theme="light"] .trust .card{background:#fff}
-html[data-theme="light"] .filters input,.html[data-theme="light"] .filters select{background:#fff}
-html[data-theme="light"] .composer input{background:#fff}
-html[data-theme="light"] textarea.cv{background:#fff}
-html[data-theme="light"] .onboard input,html[data-theme="light"] .onboard select{background:#fff}
-html[data-theme="light"] .hero-block{background:#f6f2ff;border-color:#e0d9f5}
 *{box-sizing:border-box}
+:focus-visible{outline:none;box-shadow:var(--ring);border-radius:8px}
+::selection{background:var(--accent-soft)}
 html,body{margin:0;height:100%}
 body{background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
 button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
@@ -113,6 +102,10 @@ main{overflow:auto;padding:0}
 .topbar h1{font-size:17px;margin:0;font-weight:650;letter-spacing:-.01em}
 .topbar .sub{font-size:12px;color:var(--muted)}
 .topbar .spacer{flex:1}
+.themebar{display:inline-flex;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:2px;gap:1px}
+.themebar button{font-size:10.5px;padding:3px 9px;border-radius:999px;color:var(--muted);white-space:nowrap;transition:color .12s,background .12s}
+.themebar button:hover{color:var(--ink2)}
+.themebar button[aria-pressed="true"]{background:var(--panel3);color:var(--ink);box-shadow:var(--shadow-sm)}
 .pill{font-size:11px;padding:4px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2);white-space:nowrap}
 .pill.live{border-color:#1f4d33;background:#0f2419;color:#6fe3a4}
 .view{padding:26px 28px 90px;max-width:1180px}
@@ -306,6 +299,8 @@ html[data-theme="light"] .landing{background:radial-gradient(1200px 600px at 50%
 html[data-theme="light"] .land-kicker{color:#3d5a86;border-color:#cdddf2;background:#eaf1fb}
 .land-h1{font-size:clamp(32px,5.2vw,52px);line-height:1.08;letter-spacing:-.03em;margin:20px 0 0;font-weight:750}
 .land-h1 .accent{background:linear-gradient(100deg,#6ea8ff,#a78bfa 55%,#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent}
+html[data-theme="light"] .land-h1 .accent{background:none;color:#2752c4;-webkit-text-fill-color:#2752c4}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
 .land-sub{font-size:17px;line-height:1.6;color:var(--ink2);margin:18px 0 0;max-width:620px}
 .land-cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap;align-items:center}
 .land-cta .btn{font-size:14px;padding:12px 20px;border-radius:10px}
@@ -342,7 +337,9 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
     <div class="land-nav">
       <div class="land-brand"><span class="mark">M</span> MirrorSpread</div>
       <div class="row" style="gap:10px">
-        <button class="btn ghost sm" id="land-theme" title="Toggle theme">◐</button>
+        <div class="themebar" id="land-themebar" role="group" aria-label="Appearance">
+          <button data-mode="system">Auto</button><button data-mode="light">Light</button><button data-mode="dark">Dark</button>
+        </div>
         <button class="btn ghost sm" id="land-signin">Sign in</button>
       </div>
     </div>
@@ -486,7 +483,11 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
       <div class="spacer"></div>
       <span class="pill live" id="live-pill">● live feeds</span>
       <span class="pill" id="profile-pill">no profile</span>
-      <button class="pill" id="theme" style="cursor:pointer" title="Toggle theme">◐ theme</button>
+      <div class="themebar" id="theme" role="group" aria-label="Appearance">
+        <button data-mode="system" title="Follow system">Auto</button>
+        <button data-mode="light" title="Light">Light</button>
+        <button data-mode="dark" title="Dark">Dark</button>
+      </div>
       <button class="pill" id="cmdk" style="cursor:pointer">⌘K search</button>
       <button class="btn ghost sm" id="run-ingest">Run ingest</button>
       <button class="btn ghost sm" id="load-demo">Load demo persona</button>
@@ -782,7 +783,10 @@ document.getElementById('land-signin').onclick = () => {
   document.getElementById('app-shell').style.display = '';
   go('auth');
 };
-document.getElementById('land-theme').onclick = () => document.getElementById('theme').click();
+document.querySelectorAll('#land-themebar button').forEach((b) => {
+  b.onclick = () => { setTheme(b.dataset.mode); applyTheme(b.dataset.mode); };
+  b.setAttribute('aria-pressed', String(b.dataset.mode === (localStorage.getItem(THEME_KEY) || 'system')));
+});
 
 /* ---------------- auth ---------------- */
 async function renderAuth() {
