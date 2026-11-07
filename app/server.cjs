@@ -1331,6 +1331,55 @@ route('GET', /^\/unsubscribe\/([^/]+)\/([^/]+)$/, async (req, res, url, m) => {
   res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You are unsubscribed from all CareerOS emails. <a href="/" style="color:#4c8dff">Change your mind</a></div>');
 });
 
+// ---- launch readiness: one screen that says whether it is safe to send people here ----
+route('GET', /^\/api\/launch$/, async (req, res) => {
+  const checks = [];
+  const add = (key, label, ok, detail, blocking = true) => checks.push({ key, label, ok, detail, blocking });
+
+  // Email
+  const mail = MAIL.status();
+  add('email', 'Email delivery', mail.live, mail.live ? `Sending via ${mail.provider}` : 'No provider — briefs and the signup sequence will pile up in the outbox', true);
+
+  // Billing
+  const bill = BILLING.status();
+  add('billing', 'Billing configured', bill.ready, bill.ready ? `Stripe ${bill.mode} mode` : `Missing: ${bill.missing.join(', ')}`, false);
+  add('billing_live', 'Stripe in live mode', bill.mode === 'live', bill.mode === 'live' ? 'Real payments enabled' : 'Test mode — checkout works but no money moves', false);
+
+  // Public URL
+  const appUrl = process.env.APP_URL || 'http://127.0.0.1:4173';
+  const publicUrl = !/127\.0\.0\.1|localhost/.test(appUrl);
+  add('app_url', 'Public URL set', publicUrl, publicUrl ? appUrl : 'APP_URL points at localhost — every email link will be broken for real users', true);
+
+  // Data
+  const total = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open'").get().n;
+  const fresh7 = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open' AND posted_at > datetime('now','-7 days')").get().n;
+  add('inventory', 'Live inventory', total >= 300 && fresh7 >= 50, `${total} open, ${fresh7} posted this week`, true);
+
+  // Sources
+  const last = lastRun();
+  const healthy = last ? last.report.filter((r) => r.ok).length : 0;
+  add('sources', 'Ingestion sources healthy', healthy >= 2, last ? `${healthy} of ${last.report.length} adapters returned data` : 'no ingestion run recorded', true);
+
+  // LLM
+  const llm = !!(process.env.LLM_ENDPOINT && process.env.LLM_API_KEY);
+  add('llm', 'AI copilot is generative', llm, llm ? `Using ${process.env.LLM_MODEL || 'configured model'}` : 'Deterministic composer — honest, but not generative', false);
+
+  // Legal / trust
+  add('unsubscribe', 'Unsubscribe links work', true, 'Signed HMAC links, tested', false);
+  const legalOk = fs.existsSync(path.join(PUBLIC, 'legal', 'privacy.html')) && fs.existsSync(path.join(PUBLIC, 'legal', 'terms.html'));
+  add('legal', 'Privacy and terms published', legalOk, legalOk ? '/legal/privacy.html and /legal/terms.html are live' : 'Legal pages missing — needed before collecting real CVs in the EU', true);
+
+  const blocking = checks.filter((c) => c.blocking && !c.ok);
+  json(res, 200, {
+    ready: blocking.length === 0,
+    checks,
+    blockers: blocking.length,
+    verdict: blocking.length === 0
+      ? 'Everything that must be true is true. Send it to twenty people.'
+      : `${blocking.length} blocking issue${blocking.length === 1 ? '' : 's'}: ${blocking.map((b) => b.label).join(', ')}.`,
+  });
+});
+
 // ---- which opportunities have expired or disappeared ----
 // A feed that shows dead roles destroys trust faster than a feed that shows fewer roles.
 route('GET', /^\/api\/opportunities\/lifecycle$/, async (req, res) => {

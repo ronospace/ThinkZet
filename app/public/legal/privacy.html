@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Privacy — CareerOS</title>
+<style>
+:root{--ink:#0e1116;--ink2:#39424e;--muted:#6b7683;--line:#e3e7ec;--bg:#fff;--accent:#1f6feb;--soft:#f6f8fa}
+@media (prefers-color-scheme: dark){:root{--ink:#e8edf4;--ink2:#9aa7b8;--muted:#68758a;--line:#222a35;--bg:#0b0d10;--soft:#12161c}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.7 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,sans-serif}
+.wrap{max-width:720px;margin:0 auto;padding:56px 24px 100px}
+h1{font-size:32px;letter-spacing:-.02em;margin:0 0 6px}
+h2{font-size:18px;margin:38px 0 10px;letter-spacing:-.01em}
+p,li{color:var(--ink2)}
+strong{color:var(--ink)}
+.updated{color:var(--muted);font-size:13px}
+table{border-collapse:collapse;width:100%;font-size:14px;margin:14px 0}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase}
+a{color:var(--accent)}
+.note{background:var(--soft);border:1px solid var(--line);border-radius:10px;padding:14px 16px;font-size:14px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <p class="updated">Last updated: 7 November 2026</p>
+  <h1>Privacy</h1>
+  <p>The short version: your career data is yours. We do not sell it, we do not sell access to it, and you can export or delete it at any time.</p>
+
+  <h2>What we collect</h2>
+  <table>
+    <tr><th>What</th><th>Why</th></tr>
+    <tr><td>Email address</td><td>To sign you in with a one-time code and to send the brief you asked for.</td></tr>
+    <tr><td>CV text you paste</td><td>To extract your skills, seniority and experience so opportunities can be scored against you.</td></tr>
+    <tr><td>Your current pay and target</td><td>To calculate the gap between your pay and the live market. This is optional and never shown to anyone else.</td></tr>
+    <tr><td>Opportunities you save, apply to and report on</td><td>To track your pipeline and to improve our probability estimates.</td></tr>
+    <tr><td>Usage events</td><td>To know which screens work and which do not.</td></tr>
+  </table>
+  <p>We do not collect national ID numbers, health data, ethnicity, religion or biometric data. We do not ask for your address.</p>
+
+  <h2>What we do not do</h2>
+  <ul>
+    <li>We do not sell your data. Not to employers, not to recruiters, not to anyone.</li>
+    <li>We do not share your CV or salary with employers or recruiters.</li>
+    <li>We do not let a referral partner influence what you see or how it is ranked. That constraint is enforced in code, not just in policy.</li>
+    <li>We do not train third-party models on your CV without your explicit consent.</li>
+  </ul>
+
+  <h2>Benchmarks and aggregation</h2>
+  <p>Salary benchmarks are computed from postings that disclose pay, and — with your consent — from outcomes you report. Published benchmarks are only shown when at least <strong>25</strong> comparable records exist. Below that threshold the segment is hidden rather than shown with false precision. Aggregated figures never identify an individual.</p>
+
+  <h2>Who processes data for us</h2>
+  <ul>
+    <li><strong>Stripe</strong> — payments. Card details never touch our servers.</li>
+    <li><strong>Our email provider</strong> — delivery of the brief and signup sequence.</li>
+    <li><strong>Our hosting provider</strong> — where the application runs.</li>
+  </ul>
+  <p>Each is bound by a data processing agreement. A current sub-processor list is available on request.</p>
+
+  <h2>Your rights</h2>
+  <p>Under the GDPR you can:</p>
+  <ul>
+    <li><strong>See</strong> everything we hold about you.</li>
+    <li><strong>Export</strong> it in a machine-readable format.</li>
+    <li><strong>Correct</strong> it — most of it you can edit directly.</li>
+    <li><strong>Delete</strong> it. Deletion removes your profile, your CV, your applications and your outcomes within 30 days.</li>
+    <li><strong>Object</strong> to any processing and withdraw consent at any time.</li>
+  </ul>
+  <p>Email us and we will action it. You also have the right to complain to your local data protection authority.</p>
+
+  <h2>Cookies and storage</h2>
+  <p>We use one essential cookie to keep you signed in, and local browser storage for your theme preference and whether you have seen the first-run tour. No advertising cookies, no third-party tracking pixels.</p>
+
+  <h2>Retention</h2>
+  <p>Your account data is kept while your account exists. Raw CV files are parsed and then discarded unless you keep them. Usage events are kept for 24 months. Server logs are kept for 30 days.</p>
+
+  <h2>AI processing</h2>
+  <p>Some features send parts of your profile to a language model to generate text — cover letters, explanations, interview questions. Where that happens you are told, and you can turn AI features off. Our providers are contractually barred from training on your data.</p>
+
+  <div class="note">
+    <strong>A note on honesty.</strong> The number we show you about your pay is the whole product. If we were ever wrong about it, telling you is more important than protecting our reputation. Write to us and we will look at it.
+  </div>
+
+  <h2>Contact</h2>
+  <p>Privacy questions: <a href="mailto:privacy@careeros.local">privacy@careeros.local</a></p>
+</div>
+</body>
+</html>
