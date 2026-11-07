@@ -117,10 +117,21 @@ main{overflow:auto;padding:0}
 .topbar h1{font-size:17px;margin:0;font-weight:650;letter-spacing:-.01em}
 .topbar .sub{font-size:12px;color:var(--muted)}
 .topbar .spacer{flex:1}
-.themebar{display:inline-flex;background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:2px;gap:1px}
-.themebar button{font-size:10.5px;padding:3px 9px;border-radius:999px;color:var(--muted);white-space:nowrap;transition:color .12s,background .12s}
-.themebar button:hover{color:var(--ink2)}
-.themebar button[aria-pressed="true"]{background:var(--panel3);color:var(--ink);box-shadow:var(--shadow-sm)}
+.themepick{position:relative}
+.theme-btn{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
+.theme-btn:hover{color:var(--ink);border-color:var(--line2);background:var(--panel3)}
+.theme-btn svg{width:15px;height:15px;display:none}
+html[data-theme="dark"] .theme-btn .ico-moon{display:block}
+html[data-theme="light"] .theme-btn .ico-sun{display:block}
+html[data-mode="system"] .theme-btn svg{display:none}
+html[data-mode="system"] .theme-btn .ico-auto{display:block}
+.theme-menu{position:absolute;right:0;top:calc(100% + 8px);min-width:196px;background:var(--panel);border:1px solid var(--line2);border-radius:var(--radius);box-shadow:var(--shadow);padding:5px;display:none;z-index:80}
+.theme-menu.open{display:block;animation:rise .14s ease both}
+.theme-menu button{display:flex;flex-direction:column;gap:1px;width:100%;text-align:left;padding:7px 10px;border-radius:8px;color:var(--ink2)}
+.theme-menu button:hover{background:var(--panel2);color:var(--ink)}
+.theme-menu button[aria-checked="true"]{background:var(--accent-soft);color:var(--ink)}
+.theme-menu button span{font-size:12.5px;font-weight:550}
+.theme-menu button small{font-size:10.5px;color:var(--muted)}
 .pill{font-size:11px;padding:4px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2);white-space:nowrap}
 .pill.live{border-color:#1f4d33;background:#0f2419;color:#6fe3a4}
 .view{padding:26px 28px 90px;max-width:1180px}
@@ -361,9 +372,11 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
     <div class="land-nav">
       <div class="land-brand"><span class="mark">M</span> MirrorSpread</div>
       <div class="row" style="gap:10px">
-        <div class="themebar" id="land-themebar" role="group" aria-label="Appearance">
-          <button data-mode="system">Auto</button><button data-mode="light">Light</button><button data-mode="dark">Dark</button>
-        </div>
+        <button class="theme-btn" id="land-theme" title="Appearance" aria-label="Appearance">
+          <svg class="ico-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1.4v1.6M8 13v1.6M1.4 8h1.6M13 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M12.6 3.4l-1.1 1.1M4.5 11.5l-1.1 1.1"/></svg>
+          <svg class="ico-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.2 9.6A5.6 5.6 0 016.4 2.8a5.6 5.6 0 106.8 6.8z"/></svg>
+          <svg class="ico-auto" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.6"/><path d="M8 2.4v11.2"/></svg>
+        </button>
         <button class="btn ghost sm" id="land-signin">Sign in</button>
       </div>
     </div>
@@ -508,10 +521,17 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
       <div class="spacer"></div>
       <span class="pill live" id="live-pill">● live feeds</span>
       <span class="pill" id="profile-pill">no profile</span>
-      <div class="themebar" id="theme" role="group" aria-label="Appearance">
-        <button data-mode="system" title="Follow system">Auto</button>
-        <button data-mode="light" title="Light">Light</button>
-        <button data-mode="dark" title="Dark">Dark</button>
+      <div class="themepick" id="theme">
+        <button class="theme-btn" id="theme-btn" aria-haspopup="true" aria-expanded="false" title="Appearance" aria-label="Appearance">
+          <svg class="ico-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="3"/><path d="M8 1.4v1.6M8 13v1.6M1.4 8h1.6M13 8h1.6M3.4 3.4l1.1 1.1M11.5 11.5l1.1 1.1M12.6 3.4l-1.1 1.1M4.5 11.5l-1.1 1.1"/></svg>
+          <svg class="ico-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M13.2 9.6A5.6 5.6 0 016.4 2.8a5.6 5.6 0 106.8 6.8z"/></svg>
+          <svg class="ico-auto" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="5.6"/><path d="M8 2.4v11.2" /><path d="M8 2.4a5.6 5.6 0 010 11.2z" fill="currentColor" stroke="none" opacity=".55"/></svg>
+        </button>
+        <div class="theme-menu" id="theme-menu" role="menu">
+          <button role="menuitemradio" data-mode="system"><span>Auto</span><small>Follows your system</small></button>
+          <button role="menuitemradio" data-mode="light"><span>Light</span><small>Always light</small></button>
+          <button role="menuitemradio" data-mode="dark"><span>Dark</span><small>Always dark</small></button>
+        </div>
       </div>
       <button class="pill" id="cmdk" style="cursor:pointer">⌘K search</button>
       <button class="btn ghost sm" id="run-ingest">Run ingest</button>
@@ -808,10 +828,13 @@ document.getElementById('land-signin').onclick = () => {
   document.getElementById('app-shell').style.display = '';
   go('auth');
 };
-document.querySelectorAll('#land-themebar button').forEach((b) => {
-  b.onclick = () => { setTheme(b.dataset.mode); applyTheme(b.dataset.mode); };
-  b.setAttribute('aria-pressed', String(b.dataset.mode === (localStorage.getItem('mirrorspread-theme') || 'system')));
-});
+document.getElementById('land-theme').onclick = () => {
+  const order = ['system', 'light', 'dark'];
+  const cur = localStorage.getItem('mirrorspread-theme') || 'system';
+  const next = order[(order.indexOf(cur) + 1) % order.length];
+  setTheme(next);
+  toast({ system: 'Following your system', light: 'Light', dark: 'Dark' }[next] + ' appearance');
+};
 
 /* ---------------- auth ---------------- */
 async function renderAuth() {
@@ -2695,7 +2718,7 @@ function applyTheme(mode) {
   document.documentElement.style.colorScheme = resolved;
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) meta.setAttribute('content', resolved === 'light' ? '#f6f8fb' : '#0a0d13');
-  document.querySelectorAll('.themebar button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.mode === mode)));
+  document.querySelectorAll('#theme-menu button').forEach((b) => b.setAttribute('aria-checked', String(b.dataset.mode === mode)));
 }
 function setTheme(mode) { try { localStorage.setItem(THEME_KEY, mode); } catch (e) {} applyTheme(mode); }
 (function initTheme() {
@@ -2707,9 +2730,22 @@ function setTheme(mode) { try { localStorage.setItem(THEME_KEY, mode); } catch (
     if (mq.addEventListener) mq.addEventListener('change', onChange); else if (mq.addListener) mq.addListener(onChange);
   }
 })();
-document.querySelectorAll('#theme button').forEach((b) => {
-  b.onclick = () => { setTheme(b.dataset.mode); toast({ system: 'Following your system', light: 'Light', dark: 'Dark' }[b.dataset.mode] + ' appearance'); };
-});
+(function initThemeMenu() {
+  const btn = document.getElementById('theme-btn');
+  const menu = document.getElementById('theme-menu');
+  if (!btn || !menu) return;
+  const close = () => { menu.classList.remove('open'); btn.setAttribute('aria-expanded', 'false'); };
+  btn.onclick = (e) => {
+    e.stopPropagation();
+    const open = menu.classList.toggle('open');
+    btn.setAttribute('aria-expanded', String(open));
+  };
+  menu.querySelectorAll('button').forEach((b) => {
+    b.onclick = () => { setTheme(b.dataset.mode); close(); toast({ system: 'Following your system', light: 'Light', dark: 'Dark' }[b.dataset.mode] + ' appearance'); };
+  });
+  document.addEventListener('click', (e) => { if (!menu.contains(e.target) && e.target !== btn) close(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+})();
 // Collapsible sidebar, remembered across sessions.
 (function initRail() {
   const shell = document.querySelector('.shell');
