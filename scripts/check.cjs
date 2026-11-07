@@ -7,7 +7,7 @@ const GETS = [
   '/api/health', '/api/me', '/api/auth/me', '/api/feed?limit=5', '/api/scores', '/api/rates',
   '/api/twin', '/api/tracker', '/api/gaps', '/api/gaps/plan', '/api/brief', '/api/learning',
   '/api/outcomes/intel', '/api/plan', '/api/referrals', '/api/ops', '/api/pulse', '/api/ingest',
-  '/api/saved-searches', '/api/negotiation', '/api/trajectory',
+  '/api/saved-searches', '/api/negotiation', '/api/trajectory', '/api/analytics',
 ];
 const POSTS = [
   ['/api/demo', {}],

@@ -15,6 +15,7 @@ const CONF = require('./confidence.cjs');
 const TRAJ = require('./trajectory.cjs');
 const COVER = require('./coverletter.cjs');
 const INTERVIEW = require('./interview.cjs');
+const AN = require('./analytics.cjs');
 
 const PORT = Number(process.env.PORT || 4173);
 const PUBLIC = path.join(__dirname, 'public');
@@ -128,6 +129,7 @@ route('POST', /^\/api\/auth\/verify$/, async (req, res) => {
   if (!r) return json(res, 401, { error: 'Invalid or expired code' });
   AUTH.setCookie(res, AUTH.COOKIE, r.token, AUTH.SESSION_DAYS * 86400);
   log(r.user.id, 'auth.login', 'user', r.user.id);
+  AN.track(r.user.id, 'auth.verified', { hasProfile: !!getProfile(r.user.id) });
   json(res, 200, { ok: true, user: r.user, hasProfile: !!getProfile(r.user.id) });
 });
 
@@ -249,6 +251,7 @@ route('POST', /^\/api\/onboarding$/, async (req, res) => {
   const scores = E.computeCareerScore(resolveUser(req));
   const rates = E.rateIntelligence(resolveUser(req));
   log(resolveUser(req), 'onboarding.completed', 'profile', resolveUser(req), { skills: resolved.length, matched });
+  AN.track(resolveUser(req), 'profile.created', { source: 'cv', skills: resolved.length });
 
   json(res, 200, {
     profile: { ...getProfile(resolveUser(req)), target_countries: targetCountries },
@@ -304,6 +307,7 @@ route('POST', /^\/api\/demo$/, async (req, res) => {
   E.computeMatches(uid);
   E.computeCareerScore(uid);
   log(uid, 'demo.loaded', 'profile', uid, { skills: resolved.length });
+  AN.track(uid, 'profile.created', { source: 'demo', skills: resolved.length });
   json(res, 200, { ok: true, skills: resolved.length });
 });
 
@@ -321,6 +325,7 @@ route('GET', /^\/api\/feed$/, async (req, res, url) => {
   const top = opps[0] || null;
   const saved = new Set(db.prepare('SELECT opportunity_id FROM applications WHERE user_id=?').all(resolveUser(req)).map((r) => r.opportunity_id));
 
+  AN.track(resolveUser(req), 'feed.viewed', { shown: opps.length, types: types ? types.join(',') : 'all' });
   json(res, 200, {
     needsOnboarding: false,
     generatedAt: new Date().toISOString(),
@@ -433,6 +438,7 @@ route('POST', /^\/api\/applications$/, async (req, res) => {
       applied_at=COALESCE(excluded.applied_at, applications.applied_at), updated_at=datetime('now')`)
     .run(id, resolveUser(req), opportunityId, status, appliedAt);
   log(resolveUser(req), 'application.' + status, 'opportunity', opportunityId);
+  AN.track(resolveUser(req), status === 'applied' ? 'application.applied' : 'application.saved', { opportunityId });
   E.computeCareerScore(resolveUser(req));
   json(res, 200, { ok: true });
 });
@@ -714,6 +720,7 @@ route('POST', /^\/api\/outcomes$/, async (req, res) => {
       .run(resolveUser(req), opportunityId);
   }
   log(resolveUser(req), 'outcome.reported', 'opportunity', opportunityId, { outcomeType, delta });
+  AN.track(resolveUser(req), 'outcome.reported', { outcomeType, delta });
   E.computeCareerScore(resolveUser(req));
   const total = db.prepare('SELECT COUNT(*) n FROM outcomes').get().n;
   json(res, 200, { ok: true, totalOutcomes: total, salaryDeltaPct: delta });
@@ -1014,6 +1021,30 @@ route('POST', /^\/api\/brief\/ack$/, async (req, res) => {
 });
 
 
+// ---- opportunity open (funnel step) ----
+route('POST', /^\/api\/opportunities\/opened$/, async (req, res) => {
+  const body = await readBody(req);
+  AN.track(resolveUser(req), 'opportunity.opened', { opportunityId: body.opportunityId, source: body.source || 'feed' });
+  json(res, 200, { ok: true });
+});
+
+// ---- analytics ----
+route('POST', /^\/api\/events$/, async (req, res) => {
+  const body = await readBody(req);
+  const uid = AUTH.currentUser(req)?.id || null;
+  AN.track(uid, String(body.name || 'unknown'), body.props || {}, body.path || null);
+  json(res, 200, { ok: true });
+});
+
+route('GET', /^\/api\/analytics$/, async (req, res, url) => {
+  const uid = resolveUser(req);
+  const days = Number(url.searchParams.get('days') || 30);
+  json(res, 200, {
+    funnel: AN.funnel({ sinceDays: days }),
+    summary: AN.summary(uid, Math.min(days, 14)),
+  });
+});
+
 // ---- referral / affiliate layer ----
 route('GET', /^\/api\/referrals$/, async (req, res) => {
   json(res, 200, REF.summary(resolveUser(req)));
@@ -1105,6 +1136,7 @@ route('POST', /^\/api\/plan$/, async (req, res) => {
     ON CONFLICT(user_id) DO UPDATE SET plan=excluded.plan, cycle=excluded.cycle, since=datetime('now')`)
     .run(uid, plan, cycle);
   log(uid, 'plan.changed', 'billing', uid, { plan, cycle });
+  if (plan === 'pro') AN.track(uid, 'plan.activated', { cycle });
   json(res, 200, { ok: true, plan, cycle, note: plan === 'pro' ? 'Stripe checkout is not wired in this environment — this is the local entitlement switch the paywall reads.' : 'Downgraded.' });
 });
 

@@ -225,6 +225,7 @@ kbd{background:#1b2431;border:1px solid var(--line2);border-bottom-width:2px;bor
       <button data-view="learning"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg></span>Learning Loop</button>
       <button data-view="referrals"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6.4 9.6a2.6 2.6 0 003.7 0l2.1-2.1a2.6 2.6 0 00-3.7-3.7l-1 1"/><path d="M9.6 6.4a2.6 2.6 0 00-3.7 0L3.8 8.5a2.6 2.6 0 003.7 3.7l1-1"/></svg></span>Partners</button>
       <button data-view="plan"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.8" y="3.6" width="12.4" height="8.8" rx="1.6"/><path d="M1.8 6.6h12.4"/></svg></span>Plan</button>
+      <button data-view="analytics"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.4 13.2V8.4M6.2 13.2V4.2M10 13.2v-6M13.8 13.2V2.8"/></svg></span>Funnel</button>
       <button data-view="ops"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2.2"/><path d="M8 1.8v2M8 12.2v2M1.8 8h2M12.2 8h2M3.6 3.6l1.4 1.4M11 11l1.4 1.4M12.4 3.6L11 5M5 11l-1.4 1.4"/></svg></span>Engine</button>
       </div>
     </nav>
@@ -687,6 +688,7 @@ function bindOppActions() {
 function openDetail(id) {
   const o = (STATE.feed?.opportunities || []).find((x) => x.id === id);
   if (!o) return;
+  post('/api/opportunities/opened', { opportunityId: id, source: 'feed' });
   const [c, bg] = scoreColor(o.match_score);
   const comp = o.comp_min != null ? `${money(o.comp_min)}${o.comp_max && o.comp_max !== o.comp_min ? '–' + money(o.comp_max) : ''}${PERIOD_LABEL[o.comp_period] || ''}` : 'not disclosed';
   $('#view').innerHTML = `
@@ -1288,6 +1290,59 @@ async function renderNegotiation() {
   document.querySelectorAll('.cp').forEach((b) => { b.onclick = () => copy(b.dataset.t); });
 }
 
+/* ---------------- analytics ---------------- */
+async function renderAnalytics() {
+  const a = await api('/api/analytics?days=30');
+  const f = a.funnel;
+  const maxN = Math.max(...f.steps.map((s) => s.events), 1);
+  const daily = a.summary.daily || [];
+  const maxDay = Math.max(...daily.map((d) => d.n), 1);
+  $('#view').innerHTML = `
+    <div class="card" style="border-color:#253247;background:linear-gradient(135deg,#12182a,#101a1e)">
+      <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Funnel · last ${f.windowDays} days · measured from real events</div>
+      <div style="font-size:15px;font-weight:600;margin-top:8px;line-height:1.5">${esc(f.verdict)}</div>
+      <div class="row" style="margin-top:14px;gap:24px">
+        <div><div class="big mono" style="font-size:22px">${f.overallConversion}%</div><div class="muted" style="font-size:11px">visit &gt; paid</div></div>
+        <div><div class="big mono" style="font-size:22px">${a.summary.total}</div><div class="muted" style="font-size:11px">events recorded</div></div>
+      </div>
+    </div>
+
+    <h2 class="section">Step by step</h2>
+    <div class="card">
+      ${f.steps.map((s, i) => `<div style="padding:10px 0;border-bottom:1px solid var(--line)">
+        <div class="row" style="justify-content:space-between">
+          <div><span class="mono muted" style="margin-right:10px">${i + 1}</span><b style="font-size:13px">${esc(s.label)}</b><span class="muted" style="font-size:11.5px;margin-left:8px">${esc(s.meaning)}</span></div>
+          <div class="row" style="gap:14px">
+            <span class="mono">${s.events}</span>
+            ${s.conversionFromPrevious != null ? `<span class="mono" style="font-size:11px;color:${s.conversionFromPrevious < 30 ? '#f08b91' : s.conversionFromPrevious < 60 ? '#e0c273' : '#6fe3a4'}">${s.conversionFromPrevious}%</span>` : '<span class="muted" style="font-size:11px">—</span>'}
+          </div>
+        </div>
+        <div class="bar" style="margin-top:6px"><i style="width:${Math.round((s.events / maxN) * 100)}%"></i></div>
+      </div>`).join('')}
+    </div>
+
+    <div class="grid" style="grid-template-columns:1.4fr 1fr;margin-top:14px">
+      <div class="card">
+        <h3>Events per day</h3>
+        <div style="display:flex;align-items:flex-end;gap:4px;height:120px;margin-top:14px">
+          ${daily.length ? daily.map((d) => `<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center" title="${d.d}: ${d.n}">
+            <div style="width:100%;background:linear-gradient(180deg,#4c8dff,#8b5cf6);border-radius:3px 3px 0 0;height:${Math.max(3, Math.round((d.n / maxDay) * 100))}%"></div>
+          </div>`).join('') : '<div class="muted">no events yet</div>'}
+        </div>
+        <div class="muted" style="font-size:11px;margin-top:8px">${daily.length} active day${daily.length === 1 ? '' : 's'} in the last 14</div>
+      </div>
+      <div class="card">
+        <h3>Top events</h3>
+        <div style="margin-top:10px">${a.summary.byName.slice(0, 10).map((e) => `<div class="kv"><span>${esc(e.name)}</span><span class="mono">${e.n}</span></div>`).join('') || '<div class="muted">none yet</div>'}</div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h3>Why this screen exists</h3>
+      <div class="dim" style="font-size:12.5px;margin-top:8px">Every number here is recorded by the product as it is used — the same events that drive the UI. The point is to find the single biggest leak and fix that, rather than adding features and hoping. Today the answer is above, in one sentence.</div>
+    </div>`;
+}
+
 /* ---------------- market pulse ---------------- */
 async function renderPulse() {
   const p = await api('/api/pulse');
@@ -1508,6 +1563,7 @@ const VIEWS = {
   negotiation: [renderNegotiation, 'Negotiation', 'The number to say, the evidence, and the fallback'],
   trajectory: [renderTrajectory, 'Trajectory', 'Where each path actually lands'],
   pulse: [renderPulse, 'Market Pulse', 'What the live corpus says right now'],
+  analytics: [renderAnalytics, 'Funnel', 'Where users actually leak out'],
   referrals: [renderReferrals, 'Partners', 'Referral routing, isolated from ranking'],
   plan: [renderPlan, 'Plan', 'Free vs Pro — and why the paywall sits there'],
   ops: [renderOps, 'Engine', 'What the system actually did'],
@@ -1705,6 +1761,12 @@ $('#palette-input').addEventListener('input', (e) => buildPalette(e.target.value
 $('#logout') && ($('#logout').onclick = async () => { await post('/api/auth/logout', {}); STATE.authed = false; await boot(); go('auth'); });
 
 (async () => {
+  try {
+    if (!sessionStorage.getItem('careeros-visit')) {
+      sessionStorage.setItem('careeros-visit', '1');
+      post('/api/events', { name: 'app.visit', props: { referrer: document.referrer || 'direct' }, path: location.pathname });
+    }
+  } catch (e) {}
   await boot();
   if (!STATE.authed) { go('auth'); return; }
   go(STATE.profile ? 'radar' : 'onboard');

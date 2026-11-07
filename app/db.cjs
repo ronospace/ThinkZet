@@ -179,6 +179,16 @@ CREATE TABLE IF NOT EXISTS ingestion_runs (
   created_at TEXT DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS events (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT,
+  anon_id TEXT,
+  name TEXT NOT NULL,
+  props TEXT,
+  path TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS referral_programs (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   name TEXT NOT NULL,
@@ -275,6 +285,8 @@ CREATE INDEX IF NOT EXISTS idx_opp_type ON opportunities(type, status);
 CREATE INDEX IF NOT EXISTS idx_opp_country ON opportunities(country);
 CREATE INDEX IF NOT EXISTS idx_opp_family ON opportunities(role_family, seniority);
 CREATE INDEX IF NOT EXISTS idx_matches_user ON matches(user_id, match_score DESC);
+CREATE INDEX IF NOT EXISTS idx_events_name ON events(name, created_at);
+CREATE INDEX IF NOT EXISTS idx_events_user ON events(user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_salary_seg ON salary_records(role_family, country, period);
 CREATE INDEX IF NOT EXISTS idx_apps_user ON applications(user_id, status);
 `);
