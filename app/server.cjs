@@ -1247,6 +1247,56 @@ route('GET', /^\/unsubscribe\/([^/]+)\/([^/]+)$/, async (req, res, url, m) => {
   res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You are unsubscribed from all CareerOS emails. <a href="/" style="color:#4c8dff">Change your mind</a></div>');
 });
 
+// ---- daily habit: streaks, what changed, and a reason to return ----
+route('GET', /^\/api\/habit$/, async (req, res) => {
+  const uid = resolveUser(req);
+  const profile = getProfile(uid);
+  if (!profile) return json(res, 200, { needsOnboarding: true });
+
+  // Streak: consecutive days with at least one meaningful action.
+  const days = db.prepare(`SELECT DISTINCT date(created_at) d FROM events
+    WHERE user_id=? AND name IN ('feed.viewed','opportunity.opened','application.saved','application.applied','outcome.reported')
+    ORDER BY d DESC LIMIT 60`).all(uid).map((r) => r.d);
+  let streak = 0;
+  const today = new Date();
+  for (let i = 0; i < days.length; i++) {
+    const expected = new Date(today.getTime() - i * 86400000).toISOString().slice(0, 10);
+    if (days[i] === expected) streak++;
+    else if (i === 0 && days[0] === new Date(today.getTime() - 86400000).toISOString().slice(0, 10)) continue;
+    else break;
+  }
+
+  // What changed since the user last looked — the only reason a daily return is worth it.
+  const lastSeen = db.prepare("SELECT MAX(created_at) t FROM events WHERE user_id=? AND name='feed.viewed'").get(uid)?.t;
+  const sinceClause = lastSeen ? `AND o.posted_at > datetime(?, '-1 day')` : '';
+  const params = lastSeen ? [uid, lastSeen] : [uid];
+  const fresh = db.prepare(`SELECT COUNT(*) n FROM matches m JOIN opportunities o ON o.id=m.opportunity_id
+    WHERE m.user_id=? AND m.match_score>=70 ${sinceClause}`).get(...params).n;
+
+  const rates = E.rateIntelligence(uid);
+  const scores = db.prepare('SELECT * FROM career_scores WHERE user_id=? ORDER BY id DESC LIMIT 1').get(uid);
+  const prev = db.prepare('SELECT * FROM career_scores WHERE user_id=? ORDER BY id DESC LIMIT 1 OFFSET 1').get(uid);
+
+  const appliedThisWeek = db.prepare(`SELECT COUNT(*) n FROM applications WHERE user_id=? AND status IN ('applied','interviewing','offer')
+    AND updated_at > datetime('now','-7 days')`).get(uid).n;
+  const weeklyTarget = 3;
+
+  json(res, 200, {
+    needsOnboarding: false,
+    streak,
+    fresh,
+    rateGapPct: rates ? rates.gapPct : null,
+    scoreDelta: prev ? (scores.overall - prev.overall) : null,
+    overall: scores ? scores.overall : null,
+    appliedThisWeek,
+    weeklyTarget,
+    onTrack: appliedThisWeek >= weeklyTarget,
+    message: appliedThisWeek >= weeklyTarget
+      ? `${appliedThisWeek} applications this week — you are doing the part most people skip.`
+      : `${appliedThisWeek} of ${weeklyTarget} applications this week. The score moves when you move.`,
+  });
+});
+
 // ---- lead capture + shareable cards (the acquisition loop) ----
 route('POST', /^\/api\/public\/lead$/, async (req, res) => {
   const body = await readBody(req);
