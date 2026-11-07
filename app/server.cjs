@@ -449,6 +449,80 @@ route('DELETE', /^\/api\/applications\/([^/]+)$/, async (req, res, url, m) => {
   json(res, 200, { ok: true });
 });
 
+// ---- market pulse: what the whole corpus says right now ----
+route('GET', /^\/api\/pulse$/, async (req, res) => {
+  const CUR = { EUR: 1, USD: 0.92, GBP: 1.17, CHF: 1.05, CAD: 0.68, PLN: 0.23, INR: 0.011 };
+  const annual = (amt, cur, period) => {
+    const eur = amt * (CUR[cur] || 1);
+    if (period === 'hour') return eur * 1600;
+    if (period === 'month') return eur * 12;
+    if (period === 'day') return eur * 220;
+    return eur;
+  };
+
+  const rows = db.prepare(`SELECT role_family, seniority, country, comp_min, comp_max, currency, comp_period,
+      skills, posted_at, source, type FROM opportunities
+    WHERE status='open' AND comp_min IS NOT NULL AND comp_period IN ('year','hour','month')`).all();
+
+  const median = (arr) => {
+    if (!arr.length) return null;
+    const a = [...arr].sort((x, y) => x - y);
+    const i = Math.floor(a.length / 2);
+    return Math.round(a.length % 2 ? a[i] : (a[i - 1] + a[i]) / 2);
+  };
+
+  // By role family
+  const byFamily = {};
+  for (const r of rows) {
+    const v = annual((Number(r.comp_min) + Number(r.comp_max || r.comp_min)) / 2, r.currency, r.comp_period);
+    if (v < 15000 || v > 500000) continue;
+    (byFamily[r.role_family] = byFamily[r.role_family] || []).push(v);
+  }
+  const families = Object.entries(byFamily)
+    .filter(([, v]) => v.length >= 8)
+    .map(([k, v]) => ({ family: k, median: median(v), n: v.length }))
+    .sort((a, b) => b.median - a.median);
+
+  // By country
+  const byCountry = {};
+  for (const r of rows) {
+    if (!r.country || r.country === 'WW') continue;
+    const v = annual((Number(r.comp_min) + Number(r.comp_max || r.comp_min)) / 2, r.currency, r.comp_period);
+    if (v < 15000 || v > 500000) continue;
+    (byCountry[r.country] = byCountry[r.country] || []).push(v);
+  }
+  const countries = Object.entries(byCountry)
+    .filter(([, v]) => v.length >= 8)
+    .map(([k, v]) => ({ country: k, median: median(v), n: v.length }))
+    .sort((a, b) => b.median - a.median);
+
+  // Supply: postings per role family in the last 14 days
+  const recent = db.prepare(`SELECT role_family, COUNT(*) n FROM opportunities
+    WHERE posted_at > datetime('now','-14 days') GROUP BY role_family ORDER BY n DESC`).all();
+
+  // Skill demand with premiums
+  const skillRows = db.prepare('SELECT canonical, demand_index, salary_premium, growth_rate, is_emerging FROM skills ORDER BY demand_index DESC').all();
+
+  // Remote share
+  const total = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open'").get().n;
+  const remote = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open' AND remote_type='remote'").get().n;
+
+  json(res, 200, {
+    generatedAt: new Date().toISOString(),
+    sample: rows.length,
+    families,
+    countries,
+    supply: recent,
+    skills: {
+      rising: skillRows.filter((s) => s.growth_rate >= 15).slice(0, 8),
+      falling: skillRows.filter((s) => s.growth_rate < 0).slice(0, 6),
+      premium: [...skillRows].sort((a, b) => b.salary_premium - a.salary_premium).slice(0, 8),
+    },
+    remoteShare: total ? Math.round((remote / total) * 100) : 0,
+    totals: { opportunities: total, remote },
+  });
+});
+
 // ---- trajectory simulator ----
 route('GET', /^\/api\/trajectory$/, async (req, res, url) => {
   const uid = resolveUser(req);
