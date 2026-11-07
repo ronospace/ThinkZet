@@ -179,6 +179,37 @@ CREATE TABLE IF NOT EXISTS ingestion_runs (
   created_at TEXT DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS email_queue (
+  id TEXT PRIMARY KEY,
+  user_id TEXT,
+  lead_id TEXT,
+  to_email TEXT NOT NULL,
+  kind TEXT NOT NULL,
+  subject TEXT NOT NULL,
+  body_text TEXT,
+  body_html TEXT,
+  status TEXT DEFAULT 'queued',
+  provider TEXT,
+  provider_id TEXT,
+  error TEXT,
+  scheduled_for TEXT DEFAULT (datetime('now')),
+  sent_at TEXT,
+  opened_at TEXT,
+  clicked_at TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS email_prefs (
+  user_id TEXT PRIMARY KEY,
+  daily_brief INTEGER DEFAULT 1,
+  opportunity_alerts INTEGER DEFAULT 1,
+  weekly_digest INTEGER DEFAULT 1,
+  marketing INTEGER DEFAULT 0,
+  timezone TEXT DEFAULT 'Europe/Berlin',
+  send_hour INTEGER DEFAULT 7,
+  updated_at TEXT DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS leads (
   id TEXT PRIMARY KEY,
   email TEXT,
@@ -332,6 +363,8 @@ CREATE INDEX IF NOT EXISTS idx_opp_family ON opportunities(role_family, seniorit
 CREATE INDEX IF NOT EXISTS idx_matches_user ON matches(user_id, match_score DESC);
 CREATE INDEX IF NOT EXISTS idx_events_name ON events(name, created_at);
 CREATE INDEX IF NOT EXISTS idx_leads_email ON leads(email);
+CREATE INDEX IF NOT EXISTS idx_email_status ON email_queue(status, scheduled_for);
+CREATE INDEX IF NOT EXISTS idx_email_user ON email_queue(user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_events_user ON events(user_id, created_at);
 CREATE INDEX IF NOT EXISTS idx_salary_seg ON salary_records(role_family, country, period);
 CREATE INDEX IF NOT EXISTS idx_apps_user ON applications(user_id, status);

@@ -8,13 +8,15 @@ const GETS = [
   '/api/twin', '/api/tracker', '/api/gaps', '/api/gaps/plan', '/api/brief', '/api/learning',
   '/api/outcomes/intel', '/api/plan', '/api/referrals', '/api/ops', '/api/pulse', '/api/ingest',
   '/api/saved-searches', '/api/negotiation', '/api/trajectory', '/api/analytics',
-  '/api/billing/status', '/api/leads',
+  '/api/billing/status', '/api/leads', '/api/email/status', '/api/email/prefs', '/api/email/outbox',
 ];
 const POSTS = [
   ['/api/demo', {}],
   ['/api/public/rate-check', { role: 'Senior Data Scientist', years: 8, country: 'DE', currentSalary: 78000, skills: ['Python', 'SQL'] }],
   ['/api/public/lead', { email: 'smoke@careeros.test', role: 'Senior Data Scientist', years: 8, gapPct: 17, median: 90000 }],
   ['/api/public/share', { role: 'Senior Data Scientist', gapPct: 17, gapAbs: 13000, median: 90000 }],
+  ['/api/email/brief', {}],
+  ['/api/email/flush', {}],
   ['/api/copilot', { message: 'Am I underpaid?' }],
   ['/api/horizon', { horizon: 'balanced' }],
   ['/api/brief/ack', {}],
@@ -81,6 +83,13 @@ async function call(method, path, body) {
   const share = await call('POST', '/api/public/share', { role: 'X', gapPct: 5, median: 1000 });
   const card = share.json?.id ? await call('GET', '/api/public/share/' + share.json.id) : { json: null };
   if (card.json?.payload && card.json.views >= 1) pass++; else { fail++; failures.push('invariant failed: share card round-trip'); }
+
+  const mail = await call('GET', '/api/email/status');
+  if (mail.json?.status?.provider) pass++; else { fail++; failures.push('invariant failed: email status reports a provider'); }
+
+  const outbox = await call('GET', '/api/email/outbox');
+  const composedOk = (outbox.json?.messages || []).some((m) => m.kind === 'daily_brief' && m.subject);
+  if (composedOk) pass++; else { fail++; failures.push('invariant failed: daily brief composed into the outbox'); }
 
   const traj = await call('GET', '/api/trajectory');
   const trajOk = traj.json && traj.json.paths?.length === 5 && traj.json.paths.every((p) => p.endSalary > 0);

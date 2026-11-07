@@ -29,6 +29,7 @@ const COVER = require('./coverletter.cjs');
 const INTERVIEW = require('./interview.cjs');
 const AN = require('./analytics.cjs');
 const BILLING = require('./billing.cjs');
+const MAIL = require('./mailer.cjs');
 
 const PORT = Number(process.env.PORT || 4173);
 const PUBLIC = path.join(__dirname, 'public');
@@ -940,16 +941,16 @@ Close ${missing[0]} first — it appears most often across your other matches, s
 });
 
 // ---- morning brief: the diff engine ----
-route('GET', /^\/api\/brief$/, async (req, res) => {
-  const profile = getProfile(resolveUser(req));
-  if (!profile) return json(res, 200, { needsOnboarding: true });
+async function briefFor(uid) {
+  const profile = getProfile(uid);
+  if (!profile) return { needsOnboarding: true };
 
   const today = new Date().toISOString().slice(0, 10);
   const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
 
-  const top = opportunitiesWithMatch(resolveUser(req), { limit: 400, minScore: 45 });
-  const seen = new Set(db.prepare('SELECT opportunity_id FROM brief_seen WHERE user_id=?').all(resolveUser(req)).map((r) => r.opportunity_id));
-  const savedSearches = db.prepare('SELECT * FROM saved_searches WHERE user_id=?').all(resolveUser(req)).map((r) => ({ ...r, filters: JSON.parse(r.filters || '{}') }));
+  const top = opportunitiesWithMatch(uid, { limit: 400, minScore: 45 });
+  const seen = new Set(db.prepare('SELECT opportunity_id FROM brief_seen WHERE user_id=?').all(uid).map((r) => r.opportunity_id));
+  const savedSearches = db.prepare('SELECT * FROM saved_searches WHERE user_id=?').all(uid).map((r) => ({ ...r, filters: JSON.parse(r.filters || '{}') }));
 
   const matchesSearch = (o, f) =>
     (!f.country || o.country === f.country) &&
@@ -970,9 +971,9 @@ route('GET', /^\/api\/brief$/, async (req, res) => {
     hits: top.filter((o) => isNew(o) && matchesSearch(o, s.filters)).slice(0, 4),
   })).filter((s) => s.hits.length);
 
-  const rates = E.rateIntelligence(resolveUser(req));
-  const scores = db.prepare('SELECT * FROM career_scores WHERE user_id=? ORDER BY id DESC LIMIT 1').get(resolveUser(req));
-  const prev = db.prepare('SELECT * FROM career_scores WHERE user_id=? ORDER BY id DESC LIMIT 1 OFFSET 1').get(resolveUser(req));
+  const rates = E.rateIntelligence(uid);
+  const scores = db.prepare('SELECT * FROM career_scores WHERE user_id=? ORDER BY id DESC LIMIT 1').get(uid);
+  const prev = db.prepare('SELECT * FROM career_scores WHERE user_id=? ORDER BY id DESC LIMIT 1 OFFSET 1').get(uid);
 
   // Momentum / deltas
   const delta = (a, b) => (a != null && b != null ? a - b : null);
@@ -1003,7 +1004,7 @@ route('GET', /^\/api\/brief$/, async (req, res) => {
   if (scores && scores.career_momentum < 30) actions.push({ priority: 3, text: `Momentum is ${scores.career_momentum}/100 — three applications this week moves it more than any CV edit` });
   if (closingSoon[0]) actions.push({ priority: 1, text: `${closingSoon[0].title} closes in ${Math.max(0, Math.ceil((new Date(closingSoon[0].closes_at) - Date.now()) / 86400000))} days` });
 
-  json(res, 200, {
+  return {
     needsOnboarding: false,
     generatedAt: new Date().toISOString(),
     headline,
@@ -1021,7 +1022,11 @@ route('GET', /^\/api\/brief$/, async (req, res) => {
     rates: rates ? { p50: rates.p50, gapPct: rates.gapPct, period: rates.period } : null,
     topGap: topGap ? { skill: topGap[0], blocking: topGap[1] } : null,
     unread: newSinceYesterday.length,
-  });
+  };
+}
+
+route('GET', /^\/api\/brief$/, async (req, res) => {
+  json(res, 200, await briefFor(resolveUser(req)));
 });
 
 route('POST', /^\/api\/brief\/ack$/, async (req, res) => {
@@ -1112,6 +1117,100 @@ route('POST', /^\/api\/public\/rate-check$/, async (req, res) => {
       detail: `We score every live opportunity against a profile like yours. Create a free account and the radar fills in.`,
     },
   });
+});
+
+// ---- email: delivery, preferences, the brief loop ----
+route('GET', /^\/api\/email\/status$/, async (req, res) => {
+  const rows = db.prepare('SELECT status, COUNT(*) n FROM email_queue GROUP BY status').all();
+  json(res, 200, { status: MAIL.status(), counts: Object.fromEntries(rows.map((r) => [r.status, r.n])) });
+});
+
+route('GET', /^\/api\/email\/prefs$/, async (req, res) => {
+  json(res, 200, MAIL.prefsFor(resolveUser(req)));
+});
+
+route('POST', /^\/api\/email\/prefs$/, async (req, res) => {
+  const body = await readBody(req);
+  json(res, 200, MAIL.setPrefs(resolveUser(req), body));
+});
+
+route('GET', /^\/api\/email\/outbox$/, async (req, res) => {
+  const rows = db.prepare(`SELECT id,to_email,kind,subject,body_text,status,provider,scheduled_for,sent_at,error
+    FROM email_queue ORDER BY created_at DESC LIMIT 50`).all();
+  json(res, 200, { messages: rows, status: MAIL.status() });
+});
+
+route('POST', /^\/api\/email\/flush$/, async (req, res) => {
+  const r = await MAIL.flush(50);
+  AN.track(null, 'email.flush', { attempted: r.attempted });
+  json(res, 200, r);
+});
+
+// Compose the daily brief for the current user and queue it.
+route('POST', /^\/api\/email\/brief$/, async (req, res) => {
+  const uid = resolveUser(req);
+  const user = db.prepare('SELECT * FROM users WHERE id=?').get(uid);
+  const prefs = MAIL.prefsFor(uid);
+  if (!prefs.daily_brief) return json(res, 400, { error: 'daily brief is switched off' });
+
+  // Reuse the exact brief the app shows — one source of truth, never a second implementation.
+  const brief = await briefFor(uid);
+  if (!brief || brief.needsOnboarding) return json(res, 400, { error: 'no profile yet' });
+
+  const rates = E.rateIntelligence(uid);
+  const scores = db.prepare('SELECT * FROM career_scores WHERE user_id=? ORDER BY id DESC LIMIT 1').get(uid);
+  const composed = MAIL.briefEmail({ user, brief, rates, scores, prefs });
+  const id = MAIL.enqueue({ userId: uid, to: user.email, kind: 'daily_brief', subject: composed.subject, text: composed.text, html: composed.html });
+  const sent = await MAIL.flush(5);
+  log(uid, 'email.brief_queued', 'email', id);
+  json(res, 200, { ok: true, id, subject: composed.subject, delivery: sent });
+});
+
+// Queue a brief for every user who has the brief switched on.
+route('POST', /^\/api\/email\/broadcast$/, async (req, res) => {
+  const users = db.prepare(`SELECT u.id, u.email, u.name FROM users u
+    LEFT JOIN email_prefs p ON p.user_id = u.id
+    WHERE u.status='active' AND COALESCE(p.daily_brief,1)=1 AND u.email NOT LIKE '%@anon.local'`).all();
+  const queued = [];
+  for (const u of users) {
+    try {
+      const brief = await briefFor(u.id);
+      if (!brief || brief.needsOnboarding) continue;
+      const rates = E.rateIntelligence(u.id);
+      const scores = db.prepare('SELECT * FROM career_scores WHERE user_id=? ORDER BY id DESC LIMIT 1').get(u.id);
+      const composed = MAIL.briefEmail({ user: u, brief, rates, scores });
+      const id = MAIL.enqueue({ userId: u.id, to: u.email, kind: 'daily_brief', subject: composed.subject, text: composed.text, html: composed.html });
+      queued.push({ userId: u.id, id });
+    } catch (e) { /* one bad user must not stop the broadcast */ }
+  }
+  const sent = await MAIL.flush(200);
+  json(res, 200, { queued: queued.length, delivery: sent });
+});
+
+// Lead report: the email that turns a free check into a user.
+route('POST', /^\/api\/email\/lead-report$/, async (req, res) => {
+  const body = await readBody(req);
+  const lead = db.prepare('SELECT * FROM leads WHERE id=?').get(body.leadId);
+  if (!lead) return json(res, 404, { error: 'lead not found' });
+  const composed = MAIL.leadReportEmail({ lead });
+  const id = MAIL.enqueue({ leadId: lead.id, to: lead.email, kind: 'lead_report', subject: composed.subject, text: composed.text, html: composed.html });
+  const sent = await MAIL.flush(5);
+  json(res, 200, { ok: true, id, delivery: sent });
+});
+
+route('GET', /^\/unsubscribe\/([^/]+)\/([^/]+)$/, async (req, res, url, m) => {
+  const [kind, idOrToken] = [m[1], m[2]];
+  if (kind === 'lead') {
+    db.prepare("UPDATE email_queue SET status='suppressed' WHERE lead_id=?").run(idOrToken);
+    res.writeHead(200, { 'Content-Type': 'text/html' });
+    return res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You will not receive further emails. <a href="/" style="color:#4c8dff">CareerOS</a></div>');
+  }
+  const userId = kind;
+  const token = idOrToken;
+  if (!MAIL.verifyUnsubscribe(userId, token)) { res.writeHead(403); return res.end('invalid link'); }
+  MAIL.setPrefs(userId, { daily_brief: false, opportunity_alerts: false, weekly_digest: false });
+  res.writeHead(200, { 'Content-Type': 'text/html' });
+  res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You are unsubscribed from all CareerOS emails. <a href="/" style="color:#4c8dff">Change your mind</a></div>');
 });
 
 // ---- lead capture + shareable cards (the acquisition loop) ----
@@ -1478,4 +1577,35 @@ server.listen(PORT, HOST, () => {
   };
   runLive('boot');
   setInterval(() => runLive('scheduled'), 30 * 60 * 1000);
+
+  // Daily brief scheduler. Runs every 15 minutes and sends to anyone whose local hour matches
+  // their preference and who has not already received one today.
+  const sendBriefs = async () => {
+    try {
+      const users = db.prepare(`SELECT u.id, u.email, u.name, COALESCE(p.send_hour,7) send_hour, COALESCE(p.timezone,'Europe/Berlin') tz
+        FROM users u LEFT JOIN email_prefs p ON p.user_id = u.id
+        WHERE u.status='active' AND COALESCE(p.daily_brief,1)=1 AND u.email NOT LIKE '%@anon.local'`).all();
+      let sent = 0;
+      for (const u of users) {
+        let localHour = 7;
+        try { localHour = Number(new Intl.DateTimeFormat('en-GB', { hour: '2-digit', hour12: false, timeZone: u.tz }).format(new Date())); } catch { localHour = 7; }
+        if (localHour !== Number(u.send_hour)) continue;
+        const already = db.prepare("SELECT 1 FROM email_queue WHERE user_id=? AND kind='daily_brief' AND date(created_at)=date('now') LIMIT 1").get(u.id);
+        if (already) continue;
+        const brief = await briefFor(u.id);
+        if (!brief || brief.needsOnboarding) continue;
+        const rates = E.rateIntelligence(u.id);
+        const scores = db.prepare('SELECT * FROM career_scores WHERE user_id=? ORDER BY id DESC LIMIT 1').get(u.id);
+        const composed = MAIL.briefEmail({ user: u, brief, rates, scores });
+        MAIL.enqueue({ userId: u.id, to: u.email, kind: 'daily_brief', subject: composed.subject, text: composed.text, html: composed.html });
+        sent++;
+      }
+      if (sent) {
+        const r = await MAIL.flush(200);
+        console.log(`[brief] ${sent} queued, ${r.results.filter((x) => x.ok).length} delivered via ${MAIL.provider()}`);
+      }
+    } catch (e) { console.log('  ! brief scheduler error', e.message); }
+  };
+  setTimeout(sendBriefs, 60 * 1000);
+  setInterval(sendBriefs, 15 * 60 * 1000);
 });
