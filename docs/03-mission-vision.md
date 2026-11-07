@@ -16,9 +16,9 @@ A Bloomberg terminal is not valuable because it lists prices. It's valuable beca
 - **scores** them against your portfolio and constraints,
 - and gives you a **decision surface** with an opinion.
 
-CareerOS becomes that for the 4 billion people whose most valuable asset is their labour and their next move:
+Karyvo becomes that for the 4 billion people whose most valuable asset is their labour and their next move:
 
-| Bloomberg does for | CareerOS does for |
+| Bloomberg does for | Karyvo does for |
 |---|---|
 | securities | opportunities |
 | market data | market + salary + skills data |

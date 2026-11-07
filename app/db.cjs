@@ -1,4 +1,4 @@
-// CareerOS AI — data layer. SQLite (node:sqlite), single file, zero dependencies.
+// Karyvo AI — data layer. SQLite (node:sqlite), single file, zero dependencies.
 'use strict';
 const { DatabaseSync } = require('node:sqlite');
 const path = require('node:path');

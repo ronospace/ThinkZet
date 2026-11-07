@@ -6,7 +6,7 @@
 
 ## Slide 1 — Title
 
-**CareerOS AI**
+**Karyvo AI**
 *The Operating System for Career Growth*
 One Profile. Every Opportunity.
 
@@ -52,7 +52,7 @@ Three consequences:
 
 ## Slide 5 — The product
 
-**CareerOS = one profile → a ranked, explained, tracked opportunity pipeline across 15 opportunity types.**
+**Karyvo = one profile → a ranked, explained, tracked opportunity pipeline across 15 opportunity types.**
 
 | Layer | Product | What it does |
 |---|---|---|
@@ -104,7 +104,7 @@ Three consequences:
 
 | Stream | Price | Margin | Y3 |
 |---|---|---|---|
-| CareerOS Pro | €19/mo, €149/yr | 88% | €2.2M |
+| Karyvo Pro | €19/mo, €149/yr | 88% | €2.2M |
 | Referral revenue | €15–€400/action | 95% | €0.8M |
 | Services marketplace | 20% take | 80% | €0.4M |
 | Learning marketplace | 15–30% | 90% | €0.2M |
@@ -180,4 +180,4 @@ Three consequences:
 
 ## The one-slide version
 
-> **People have more career options than ever and no way to choose between them. Every incumbent monetises its own inventory, so none can be neutral. CareerOS is the neutral decision layer — one profile, every opportunity, scored and explained — funded by the user, compounding on outcome data nobody else collects. €10B market, 88% margins, and a moat that grows every time someone asks "did you get it?"**
+> **People have more career options than ever and no way to choose between them. Every incumbent monetises its own inventory, so none can be neutral. Karyvo is the neutral decision layer — one profile, every opportunity, scored and explained — funded by the user, compounding on outcome data nobody else collects. €10B market, 88% margins, and a moat that grows every time someone asks "did you get it?"**

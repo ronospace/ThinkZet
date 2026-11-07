@@ -26,7 +26,7 @@ Four structural reasons nobody has taken it:
 
 ## 3. Demand-side drivers (why the timing is now)
 
-| Driver | Data point | Implication for CareerOS |
+| Driver | Data point | Implication for Karyvo |
 |---|---|---|
 | **AI re-pricing of talent** | Global AI-talent marketplaces are paying $30–$150/hr to vetted professionals across 100+ countries; new rate benchmarks appear quarterly | Rate arbitrage became a *personal* decision. People need to know: am I underpaid by 40%? |
 | **Ghost jobs & spam** | A majority of listings on large boards are stale, reposted or non-existent; recruiter spam up sharply post-2024 | Signal > volume. Curation is now a product. |
@@ -47,7 +47,7 @@ Four structural reasons nobody has taken it:
                     HIGH WILLINGNESS TO PAY
                               ▲
       Employer ATS /          │        ★ CAREER INTELLIGENCE
-      sourcing SaaS           │          (CareerOS)
+      sourcing SaaS           │          (Karyvo)
       (budget exists,         │        • individual pays
        buyer is corp)         │        • outcome-linked
                               │        • data compounds
@@ -78,7 +78,7 @@ The upper-right quadrant — **high individual willingness to pay + high data mo
 
 ### 🟢 Underserved — the wedge
 
-| Segment | Why it's open | CareerOS angle |
+| Segment | Why it's open | Karyvo angle |
 |---|---|---|
 | **Cross-type opportunity decisioning** | Every platform is single-type. Nobody compares "senior AI role in Berlin" vs "Mercor contract at $90/hr" vs "remote fellowship". | Core product. |
 | **Realistic probability of getting a given opportunity** | Everyone shows "match"; nobody shows "your odds." | Interview/offer probability engine. |

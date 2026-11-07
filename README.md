@@ -1,4 +1,4 @@
-# CareerOS AI
+# Karyvo AI
 
 **The Operating System for Career Growth.** One profile. Every opportunity.
 
