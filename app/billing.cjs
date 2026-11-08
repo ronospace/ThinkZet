@@ -251,4 +251,31 @@ function handleEvent(event) {
   }
 }
 
-module.exports = { PLANS, CONFIG, mode, status, createCheckout, setPlan, planFor, verifySignature, handleEvent, verifyPrices, stripeGet };
+// Reconciliation: webhooks can be missed, misconfigured or disabled by Stripe after repeated
+// failures. This asks Stripe directly what each paying user's subscription actually is, and
+// corrects our entitlement to match. It is the safety net under the webhook.
+async function reconcile() {
+  if (!CONFIG.secretKey) return { skipped: true, reason: 'no stripe key' };
+  const rows = db.prepare("SELECT user_id FROM plan_state WHERE plan IN ('pro','plus')").all();
+  const results = [];
+  for (const { user_id: userId } of rows) {
+    const link = db.prepare("SELECT external_id FROM billing_events WHERE user_id=? AND kind='link' AND external_id LIKE 'sub_%' ORDER BY id DESC LIMIT 1").get(userId);
+    if (!link) { results.push({ userId, action: 'no subscription on record' }); continue; }
+    try {
+      const sub = await stripeGet(`subscriptions/${link.external_id}`);
+      const active = ['active', 'trialing'].includes(sub.status);
+      const current = db.prepare('SELECT plan FROM plan_state WHERE user_id=?').get(userId)?.plan;
+      if (!active && current !== 'free') {
+        setPlan(userId, 'free', { source: 'reconcile', externalId: sub.id, status: sub.status });
+        results.push({ userId, action: `downgraded (stripe status: ${sub.status})` });
+      } else {
+        results.push({ userId, action: `ok (${sub.status})` });
+      }
+    } catch (e) {
+      results.push({ userId, action: 'lookup failed: ' + String(e.message || e).slice(0, 80) });
+    }
+  }
+  return { checked: rows.length, results };
+}
+
+module.exports = { PLANS, CONFIG, mode, status, createCheckout, setPlan, planFor, verifySignature, handleEvent, verifyPrices, stripeGet, reconcile };

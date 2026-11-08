@@ -1915,6 +1915,14 @@ route('POST', /^\/api\/billing\/cancel$/, async (req, res) => {
 });
 
 // Verify the configured prices against Stripe – catches mismatches before a customer does.
+route('POST', /^\/api\/billing\/reconcile$/, async (req, res) => {
+  try {
+    const r = await BILLING.reconcile();
+    log(resolveUser(req), 'billing.reconcile', 'billing', null, { checked: r.checked });
+    json(res, 200, r);
+  } catch (e) { json(res, 502, { error: String(e.message || e) }); }
+});
+
 route('GET', /^\/api\/billing\/verify$/, async (req, res) => {
   const st = BILLING.status();
   if (st.mode !== 'test' && st.mode !== 'live') return json(res, 200, { status: st, prices: null });
@@ -2135,6 +2143,18 @@ server.listen(PORT, HOST, () => {
       }
     } catch (e) { console.log('  ! brief scheduler error', e.message); }
   };
+  // Entitlement reconciliation every six hours, in case a webhook was missed.
+  setTimeout(async () => {
+    try {
+      const r = await BILLING.reconcile();
+      const fixed = (r.results || []).filter((x) => /downgraded/.test(x.action)).length;
+      if (fixed) console.log(`[reconcile] ${fixed} entitlement(s) corrected`);
+    } catch (e) { console.log('  ! reconcile error', e.message); }
+  }, 90 * 1000);
+  setInterval(async () => {
+    try { await BILLING.reconcile(); } catch (e) { /* best effort */ }
+  }, 6 * 60 * 60 * 1000);
+
   setTimeout(sendBriefs, 60 * 1000);
   setInterval(sendBriefs, 15 * 60 * 1000);
 });
