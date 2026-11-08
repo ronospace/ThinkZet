@@ -7,7 +7,7 @@
 
 ## The constraint that decides this
 
-MirrorSpread is a **good product name** and a **poor search name**. It is two common
+ThinkZet is a **good product name** and a **poor search name**. It is two common
 words joined, so search engines will split it, and "mirror spread" already means something
 in optics and in trading. That is a real cost for a product that must be found by people who
 have never heard of it.
@@ -23,7 +23,7 @@ gone.
 
 | Name | .com | Why it could work | Risk |
 |---|---|---|---|
-| **MirrorSpread** | ✅ free | Already the brand, already in the code, describes the product | Weak search distinctiveness |
+| **ThinkZet** | ✅ free | Already the brand, already in the code, describes the product | Weak search distinctiveness |
 | **EarnMore** | ✅ free | Literally the outcome. Memorable, plain-spoken | Generic; hard to trademark |
 | **SalaryProof** | ✅ free | "Proof" is the differentiator: evidence, not opinion | Narrow - sounds like pay data only |
 | **Prospect** | ✅ free | Elegant, one word, implies future value | Very broad, crowded meaning |
@@ -43,7 +43,7 @@ That is 56 of 60 checked. The category is mined out.
 
 ## Recommendation
 
-**Keep MirrorSpread. Buy mirrorspread.com today.**
+**Keep ThinkZet. Buy mirrorspread.com today.**
 
 Three reasons:
 

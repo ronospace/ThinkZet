@@ -16,9 +16,9 @@ A Bloomberg terminal is not valuable because it lists prices. It's valuable beca
 - **scores** them against your portfolio and constraints,
 - and gives you a **decision surface** with an opinion.
 
-MirrorSpread becomes that for the 4 billion people whose most valuable asset is their labour and their next move:
+ThinkZet becomes that for the 4 billion people whose most valuable asset is their labour and their next move:
 
-| Bloomberg does for | MirrorSpread does for |
+| Bloomberg does for | ThinkZet does for |
 |---|---|
 | securities | opportunities |
 | market data | market + salary + skills data |

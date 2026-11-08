@@ -1,4 +1,4 @@
-# MirrorSpread AI — Executive Summary
+# ThinkZet AI — Executive Summary
 
 **Date:** 7 November 2026
 **Status:** Pre-seed / validation
@@ -8,13 +8,13 @@
 
 ## The one-sentence thesis
 
-> Job boards answer *"what exists?"*. MirrorSpread answers *"what should **I** do next, and why?"* — and then runs the pipeline for you.
+> Job boards answer *"what exists?"*. ThinkZet answers *"what should **I** do next, and why?"* — and then runs the pipeline for you.
 
 The internet solved opportunity **discovery** in 2008 (Indeed, LinkedIn). It never solved opportunity **decisioning**. Every platform added more listings; nobody added a decision layer. That is the gap.
 
 ## What we are building
 
-MirrorSpread AI is a personal **opportunity intelligence system**. A user connects one profile (CV + goals + constraints), and MirrorSpread:
+ThinkZet AI is a personal **opportunity intelligence system**. A user connects one profile (CV + goals + constraints), and ThinkZet:
 
 1. **Radar** — continuously scans the market across 15+ heterogeneous opportunity types (jobs, contracts, fellowships, grants, visas, co-founder matches) and produces a ranked daily feed.
 2. **Match Engine** — scores every opportunity on match, income potential, interview probability, offer probability, and realistic-ness.
@@ -25,7 +25,7 @@ MirrorSpread AI is a personal **opportunity intelligence system**. A user connec
 
 ## Why now (the three shifts)
 
-| Shift | What changed | Why it unlocks MirrorSpread |
+| Shift | What changed | Why it unlocks ThinkZet |
 |---|---|---|
 | **AI-native labour market** | LLM evaluation platforms (Mercor, micro1, Turing, Surge, Scale) turned talent into a global commodity priced per hour — and *re-priced* it every 6 months. | People now have 10–50 realistic income options at any moment and zero tooling to compare them. Comparison, not discovery, is the bottleneck. |
 | **AI made the data layer cheap** | Parsing a CV, normalising a listing, scoring fit and predicting salary used to cost a data-science team; now it's an LLM call + an embedding. | A solo founder can ship a credible decision engine in 30–60 days. Previously this needed $3–5M. |
@@ -35,7 +35,7 @@ MirrorSpread AI is a personal **opportunity intelligence system**. A user connec
 
 | Stream | Price | Margin | Timeline |
 |---|---|---|---|
-| **MirrorSpread Pro** (subscription) | €19/mo, €149/yr | 88% | Week 4 |
+| **ThinkZet Pro** (subscription) | €19/mo, €149/yr | 88% | Week 4 |
 | **Referral revenue** (affiliate/partner programs) | €15–€400 per qualified action | 95% | Week 6 |
 | **Career Services marketplace** (coaches, CV experts, immigration) | 20% take rate | 80% | Month 5–7 |
 | **Learning marketplace** (certs, courses) | 15–30% rev-share | 90% | Month 7–9 |
@@ -68,4 +68,4 @@ This is a **validation plan first, capital plan second**.
 
 ## The brutal one-liner
 
-MirrorSpread is worth building **only if** we win the *decision* layer, not the *listing* layer. If we end up as "LinkedIn with better filters," we are dead. Every design decision in this document is filtered through one question: **does this make the user's next career decision measurably better?**
+ThinkZet is worth building **only if** we win the *decision* layer, not the *listing* layer. If we end up as "LinkedIn with better filters," we are dead. Every design decision in this document is filtered through one question: **does this make the user's next career decision measurably better?**

@@ -14,7 +14,7 @@ Three rules:
 
 | # | Stream | When | Share of Y3 revenue | Gross margin |
 |---|---|---|---|---|
-| 1 | **MirrorSpread Pro** (subscription) | Week 4 | 62% | 88% |
+| 1 | **ThinkZet Pro** (subscription) | Week 4 | 62% | 88% |
 | 2 | **Referral / affiliate revenue** | Week 6 | 22% | 95% |
 | 3 | **Career Services marketplace** | Month 5–7 | 11% | 80% |
 | 4 | **Learning marketplace** | Month 7–9 | 5% | 90% |
@@ -22,7 +22,7 @@ Three rules:
 
 ---
 
-## 2. Stream 1 — MirrorSpread Pro (core)
+## 2. Stream 1 — ThinkZet Pro (core)
 
 ### Tiers
 

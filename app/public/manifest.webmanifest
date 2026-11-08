@@ -1,6 +1,6 @@
 {
-  "name": "MirrorSpread",
-  "short_name": "MirrorSpread",
+  "name": "ThinkZet",
+  "short_name": "ThinkZet",
   "description": "Discover how much opportunity you're leaving on the table.",
   "start_url": "/",
   "display": "standalone",

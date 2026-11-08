@@ -1,5 +1,5 @@
 #!/bin/bash
-# MirrorSpread — start everything.
+# ThinkZet — start everything.
 #   1. the app server
 #   2. the Stripe webhook forwarder (if the CLI is installed)
 # Ctrl-C stops both.

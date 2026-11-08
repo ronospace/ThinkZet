@@ -99,13 +99,13 @@ Notice: **four of five are self-inflicted.** That's actually good news — they'
 Three things, in order of leverage:
 
 1. **A single viral artifact: the Rate Gap Card.**
-   "MirrorSpread says I'm worth €95–120/hr. My last offer was €75." — a beautiful, shareable, data-backed card. This is the growth engine. Not SEO, not ads. **One shareable proof-of-value artifact that people post in the Discords where the ICP already lives.**
+   "ThinkZet says I'm worth €95–120/hr. My last offer was €75." — a beautiful, shareable, data-backed card. This is the growth engine. Not SEO, not ads. **One shareable proof-of-value artifact that people post in the Discords where the ICP already lives.**
 
 2. **Programmatic SEO on rate + visa + comparison queries.**
    10,000 pages of data nobody else has. Slow to start, unbeatable at scale. This is the compounding channel.
 
 3. **The outcome proof loop.**
-   Every user who reports a win becomes a case study, a referral source, and a data point. "I used MirrorSpread and got a 32% raise" is more persuasive than any ad. **Make reporting outcomes feel like a win, not a survey.**
+   Every user who reports a win becomes a case study, a referral source, and a data point. "I used ThinkZet and got a 32% raise" is more persuasive than any ad. **Make reporting outcomes feel like a win, not a survey.**
 
 **What would *not* create breakout growth:** paid ads, Product Hunt alone, influencer marketing, a mobile app, a community, enterprise sales.
 
@@ -226,7 +226,7 @@ Three things, in order of leverage:
 
 ## The final word
 
-> **MirrorSpread is a real company hiding inside a very big vision.**
+> **ThinkZet is a real company hiding inside a very big vision.**
 >
 > The vision is right: the decision layer between talent and opportunity is genuinely unowned, and the structural neutrality argument is a real, durable, uncopyable position.
 >

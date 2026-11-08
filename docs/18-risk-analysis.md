@@ -66,7 +66,7 @@ Scoring: Likelihood (1–5) × Impact (1–5) = Risk score. Anything ≥ 12 need
 ## 3. Top five risks in detail
 
 ### R1 — No distribution (score 25)
-**Why it's the top risk:** the product can be excellent and still die. MirrorSpread is entering a category with zero brand awareness, against incumbents with billions of monthly impressions.
+**Why it's the top risk:** the product can be excellent and still die. ThinkZet is entering a category with zero brand awareness, against incumbents with billions of monthly impressions.
 
 **Mitigation plan (specific, dated):**
 - Weeks 1–2: 25 interviews + waitlist page + 2 LinkedIn posts → target 100 emails.

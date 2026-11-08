@@ -1,4 +1,4 @@
-# MirrorSpread Brand Transformation — Phase 1: Audit
+# ThinkZet Brand Transformation — Phase 1: Audit
 
 **Status:** complete, no changes made
 **Date:** 7 November 2026
@@ -8,14 +8,14 @@
 
 ## 1. Executive summary
 
-The platform already reads as **MirrorSpread** in every user-facing location. The previous
+The platform already reads as **ThinkZet** in every user-facing location. The previous
 rename was completed across 32 files with zero legacy strings remaining.
 
 What is **not** yet done is the brand *architecture* in its final form:
 
 | Required | Present | Gap |
 |---|---|---|
-| Product name: MirrorSpread | ✅ everywhere | — |
+| Product name: ThinkZet | ✅ everywhere | — |
 | Parent: ZyraFlow GmbH™ | ✅ footer + legal only | — |
 | Category: **Career Intelligence Platform** | ❌ | Sidebar says "Opportunity OS"; title says "Opportunity Operating System" |
 | Attribution: **An independent product by ZyraFlow GmbH™** | ⚠️ different wording | Footer says "is a product of" |
@@ -34,39 +34,39 @@ precise edits across 6 files, plus one open question about the tagline's placeme
 
 | Location | Current | Target |
 |---|---|---|
-| `<title>` | MirrorSpread AI — Opportunity Operating System | MirrorSpread — Career Intelligence Platform |
+| `<title>` | ThinkZet AI — Opportunity Operating System | ThinkZet — Career Intelligence Platform |
 | Sidebar brand subtitle | Opportunity OS | Career Intelligence |
-| Landing logo lockup | MirrorSpread | MirrorSpread *(keep)* |
-| Landing sub-headline | …MirrorSpread reads live postings… | keep *(narrative, not the tagline)* |
+| Landing logo lockup | ThinkZet | ThinkZet *(keep)* |
+| Landing sub-headline | …ThinkZet reads live postings… | keep *(narrative, not the tagline)* |
 | Star-seller `og:title` | The market has been pricing you without you | keep |
-| Footer legal | © 2026 ZyraFlow GmbH™. All rights reserved. MirrorSpread is a product of ZyraFlow GmbH™. | © 2026 ZyraFlow GmbH™ · An independent product by ZyraFlow GmbH™ |
+| Footer legal | © 2026 ZyraFlow GmbH™. All rights reserved. ThinkZet is a product of ZyraFlow GmbH™. | © 2026 ZyraFlow GmbH™ · An independent product by ZyraFlow GmbH™ |
 | App sidebar footer | © 2026 ZyraFlow GmbH™ | © 2026 ZyraFlow GmbH™ |
-| Share card brand | MirrorSpread | keep |
-| SEO page brand ×3 | MirrorSpread | keep |
-| One-liner share text | "MirrorSpread says…" | keep |
+| Share card brand | ThinkZet | keep |
+| SEO page brand ×3 | ThinkZet | keep |
+| One-liner share text | "ThinkZet says…" | keep |
 
 ### 2.2 Emails (`app/mailer.cjs`, 3 references)
 
 | Location | Current | Target |
 |---|---|---|
-| Sender | MirrorSpread <brief@careeros.local> | MirrorSpread <brief@…> *(domain unchanged — see §5)* |
-| Email header | MirrorSpread · Morning brief | keep |
-| Sign-off | — MirrorSpread, a product of ZyraFlow GmbH™ | — MirrorSpread · An independent product by ZyraFlow GmbH™ |
+| Sender | ThinkZet <brief@careeros.local> | ThinkZet <brief@…> *(domain unchanged — see §5)* |
+| Email header | ThinkZet · Morning brief | keep |
+| Sign-off | — ThinkZet, a product of ZyraFlow GmbH™ | — ThinkZet · An independent product by ZyraFlow GmbH™ |
 | Email footer | © 2026 ZyraFlow GmbH™. All rights reserved. | © 2026 ZyraFlow GmbH™ |
 
 ### 2.3 Metadata and manifests
 
 | File | Item | Current | Target |
 |---|---|---|---|
-| `manifest.webmanifest` | name | MirrorSpread | MirrorSpread — Career Intelligence |
-| `manifest.webmanifest` | short_name | MirrorSpread | MirrorSpread |
+| `manifest.webmanifest` | name | ThinkZet | ThinkZet — Career Intelligence |
+| `manifest.webmanifest` | short_name | ThinkZet | ThinkZet |
 | `manifest.webmanifest` | description | Discover how much opportunity… | See your value. Expand your possibilities. |
 | `icon.svg` | glyph | M | M *(no change needed)* |
 | `index.html` | `theme-color` | #0b0d10 | keep |
 
 ### 2.4 Documentation (18 files)
 
-`README.md`, `docs/01…19`, `docs/planning/*` all reference MirrorSpread correctly.
+`README.md`, `docs/01…19`, `docs/planning/*` all reference ThinkZet correctly.
 **No action required** beyond adding the tagline to the mission document.
 
 ### 2.5 Backend (`app/server.cjs`, 11 references)
@@ -182,7 +182,7 @@ where it earns its keep and gives the brand a calm, repeatable line everywhere e
 
 1. `COMPANY` constant in `server.cjs` — single source of truth for name, category, attribution, copyright.
 2. `manifest.webmanifest` + `<title>` + meta description.
-3. Sidebar brand block: MirrorSpread / Career Intelligence / tagline.
+3. Sidebar brand block: ThinkZet / Career Intelligence / tagline.
 4. Footer legal line, landing and app.
 5. Email sign-off and footer.
 6. Legal pages entity line.
@@ -196,8 +196,8 @@ where it earns its keep and gives the brand a calm, repeatable line everywhere e
 ## 9. Acceptance criteria
 
 - [ ] `grep -r "CareerOS\|Karyvo"` returns **0** user-facing hits
-- [ ] `<title>` reads `MirrorSpread — Career Intelligence Platform`
-- [ ] Sidebar reads MirrorSpread / Career Intelligence, with the tagline
+- [ ] `<title>` reads `ThinkZet — Career Intelligence Platform`
+- [ ] Sidebar reads ThinkZet / Career Intelligence, with the tagline
 - [ ] Footer reads `© 2026 ZyraFlow GmbH™ · An independent product by ZyraFlow GmbH™`
 - [ ] Emails sign off with the same line
 - [ ] Database, cookie, routes, storage keys **unchanged**

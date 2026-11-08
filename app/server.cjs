@@ -1,4 +1,4 @@
-// MirrorSpread AI – API server. Node built-ins only (http + node:sqlite). Zero dependencies.
+// ThinkZet AI – API server. Node built-ins only (http + node:sqlite). Zero dependencies.
 'use strict';
 // Minimal .env loader: KEY=value lines, no dependency, ignored if the file is absent.
 try {
@@ -34,9 +34,12 @@ const MAIL = require('./mailer.cjs');
 const COMPANY = {
   name: 'ZyraFlow GmbH',
   mark: 'ZyraFlow GmbH™',
-  product: 'MirrorSpread',
+  product: 'ThinkZet',
+  productFull: 'ThinkZet AI',
+  domain: 'thinkzet.com',
+  url: 'https://thinkzet.com',
   copyright: (year = new Date().getFullYear()) => `© ${year} ZyraFlow GmbH™. All rights reserved.`,
-  legalLine: (year = new Date().getFullYear()) => `© ${year} ZyraFlow GmbH™. All rights reserved. MirrorSpread is a product of ZyraFlow GmbH™.`,
+  legalLine: (year = new Date().getFullYear()) => `© ${year} ZyraFlow GmbH™. All rights reserved. ThinkZet is a product of ZyraFlow GmbH™.`,
 };
 
 const PORT = Number(process.env.PORT || 4173);
@@ -1241,7 +1244,7 @@ Three things worth doing this week:
 
 ${app}
 
-– MirrorSpread
+– ThinkZet
 You can turn these off any time: ${unsub}`,
     first_move: `${name},
 
@@ -1253,7 +1256,7 @@ Open the radar, filter to 60% interview odds or above, and take the top one toda
 
 ${app}
 
-– MirrorSpread
+– ThinkZet
 ${unsub}`,
     gap: `${name},
 
@@ -1267,7 +1270,7 @@ The gaps screen has the sequence, with the weeks and the cumulative unblocking a
 
 ${app}
 
-– MirrorSpread
+– ThinkZet
 ${unsub}`,
     proof: `${name},
 
@@ -1281,11 +1284,11 @@ Your streak is ${ctx.streak || 1}. Keep it.
 
 ${app}
 
-– MirrorSpread
+– ThinkZet
 ${unsub}`,
   };
 
-  return { subject: SEQUENCE.find((x) => x.key === key)?.subject || 'MirrorSpread', text: bodies[key] || bodies.welcome };
+  return { subject: SEQUENCE.find((x) => x.key === key)?.subject || 'ThinkZet', text: bodies[key] || bodies.welcome };
 }
 
 function scheduleSequence(userId) {
@@ -1404,14 +1407,14 @@ route('GET', /^\/unsubscribe\/([^/]+)\/([^/]+)$/, async (req, res, url, m) => {
   if (kind === 'lead') {
     db.prepare("UPDATE email_queue SET status='suppressed' WHERE lead_id=?").run(idOrToken);
     res.writeHead(200, { 'Content-Type': 'text/html' });
-    return res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You will not receive further emails. <a href="/" style="color:#4c8dff">MirrorSpread</a></div>');
+    return res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You will not receive further emails. <a href="/" style="color:#4c8dff">ThinkZet</a></div>');
   }
   const userId = kind;
   const token = idOrToken;
   if (!MAIL.verifyUnsubscribe(userId, token)) { res.writeHead(403); return res.end('invalid link'); }
   MAIL.setPrefs(userId, { daily_brief: false, opportunity_alerts: false, weekly_digest: false });
   res.writeHead(200, { 'Content-Type': 'text/html' });
-  res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You are unsubscribed from all MirrorSpread emails. <a href="/" style="color:#4c8dff">Change your mind</a></div>');
+  res.end('<div style="font-family:system-ui;padding:60px;text-align:center;background:#0b0d10;color:#e8edf4;min-height:100vh">You are unsubscribed from all ThinkZet emails. <a href="/" style="color:#4c8dff">Change your mind</a></div>');
 });
 
 // ---- GDPR: export and erase, implemented rather than promised ----
@@ -2102,7 +2105,7 @@ const server = http.createServer(async (req, res) => {
 // network can reach it. Localhost still works exactly as before.
 const HOST = process.env.HOST || '0.0.0.0';
 server.listen(PORT, HOST, () => {
-  console.log(`MirrorSpread engine on http://127.0.0.1:${PORT}`);
+  console.log(`ThinkZet engine on http://127.0.0.1:${PORT}`);
   console.log(`seed: ${ingest.raw ?? 0} raw → ${ingest.canonical ?? ingest.count} canonical, ${ingest.merged ?? 0} merged (${ingest.duplicateRate ?? 0}% dup) in ${ingestMs}ms`);
   // Live ingestion on boot, then every 30 minutes. Failures are isolated per source.
   const runLive = async (label) => {

@@ -132,7 +132,7 @@ LinkedIn is where the ICP lives and where our *category* can be created. We do n
 |---|---|---|
 | Rate teardown | "What Mercor, micro1 and Turing actually pay in 2026" | Search-driven, evergreen, high intent |
 | Relocation math | "The real cost of moving to Berlin on €85k" | Huge long-tail demand |
-| MirrorSpread demo | "How I'd find my next opportunity in 4 minutes" | Product demo with context |
+| ThinkZet demo | "How I'd find my next opportunity in 4 minutes" | Product demo with context |
 | Build in public | "Month 3 of building a startup with no funding" | Audience building, founder brand |
 
 **Cadence:** 1/week from M2. Target: 1,000 subs by M6, 8,000 by M12. Each video repurposed into 3 LinkedIn posts, 1 newsletter section, 1 SEO page embed.
@@ -144,7 +144,7 @@ LinkedIn is where the ICP lives and where our *category* can be created. We do n
 Three referral loops, each built into the product:
 
 **Loop A — The Insight Share (viral, free-tier).**
-When a user gets a rate-gap insight, they can share a *beautifully designed card*: "My market rate is €95–120/hr. MirrorSpread found me €38k/yr." (No personal data leaked; they choose what's shown.)
+When a user gets a rate-gap insight, they can share a *beautifully designed card*: "My market rate is €95–120/hr. ThinkZet found me €38k/yr." (No personal data leaked; they choose what's shown.)
 → Every share is an acquisition ad with social proof.
 
 **Loop B — The Outcome Proof.**
@@ -175,7 +175,7 @@ Two-sided: invite 3 peers → 1 month free for both. Target communities (Discord
 
 **Why:** P4 (early career) is cheap volume, universities have budget, and cohorts give us density + a data goldmine (cohort outcomes).
 
-**Offer:** free MirrorSpread for final-year students; a cohort dashboard for the careers service (aggregate employability, skill gaps, where graduates land); a paid "Cohort Intelligence" tier for the university.
+**Offer:** free ThinkZet for final-year students; a cohort dashboard for the careers service (aggregate employability, skill gaps, where graduates land); a paid "Cohort Intelligence" tier for the university.
 
 **Sequence:**
 1. Start with 3–5 universities where the founder has a connection (M5).
@@ -281,7 +281,7 @@ Two-sided: invite 3 peers → 1 month free for both. Target communities (Discord
 | Channel | Tactic |
 |---|---|
 | SEO | 6,000+ pages; category-defining content |
-| Brand | "MirrorSpread" becomes the verb for career decisioning |
+| Brand | "ThinkZet" becomes the verb for career decisioning |
 | Institutional | 100+ university/enterprise contracts |
 | Geographic | Localised in DE, NL, FR, ES, PT-BR, HI |
 | API | Comp-data and skills API licensed to HR tech |

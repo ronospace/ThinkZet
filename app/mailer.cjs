@@ -14,7 +14,7 @@ const { db } = require('./db.cjs');
 const CONFIG = {
   resendKey: process.env.RESEND_API_KEY || '',
   postmarkKey: process.env.POSTMARK_API_KEY || '',
-  from: process.env.EMAIL_FROM || 'MirrorSpread <brief@careeros.local>',
+  from: process.env.EMAIL_FROM || 'ThinkZet <brief@careeros.local>',
   replyTo: process.env.EMAIL_REPLY_TO || '',
   appUrl: process.env.APP_URL || 'http://127.0.0.1:4173',
   originFrom: (req) => {
@@ -163,7 +163,7 @@ function briefEmail({ user, brief, rates, scores, prefs }) {
   }
   lines.push(`Open your radar: ${CONFIG.appUrl}/?app=1`);
   lines.push('');
-  lines.push(`– MirrorSpread, a product of ZyraFlow GmbH™
+  lines.push(`– ThinkZet, a product of ZyraFlow GmbH™
 You get this because you asked for the daily brief. Unsubscribe: ${unsub}`);
 
   const text = `Good morning ${name},\n\n${lines.join('\n')}`;
@@ -188,7 +188,7 @@ function renderHtml({ name, brief, rates, scores, unsub }) {
   return `<!doctype html><html><body style="margin:0;background:#0b0d10;padding:28px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;color:#e8edf4">
   <div style="max-width:560px;margin:0 auto;background:#12161c;border:1px solid #222a35;border-radius:14px;overflow:hidden">
     <div style="padding:22px 24px;border-bottom:1px solid #222a35">
-      <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#4c8dff;font-weight:700">MirrorSpread · Morning brief</div>
+      <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#4c8dff;font-weight:700">ThinkZet · Morning brief</div>
       <div style="font-size:10.5px;color:#6b7683;margin-top:4px">See your value. Expand your possibilities.</div>
       <div style="font-size:20px;font-weight:700;letter-spacing:-.02em;margin-top:8px;line-height:1.35">${escHtml(brief.headline)}</div>
     </div>

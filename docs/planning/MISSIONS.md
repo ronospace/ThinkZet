@@ -1,4 +1,4 @@
-# MirrorSpread — Mission Plan & Operating Priorities
+# ThinkZet — Mission Plan & Operating Priorities
 
 **Last updated:** 7 November 2026
 **Single question every piece of work must answer:** *Will this help us reach the first 100 paying users faster?*

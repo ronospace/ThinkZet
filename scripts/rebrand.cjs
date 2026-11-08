@@ -11,12 +11,12 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const NEW = process.argv[2];
-if (!NEW || NEW.startsWith('-') || NEW.trim().length < 2 || NEW.trim() === 'MirrorSpread') {
+if (!NEW || NEW.startsWith('-') || NEW.trim().length < 2 || NEW.trim() === 'ThinkZet') {
   console.error('usage: node scripts/rebrand.cjs "New Name"');
   console.error('       pass a genuinely new name — running it with the current name does nothing useful.');
   process.exit(1);
 }
-const OLD = 'MirrorSpread';
+const OLD = 'ThinkZet';
 const OLD_LOWER = 'careeros';
 
 const ROOT = path.join(__dirname, '..');
