@@ -1,0 +1,16 @@
+# ThinkZet has zero npm dependencies. Nixpacks only needs to know which Node to install
+# and that there is nothing to build.
+providers = ["node"]
+
+[variables]
+NODE_VERSION = "22"
+NPM_CONFIG_PRODUCTION = "false"
+
+[phases.install]
+cmds = ["echo 'no dependencies to install'"]
+
+[phases.build]
+cmds = ["echo 'no build step'"]
+
+[start]
+cmd = "node app/server.cjs"
