@@ -262,6 +262,18 @@ textarea.cv:focus{border-color:var(--accent2)}
 .filters input:focus,.filters select:focus{border-color:var(--accent2)}
 .filters .chk{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink2);white-space:nowrap}
 .reveal{animation:rise .32s cubic-bezier(.2,.7,.3,1) both}
+.sk{background:linear-gradient(90deg,var(--panel2) 25%,var(--panel3) 37%,var(--panel2) 63%);background-size:400% 100%;animation:shimmer 1.3s ease-in-out infinite;border-radius:8px}
+@keyframes shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
+@media(prefers-reduced-motion:reduce){.sk{animation:none;background:var(--panel2)}}
+.sk-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3);margin-bottom:14px}
+.sk-kpi{height:118px;border-radius:var(--radius-lg)}
+.sk-band{height:150px;border-radius:var(--radius-lg);margin-bottom:14px}
+.sk-row{display:grid;grid-template-columns:64px 1fr auto;gap:var(--sp-4);align-items:center;padding:var(--sp-4);border-radius:var(--radius-lg);background:var(--panel);border:1px solid var(--line);margin-bottom:var(--sp-3)}
+.sk-circle{width:64px;height:64px;border-radius:50%}
+.sk-line{height:11px;border-radius:6px}
+.sk-line.short{width:38%}
+.sk-line.mid{width:64%}
+@media(max-width:1100px){.sk-kpis{grid-template-columns:repeat(2,1fr)}}
 @keyframes rise{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:reduce){.reveal{animation:none}}
 .opp{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-4);margin-bottom:var(--sp-3);display:grid;grid-template-columns:64px 1fr auto;gap:var(--sp-4);align-items:center;transition:border-color .16s ease,box-shadow .16s ease,transform .16s ease;box-shadow:var(--shadow-sm)}
@@ -2647,7 +2659,9 @@ async function go(view) {
   const [fn, title, sub] = VIEWS[view];
   $('#view-title').textContent = title;
   $('#view-sub').textContent = sub;
-  $('#view').innerHTML = '<div class="empty">Loading…</div>';
+  $('#view').innerHTML = `<div class="sk-kpis">${'<div class="sk sk-kpi"></div>'.repeat(4)}</div>
+    <div class="sk sk-band"></div>
+    ${'<div class="sk-row"><div class="sk sk-circle"></div><div><div class="sk sk-line mid"></div><div class="sk sk-line short" style="margin-top:8px"></div></div><div class="sk sk-line" style="width:80px"></div></div>'.repeat(4)}`;
   try { await fn(); } catch (e) { $('#view').innerHTML = '<div class="empty">Error: ' + esc(e.message) + '</div>'; }
 }
 
