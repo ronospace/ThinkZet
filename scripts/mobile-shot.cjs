@@ -60,7 +60,7 @@ function cdp(port, path, method = 'GET') {
   await new Promise((r) => setTimeout(r, 3500));
   await send('Runtime.evaluate', { expression: "localStorage.setItem('mirrorspread-theme','light');location.reload()" });
   await new Promise((r) => setTimeout(r, 3500));
-  await send('Runtime.evaluate', { expression: "showApp();go('radar')" });
+  await send('Runtime.evaluate', { expression: process.env.APP_MODE === 'app' ? "showApp();go('radar')" : "showLanding()" });
   await new Promise((r) => setTimeout(r, 2500));
   const shot = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
   require('node:fs').writeFileSync(OUT, Buffer.from(shot.data, 'base64'));
