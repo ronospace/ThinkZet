@@ -157,7 +157,7 @@ function briefEmail({ user, brief, rates, scores, prefs }) {
   }
   lines.push(`Open your radar: ${CONFIG.appUrl}/?app=1`);
   lines.push('');
-  lines.push(`— MirrorSpread, a product of ZyraFlow GmbH™
+  lines.push(`– MirrorSpread, a product of ZyraFlow GmbH™
 You get this because you asked for the daily brief. Unsubscribe: ${unsub}`);
 
   const text = `Good morning ${name},\n\n${lines.join('\n')}`;
@@ -248,7 +248,7 @@ function leadReportEmail({ lead }) {
         <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#4c8dff;font-weight:700">Your market value report</div>
         <div style="font-size:26px;font-weight:750;margin-top:10px;color:${gap > 10 ? '#ff8f96' : '#6fe3a4'}">${gap != null ? (gap > 0 ? `${gap}% below market` : `${Math.abs(gap)}% above market`) : 'Market value'}</div>
         <table style="width:100%;border-collapse:collapse;margin-top:16px">
-          <tr><td style="padding:6px 0;color:#6b7683;font-size:13px">Role</td><td style="text-align:right;font-size:13px;font-weight:600">${escHtml(lead.role || '—')}</td></tr>
+          <tr><td style="padding:6px 0;color:#6b7683;font-size:13px">Role</td><td style="text-align:right;font-size:13px;font-weight:600">${escHtml(lead.role || '–')}</td></tr>
           <tr><td style="padding:6px 0;color:#6b7683;font-size:13px">Experience</td><td style="text-align:right;font-size:13px;font-weight:600">${lead.years || '—'} years</td></tr>
           ${lead.current_salary ? `<tr><td style="padding:6px 0;color:#6b7683;font-size:13px">You report</td><td style="text-align:right;font-size:13px;font-weight:600">${money(lead.current_salary)}</td></tr>` : ''}
           <tr><td style="padding:6px 0;color:#6b7683;font-size:13px">Market median</td><td style="text-align:right;font-size:13px;font-weight:600">${money(lead.median)}</td></tr>

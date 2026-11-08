@@ -1026,7 +1026,7 @@ async function briefFor(uid) {
   } else if (newSinceYesterday.length) {
     headline = `${plural(newSinceYesterday.length, 'new opportunity', 'new opportunities')} since yesterday. Highest match: ${top[0]?.match_score ?? 0}/100.`;
   } else {
-    headline = `Nothing new at your bar overnight. Your best live option is still ${top[0]?.title || '—'} (${top[0]?.match_score || 0}/100).`;
+    headline = `Nothing new at your bar overnight. Your best live option is still ${top[0]?.title || '–'} (${top[0]?.match_score || 0}/100).`;
   }
 
   const actions = [];

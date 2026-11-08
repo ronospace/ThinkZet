@@ -72,12 +72,12 @@ const SENIORITY_MULT = { junior: 0.62, mid: 0.85, senior: 1.0, staff: 1.3, lead:
 const OTHER_TYPES = [
   { type: 'fellowship', titles: ['AI Safety Research Fellowship', 'Data Science for Public Good Fellowship', 'Mozilla Technology Fellowship', 'Open Source AI Fellowship'], comp: [0, 24000], period: 'stipend' },
   { type: 'grant', titles: ['Independent AI Research Grant', 'Open Source Maintainer Grant', 'Prototype Fund Grant'], comp: [10000, 60000], period: 'oneoff' },
-  { type: 'accelerator', titles: ['AI Founders Accelerator — Cohort 9', 'B2B SaaS Accelerator', 'Climate Tech Accelerator'], comp: [25000, 150000], period: 'investment' },
-  { type: 'cofounder', titles: ['Technical Co-Founder — AI Legal Tech', 'Co-Founder & CTO — Vertical AI', 'Founding Engineer / Co-Founder — DevTools'], comp: [0, 0], period: 'equity' },
-  { type: 'research', titles: ['Research Scientist — LLM Evaluation', 'Applied Research — Multimodal', 'Research Engineer — Agents'], comp: [85000, 140000], period: 'year' },
-  { type: 'hackathon', titles: ['Agentic AI Hackathon — Berlin', 'AI x Climate Hack', 'LLM Evals Challenge'], comp: [2000, 25000], period: 'prize' },
+  { type: 'accelerator', titles: ['AI Founders Accelerator – Cohort 9', 'B2B SaaS Accelerator', 'Climate Tech Accelerator'], comp: [25000, 150000], period: 'investment' },
+  { type: 'cofounder', titles: ['Technical Co-Founder – AI Legal Tech', 'Co-Founder & CTO – Vertical AI', 'Founding Engineer / Co-Founder – DevTools'], comp: [0, 0], period: 'equity' },
+  { type: 'research', titles: ['Research Scientist – LLM Evaluation', 'Applied Research – Multimodal', 'Research Engineer – Agents'], comp: [85000, 140000], period: 'year' },
+  { type: 'hackathon', titles: ['Agentic AI Hackathon – Berlin', 'AI x Climate Hack', 'LLM Evals Challenge'], comp: [2000, 25000], period: 'prize' },
   { type: 'speaking', titles: ['Keynote: Production RAG at Scale', 'Workshop: MLOps for Small Teams', 'Panel: The AI Talent Market'], comp: [1500, 8000], period: 'fee' },
-  { type: 'mentorship', titles: ['Mentor — AI Engineering Bootcamp', 'Technical Mentor — Founders Program'], comp: [0, 4000], period: 'stipend' },
+  { type: 'mentorship', titles: ['Mentor – AI Engineering Bootcamp', 'Technical Mentor – Founders Program'], comp: [0, 4000], period: 'stipend' },
 ];
 
 function hash(s) { return crypto.createHash('sha1').update(s).digest('hex').slice(0, 16); }

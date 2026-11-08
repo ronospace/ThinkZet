@@ -9,7 +9,7 @@ const crypto = require('node:crypto');
 const { db } = require('./db.cjs');
 
 const DEFAULT_PROGRAMS = [
-  { name: 'Mercor', slug: 'mercor', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 150, template: 'https://mercor.com/?ref={code}', notes: 'AI talent marketplace — hourly contracts' },
+  { name: 'Mercor', slug: 'mercor', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 150, template: 'https://mercor.com/?ref={code}', notes: 'AI talent marketplace – hourly contracts' },
   { name: 'micro1', slug: 'micro1', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 120, template: 'https://www.micro1.ai/?ref={code}', notes: 'AI screening + talent marketplace' },
   { name: 'Turing', slug: 'turing', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 100, template: 'https://www.turing.com/?ref={code}', notes: 'Remote developer staffing' },
   { name: 'Arc.dev', slug: 'arc', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 90, template: 'https://arc.dev/?ref={code}', notes: 'Curated remote developer marketplace' },
