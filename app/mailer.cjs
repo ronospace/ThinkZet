@@ -17,6 +17,12 @@ const CONFIG = {
   from: process.env.EMAIL_FROM || 'MirrorSpread <brief@careeros.local>',
   replyTo: process.env.EMAIL_REPLY_TO || '',
   appUrl: process.env.APP_URL || 'http://127.0.0.1:4173',
+  originFrom: (req) => {
+    if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, '');
+    const proto = (req?.headers['x-forwarded-proto'] || 'http').toString().split(',')[0];
+    const host = req?.headers['x-forwarded-host'] || req?.headers.host || '127.0.0.1:4173';
+    return `${proto}://${host}`;
+  },
   unsubscribeSecret: process.env.EMAIL_UNSUB_SECRET || 'dev-unsubscribe-secret',
 };
 

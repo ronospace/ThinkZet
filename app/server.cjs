@@ -221,6 +221,26 @@ const ingest = seedIfEmpty();
 const ingestMs = Date.now() - t0;
 
 // ---------------- helpers ----------------
+// Public origin resolution: APP_URL when set, otherwise the host the request arrived on.
+// This is what keeps email links working behind a tunnel without a redeploy.
+function publicOrigin(req) {
+  if (process.env.APP_URL) return process.env.APP_URL.replace(/\/$/, '');
+  const proto = (req.headers['x-forwarded-proto'] || 'http').toString().split(',')[0];
+  const host = req.headers['x-forwarded-host'] || req.headers.host || `127.0.0.1:${PORT}`;
+  return `${proto}://${host}`;
+}
+
+route('GET', /^\/api\/config$/, async (req, res) => {
+  json(res, 200, {
+    origin: publicOrigin(req),
+    appUrlConfigured: !!process.env.APP_URL,
+    company: COMPANY.mark,
+    product: COMPANY.product,
+    tagline: 'See your value. Expand your possibilities.',
+    category: 'Career Intelligence Platform',
+  });
+});
+
 route('GET', /^\/api\/health$/, async (req, res) => {
   const counts = {
     opportunities: db.prepare('SELECT COUNT(*) n FROM opportunities').get().n,
@@ -1412,9 +1432,9 @@ route('GET', /^\/api\/launch$/, async (req, res) => {
   add('billing_live', 'Stripe in live mode', bill.mode === 'live', bill.mode === 'live' ? 'Real payments enabled' : 'Test mode – checkout works but no money moves', false);
 
   // Public URL
-  const appUrl = process.env.APP_URL || 'http://127.0.0.1:4173';
-  const publicUrl = !/127\.0\.0\.1|localhost/.test(appUrl);
-  add('app_url', 'Public URL set', publicUrl, publicUrl ? appUrl : 'APP_URL points at localhost – every email link will be broken for real users', true);
+  const origin = publicOrigin(req);
+  const publicUrl = !/127\.0\.0\.1|localhost/.test(origin);
+  add('app_url', 'Public URL reachable', publicUrl, publicUrl ? origin : 'Only reachable on localhost – start a tunnel or set APP_URL', true);
 
   // Data
   const total = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open'").get().n;
