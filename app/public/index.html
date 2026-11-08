@@ -11,7 +11,7 @@
 <link rel="manifest" href="/manifest.webmanifest"/>
 <meta property="og:site_name" content="ThinkZet"/>
 <meta property="og:title" content="ThinkZet – Think beyond. Build what's next."/>
-<meta property="og:description" content="See the number your employer never showed you. Sixty seconds, no account."/>
+<meta property="og:description" content="See the number your employer never showed you."/>
 <meta property="og:type" content="website"/>
 <style>
 :root{
@@ -622,17 +622,21 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 @media(max-width:900px){.shell{grid-template-columns:minmax(0,1fr)}.rail{display:none}.scores-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.opp{grid-template-columns:54px 1fr}.opp .right{display:none}}
 
 /* ---------- desktop layout ---------- */
-/* One calm column: copy, proof, then the rate check. Width is capped, space is generous. */
+/* Centred hero: headline, one line, one button. Everything else waits below. */
 .hero-sec{display:flex;flex-direction:column}
-.hero-sec .hero-copy{order:0}
-.hero-sec .proof{order:1}
-.hero-sec .check{order:2}
+.hero-sec .hero-copy{order:0;text-align:center;display:flex;flex-direction:column;align-items:center}
+.hero-sec .check{order:1}
+.hero-sec .proof{order:2}
+.hero-copy .land-sub{margin:20px auto 0;max-width:none;font-size:19px;color:var(--ink2)}
+.hero-copy .land-cta{justify-content:center;margin-top:28px}
 @media(min-width:1024px){
   .hero-sec{padding:var(--sp-16) 0 var(--sp-8)}
-  .hero-sec .proof{margin-top:var(--sp-12);padding-top:var(--sp-8)}
-  .hero-sec .check{margin-top:var(--sp-16);padding:var(--sp-8)}
+  .land-h1{font-size:clamp(38px,4.2vw,60px);text-wrap:balance}
+  .land-h1 br{display:none}
+  .land-h1 .accent{display:block}
+  .hero-sec .check{margin:var(--sp-16) auto 0;padding:var(--sp-8);max-width:760px;width:100%}
+  .hero-sec .proof{margin-top:var(--sp-16);padding-top:var(--sp-8)}
   .land-sec{margin-top:112px}
-  .land-sub{max-width:520px}
   .how-grid,.cap-grid,.price-grid{gap:var(--sp-5)}
   #faq{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:64px;align-items:start}
   #faq .land-h2{position:sticky;top:96px;margin:0}
@@ -687,17 +691,14 @@ html[data-theme="light"] .wm i{background-image:linear-gradient(100deg,var(--acc
   <div class="land-wrap">
     <section class="hero-sec">
       <div class="hero-copy">
-      <span class="land-kicker">Career intelligence · free to check</span>
       <h1 class="land-h1">The market has been<br/><span class="accent">pricing you without you.</span></h1>
-      <p class="land-sub"><strong class="land-slogan">One profile, every opportunity.</strong><span class="land-sub-2">Live pay data, matched to you.</span></p>
+      <p class="land-sub">One profile, every opportunity.</p>
       <div class="land-cta">
         <a class="btn" href="#check">Check my market value</a>
-        <span class="tiny">60 seconds · no account · no CV required</span>
       </div>
       </div>
       <section class="check" id="check">
       <h2>What should you be earning?</h2>
-      <p class="sub">Four fields, one number. Priced against live postings that actually disclose pay.</p>
       <div class="row3">
         <div><label for="c-role">Your role</label><input id="c-role" placeholder="Senior Data Scientist"/></div>
         <div><label for="c-years">Years of experience</label><input id="c-years" type="number" min="0" max="45" placeholder="8"/></div>
@@ -719,7 +720,7 @@ html[data-theme="light"] .wm i{background-image:linear-gradient(100deg,var(--acc
         <div><label for="c-current">What you are paid now (EUR)</label><input id="c-current" type="number" placeholder="78000"/></div>
         <div><label for="c-skills">Strongest skills, comma separated</label><input id="c-skills" placeholder="Python, SQL, Machine Learning"/></div>
       </div>
-      <button class="btn go" id="c-run">Show me the number <span style="opacity:.7">&gt;</span></button>
+      <button class="btn go" id="c-run">Show me the number</button>
       <div class="muted" id="c-err" style="font-size:12px;margin-top:10px"></div>
       <div class="result" id="c-result"></div>
     </section>
@@ -890,7 +891,7 @@ html[data-theme="light"] .wm i{background-image:linear-gradient(100deg,var(--acc
     <div class="rail-foot">
       <div><span class="dot"></span><span id="engine-status">engine online</span> <span id="new-badge" class="chip" style="margin-left:6px;display:none"></span></div>
       <div id="engine-counts">–</div>
-      <div style="margin-top:8px"><a href="/strategy.html">Strategy documents <span style="opacity:.7">&gt;</span></a></div>
+      <div style="margin-top:8px"><a href="/strategy.html">Strategy documents</a></div>
       <div style="margin-top:4px"><a href="/legal/privacy.html">Privacy</a> · <a href="/legal/terms.html">Terms</a></div>
       <div style="margin-top:6px;opacity:.7;font-size:10px;line-height:1.5">© 2026 ZyraFlow GmbH™</div>
     </div>
@@ -999,7 +1000,7 @@ async function renderSeo() {
     document.getElementById('landing').innerHTML = `
       <div class="land-wrap">
         <div class="land-nav"><div class="land-brand"><svg class="mark" viewBox="0 0 192 192" aria-hidden="true" focusable="false"><use href="#tz-mark"/></svg> <span class="wm">Think<i>Zet</i></span></div>
-          <a class="btn ghost sm" href="/">Check your own <span style="opacity:.7">&gt;</span></a></div>
+          <a class="btn ghost sm" href="/">Check your own</a></div>
         <span class="land-kicker">Live market data · ${b.sampleSize} postings · updated continuously</span>
         <h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${esc(role)} salary${country ? ' in ' + esc(country) : ''}</h1>
         <p class="land-sub">What employers are actually publishing right now – not a survey, not self-reported.</p>
@@ -1018,8 +1019,8 @@ async function renderSeo() {
         <div class="card">${r.levers.slice(0, 6).map((l) => `<div class="kv"><span>${esc(l.skill)}</span><span class="mono" style="color:var(--good)">+${l.premium}%</span></div>`).join('')}</div>
         <div class="card" style="margin-top:26px;text-align:center;">
           <div style="font-size:15px;font-weight:600">Where do you sit against this?</div>
-          <div class="dim" style="font-size:12.5px;margin-top:6px">Find out in 60 seconds. Free, no account.</div>
-          <a class="btn" href="/" style="margin-top:14px;display:inline-block">Check my market value <span style="opacity:.7">&gt;</span></a>
+          <div class="dim" style="font-size:12.5px;margin-top:6px">Free and takes a minute.</div>
+          <a class="btn" href="/" style="margin-top:14px;display:inline-block">Check my market value</a>
         </div>
         <div class="muted" style="font-size:11.5px;margin-top:22px">Source: ${b.sampleSize} live postings disclosing pay, annualised to EUR. Discipline-level segments with fewer than eight postings are omitted rather than shown with false precision.</div>
       </div>`;
@@ -1034,7 +1035,7 @@ async function renderSeo() {
     document.getElementById('landing').innerHTML = `
       <div class="land-wrap">
         <div class="land-nav"><div class="land-brand"><svg class="mark" viewBox="0 0 192 192" aria-hidden="true" focusable="false"><use href="#tz-mark"/></svg> <span class="wm">Think<i>Zet</i></span></div>
-          <a class="btn ghost sm" href="/">Check your own <span style="opacity:.7">&gt;</span></a></div>
+          <a class="btn ghost sm" href="/">Check your own</a></div>
         <span class="land-kicker">Skill intelligence · live</span>
         <h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${esc(s1.canonical)}</h1>
         <p class="land-sub">${esc(s1.category)} · demand index ${s1.demand_index} · salary premium +${s1.salary_premium}% · growth ${s1.growth_rate > 0 ? '+' : ''}${s1.growth_rate}%</p>
@@ -1047,7 +1048,7 @@ async function renderSeo() {
         <div class="card" style="margin-top:22px;text-align:center">
           <div style="font-size:14px;font-weight:600">Do you have ${esc(s1.canonical)}?</div>
           <div class="dim" style="font-size:12.5px;margin-top:6px">See what it's worth on your profile, and what it's costing you to not have it.</div>
-          <a class="btn" href="/" style="margin-top:14px;display:inline-block">Check my market value <span style="opacity:.7">&gt;</span></a>
+          <a class="btn" href="/" style="margin-top:14px;display:inline-block">Check my market value</a>
         </div>
       </div>`;
     return;
@@ -1081,8 +1082,8 @@ async function renderSharedCard(id) {
         </div>
       </div>
       <div style="text-align:center;margin-top:26px">
-        <a class="btn" href="/" style="font-size:14px;padding:12px 20px">Find out what you're worth <span style="opacity:.7">&gt;</span></a>
-        <div class="muted" style="font-size:11.5px;margin-top:10px">Free · 60 seconds · no account needed · ${r.views} view${r.views === 1 ? '' : 's'}</div>
+        <a class="btn" href="/" style="font-size:14px;padding:12px 20px">Find out what you're worth</a>
+        <div class="muted" style="font-size:11.5px;margin-top:10px">${r.views} view${r.views === 1 ? '' : 's'}</div>
       </div>
     </div>`;
 }
@@ -1118,7 +1119,7 @@ async function runRateCheck() {
     const r = await post('/api/public/rate-check', {
       role, years: Number(years), country, currentSalary: current ? Number(current) : null, skills,
     });
-    btn.disabled = false; btn.innerHTML = 'Show me the number <span style="opacity:.7">&gt;</span>';
+    btn.disabled = false; btn.innerHTML = 'Show me the number';
     if (r.error) { err.textContent = r.error; return; }
 
     const b = r.benchmark, v = r.verdict;
@@ -1165,7 +1166,7 @@ async function runRateCheck() {
         <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px">${esc(r.next.detail)}</div>
         <div class="row" style="gap:8px;flex-wrap:wrap">
           <input id="c-email" type="email" placeholder="you@example.com" style="flex:1;min-width:200px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:9px;padding:11px 13px;color:var(--ink);outline:none;font-size:13.5px"/>
-          <button class="btn" id="c-signup">Send me the full breakdown <span style="opacity:.7">&gt;</span></button>
+          <button class="btn" id="c-signup">Send me the full breakdown</button>
         </div>
         <div class="muted" id="c-lead-msg" style="font-size:11.5px;margin-top:8px"></div>
       </div>`;
@@ -1199,7 +1200,7 @@ async function runRateCheck() {
         currentSalary: r.input.current, skills: document.getElementById('c-skills').value.split(',').map((x) => x.trim()).filter(Boolean),
         gapPct: v.gapPct, gapAbs: v.gapAbs, median: b.p50, source: 'landing',
       });
-      btn.disabled = false; btn.innerHTML = 'Email me my report <span style="opacity:.7">&gt;</span>';
+      btn.disabled = false; btn.innerHTML = 'Email me my report';
       if (lead.error) { msg.textContent = lead.error; return; }
       msg.innerHTML = lead.hasAccount
         ? 'We found your account – <a href="/?app=1" style="color:var(--blue)">open the radar</a>.'
@@ -1216,7 +1217,7 @@ async function runRateCheck() {
     };
     box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   } catch (e) {
-    btn.disabled = false; btn.innerHTML = 'Show me the number <span style="opacity:.7">&gt;</span>';
+    btn.disabled = false; btn.innerHTML = 'Show me the number';
     err.textContent = 'Something broke: ' + e.message;
   }
 }
@@ -1250,7 +1251,7 @@ document.getElementById('land-theme').onclick = () => {
 /* ---------------- auth ---------------- */
 async function renderAuth() {
   $('#view-title').textContent = 'Sign in';
-  $('#view-sub').textContent = 'Passwordless. No passwords stored.';
+  $('#view-sub').textContent = '';
   const prov = await api('/api/auth/providers').catch(() => ({}));
   const qerr = new URLSearchParams(location.search).get('auth_error');
   if (qerr) { history.replaceState(null, '', '/?app=1'); setTimeout(() => toast(qerr), 300); }
@@ -1272,7 +1273,6 @@ async function renderAuth() {
       <div id="auth-step1">
         <div class="field"><label for="auth-email">Email</label><input id="auth-email" type="email" placeholder="you@example.com" autocomplete="email"/></div>
         <button class="btn auth-cta" id="auth-send">Email me a code</button>
-        <p class="auth-note">We send a 6-digit code. No password to create.</p>
       </div>
       <div id="auth-step2" style="display:none">
         <div class="field"><label for="auth-code">6-digit code</label><input id="auth-code" inputmode="numeric" maxlength="6" placeholder="••••••" autocomplete="one-time-code" class="auth-code"/></div>
@@ -1340,7 +1340,7 @@ function renderOnboarding() {
       </div>
     </div>
     <div class="row" style="margin-top:20px;gap:10px">
-      <button class="btn" id="ob-next">Continue <span aria-hidden="true">&rarr;</span></button>
+      <button class="btn" id="ob-next">Continue</button>
       <button class="btn ghost" id="ob-demo">Use the demo profile instead</button>
     </div>`;
 
@@ -1356,7 +1356,7 @@ function renderOnboarding() {
     </div>
     <div class="field" style="margin-top:4px"><label>Your strongest skills (comma separated)</label><input id="ob-skills" placeholder="Python, SQL, Machine Learning" value="${esc(D.skills || '')}"/></div>
     <div class="row" style="margin-top:20px;gap:10px">
-      <button class="btn" id="ob-next2">See my market value <span style="opacity:.7">&gt;</span></button>
+      <button class="btn" id="ob-next2">See my market value</button>
       <button class="btn ghost" id="ob-back">Back</button>
     </div>
     <div class="note" style="margin-top:14px">Prefer to paste a CV? <a href="#" id="ob-cvlink" style="color:var(--accent)">Do that instead</a> – we'll parse it and fill this in.</div>`;
@@ -1453,7 +1453,7 @@ function renderOnboarding() {
           <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b></div>
         </div>
         <div class="row" style="margin-top:18px;gap:10px">
-          <button class="btn" id="ob-finish">Open my radar <span style="opacity:.7">&gt;</span></button>
+          <button class="btn" id="ob-finish">Open my radar</button>
           <button class="btn ghost" id="ob-edit">Edit details</button>
         </div>`;
       $('#ob-finish').onclick = async () => { STATE.draft = null; await boot(); go('radar'); };
@@ -1980,7 +1980,7 @@ function openDetail(id) {
     </div>
     <div class="card" style="margin-top:14px" id="ref-card"></div>
     <div class="card" style="margin-top:14px"><h3>Listing</h3><div class="dim" style="margin-top:8px">${esc(o.description)}</div>
-      <div style="margin-top:12px"><a class="btn sm ghost" href="${esc(o.apply_url)}" target="_blank" rel="noopener">Open original listing <span style="opacity:.7">&gt;</span></a></div>
+      <div style="margin-top:12px"><a class="btn sm ghost" href="${esc(o.apply_url)}" target="_blank" rel="noopener">Open original listing</a></div>
     </div>
   `;
   document.querySelectorAll('.d-ask').forEach((b) => {
@@ -2044,7 +2044,7 @@ function openDetail(id) {
       if (r.referral) {
         $('#ref-card').innerHTML = `<h3>Route through ${esc(r.referral.program)}</h3>
           <div class="dim" style="font-size:12.5px;margin-top:6px">This listing comes from a partner with a referral programme (${esc(r.referral.payoutModel)}${r.referral.payoutAmount ? ', €' + r.referral.payoutAmount : ''}).</div>
-          <div style="margin-top:10px"><a class="btn sm" href="${r.referral.url}" target="_blank" rel="noopener">Open with tracking <span style="opacity:.7">&gt;</span></a></div>
+          <div style="margin-top:10px"><a class="btn sm" href="${r.referral.url}" target="_blank" rel="noopener">Open with tracking</a></div>
           <div class="muted" style="font-size:11px;margin-top:10px">${esc(r.referral.disclosure)}</div>`;
       } else {
         $('#ref-card').innerHTML = `<h3>No referral programme</h3><div class="dim" style="font-size:12.5px;margin-top:6px">This source has no affiliate route. It is shown because it is a good match, and nothing else.</div>`;
@@ -2247,7 +2247,7 @@ async function renderGaps() {
             <div style="font-size:13px">${esc(r.skill)}${r.blocking ? ` <span class="muted" style="font-size:11px">· unblocks ${r.blocking}</span>` : ''}</div>
             <div class="muted" style="font-size:11px;margin-top:2px">${esc(r.reason || r.disclosure)}</div>
           </div>
-          <button class="chip pr" data-slug="${esc(r.partner.slug)}" data-skill="${esc(r.skill)}" style="cursor:pointer">${esc(r.partner.name)} <span style="opacity:.7">&gt;</span></button>
+          <button class="chip pr" data-slug="${esc(r.partner.slug)}" data-skill="${esc(r.skill)}" style="cursor:pointer">${esc(r.partner.name)}</button>
         </div>`).join('')}
       </div>
     </div>` : ''}
@@ -2505,7 +2505,7 @@ async function renderPlan() {
         <div style="margin-top:12px">${(p.plans.plus?.features || []).map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--tone-kicker, var(--tone-kicker))">✦</span></div>`).join('')}</div>
         ${p.plan === 'plus'
           ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
-          : `<div style="margin-top:14px"><button class="btn sm ghost" id="up-plus" style="border-color:var(--ai-border);color:var(--accent)">Talk to us about Pro+ <span style="opacity:.7">&gt;</span></button></div>`}
+          : `<div style="margin-top:14px"><button class="btn sm ghost" id="up-plus" style="border-color:var(--ai-border);color:var(--accent)">Talk to us about Pro+</button></div>`}
       </div>
     </div>
     <div class="card" style="margin-top:14px">
@@ -2577,7 +2577,7 @@ async function renderNegotiation() {
     </div>
     ${n.anchorOpportunity ? `<div class="card" style="margin-top:14px"><h3>Anchor this to a live opportunity</h3>
       <div class="dim" style="font-size:12.5px;margin-top:6px">${esc(n.anchorOpportunity.title)} at ${esc(n.anchorOpportunity.company)} – listed at ${n.anchorOpportunity.compMin ? money(n.anchorOpportunity.compMin) + '–' + money(n.anchorOpportunity.compMax) + ' ' + esc(n.anchorOpportunity.currency) : 'compensation not disclosed'}.</div>
-      <div style="margin-top:10px"><button class="btn sm ghost" onclick="go('radar')">Back to the radar <span style="opacity:.7">&gt;</span></button></div>
+      <div style="margin-top:10px"><button class="btn sm ghost" onclick="go('radar')">Back to the radar</button></div>
     </div>` : ''}`;
   document.querySelectorAll('.cp').forEach((b) => { b.onclick = () => copy(b.dataset.t); });
 }
@@ -3004,7 +3004,7 @@ const VIEWS = {
   gaps: [renderGaps, 'Skill Gaps', 'What is actually blocking your next move'],
   tracker: [renderTracker, 'Career Tracker', 'Your pipeline and the outcome loop'],
   twin: [renderTwin, 'Career Twin', 'The model of you that gets better with use'],
-  auth: [renderAuth, 'Sign in', 'Passwordless access'],
+  auth: [renderAuth, 'Sign in', ''],
   copilot: [renderCopilot, 'Career Copilot', 'Grounded in your data, not generic advice'],
   learning: [renderLearning, 'Learning Loop', 'Outcomes recalibrate the model – the flywheel'],
   searches: [renderSearches, 'Saved Searches', 'Standing questions the engine keeps answering'],

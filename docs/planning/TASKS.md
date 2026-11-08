@@ -29,6 +29,7 @@ Last updated: 9 November 2026.
 | UI-05 | UI | Brand: translucent gradient mark with echo and halo, two-tone wordmark, one shared symbol, favicon and touch icon | Us | DONE | computed styles verified in both themes |
 | UI-06 | UI | Logo simplified: removed sheen, echo and halo; content width capped (1080 landing, 1120 app) so wide screens keep calm margins | Us | DONE | measured at 1280, 1440, 1920 |
 | UI-07 | UI | App screens adopt Mercor-style structure: underline tabs for sections, left sub-nav plus a form column, quiet icon rail | Us | OPEN | Study references, then apply to Plan, Twin, Tracker, Brief |
+| COPY-11 | COPY | Removed filler notes and button arrows; hero reduced to headline, one line, one button, centred | Us | DONE | 0 arrow spans left; hero has 3 elements; copy and check card centre offset 0px at 1280, 1440, 1920 |
 | UI-01 | UI | Radar list: 1 column on phones, 2 on tablets, 3 on wide screens, tinted by score | Us | OPEN | Build and measure at 393, 768, 1280 |
 | UI-02 | UI | Structure audit of remaining screens: landing lower sections, pricing, Brief, Tracker, Negotiation, Market Pulse, Onboarding | Us | IN PROGRESS | Screenshot each at 393 and fix paragraph-style blocks |
 | UI-03 | UI | Light-mode audit of the 90 remaining hardcoded colours | Us | OPEN | Tokenise or confirm each |
@@ -55,6 +56,7 @@ Last updated: 9 November 2026.
 
 ## C. Change log
 
+- 9 Nov 2026 – COPY-11 filler removed, hero centred.
 - 9 Nov 2026 – EML-03: sign-in failing because EMAIL_FROM uses an unverified domain; app now logs the real reason.
 - 9 Nov 2026 – UI-06 logo simplified, widths capped.
 - 9 Nov 2026 – UI-04 desktop layout and UI-05 brand refresh.
