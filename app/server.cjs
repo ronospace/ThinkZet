@@ -34,8 +34,8 @@ const MAIL = require('./mailer.cjs');
 const COMPANY = {
   name: 'ZyraFlow GmbH',
   mark: 'ZyraFlow GmbH™',
-  product: 'ThinkZet',
-  productFull: 'ThinkZet AI',
+  product: 'ThinkZet AI',
+  productShort: 'ThinkZet',
   domain: 'thinkzet.com',
   url: 'https://thinkzet.com',
   copyright: (year = new Date().getFullYear()) => `© ${year} ZyraFlow GmbH™. All rights reserved.`,
