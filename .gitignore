@@ -1,6 +1,29 @@
+# Runtime state
 data/
+*.db
+*.db-shm
+*.db-wal
+
+# Secrets
+.env
+app/.env
+.env.*
+!.env.example
+
+# Dependencies and build output
 node_modules/
+dist/
+build/
+
+# Logs and OS noise
 *.log
 .DS_Store
-app/.env
-.env
+Thumbs.db
+
+# Editor and tooling
+.vscode/
+.idea/
+*.swp
+
+# Tool backups
+.abacusai-bot/

@@ -77,7 +77,7 @@ function md2html(md) {
 
 const sections = [];
 for (const [file, label] of files) {
-  const p = path.join(__dirname, '..', 'docs', file);
+  const p = path.join(__dirname, '..', 'docs', 'strategy', file);
   if (!fs.existsSync(p)) continue;
   const md = fs.readFileSync(p, 'utf8');
   const body = md2html(md).replace(/<h1[^>]*>[\s\S]*?<\/h1>/, '');
