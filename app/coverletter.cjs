@@ -48,7 +48,7 @@ function composeDeterministic(ev, tone = 'direct') {
 
 I have spent ${yearsPhrase} working close to exactly this problem, and ${skillPhrase} is where most of that work has lived. When I read the ${ev.role} description, the list of requirements read less like a wish list and more like a summary of what I do day to day.${gapPhrase}
 
-What I would bring first is ${ev.strongest[0] || 'depth in the core stack'} — not as a line on a CV but as something I have shipped and maintained. I am drawn to this role because it sits where ${skillPhrase} actually decides outcomes rather than sitting on the edge of them.
+What I would bring first is ${ev.strongest[0] || 'depth in the core stack'} – not as a line on a CV but as something I have shipped and maintained. I am drawn to this role because it sits where ${skillPhrase} actually decides outcomes rather than sitting on the edge of them.
 
 I would welcome a conversation about where the team is heading and what the first ninety days would need to look like.
 
@@ -72,11 +72,11 @@ ${'{{name}}'}`;
   // direct (default)
   return `Hi ${ev.company} team,
 
-I am applying for ${ev.role}. The short version: ${yearsPhrase} building with ${skillPhrase} — and this role asks for exactly that.${gapPhrase}
+I am applying for ${ev.role}. The short version: ${yearsPhrase} building with ${skillPhrase} – and this role asks for exactly that.${gapPhrase}
 
-Two things that map directly to what you have described. First, ${ev.strongest[0] || 'the core stack'} is not a skill I picked up for an interview — it is what I have built and maintained in production. Second, I work well where the stack decides the outcome, which is the part of this role that interests me most.
+Two things that map directly to what you have described. First, ${ev.strongest[0] || 'the core stack'} is not a skill I picked up for an interview – it is what I have built and maintained in production. Second, I work well where the stack decides the outcome, which is the part of this role that interests me most.
 
-${ev.currentRole ? `Currently ${ev.currentRole}${ev.currentCompany ? ` at ${ev.currentCompany}` : ''}.` : ''} Happy to go deeper on any of this — or on what you would need in the first ninety days.
+${ev.currentRole ? `Currently ${ev.currentRole}${ev.currentCompany ? ` at ${ev.currentCompany}` : ''}.` : ''} Happy to go deeper on any of this – or on what you would need in the first ninety days.
 
 Best,
 ${'{{name}}'}`;

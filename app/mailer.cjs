@@ -33,7 +33,7 @@ function status() {
     live: p !== 'outbox',
     from: CONFIG.from,
     note: p === 'outbox'
-      ? 'No email provider configured. Messages are composed and stored in the outbox — you can read exactly what would have been sent, nothing is lost.'
+      ? 'No email provider configured. Messages are composed and stored in the outbox – you can read exactly what would have been sent, nothing is lost.'
       : `Sending through ${p}.`,
     missing: p === 'outbox' ? ['RESEND_API_KEY or POSTMARK_API_KEY'] : [],
   };
@@ -148,7 +148,7 @@ function briefEmail({ user, brief, rates, scores, prefs }) {
   }
   if (brief.newHighMatch && brief.newHighMatch.length) {
     lines.push('New at your bar:');
-    brief.newHighMatch.slice(0, 4).forEach((o) => lines.push(`· ${o.title} at ${o.company} — ${o.match_score}/100, ${o.interview_probability}% interview odds`));
+    brief.newHighMatch.slice(0, 4).forEach((o) => lines.push(`· ${o.title} at ${o.company} – ${o.match_score}/100, ${o.interview_probability}% interview odds`));
     lines.push('');
   }
   if (scores) {
@@ -239,9 +239,9 @@ function alertEmail({ user, opportunity, rates }) {
 
 function leadReportEmail({ lead }) {
   const gap = lead.gap_pct;
-  const text = `Your market value report\n\nRole: ${lead.role}\nExperience: ${lead.years} years\n${lead.current_salary ? `You report: ${money(lead.current_salary)}\n` : ''}Market median for your profile: ${money(lead.median)}\n${gap != null ? `${gap > 0 ? `You are ${gap}% below market${lead.gap_abs ? ` — about ${money(Math.abs(lead.gap_abs))} a year` : ''}.` : `You are ${Math.abs(gap)}% above market.`}\n` : ''}\nNext step: build your Career Twin and see the opportunities that pay this.\n${CONFIG.appUrl}\n\nUnsubscribe: ${CONFIG.appUrl}/unsubscribe/lead/${lead.id}`;
+  const text = `Your market value report\n\nRole: ${lead.role}\nExperience: ${lead.years} years\n${lead.current_salary ? `You report: ${money(lead.current_salary)}\n` : ''}Market median for your profile: ${money(lead.median)}\n${gap != null ? `${gap > 0 ? `You are ${gap}% below market${lead.gap_abs ? ` – about ${money(Math.abs(lead.gap_abs))} a year` : ''}.` : `You are ${Math.abs(gap)}% above market.`}\n` : ''}\nNext step: build your Career Twin and see the opportunities that pay this.\n${CONFIG.appUrl}\n\nUnsubscribe: ${CONFIG.appUrl}/unsubscribe/lead/${lead.id}`;
   return {
-    subject: gap > 10 ? `You are ${gap}% below market — here's your report` : 'Your market value report',
+    subject: gap > 10 ? `You are ${gap}% below market – here's your report` : 'Your market value report',
     text,
     html: `<div style="font-family:-apple-system,sans-serif;background:#0b0d10;color:#e8edf4;padding:24px">
       <div style="max-width:520px;margin:0 auto;background:#12161c;border:1px solid #222a35;border-radius:12px;padding:24px">

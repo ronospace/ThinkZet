@@ -3,16 +3,16 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>MirrorSpread AI — Opportunity Operating System</title>
+<title>MirrorSpread AI – Opportunity Operating System</title>
 <meta name="theme-color" content="#0b0d10"/>
-<meta name="description" content="The market has been pricing you without you. MirrorSpread reads live postings and shows you the number your employer never did — then every opportunity scored against your profile."/>
+<meta name="description" content="The market has been pricing you without you. MirrorSpread reads live postings and shows you the number your employer never did – then every opportunity scored against your profile."/>
 <link rel="manifest" href="/manifest.webmanifest"/>
 <meta property="og:title" content="The market has been pricing you without you"/>
 <meta property="og:description" content="See the number your employer never showed you. Sixty seconds, no account."/>
 <meta property="og:type" content="website"/>
 <style>
 :root{
-  /* semantic tokens — dark is the primary identity, light is a full peer, not an afterthought */
+  /* semantic tokens - dark is the primary identity, light is a full peer, not an afterthought */
   --rgb-panel: 18,23,31;
   --bg:#0a0d13;
   --bg-grad: radial-gradient(1200px 640px at 50% -10%, #111a2b 0%, #0a0d13 62%);
@@ -127,6 +127,18 @@ main{overflow:auto;padding:0}
 .topbar h1{font-size:17px;margin:0;font-weight:650;letter-spacing:-.01em}
 .topbar .sub{font-size:12px;color:var(--muted)}
 .topbar .spacer{flex:1}
+.tb-title{min-width:0}
+.tb-icon{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
+.tb-icon:hover{color:var(--ink);border-color:var(--line2);background:var(--panel3)}
+.tb-icon svg{width:15px;height:15px}
+.tb-menu{position:relative}
+.tb-drop{position:absolute;right:0;top:calc(100% + 8px);min-width:216px;background:var(--panel);border:1px solid var(--line2);border-radius:var(--radius);box-shadow:var(--shadow);padding:5px;display:none;z-index:90}
+.tb-drop.open{display:block;animation:rise .14s ease both}
+.tb-drop-head{padding:7px 10px 9px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.tb-drop-head span{font-size:var(--text-xs);color:var(--muted)}
+.tb-drop button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:8px 10px;border-radius:8px;font-size:var(--text-sm);color:var(--ink2)}
+.tb-drop button:hover{background:var(--panel2);color:var(--ink)}
+.tb-drop button svg{width:14px;height:14px;opacity:.75}
 .theme-btn{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
 .theme-btn:hover{color:var(--ink);border-color:var(--line2);background:var(--panel3)}
 .theme-btn svg{width:15px;height:15px;display:none}
@@ -134,7 +146,9 @@ html[data-mode="system"] .theme-btn .ico-auto{display:block}
 html[data-mode="light"] .theme-btn .ico-sun{display:block}
 html[data-mode="dark"] .theme-btn .ico-moon{display:block}
 .pill{font-size:11px;padding:4px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2);white-space:nowrap}
-.pill.live{border-color:#1f4d33;background:#0f2419;color:#6fe3a4}
+.pill.live{border-color:#1f4d33;background:#0f2419;color:#6fe3a4;display:inline-flex;align-items:center;gap:6px}
+.pill.live i{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px rgba(111,227,164,.16)}
+html[data-theme="light"] .pill.live{background:#eaf7f0;border-color:transparent;color:#0a7a45}
 .view{padding:26px 28px 90px;max-width:1180px}
 
 /* ---------- shared ---------- */
@@ -401,7 +415,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 
     <span class="land-kicker">Free · 60 seconds · no account needed</span>
     <h1 class="land-h1">The market has been<br/><span class="accent">pricing you without you.</span></h1>
-    <p class="land-sub">Somewhere out there, a salary band exists with your name on it. Your employer knows it. The recruiter who called last month knew it. You've never seen it. MirrorSpread reads live postings and shows you the number — then every opportunity that pays it.</p>
+    <p class="land-sub">Somewhere out there, a salary band exists with your name on it. Your employer knows it. The recruiter who called last month knew it. You've never seen it. MirrorSpread reads live postings and shows you the number – then every opportunity that pays it.</p>
 
     <div class="check">
       <h2>What should you be earning?</h2>
@@ -455,7 +469,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
         <div class="card" style="display:flex;gap:16px;align-items:flex-start">
           <div style="font-size:11px;color:#6ea8ff;font-weight:700;letter-spacing:.1em;padding-top:2px">01</div>
           <div><div style="font-size:14px;font-weight:600">What number would you say out loud?</div>
-          <div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">Most people cannot answer that in a negotiation, so they accept the first number they hear. We give you the median for your exact profile — seniority, skills, country — from postings that disclose pay, today.</div></div>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">Most people cannot answer that in a negotiation, so they accept the first number they hear. We give you the median for your exact profile – seniority, skills, country – from postings that disclose pay, today.</div></div>
         </div>
         <div class="card" style="display:flex;gap:16px;align-items:flex-start">
           <div style="font-size:11px;color:#6ea8ff;font-weight:700;letter-spacing:.1em;padding-top:2px">02</div>
@@ -465,7 +479,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
         <div class="card" style="display:flex;gap:16px;align-items:flex-start">
           <div style="font-size:11px;color:#6ea8ff;font-weight:700;letter-spacing:.1em;padding-top:2px">03</div>
           <div><div style="font-size:14px;font-weight:600">Which move actually pays?</div>
-          <div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">Stay, switch, contract, relocate, pivot — priced against your real market, with the risk attached. Not the trending path. The profitable one.</div></div>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:4px;line-height:1.6">Stay, switch, contract, relocate, pivot – priced against your real market, with the risk attached. Not the trending path. The profitable one.</div></div>
         </div>
       </div>
     </div>
@@ -523,7 +537,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
     </nav>
     <div class="rail-foot">
       <div><span class="dot"></span><span id="engine-status">engine online</span> <span id="new-badge" class="chip" style="margin-left:6px;display:none"></span></div>
-      <div id="engine-counts">—</div>
+      <div id="engine-counts">–</div>
       <div style="margin-top:8px"><a href="/strategy.html">Strategy documents <span style="opacity:.7">&gt;</span></a></div>
       <div style="margin-top:4px"><a href="/legal/privacy.html">Privacy</a> · <a href="/legal/terms.html">Terms</a></div>
       <div style="margin-top:6px;opacity:.7;font-size:10px;line-height:1.5">© 2026 ZyraFlow GmbH™</div>
@@ -532,22 +546,42 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 
   <main>
     <div class="topbar">
-      <div>
+      <div class="tb-title">
         <h1 id="view-title">Opportunity Radar</h1>
         <div class="sub" id="view-sub">Live</div>
       </div>
       <div class="spacer"></div>
-      <span class="pill live" id="live-pill">● live feeds</span>
-      <span class="pill" id="profile-pill">no profile</span>
+      <span class="pill live" id="live-pill"><i></i>live</span>
+      <button class="tb-icon" id="cmdk" title="Search everything (Cmd K)" aria-label="Search everything">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7.2" cy="7.2" r="4.4"/><path d="M10.4 10.4L13.6 13.6"/></svg>
+      </button>
       <button class="theme-btn" id="theme-btn" title="Appearance: auto" aria-label="Appearance: auto">
-        <svg class="ico-auto" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="5.6"/><path d="M8 2.4v11.2"/></svg>
-        <svg class="ico-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="3"/><path d="M8 1.6v1.5M8 12.9v1.5M1.6 8h1.5M12.9 8h1.5M3.5 3.5l1 1M11.5 11.5l1 1M12.5 3.5l-1 1M4.5 11.5l-1 1"/></svg>
+        <svg class="ico-auto" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="5.4"/><path d="M8 2.6v10.8"/><path d="M8 2.6a5.4 5.4 0 010 10.8z" fill="currentColor" stroke="none" opacity=".5"/></svg>
+        <svg class="ico-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2.9"/><path d="M8 1.8v1.6M8 12.6v1.6M1.8 8h1.6M12.6 8h1.6M3.6 3.6l1.15 1.15M11.25 11.25l1.15 1.15M12.4 3.6l-1.15 1.15M4.75 11.25L3.6 12.4"/></svg>
         <svg class="ico-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 9.8A5.8 5.8 0 016.2 2.6a5.8 5.8 0 107.2 7.2z"/></svg>
       </button>
-      <button class="pill" id="cmdk" style="cursor:pointer">⌘K search</button>
-      <button class="btn ghost sm" id="run-ingest">Run ingest</button>
-      <button class="btn ghost sm" id="load-demo">Load demo persona</button>
-      <button class="pill" id="logout" style="cursor:pointer">Sign out</button>
+      <div class="tb-menu" id="tb-menu">
+        <button class="tb-icon" id="tb-more" title="More" aria-label="More" aria-haspopup="true" aria-expanded="false">
+          <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="3.2" cy="8" r="1.25"/><circle cx="8" cy="8" r="1.25"/><circle cx="12.8" cy="8" r="1.25"/></svg>
+        </button>
+        <div class="tb-drop" id="tb-drop" role="menu">
+          <div class="tb-drop-head">
+            <span id="profile-pill">no profile</span>
+          </div>
+          <button role="menuitem" id="run-ingest">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg>
+            Run ingest
+          </button>
+          <button role="menuitem" id="load-demo">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5.6" r="2.5"/><path d="M3 13.2c0-2.5 2.2-4 5-4s5 1.5 5 4"/></svg>
+            Load demo persona
+          </button>
+          <button role="menuitem" id="logout">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6.2 2.6H3.4v10.8h2.8"/><path d="M9.4 8h4.2M11.4 5.8L13.6 8l-2.2 2.2"/></svg>
+            Sign out
+          </button>
+        </div>
+      </div>
     </div>
     <div class="view" id="view"></div>
   </main>
@@ -565,7 +599,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 const $ = (s, r = document) => r.querySelector(s);
 const api = async (p, opt) => { const r = await fetch(p, opt); return r.json(); };
 const post = (p, b) => api(p, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(b || {}) });
-const money = (n, cur = 'EUR', d = 0) => n == null ? '—' : new Intl.NumberFormat('en-GB', { style: 'currency', currency: cur, maximumFractionDigits: d }).format(n);
+const money = (n, cur = 'EUR', d = 0) => n == null ? '–' : new Intl.NumberFormat('en-GB', { style: 'currency', currency: cur, maximumFractionDigits: d }).format(n);
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2600); };
 
@@ -604,7 +638,7 @@ async function renderSeo() {
     const r = await post('/api/public/rate-check', { role, years: 7, country: country || null, skills: [] });
     if (r.error) { document.getElementById('landing').innerHTML = '<div class="land-wrap"><h1>Not found</h1></div>'; return; }
     const b = r.benchmark;
-    const title = `${role} salary${country ? ' in ' + country : ' in Europe'} — what the live market pays (${new Date().getFullYear()})`;
+    const title = `${role} salary${country ? ' in ' + country : ' in Europe'} – what the live market pays (${new Date().getFullYear()})`;
     document.title = title;
     document.getElementById('landing').innerHTML = `
       <div class="land-wrap">
@@ -612,7 +646,7 @@ async function renderSeo() {
           <a class="btn ghost sm" href="/">Check your own <span style="opacity:.7">&gt;</span></a></div>
         <span class="land-kicker">Live market data · ${b.sampleSize} postings · updated continuously</span>
         <h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${esc(role)} salary${country ? ' in ' + esc(country) : ''}</h1>
-        <p class="land-sub">What employers are actually publishing right now — not a survey, not self-reported.</p>
+        <p class="land-sub">What employers are actually publishing right now – not a survey, not self-reported.</p>
         <div class="card" style="margin-top:26px">
           <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:16px">
             <div><div class="muted" style="font-size:11px">Median</div><div class="big mono">${fmt(b.p50)}</div></div>
@@ -640,7 +674,7 @@ async function renderSeo() {
     const d = await api('/api/skills');
     const s1 = d.skills.find((x) => x.canonical.toLowerCase() === skill.toLowerCase());
     if (!s1) { document.getElementById('landing').innerHTML = '<div class="land-wrap"><h1>Not found</h1></div>'; return; }
-    document.title = `${s1.canonical} demand, salary premium and growth — MirrorSpread`;
+    document.title = `${s1.canonical} demand, salary premium and growth – MirrorSpread`;
     document.getElementById('landing').innerHTML = `
       <div class="land-wrap">
         <div class="land-nav"><div class="land-brand"><span class="mark">M</span> MirrorSpread</div>
@@ -686,7 +720,7 @@ async function renderSharedCard(id) {
           ${p.gapPct != null ? (under ? `${p.gapPct}% below market` : `${Math.abs(p.gapPct)}% above market`) : 'Market value'}
         </div>
         <div style="font-size:14px;color:var(--ink2)">
-          ${esc(p.role || 'This profile')}${p.country ? ' · ' + esc(p.country) : ''} — median <b style="color:var(--ink)">${fmt(p.median)}${per}</b>
+          ${esc(p.role || 'This profile')}${p.country ? ' · ' + esc(p.country) : ''} – median <b style="color:var(--ink)">${fmt(p.median)}${per}</b>
           ${p.gapAbs && under ? ` · about <b style="color:#ff8f96">${fmt(Math.abs(p.gapAbs))} a year</b> left on the table` : ''}
         </div>
       </div>
@@ -745,7 +779,7 @@ async function runRateCheck() {
       if (g == null) return 'Here is the band your profile sits in.';
       if (g >= 25) return `Someone with your CV was worth ${Math.abs(g)}% more than you are being paid.`;
       if (g >= 15) return `There is a version of your job paying ${fmt(b.p50)}${per}. You are not in it.`;
-      if (g >= 5) return `You are being paid under the median. Not by a lot — but every month.`;
+      if (g >= 5) return `You are being paid under the median. Not by a lot – but every month.`;
       if (g > -10) return `You are priced correctly. Now the question is whether you are moving.`;
       return `You are ahead of the median. That is leverage, and it expires if you sit still.`;
     })();
@@ -782,9 +816,9 @@ async function runRateCheck() {
     STATE.lastCheck = { input: r.input, benchmark: b, verdict: v };
 
     const oneLiner = v.gapPct != null
-      ? `MirrorSpread says a ${r.input.seniority} ${r.input.family.replace(/_/g, ' ')} in ${r.input.country || 'the EU'} is worth ${fmt(b.p50)}${per} — I'm ${Math.abs(v.gapPct)}% ${v.gapPct > 0 ? 'below' : 'above'} that.`
+      ? `MirrorSpread says a ${r.input.seniority} ${r.input.family.replace(/_/g, ' ')} in ${r.input.country || 'the EU'} is worth ${fmt(b.p50)}${per} – I'm ${Math.abs(v.gapPct)}% ${v.gapPct > 0 ? 'below' : 'above'} that.`
       : `The median for ${r.input.seniority} ${r.input.family.replace(/_/g, ' ')} work is ${fmt(b.p50)}${per}.`;
-    document.getElementById('c-copyline').onclick = () => { navigator.clipboard.writeText(oneLiner); toast('Copied — paste it anywhere'); };
+    document.getElementById('c-copyline').onclick = () => { navigator.clipboard.writeText(oneLiner); toast('Copied – paste it anywhere'); };
 
     document.getElementById('c-share').onclick = async () => {
       const share = await post('/api/public/share', {
@@ -795,7 +829,7 @@ async function runRateCheck() {
       const url = location.origin + share.path;
       if (navigator.share) { try { await navigator.share({ title: 'My market value', text: oneLiner, url }); return; } catch (e) { /* fall through */ } }
       navigator.clipboard.writeText(oneLiner + ' ' + url);
-      toast('Link copied — it opens as a card');
+      toast('Link copied – it opens as a card');
     };
 
     document.getElementById('c-signup').onclick = async () => {
@@ -812,7 +846,7 @@ async function runRateCheck() {
       btn.disabled = false; btn.innerHTML = 'Email me my report <span style="opacity:.7">&gt;</span>';
       if (lead.error) { msg.textContent = lead.error; return; }
       msg.innerHTML = lead.hasAccount
-        ? 'We found your account — <a href="/?app=1" style="color:#8fb4ee">open the radar</a>.'
+        ? 'We found your account – <a href="/?app=1" style="color:#8fb4ee">open the radar</a>.'
         : 'Saved. Continue to build your Career Twin and see the opportunities that pay this.';
       if (!lead.hasAccount) {
         setTimeout(() => {
@@ -865,7 +899,7 @@ async function renderAuth() {
       <div class="note" id="auth-hint" style="margin-top:12px"></div>
     </div>
     <div style="margin-top:22px;border-top:1px solid var(--line);padding-top:16px">
-      <button class="btn ghost" id="auth-demo" style="width:100%">Skip — explore the demo persona</button>
+      <button class="btn ghost" id="auth-demo" style="width:100%">Skip – explore the demo persona</button>
     </div>
   </div>`;
 
@@ -876,7 +910,7 @@ async function renderAuth() {
     if (r.error) return toast(r.error);
     $('#auth-step1').style.display = 'none';
     $('#auth-step2').style.display = 'block';
-    $('#auth-hint').innerHTML = `Code for <b>${esc(r.sentTo)}</b> — <span class="mono" style="color:var(--tone-ink, #cfe0ff);font-size:15px;letter-spacing:.2em">${esc(r.devCode)}</span> <span class="muted">(dev only — this would be an email)</span>`;
+    $('#auth-hint').innerHTML = `Code for <b>${esc(r.sentTo)}</b> – <span class="mono" style="color:var(--tone-ink, #cfe0ff);font-size:15px;letter-spacing:.2em">${esc(r.devCode)}</span> <span class="muted">(dev only – this would be an email)</span>`;
     $('#auth-code').focus();
   };
   $('#auth-verify').onclick = async () => {
@@ -923,7 +957,7 @@ function renderOnboarding() {
     </div>
     <div class="row" style="margin-top:20px;gap:10px">
       <button class="btn" id="ob-next">Continue <span style="opacity:.7">&gt;</span></button>
-      <button class="btn ghost" id="ob-demo">Skip — use the demo persona</button>
+      <button class="btn ghost" id="ob-demo">Skip – use the demo persona</button>
     </div>`;
 
   const stepTwo = `
@@ -941,7 +975,7 @@ function renderOnboarding() {
       <button class="btn" id="ob-next2">See my market value <span style="opacity:.7">&gt;</span></button>
       <button class="btn ghost" id="ob-back">Back</button>
     </div>
-    <div class="note" style="margin-top:14px">Prefer to paste a CV? <a href="#" id="ob-cvlink" style="color:var(--accent)">Do that instead</a> — we'll parse it and fill this in.</div>`;
+    <div class="note" style="margin-top:14px">Prefer to paste a CV? <a href="#" id="ob-cvlink" style="color:var(--accent)">Do that instead</a> – we'll parse it and fill this in.</div>`;
 
   const stepThree = `
     <p class="lead">Here's what you're leaving on the table.</p>
@@ -951,7 +985,7 @@ function renderOnboarding() {
   const cvMode = `
     <p class="lead">Paste your CV.</p>
     <p class="sub">We parse it deterministically and pre-fill everything. Nothing is invented.</p>
-    <textarea class="cv" id="cv" placeholder="Paste your CV — experience, skills, current salary, target countries…"></textarea>
+    <textarea class="cv" id="cv" placeholder="Paste your CV – experience, skills, current salary, target countries…"></textarea>
     <div class="row" style="margin-top:14px;gap:10px">
       <button class="btn" id="parse">Parse &amp; build my twin</button>
       <button class="btn ghost" id="ob-back2">Back to the quick version</button>
@@ -1053,7 +1087,7 @@ async function loadDemo() {
   await boot();
   b.disabled = false; b.textContent = 'Load demo persona';
   go('radar');
-  toast('Demo persona loaded — 8 years, €78k, targeting DE/NL');
+  toast('Demo persona loaded – 8 years, €78k, targeting DE/NL');
 }
 
 /* ---------------- radar ---------------- */
@@ -1078,8 +1112,8 @@ async function renderRadar() {
       planBanner = `<div class="card tone-violet" style="margin-bottom:14px;border-color:#2f2a4d;">
         <div class="row" style="justify-content:space-between;gap:16px;flex-wrap:wrap">
           <div style="flex:1;min-width:260px">
-            <div style="font-size:13.5px;font-weight:600">You are on Free — showing your top ${plan.limits.matches} scored opportunities</div>
-            <div class="dim" style="font-size:12.5px;margin-top:3px">Pro unlocks the full radar, saved searches, the daily brief and the copilot. €19.99/month, or €149.99/year.</div>
+            <div style="font-size:13.5px;font-weight:600">You are on Free – showing your top ${plan.limits.matches} scored opportunities</div>
+            <div class="dim" style="font-size:12.5px;margin-top:3px">Pro unlocks the full radar, saved searches, the daily brief and the copilot. €19.99 a month, or €149.99 a year.</div>
           </div>
           <button class="btn sm" id="upgrade">Unlock Pro</button>
         </div>
@@ -1108,7 +1142,7 @@ async function renderRadar() {
         </div>
       </div>`;
     }
-  } catch (e) { /* brief is additive — never block the radar */ }
+  } catch (e) { /* brief is additive – never block the radar */ }
 
   const gapHtml = rates && rates.gapPct != null ? (() => {
     const min = rates.p25 * 0.9, max = rates.p90 * 1.05;
@@ -1123,7 +1157,7 @@ async function renderRadar() {
         <div class="you" style="left:${pos(rates.current)}%"></div>
       </div>
       <div class="legend"><span>p25 ${money(rates.p25)}</span><span>p50 ${money(rates.p50)}</span><span>p75 ${money(rates.p75)}</span><span>p90 ${money(rates.p90)}</span></div>
-      <div style="margin-top:14px;font-size:12.5px" class="dim">Highest-paying channel: <b>${rates.byChannel[0] ? rates.byChannel[0].channel + ' · ' + money(rates.byChannel[0].median) : '—'}</b> · biggest lever: <b>${rates.topPayingSkills[0] ? rates.topPayingSkills[0].skill + ' (+' + rates.topPayingSkills[0].premium + '%)' : '—'}</b></div>
+      <div style="margin-top:14px;font-size:12.5px" class="dim">Highest-paying channel: <b>${rates.byChannel[0] ? rates.byChannel[0].channel + ' · ' + money(rates.byChannel[0].median) : '–'}</b> · biggest lever: <b>${rates.topPayingSkills[0] ? rates.topPayingSkills[0].skill + ' (+' + rates.topPayingSkills[0].premium + '%)' : '–'}</b></div>
     </div>`;
   })() : '';
 
@@ -1224,9 +1258,9 @@ async function renderRadar() {
       };
       const series = (seed, n) => Array.from({ length: n }, (_, i) => Math.max(1, Math.round(seed * (0.55 + Math.sin(i * 1.1 + seed) * 0.22 + i * 0.05))));
       const cards = [
-        { k: 'Rate gap', v: h.rateGapPct != null ? h.rateGapPct + '%' : '—', sub: h.rateGapPct > 0 ? 'below market' : 'at or above', tone: h.rateGapPct > 10 ? 'var(--bad)' : 'var(--good)', s: series(14, 9) },
+        { k: 'Rate gap', v: h.rateGapPct != null ? h.rateGapPct + '%' : '–', sub: h.rateGapPct > 0 ? 'below market' : 'at or above', tone: h.rateGapPct > 10 ? 'var(--bad)' : 'var(--good)', s: series(14, 9) },
         { k: 'New at 70+', v: h.fresh, sub: 'since you last looked', tone: 'var(--accent)', s: series(h.fresh || 6, 9) },
-        { k: 'Career score', v: h.overall != null ? h.overall : '—', sub: h.scoreDelta ? (h.scoreDelta > 0 ? '+' : '') + h.scoreDelta + ' this week' : 'this week', tone: 'var(--accent)', s: series(h.overall || 60, 9) },
+        { k: 'Career score', v: h.overall != null ? h.overall : '–', sub: h.scoreDelta ? (h.scoreDelta > 0 ? '+' : '') + h.scoreDelta + ' this week' : 'this week', tone: 'var(--accent)', s: series(h.overall || 60, 9) },
         { k: 'Applications', v: h.appliedThisWeek + '/' + h.weeklyTarget, sub: h.onTrack ? 'on track' : 'this week', tone: h.onTrack ? 'var(--good)' : 'var(--warn)', s: series(Math.max(2, h.appliedThisWeek * 3), 9) },
       ];
       kbox.innerHTML = `<div class="kpi-grid">${cards.map((c) => `<div class="kpi">
@@ -1267,7 +1301,7 @@ async function renderRadar() {
       <div class="row" style="justify-content:space-between;gap:16px;flex-wrap:wrap">
         <div style="flex:1;min-width:280px">
           <div style="font-size:13.5px;font-weight:600">Every card here is scored against your twin.</div>
-          <div class="dim" style="font-size:12.5px;margin-top:4px">The big number is <b>match</b>. The two small numbers are <b>interview</b> and <b>offer</b> probability — calibrated from real outcomes, not guesses. Start with the highest interview odds, not the highest match.</div>
+          <div class="dim" style="font-size:12.5px;margin-top:4px">The big number is <b>match</b>. The two small numbers are <b>interview</b> and <b>offer</b> probability – calibrated from real outcomes, not guesses. Start with the highest interview odds, not the highest match.</div>
         </div>
         <button class="btn sm" id="teach-ok">Got it</button>
       </div>
@@ -1359,7 +1393,7 @@ async function renderRadar() {
     else if (e.key === 'k' || e.key === 'ArrowUp') { e.preventDefault(); cursor = Math.max(0, cursor - 1); paint(); list[cursor].scrollIntoView({ block: 'nearest' }); }
     else if (e.key === 'Enter' && cursor >= 0) { openDetail(list[cursor].dataset.id); }
     else if (e.key === 's' && cursor >= 0) { await post('/api/applications', { opportunityId: list[cursor].dataset.id, status: 'saved' }); toast('Saved'); }
-    else if (e.key === 'a' && cursor >= 0) { await post('/api/applications', { opportunityId: list[cursor].dataset.id, status: 'applied' }); toast('Marked applied — momentum updated'); }
+    else if (e.key === 'a' && cursor >= 0) { await post('/api/applications', { opportunityId: list[cursor].dataset.id, status: 'applied' }); toast('Marked applied – momentum updated'); }
     else if (e.key === '?') { showHelp(); }
   };
   document.removeEventListener('keydown', STATE._keys || (() => {}));
@@ -1407,7 +1441,7 @@ function renderFacets(rows) {
   const remote = rows.filter((o) => o.remote_type === 'remote').length;
 
   body.innerHTML = `
-    <div class="facet-row"><span class="muted">Median pay</span><span class="mono">${med ? money(med) : '—'}</span></div>
+    <div class="facet-row"><span class="muted">Median pay</span><span class="mono">${med ? money(med) : '–'}</span></div>
     <div class="facet-row"><span class="muted">Best match</span><span class="mono">${top.match_score}/100</span></div>
     <div class="facet-row"><span class="muted">≥40% interview odds</span><span class="mono">${strong} of ${rows.length}</span></div>
     <div class="facet-row"><span class="muted">Remote</span><span class="mono">${Math.round((remote / rows.length) * 100)}%</span></div>
@@ -1483,7 +1517,7 @@ function openDetail(id) {
           <div class="dim">${esc(o.company)} · ${esc(o.city)}${o.country ? ', ' + esc(o.country) : ''} · ${esc(o.remote_type)} · ${TYPE_LABEL[o.type] || o.type}</div>
           <div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap">
             <span class="chip">${comp}</span>
-            <span class="chip">${esc(o.seniority || '—')}</span>
+            <span class="chip">${esc(o.seniority || '–')}</span>
             <span class="chip ${o.visa_sponsorship === 'yes' ? 'have' : ''}">visa: ${esc(o.visa_sponsorship)}</span>
             <span class="chip ${o.degree_requirement === 'not_required' ? 'have' : ''}">degree: ${esc(o.degree_requirement || 'unknown')}</span>
             <span class="chip">${esc(o.source)} · quality ${Math.round((o.source_quality || 0) * 100)}</span>
@@ -1512,10 +1546,10 @@ function openDetail(id) {
           ${(o.skills || []).map((s) => `<span class="chip ${(o.missing_skills || []).includes(s) ? 'miss' : 'have'}">${esc(s)}</span>`).join('')}
         </div>
         <h3 style="margin-top:18px">What would move you up</h3>
-        <div style="font-size:12.5px" class="dim">${(o.missing_skills || []).length ? 'Close: <b>' + o.missing_skills.map(esc).join(', ') + '</b> — each one raises both match and interview probability.' : 'You cover every listed skill. Your edge here is speed of application.'}</div>
+        <div style="font-size:12.5px" class="dim">${(o.missing_skills || []).length ? 'Close: <b>' + o.missing_skills.map(esc).join(', ') + '</b> – each one raises both match and interview probability.' : 'You cover every listed skill. Your edge here is speed of application.'}</div>
         ${o.confidence ? `<div style="margin-top:16px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)">
           <div class="row" style="justify-content:space-between"><span style="font-size:12px">Evidence quality</span><span class="mono" style="color:${o.confidence.level === 'high' ? '#71d69c' : o.confidence.level === 'medium' ? '#e0c273' : '#f08b91'}">${o.confidence.score}/100 · ${o.confidence.level}</span></div>
-          <div style="margin-top:8px;font-size:11.5px;color:var(--muted);line-height:1.7">${o.confidence.factors.map((f) => `${esc(f.k)} <span class="mono">${esc(f.d)}</span>${f.note ? ' <span style="opacity:.7">— ' + esc(f.note) + '</span>' : ''}`).join('<br/>')}</div>
+          <div style="margin-top:8px;font-size:11.5px;color:var(--muted);line-height:1.7">${o.confidence.factors.map((f) => `${esc(f.k)} <span class="mono">${esc(f.d)}</span>${f.note ? ' <span style="opacity:.7">– ' + esc(f.note) + '</span>' : ''}`).join('<br/>')}</div>
         </div>` : ''}
         <div class="kv" style="margin-top:16px"><span>Income potential</span><span class="mono">${o.income_potential}/100</span></div>
         <div class="kv"><span>Skill fit</span><span class="mono">${o.skill_fit}/100</span></div>
@@ -1550,7 +1584,7 @@ function openDetail(id) {
         <h3 style="margin:0">Interview prep</h3>
         <button class="btn sm ghost" id="ip-load">Build my prep plan</button>
       </div>
-      <div id="ip-body" class="dim" style="font-size:13px;margin-top:10px">Questions derived from this posting's role family and your specific gaps — with STAR scaffolds built from your own experience.</div>
+      <div id="ip-body" class="dim" style="font-size:13px;margin-top:10px">Questions derived from this posting's role family and your specific gaps – with STAR scaffolds built from your own experience.</div>
     </div>
     <div class="card" style="margin-top:14px" id="ref-card"></div>
     <div class="card" style="margin-top:14px"><h3>Listing</h3><div class="dim" style="margin-top:8px">${esc(o.description)}</div>
@@ -1563,7 +1597,7 @@ function openDetail(id) {
       box.innerHTML = '<span class="spin"></span>Thinking…';
       const r = await post('/api/copilot/opportunity', { opportunityId: o.id, message: b.dataset.q });
       const cites = (r.citations || []).map((c) => `${c.label}: ${c.detail}`).join(' · ');
-      box.innerHTML = `<div style="white-space:pre-wrap;line-height:1.65">${esc(r.reply)}</div>${cites ? `<div class="cite" style="margin-top:8px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:7px">Grounded in — ${esc(cites)}</div>` : ''}`;
+      box.innerHTML = `<div style="white-space:pre-wrap;line-height:1.65">${esc(r.reply)}</div>${cites ? `<div class="cite" style="margin-top:8px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:7px">Grounded in – ${esc(cites)}</div>` : ''}`;
     };
   });
   const ipBtn = $('#ip-load');
@@ -1627,7 +1661,7 @@ function openDetail(id) {
   })();
 
   $('#back').onclick = () => go('radar');
-  $('#d-apply').onclick = async () => { await post('/api/applications', { opportunityId: o.id, status: 'applied' }); toast('Marked as applied — momentum updated'); };
+  $('#d-apply').onclick = async () => { await post('/api/applications', { opportunityId: o.id, status: 'applied' }); toast('Marked as applied – momentum updated'); };
   $('#d-save').onclick = async () => { await post('/api/applications', { opportunityId: o.id, status: 'saved' }); toast('Saved'); };
   $('#d-outcome').onclick = () => {
     const existing = document.getElementById('outcome-form');
@@ -1649,7 +1683,7 @@ function openDetail(id) {
     form.querySelectorAll('.oc').forEach((b) => {
       b.onclick = async () => {
         const r = await post('/api/outcomes', { opportunityId: o.id, outcomeType: b.dataset.t, amount: $('#oc-amount').value || null, notes: $('#oc-notes').value || null });
-        toast(r.salaryDeltaPct != null ? `Recorded — ${r.salaryDeltaPct > 0 ? '+' : ''}${r.salaryDeltaPct}% vs your current rate` : 'Recorded — your model just got sharper');
+        toast(r.salaryDeltaPct != null ? `Recorded – ${r.salaryDeltaPct > 0 ? '+' : ''}${r.salaryDeltaPct}% vs your current rate` : 'Recorded – your model just got sharper');
         form.remove();
       };
     });
@@ -1680,7 +1714,7 @@ async function renderScores() {
       </div>
       <div>
         <div style="font-size:15px;font-weight:600">${percentileV}th percentile</div>
-        <div class="dim" style="margin-top:4px;max-width:520px">Eight scores, benchmarked against professionals at your level. It moves when you move — that is the entire point of it being a score and not a certificate.</div>
+        <div class="dim" style="margin-top:4px;max-width:520px">Eight scores, benchmarked against professionals at your level. It moves when you move – that is the entire point of it being a score and not a certificate.</div>
         <div class="muted" style="font-size:11.5px;margin-top:8px">${history.length} computation${history.length === 1 ? '' : 's'} recorded</div>
       </div>
     </div>
@@ -1736,7 +1770,7 @@ async function renderRates() {
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:1.3fr 1fr">
       <div class="card">
-        <h3>Your market rate — ${r.period === 'hour' ? 'per hour' : 'per year'}, EUR</h3>
+        <h3>Your market rate – ${r.period === 'hour' ? 'per hour' : 'per year'}, EUR</h3>
         <div class="big mono" style="margin:10px 0 2px">${money(r.p50)}</div>
         <div class="dim">median across ${r.sampleSize} comparable postings (${r.confidence} confidence)</div>
         <div class="scale" style="margin-top:22px;height:10px;border-radius:6px;background:#1c2431;position:relative">
@@ -1748,8 +1782,8 @@ async function renderRates() {
         </div>
         ${r.gapPct != null ? `<div class="card tone-violet" style="margin-top:20px;background:#161b24;border-color:#2f2a4d">
           <div class="k" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tone-kicker, #a99bf0)">Verdict</div>
-          <div style="font-size:17px;font-weight:650;margin-top:6px">${r.verdict === 'underpaid' ? 'The market disagrees with your payslip — by ' + r.gapPct + '%' : r.verdict === 'slightly_under' ? 'Just under the line (' + r.gapPct + '%) — and it compounds' : r.verdict === 'at_market' ? 'Priced correctly. Not the same as paid well.' : 'Ahead of the market. Now use it.'}</div>
-          <div class="dim" style="margin-top:4px">${r.gapAbs > 0 ? money(r.gapAbs) + ' per year of headroom at the median — ' + money(r.gapAbs * 2) + ' over two years.' : 'Your rate is defensible. The lever now is growth, not price.'}</div>
+          <div style="font-size:17px;font-weight:650;margin-top:6px">${r.verdict === 'underpaid' ? 'The market disagrees with your payslip – by ' + r.gapPct + '%' : r.verdict === 'slightly_under' ? 'Just under the line (' + r.gapPct + '%) – and it compounds' : r.verdict === 'at_market' ? 'Priced correctly. Not the same as paid well.' : 'Ahead of the market. Now use it.'}</div>
+          <div class="dim" style="margin-top:4px">${r.gapAbs > 0 ? money(r.gapAbs) + ' per year of headroom at the median – ' + money(r.gapAbs * 2) + ' over two years.' : 'Your rate is defensible. The lever now is growth, not price.'}</div>
         </div>` : ''}
       </div>
       <div>
@@ -1786,7 +1820,7 @@ async function renderGaps() {
   $('#view').innerHTML = `
     <div class="card" style="margin-bottom:14px">
       <h3>Skill gap detection</h3>
-      <div class="dim" style="margin-top:6px">Computed by comparing your skills against the required skills of your top ${sampleOf} realistic opportunities — weighted by how many roles each gap blocks, its salary premium and its growth rate.</div>
+      <div class="dim" style="margin-top:6px">Computed by comparing your skills against the required skills of your top ${sampleOf} realistic opportunities – weighted by how many roles each gap blocks, its salary premium and its growth rate.</div>
     </div>
     <div class="card tone-violet" style="margin-bottom:14px;border-color:#253247;">
       <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">The shortest path</div>
@@ -1805,7 +1839,7 @@ async function renderGaps() {
     </div>
     ${partnerRecs.length ? `<div class="card" style="margin-bottom:14px">
       <h3>How to close them</h3>
-      <div class="dim" style="font-size:12.5px;margin-top:6px">Each gap below has a route. Partners are attached to gaps the engine already found — they never change what you see or how it is ranked.</div>
+      <div class="dim" style="font-size:12.5px;margin-top:6px">Each gap below has a route. Partners are attached to gaps the engine already found – they never change what you see or how it is ranked.</div>
       <div style="margin-top:12px">
         ${partnerRecs.slice(0, 5).map((r) => `<div style="display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)">
           <div style="flex:1">
@@ -1852,7 +1886,7 @@ async function renderTracker() {
           <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
             ${items.map((a) => `<div style="border:1px solid var(--line);border-radius:9px;padding:9px 10px;background:var(--panel2)">
               <div style="font-size:12.5px;font-weight:550">${esc(a.title)}</div>
-              <div class="muted" style="font-size:11px">${esc(a.company)} · match ${a.match_score ?? '—'}</div>
+              <div class="muted" style="font-size:11px">${esc(a.company)} · match ${a.match_score ?? '–'}</div>
               <div class="row" style="gap:5px;margin-top:7px;flex-wrap:wrap">
                 ${cols.filter((x) => x !== c).map((x) => `<button class="chip mv" data-id="${a.opportunity_id}" data-to="${x}" style="cursor:pointer">${label[x]}</button>`).join('')}
               </div>
@@ -1861,7 +1895,7 @@ async function renderTracker() {
         </div>`;
       }).join('')}
     </div>
-    <h2 class="section">Outcome log — the moat</h2>
+    <h2 class="section">Outcome log – the moat</h2>
     <div class="card">
       <div class="dim" style="font-size:12.5px;margin-bottom:12px">Every outcome recorded here is data no competitor has: person &gt; opportunity &gt; action &gt; result. ${outcomes.length} recorded.</div>
       ${outcomes.length ? outcomes.map((o) => `<div class="kv"><span>${esc(o.outcome_type)}${o.salary_delta_pct != null ? ' · ' + (o.salary_delta_pct > 0 ? '+' : '') + o.salary_delta_pct + '%' : ''}</span><span class="muted">${new Date(o.occurred_at).toLocaleDateString('en-GB')}</span></div>`).join('') : '<div class="muted">No outcomes yet. Report one from any opportunity detail.</div>'}
@@ -1892,13 +1926,13 @@ async function renderTwin() {
       <div class="card">
         <h3>Identity</h3>
         <div class="kv"><span>Seniority</span><span>${esc(t.identity?.seniority)}</span></div>
-        <div class="kv"><span>Years</span><span class="mono">${t.identity?.years ?? '—'}</span></div>
-        <div class="kv"><span>Headline</span><span>${esc(t.identity?.headline || '—')}</span></div>
+        <div class="kv"><span>Years</span><span class="mono">${t.identity?.years ?? '–'}</span></div>
+        <div class="kv"><span>Headline</span><span>${esc(t.identity?.headline || '–')}</span></div>
         <div class="kv"><span>Profile completeness</span><span class="mono">${t.completeness}%</span></div>
         <h3 style="margin-top:18px">Constraints</h3>
         <div class="kv"><span>Remote preference</span><span>${esc(t.constraints?.remotePreference)}</span></div>
         <div class="kv"><span>Willing to relocate</span><span>${t.constraints?.willingToRelocate ? 'yes' : 'no'}</span></div>
-        <div class="kv"><span>Target countries</span><span>${(t.constraints?.targetCountries || []).join(', ') || '—'}</span></div>
+        <div class="kv"><span>Target countries</span><span>${(t.constraints?.targetCountries || []).join(', ') || '–'}</span></div>
         <div class="kv"><span>Visa sponsorship needed</span><span>${t.constraints?.visaNeeded ? 'yes' : 'no'}</span></div>
         <div class="kv"><span>Current &gt; target</span><span class="mono">${money(t.constraints?.currentRate)} &gt; ${money(t.constraints?.targetRateMin)}</span></div>
       </div>
@@ -1930,7 +1964,7 @@ async function renderCopilot() {
         ${['What should I do next?', 'Am I underpaid?', 'Which skills are blocking me?', 'What is realistic for relocating to Germany?', 'How am I doing overall?'].map((q) => `<button data-q="${esc(q)}">${esc(q)}</button>`).join('')}
       </div>
       <div class="msgs" id="msgs">
-        <div class="msg bot">I answer only from your data — your twin, your matches, your rate benchmark, your scores. Ask me something specific.</div>
+        <div class="msg bot">I answer only from your data – your twin, your matches, your rate benchmark, your scores. Ask me something specific.</div>
       </div>
       <div class="composer">
         <input id="q" placeholder="Ask about your rate, your next move, your gaps…"/>
@@ -1945,7 +1979,7 @@ async function renderCopilot() {
     msgs.scrollTop = msgs.scrollHeight;
     const res = await post('/api/copilot', { message: q });
     const cites = (res.citations || []).map((c) => `${c.label}: ${c.detail}`).join(' · ');
-    msgs.insertAdjacentHTML('beforeend', `<div class="msg bot">${esc(res.reply)}${cites ? `<div class="cite">Grounded in — ${esc(cites)}</div>` : ''}</div>`);
+    msgs.insertAdjacentHTML('beforeend', `<div class="msg bot">${esc(res.reply)}${cites ? `<div class="cite">Grounded in – ${esc(cites)}</div>` : ''}</div>`);
     msgs.scrollTop = msgs.scrollHeight;
   };
   $('#send').onclick = () => send();
@@ -1970,23 +2004,23 @@ async function renderLearning() {
           <div class="kv"><span>Outcome weight in prior</span><span class="mono">${Math.round(l.calibration.shrinkage * 100)}%</span></div>
           <div class="kv"><span>Interview prior lift</span><span class="mono">+${l.calibration.interviewPriorLift}%</span></div>
           <div class="kv"><span>Offers logged</span><span class="mono">${l.offers}</span></div>
-          <div class="kv"><span>Avg salary delta on offers</span><span class="mono">${l.avgSalaryDeltaPct == null ? '—' : (l.avgSalaryDeltaPct > 0 ? '+' : '') + l.avgSalaryDeltaPct + '%'}</span></div>
+          <div class="kv"><span>Avg salary delta on offers</span><span class="mono">${l.avgSalaryDeltaPct == null ? '–' : (l.avgSalaryDeltaPct > 0 ? '+' : '') + l.avgSalaryDeltaPct + '%'}</span></div>
         </div>
       </div>
       <div class="card">
         <h3>Score distribution across your ${l.priors[0]?.n || 0} scored opportunities</h3>
-        <div class="kv"><span>Average match score</span><span class="mono">${l.priors[0]?.m ?? '—'}</span></div>
-        <div class="kv"><span>Average interview probability</span><span class="mono">${l.priors[0]?.p ?? '—'}%</span></div>
-        <div class="note" style="margin-top:14px">Calibration is the whole game. A model that says 30% and is right 30% of the time is worth more than one that says 60% and is right 30% of the time. We publish the prior and blend your observed outcomes into it — with shrinkage so one lucky offer cannot move the model.</div>
+        <div class="kv"><span>Average match score</span><span class="mono">${l.priors[0]?.m ?? '–'}</span></div>
+        <div class="kv"><span>Average interview probability</span><span class="mono">${l.priors[0]?.p ?? '–'}%</span></div>
+        <div class="note" style="margin-top:14px">Calibration is the whole game. A model that says 30% and is right 30% of the time is worth more than one that says 60% and is right 30% of the time. We publish the prior and blend your observed outcomes into it – with shrinkage so one lucky offer cannot move the model.</div>
         <div style="margin-top:16px"><button class="btn sm" id="l-outcome">Report an outcome</button></div>
       </div>
     </div>
     <h2 class="section">Your measured funnel</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="card"><h3>Applications</h3><div class="big mono">${intel.mine.funnel.applied}</div></div>
-      <div class="card"><h3>Interview rate</h3><div class="big mono">${intel.mine.funnel.interviewRate == null ? '—' : intel.mine.funnel.interviewRate + '%'}</div><div class="muted" style="font-size:11px">measured, not modelled</div></div>
-      <div class="card"><h3>Offer rate</h3><div class="big mono">${intel.mine.funnel.offerRate == null ? '—' : intel.mine.funnel.offerRate + '%'}</div><div class="muted" style="font-size:11px">of interviews</div></div>
-      <div class="card"><h3>End-to-end</h3><div class="big mono">${intel.mine.funnel.conversion == null ? '—' : intel.mine.funnel.conversion + '%'}</div><div class="muted" style="font-size:11px">application &gt; offer</div></div>
+      <div class="card"><h3>Interview rate</h3><div class="big mono">${intel.mine.funnel.interviewRate == null ? '–' : intel.mine.funnel.interviewRate + '%'}</div><div class="muted" style="font-size:11px">measured, not modelled</div></div>
+      <div class="card"><h3>Offer rate</h3><div class="big mono">${intel.mine.funnel.offerRate == null ? '–' : intel.mine.funnel.offerRate + '%'}</div><div class="muted" style="font-size:11px">of interviews</div></div>
+      <div class="card"><h3>End-to-end</h3><div class="big mono">${intel.mine.funnel.conversion == null ? '–' : intel.mine.funnel.conversion + '%'}</div><div class="muted" style="font-size:11px">application &gt; offer</div></div>
     </div>
     <div class="card" style="margin-top:14px">
       <h3>Market benchmark</h3>
@@ -2002,7 +2036,7 @@ async function renderLearning() {
     const apps = recent.applications;
     if (!apps.length) return toast('Track an opportunity first');
     await post('/api/outcomes', { opportunityId: apps[0].opportunity_id, outcomeType: 'interview' });
-    toast('Outcome recorded — prior updated');
+    toast('Outcome recorded – prior updated');
     renderLearning();
   };
 }
@@ -2015,7 +2049,7 @@ async function renderSearches() {
       <h3>Saved searches</h3>
       <div class="dim" style="margin-top:6px;font-size:12.5px">A search you save becomes a standing question the engine keeps answering. This is the difference between a job board (you ask) and an operating system (it watches).</div>
       <div class="row" style="margin-top:14px;gap:8px;flex-wrap:wrap">
-        <input id="s-name" placeholder="Name this search — e.g. 'Senior AI roles, DE/NL, visa'" style="flex:1;min-width:260px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:9px 12px;outline:none"/>
+        <input id="s-name" placeholder="Name this search – e.g. 'Senior AI roles, DE/NL, visa'" style="flex:1;min-width:260px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:9px 12px;outline:none"/>
         <button class="btn" id="s-add">Save current filters</button>
       </div>
     </div>
@@ -2027,7 +2061,7 @@ async function renderSearches() {
       </div>`).join('') : '<div class="card muted">No saved searches yet.</div>'}
     </div>
     <h2 class="section">Why this matters</h2>
-    <div class="card dim" style="font-size:13px">Saved searches are the foundation of the daily brief: tomorrow morning the engine re-runs them against fresh inventory and tells you only what is new. That is the habit loop — you do not come back to search, you come back because it found something while you were asleep.</div>`;
+    <div class="card dim" style="font-size:13px">Saved searches are the foundation of the daily brief: tomorrow morning the engine re-runs them against fresh inventory and tells you only what is new. That is the habit loop – you do not come back to search, you come back because it found something while you were asleep.</div>`;
   $('#s-add').onclick = async () => {
     const name = $('#s-name').value.trim() || 'Untitled search';
     const filters = {};
@@ -2035,7 +2069,7 @@ async function renderSearches() {
     if (STATE.types.length) filters.types = STATE.types.join(',');
     filters.horizon = STATE.horizon;
     await post('/api/saved-searches', { name, filters });
-    toast('Saved — the engine will watch this');
+    toast('Saved – the engine will watch this');
     renderSearches();
   };
   document.querySelectorAll('.del').forEach((b) => {
@@ -2051,13 +2085,13 @@ async function renderPlan() {
       <div class="card tone-violet" style="${p.plan === 'free' ? 'border-color:#2f2a4d' : ''}">
         <h3>Free</h3>
         <div class="big mono" style="margin:8px 0">€0</div>
-        <div style="margin-top:12px">${p.plans.free.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span class="muted">—</span></div>`).join('')}</div>
+        <div style="margin-top:12px">${p.plans.free.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span class="muted">–</span></div>`).join('')}</div>
         ${p.plan === 'free' ? '<div class="chip have" style="margin-top:14px;display:inline-block">current plan</div>' : `<div style="margin-top:14px"><button class="btn ghost sm" id="downgrade">Switch to Free</button></div>`}
       </div>
       <div class="card tone-violet" style="border-color:#33507a;">
         <h3>Pro</h3>
         <div class="big mono" style="margin:8px 0">€19.99<span style="font-size:14px;color:var(--muted)">/month</span></div>
-        <div class="dim" style="font-size:12.5px">or €149.99/year — two months free</div>
+        <div class="dim" style="font-size:12.5px">or €149.99/year – two months free</div>
         <div style="margin-top:12px">${p.plans.pro.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:#6fe3a4">✓</span></div>`).join('')}</div>
         ${p.plan === 'pro'
           ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
@@ -2075,7 +2109,7 @@ async function renderPlan() {
     </div>
     <div class="card" style="margin-top:14px">
       <h3>Why the paywall sits where it does</h3>
-      <div class="dim" style="font-size:13px;margin-top:8px">The rate gap is free, always. That is the moment that earns trust — you should be able to find out you are underpaid without paying. What you pay for is the ongoing system: the full radar, saved searches, the daily brief, and a copilot that remembers your whole situation.</div>
+      <div class="dim" style="font-size:13px;margin-top:8px">The rate gap is free, always. That is the moment that earns trust – you should be able to find out you are underpaid without paying. What you pay for is the ongoing system: the full radar, saved searches, the daily brief, and a copilot that remembers your whole situation.</div>
       <div class="kv" style="margin-top:14px"><span>Match scores computed</span><span class="mono">${p.usage.matchScores}</span></div>
       <div class="kv"><span>Opportunities tracked</span><span class="mono">${p.usage.tracked}</span></div>
       <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:12px">
@@ -2088,7 +2122,7 @@ async function renderPlan() {
     const r = await post('/api/billing/checkout', { cycle });
     if (r.error) return toast(r.error);
     if (r.url) { window.location.href = r.url; return; }
-    toast(r.fallback ? 'Pro unlocked locally — Stripe not configured yet' : 'Pro unlocked');
+    toast(r.fallback ? 'Pro unlocked locally – Stripe not configured yet' : 'Pro unlocked');
     go('plan');
   };
   if ($('#up-month')) $('#up-month').onclick = () => checkout('monthly');
@@ -2105,7 +2139,7 @@ async function renderPlan() {
 async function renderNegotiation() {
   const n = await api('/api/negotiation');
   if (!n || n.error) return renderOnboarding();
-  const copy = (t) => { navigator.clipboard.writeText(t); toast('Copied — go say it'); };
+  const copy = (t) => { navigator.clipboard.writeText(t); toast('Copied – go say it'); };
   $('#view').innerHTML = `
     <div class="card tone-violet" style="border-color:#253247;">
       <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Negotiation brief · ${esc(n.confidence)} confidence · ${n.exactComparables} exact comparables</div>
@@ -2141,7 +2175,7 @@ async function renderNegotiation() {
       </div>
     </div>
     ${n.anchorOpportunity ? `<div class="card" style="margin-top:14px"><h3>Anchor this to a live opportunity</h3>
-      <div class="dim" style="font-size:12.5px;margin-top:6px">${esc(n.anchorOpportunity.title)} at ${esc(n.anchorOpportunity.company)} — listed at ${n.anchorOpportunity.compMin ? money(n.anchorOpportunity.compMin) + '–' + money(n.anchorOpportunity.compMax) + ' ' + esc(n.anchorOpportunity.currency) : 'compensation not disclosed'}.</div>
+      <div class="dim" style="font-size:12.5px;margin-top:6px">${esc(n.anchorOpportunity.title)} at ${esc(n.anchorOpportunity.company)} – listed at ${n.anchorOpportunity.compMin ? money(n.anchorOpportunity.compMin) + '–' + money(n.anchorOpportunity.compMax) + ' ' + esc(n.anchorOpportunity.currency) : 'compensation not disclosed'}.</div>
       <div style="margin-top:10px"><button class="btn sm ghost" onclick="go('radar')">Back to the radar <span style="opacity:.7">&gt;</span></button></div>
     </div>` : ''}`;
   document.querySelectorAll('.cp').forEach((b) => { b.onclick = () => copy(b.dataset.t); });
@@ -2174,7 +2208,7 @@ async function renderEmail() {
           ${toggle('weekly_digest', 'Weekly digest', 'The week in your market.')}
           ${toggle('marketing', 'Product updates', 'Off by default.')}
         </div>
-        <div class="note" style="margin-top:12px">Every email carries a one-click unsubscribe. Unsubscribing is a preference, not a lost user — the app keeps working.</div>
+        <div class="note" style="margin-top:12px">Every email carries a one-click unsubscribe. Unsubscribing is a preference, not a lost user – the app keeps working.</div>
       </div>
       <div class="card" style="margin-top:14px">
         <h3>Signup sequence</h3>
@@ -2234,12 +2268,12 @@ async function renderLeads() {
         <tbody>
         ${d.leads.length ? d.leads.map((l) => `<tr>
           <td>${esc(l.email)}</td>
-          <td>${esc(l.role || '—')}</td>
-          <td class="mono">${l.years ?? '—'}</td>
-          <td class="mono">${esc(l.country || '—')}</td>
-          <td class="mono">${l.current_salary ? money(l.current_salary) : '—'}</td>
-          <td class="mono" style="color:${l.gap_pct > 10 ? '#ff8f96' : l.gap_pct > 0 ? '#e0c273' : '#6fe3a4'}">${l.gap_pct != null ? (l.gap_pct > 0 ? '+' : '') + l.gap_pct + '%' : '—'}</td>
-          <td class="mono">${l.median ? money(l.median) : '—'}</td>
+          <td>${esc(l.role || '–')}</td>
+          <td class="mono">${l.years ?? '–'}</td>
+          <td class="mono">${esc(l.country || '–')}</td>
+          <td class="mono">${l.current_salary ? money(l.current_salary) : '–'}</td>
+          <td class="mono" style="color:${l.gap_pct > 10 ? '#ff8f96' : l.gap_pct > 0 ? '#e0c273' : '#6fe3a4'}">${l.gap_pct != null ? (l.gap_pct > 0 ? '+' : '') + l.gap_pct + '%' : '–'}</td>
+          <td class="mono">${l.median ? money(l.median) : '–'}</td>
           <td>${l.converted_user_id ? '<span class="chip have">account</span>' : '<span class="chip">lead</span>'}</td>
           <td class="muted" style="font-size:11px">${new Date(l.created_at).toLocaleDateString('en-GB')}</td>
         </tr>`).join('') : '<tr><td colspan="9" class="muted">No leads yet. Run the free check on the landing page.</td></tr>'}
@@ -2248,7 +2282,7 @@ async function renderLeads() {
     </div>
     <div class="card" style="margin-top:14px">
       <h3>What to do with this</h3>
-      <div class="dim" style="font-size:12.5px;margin-top:8px">A lead with a gap above 10% is the highest-intent person in the system: they have seen a number, they believe it, and they have not yet acted. That is the list to email first — not the whole database.</div>
+      <div class="dim" style="font-size:12.5px;margin-top:8px">A lead with a gap above 10% is the highest-intent person in the system: they have seen a number, they believe it, and they have not yet acted. That is the list to email first – not the whole database.</div>
     </div>`;
 }
 
@@ -2278,7 +2312,7 @@ async function renderLaunch() {
           if (b.key === 'email') return '<div><b>Email:</b> add <span class="mono">RESEND_API_KEY</span> to <span class="mono">' + envFile + '</span> and restart.</div>';
           if (b.key === 'app_url') return '<div><b>Public URL:</b> deploy (see <span class="mono">app/DEPLOY.md</span>), then set <span class="mono">APP_URL</span> to the real domain.</div>';
           if (b.key === 'legal') return '<div><b>Legal:</b> publish privacy and terms pages.</div>';
-          if (b.key === 'inventory' || b.key === 'sources') return '<div><b>Data:</b> run an ingest — the corpus is too thin to launch on.</div>';
+          if (b.key === 'inventory' || b.key === 'sources') return '<div><b>Data:</b> run an ingest – the corpus is too thin to launch on.</div>';
           return `<div><b>${esc(b.label)}:</b> ${esc(b.detail)}</div>`;
         }).join('')}
       </div>
@@ -2287,10 +2321,10 @@ async function renderLaunch() {
     <div class="card" style="margin-top:14px">
       <h3>What to watch in the first week</h3>
       <div class="dim" style="font-size:12.5px;margin-top:8px;line-height:1.9">
-        <div>· <b>Rate checks completed</b> — the landing funnel working at all.</div>
-        <div>· <b>Lead capture rate</b> — of people who saw a number, how many gave an email.</div>
-        <div>· <b>First opportunity opened</b> — the moment the product becomes a tool rather than a report.</div>
-        <div>· <b>Funnel biggest leak</b> — fix that, ignore everything else.</div>
+        <div>· <b>Rate checks completed</b> – the landing funnel working at all.</div>
+        <div>· <b>Lead capture rate</b> – of people who saw a number, how many gave an email.</div>
+        <div>· <b>First opportunity opened</b> – the moment the product becomes a tool rather than a report.</div>
+        <div>· <b>Funnel biggest leak</b> – fix that, ignore everything else.</div>
       </div>
     </div>`;
 }
@@ -2319,7 +2353,7 @@ async function renderAnalytics() {
           <div><span class="mono muted" style="margin-right:10px">${i + 1}</span><b style="font-size:13px">${esc(s.label)}</b><span class="muted" style="font-size:11.5px;margin-left:8px">${esc(s.meaning)}</span></div>
           <div class="row" style="gap:14px">
             <span class="mono">${s.events}</span>
-            ${s.conversionFromPrevious != null ? `<span class="mono" style="font-size:11px;color:${s.conversionFromPrevious < 30 ? '#f08b91' : s.conversionFromPrevious < 60 ? '#e0c273' : '#6fe3a4'}">${s.conversionFromPrevious}%</span>` : '<span class="muted" style="font-size:11px">—</span>'}
+            ${s.conversionFromPrevious != null ? `<span class="mono" style="font-size:11px;color:${s.conversionFromPrevious < 30 ? '#f08b91' : s.conversionFromPrevious < 60 ? '#e0c273' : '#6fe3a4'}">${s.conversionFromPrevious}%</span>` : '<span class="muted" style="font-size:11px">–</span>'}
           </div>
         </div>
         <div class="bar" style="margin-top:6px"><i style="width:${Math.round((s.events / maxN) * 100)}%"></i></div>
@@ -2344,7 +2378,7 @@ async function renderAnalytics() {
 
     <div class="card" style="margin-top:14px">
       <h3>Why this screen exists</h3>
-      <div class="dim" style="font-size:12.5px;margin-top:8px">Every number here is recorded by the product as it is used — the same events that drive the UI. The point is to find the single biggest leak and fix that, rather than adding features and hoping. Today the answer is above, in one sentence.</div>
+      <div class="dim" style="font-size:12.5px;margin-top:8px">Every number here is recorded by the product as it is used – the same events that drive the UI. The point is to find the single biggest leak and fix that, rather than adding features and hoping. Today the answer is above, in one sentence.</div>
     </div>`;
 }
 
@@ -2391,13 +2425,13 @@ async function renderPulse() {
         <div style="margin-top:10px">${p.skills.premium.map((s) => `<div class="kv"><span>${esc(s.canonical)}</span><span class="mono" style="color:#6fe3a4">+${s.salary_premium}%</span></div>`).join('')}</div>
       </div>
       <div class="card">
-        <h3>Supply — postings in 14 days</h3>
+        <h3>Supply – postings in 14 days</h3>
         <div style="margin-top:10px">${p.supply.slice(0, 8).map((s) => `<div class="kv"><span>${esc(famLabel(s.role_family))}</span><span class="mono">${s.n}</span></div>`).join('')}</div>
       </div>
     </div>
     <div class="card" style="margin-top:14px">
       <h3>How to read this</h3>
-      <div class="dim" style="font-size:12.5px;margin-top:8px">Every number here is computed from the ${p.sample} live postings that disclose pay, annualised to EUR. It is not a survey and not self-reported — it is what employers are publishing right now. Where a discipline has fewer than eight disclosed postings it is omitted rather than shown with false precision.</div>
+      <div class="dim" style="font-size:12.5px;margin-top:8px">Every number here is computed from the ${p.sample} live postings that disclose pay, annualised to EUR. It is not a survey and not self-reported – it is what employers are publishing right now. Where a discipline has fewer than eight disclosed postings it is omitted rather than shown with false precision.</div>
     </div>`;
 }
 
@@ -2460,11 +2494,11 @@ async function renderReferrals() {
       <div class="dim" style="font-size:13px;margin-top:6px">${esc(r.note)}</div>
       <div class="row" style="margin-top:14px;gap:8px;flex-wrap:wrap">
         <input id="p-name" placeholder="Partner name" style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:12.5px"/>
-        <input id="p-template" placeholder="Your referral URL — use {code} for the tracking token" style="flex:1;min-width:280px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:12.5px"/>
+        <input id="p-template" placeholder="Your referral URL – use {code} for the tracking token" style="flex:1;min-width:280px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:12.5px"/>
         <input id="p-amount" placeholder="€ payout" style="width:100px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:12.5px"/>
         <button class="btn sm" id="p-add">Add partner</button>
       </div>
-      <div class="note" style="margin-top:10px">Paste your own affiliate link here when you have it. The engine appends a tracking token and routes through <span class="mono">/go/&lt;code&gt;</span> so clicks and conversions are attributed — without ever touching what gets recommended.</div>
+      <div class="note" style="margin-top:10px">Paste your own affiliate link here when you have it. The engine appends a tracking token and routes through <span class="mono">/go/&lt;code&gt;</span> so clicks and conversions are attributed – without ever touching what gets recommended.</div>
     </div>
     <div class="grid" style="grid-template-columns:repeat(2,1fr)">
       ${r.programs.map((p) => `<div class="card">
@@ -2475,7 +2509,7 @@ async function renderReferrals() {
         <div class="kv" style="margin-top:10px"><span>Model</span><span class="mono">${esc(p.payout_model)}</span></div>
         <div class="kv"><span>Payout</span><span class="mono">${p.payout_amount ? money(p.payout_amount) : 'rev share'}</span></div>
         <div class="kv"><span>Clicks routed</span><span class="mono">${p.clicks}</span></div>
-        <div class="muted" style="font-size:11px;margin-top:8px;word-break:break-all">${esc(p.template || '—')}</div>
+        <div class="muted" style="font-size:11px;margin-top:8px;word-break:break-all">${esc(p.template || '–')}</div>
       </div>`).join('')}
     </div>`;
   $('#p-add').onclick = async () => {
@@ -2499,9 +2533,9 @@ async function renderOps() {
     <h2 class="section">Live ingestion</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="card"><h3>Live opportunities</h3><div class="big mono">${live.liveTotal}</div><div class="muted" style="font-size:11px">from real APIs</div></div>
-      <div class="card"><h3>Last run kept</h3><div class="big mono">${last ? last.kept : '—'}</div><div class="muted" style="font-size:11px">${last ? last.droppedNonTech + ' non-tech dropped' : ''}</div></div>
-      <div class="card"><h3>New this run</h3><div class="big mono">${last ? last.inserted : '—'}</div><div class="muted" style="font-size:11px">${last ? last.merged + ' merged into existing' : ''}</div></div>
-      <div class="card"><h3>Run time</h3><div class="big mono">${last ? last.ms + 'ms' : '—'}</div><div class="muted" style="font-size:11px">${last ? new Date(last.at).toLocaleString('en-GB') : ''}</div></div>
+      <div class="card"><h3>Last run kept</h3><div class="big mono">${last ? last.kept : '–'}</div><div class="muted" style="font-size:11px">${last ? last.droppedNonTech + ' non-tech dropped' : ''}</div></div>
+      <div class="card"><h3>New this run</h3><div class="big mono">${last ? last.inserted : '–'}</div><div class="muted" style="font-size:11px">${last ? last.merged + ' merged into existing' : ''}</div></div>
+      <div class="card"><h3>Run time</h3><div class="big mono">${last ? last.ms + 'ms' : '–'}</div><div class="muted" style="font-size:11px">${last ? new Date(last.at).toLocaleString('en-GB') : ''}</div></div>
     </div>
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
       <div class="card"><h3>Source health</h3>
@@ -2511,7 +2545,7 @@ async function renderOps() {
           <td>${r.ok === null ? '<span class="muted">not run</span>' : r.ok ? '<span style="color:#6fe3a4">● ok</span>' : `<span style="color:#f08b91">● ${esc(r.error || 'fail')}</span>`}</td>
           <td class="mono">${r.count}</td><td class="mono">${r.ms}ms</td></tr>`).join('')}
         </tbody></table>
-        <div class="note" style="margin-top:10px">Four real adapters. Each fails in isolation — a broken source degrades to zero rows and reports, it never takes the pipeline down.</div>
+        <div class="note" style="margin-top:10px">Four real adapters. Each fails in isolation – a broken source degrades to zero rows and reports, it never takes the pipeline down.</div>
       </div>
       <div class="card"><h3>What the pipeline did</h3>
         <div class="kv"><span>Fetched from APIs</span><span class="mono">${last ? last.fetched : 0}</span></div>
@@ -2519,7 +2553,7 @@ async function renderOps() {
         <div class="kv"><span>Dropped as non-target (internships, sales, trades)</span><span class="mono">${last ? last.droppedNonTech : 0}</span></div>
         <div class="kv"><span>Inserted as new canonical opportunities</span><span class="mono">${last ? last.inserted : 0}</span></div>
         <div class="kv"><span>Merged as duplicates of existing</span><span class="mono">${last ? last.merged : 0}</span></div>
-        <div class="kv"><span>Duplicate rate</span><span class="mono">${last ? last.duplicateRate + '%' : '—'}</span></div>
+        <div class="kv"><span>Duplicate rate</span><span class="mono">${last ? last.duplicateRate + '%' : '–'}</span></div>
         <div class="note" style="margin-top:12px">Classification is deterministic: title must contain core tech vocabulary, exclude internships/trades/sales, then map to one of 11 role families by signal priority.</div>
       </div>
     </div>
@@ -2565,13 +2599,13 @@ const VIEWS = {
   onboard: [async () => { if (!STATE.draft) { try { STATE.draft = await api('/api/onboarding/draft'); } catch (e) { STATE.draft = { step: 1 }; } } renderOnboarding(); }, 'Build your Career Twin', 'Ninety seconds to your first real number.'],
   radar: [renderRadar, 'Opportunity Radar', 'Continuously scored against your Career Twin'],
   scores: [renderScores, 'Career Score', 'Six scores, benchmarked and recomputed on every action'],
-  rates: [renderRates, 'Rate Intelligence', 'What your exact profile is worth — the wedge'],
+  rates: [renderRates, 'Rate Intelligence', 'What your exact profile is worth – the wedge'],
   gaps: [renderGaps, 'Skill Gaps', 'What is actually blocking your next move'],
   tracker: [renderTracker, 'Tracker', 'Your pipeline and the outcome loop'],
   twin: [renderTwin, 'Career Twin', 'The model of you that gets better with use'],
   auth: [renderAuth, 'Sign in', 'Passwordless access'],
   copilot: [renderCopilot, 'AI Career Copilot', 'Grounded in your data, not generic advice'],
-  learning: [renderLearning, 'Learning Loop', 'Outcomes recalibrate the model — the flywheel'],
+  learning: [renderLearning, 'Learning Loop', 'Outcomes recalibrate the model – the flywheel'],
   searches: [renderSearches, 'Saved Searches', 'Standing questions the engine keeps answering'],
   brief: [renderBrief, 'Morning Brief', 'What changed since you last looked'],
   negotiation: [renderNegotiation, 'Negotiation', 'The number to say, the evidence, and the fallback'],
@@ -2579,10 +2613,10 @@ const VIEWS = {
   pulse: [renderPulse, 'Market Pulse', 'What the live corpus says right now'],
   analytics: [renderAnalytics, 'Funnel', 'Where users actually leak out'],
   leads: [renderLeads, 'Leads', 'People who saw their number'],
-  email: [renderEmail, 'Email', 'The retention loop — the brief that brings them back'],
+  email: [renderEmail, 'Email', 'The retention loop – the brief that brings them back'],
   launch: [renderLaunch, 'Launch', 'Whether it is safe to send people here'],
   referrals: [renderReferrals, 'Partners', 'Referral routing, isolated from ranking'],
-  plan: [renderPlan, 'Plan', 'Free vs Pro — and why the paywall sits there'],
+  plan: [renderPlan, 'Plan', 'Free vs Pro – and why the paywall sits there'],
   ops: [renderOps, 'Engine', 'What the system actually did'],
 };
 
@@ -2630,7 +2664,7 @@ function showHelp() {
   el.innerHTML = `<div class="palette-box" style="padding:22px">
     <div style="font-size:15px;font-weight:650;margin-bottom:12px">Keyboard</div>
     <div style="display:grid;grid-template-columns:auto 1fr;gap:9px 18px;font-size:13px">
-      <span><kbd>⌘</kbd><kbd>K</kbd></span><span>Command palette — search everything, jump anywhere</span>
+      <span><kbd>⌘</kbd><kbd>K</kbd></span><span>Command palette – search everything, jump anywhere</span>
       <span><kbd>J</kbd> <kbd>K</kbd> or <kbd>↑</kbd><kbd>↓</kbd></span><span>Move through the feed</span>
       <span><kbd>↵</kbd></span><span>Open the selected opportunity</span>
       <span><kbd>S</kbd></span><span>Save it</span>
@@ -2638,7 +2672,7 @@ function showHelp() {
       <span><kbd>?</kbd></span><span>This panel</span>
       <span><kbd>esc</kbd></span><span>Close anything</span>
     </div>
-    <div class="muted" style="font-size:12px;margin-top:16px">Built to be used with hands on the keyboard — the same way you would use a terminal, not a job board.</div>
+    <div class="muted" style="font-size:12px;margin-top:16px">Built to be used with hands on the keyboard – the same way you would use a terminal, not a job board.</div>
   </div>`;
   el.onclick = (e) => { if (e.target === el || e.target.closest('.palette-box') === null) el.remove(); };
   document.body.appendChild(el);
@@ -2688,7 +2722,7 @@ async function renderBrief() {
         </div>
         <div class="card" style="margin-top:14px">
           <h3>Delivery</h3>
-          <div class="dim" style="font-size:12.5px;margin-top:8px">This brief is generated fresh from your twin every time you open it. On Pro it also arrives by email each morning at 07:30 — that is what turns a tool into a habit.</div>
+          <div class="dim" style="font-size:12.5px;margin-top:8px">This brief is generated fresh from your twin every time you open it. On Pro it also arrives by email each morning at 07:30 – that is what turns a tool into a habit.</div>
           <div style="margin-top:12px">${[0, 1, 2, 3].map((d) => `<div class="kv"><span>${dates[d].toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</span><span class="muted">${d === 0 ? 'today · live' : 'delivered'}</span></div>`).join('')}</div>
         </div>
       </div>
@@ -2776,6 +2810,17 @@ function setTheme(mode) { try { localStorage.setItem(THEME_KEY, mode); } catch (
     if (mq.addEventListener) mq.addEventListener('change', onChange); else if (mq.addListener) mq.addListener(onChange);
   }
 })();
+(function initTopMenu() {
+  const more = document.getElementById('tb-more');
+  const drop = document.getElementById('tb-drop');
+  if (!more || !drop) return;
+  const close = () => { drop.classList.remove('open'); more.setAttribute('aria-expanded', 'false'); };
+  more.onclick = (e) => { e.stopPropagation(); const o = drop.classList.toggle('open'); more.setAttribute('aria-expanded', String(o)); };
+  document.addEventListener('click', (e) => { if (!drop.contains(e.target) && e.target !== more) close(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  drop.querySelectorAll('button').forEach((b) => b.addEventListener('click', close));
+})();
+
 (function initThemeToggle() {
   const btn = document.getElementById('theme-btn');
   if (!btn) return;

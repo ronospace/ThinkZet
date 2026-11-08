@@ -1,7 +1,7 @@
 // Career trajectory simulator.
 //
 // The question nobody answers: "if I take path A instead of path B, where am I in 24 months?"
-// This is a transparent model — every multiplier is visible and adjustable — not a prediction.
+// This is a transparent model – every multiplier is visible and adjustable – not a prediction.
 'use strict';
 const { CURRENCY_RATES, SENIORITY_MULT } = require('./corpus.cjs');
 
@@ -113,7 +113,7 @@ function simulate({ currentAnnual, level, skills, months = 24 }) {
       'Salary growth is applied quarterly at a path-specific annual rate.',
       'Promotion timing uses typical tenure for your level, accelerated by the growth rate of your skills.',
       'Contract income is gross and excludes holiday, pension and employer contributions.',
-      'Relocation is modelled as a one-off step change, not a one-off cost — subtract relocation cost separately.',
+      'Relocation is modelled as a one-off step change, not a one-off cost – subtract relocation cost separately.',
       'This is a transparent model, not a forecast. Change the assumptions and the answer changes.',
     ],
   };

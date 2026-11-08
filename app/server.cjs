@@ -1,4 +1,4 @@
-// MirrorSpread AI — API server. Node built-ins only (http + node:sqlite). Zero dependencies.
+// MirrorSpread AI – API server. Node built-ins only (http + node:sqlite). Zero dependencies.
 'use strict';
 // Minimal .env loader: KEY=value lines, no dependency, ignored if the file is absent.
 try {
@@ -419,14 +419,14 @@ route('GET', /^\/api\/negotiation$/, async (req, res) => {
   // Only call out a channel if it is backed by a real sample, not a handful of outliers.
   const strongChannel = (rates.byChannel || []).find((c) => c.n >= 10 && c.median > floor);
   const channelUpside = strongChannel
-    ? `The ${strongChannel.channel} channel pays a median of ${fmt(strongChannel.median)} across ${strongChannel.n} comparable postings — ${fmt(strongChannel.median - floor)} above your segment median.`
+    ? `The ${strongChannel.channel} channel pays a median of ${fmt(strongChannel.median)} across ${strongChannel.n} comparable postings – ${fmt(strongChannel.median - floor)} above your segment median.`
     : null;
 
   const askScript = current
-    ? `"Based on what I'm seeing for senior ${E.guessFamily(profile, twin).replace(/_/g, ' ')} profiles with this stack, the range is ${fmt(rates.p25)} to ${fmt(rates.p75)} ${periodLabel}. I'm targeting ${fmt(target)} — that's the upper half of the band, and it reflects ${levers[0] ? levers[0].split(' (')[0] : 'the scope of the role'} on top of the core requirements. What's the band you've set for this level?"`
+    ? `"Based on what I'm seeing for senior ${E.guessFamily(profile, twin).replace(/_/g, ' ')} profiles with this stack, the range is ${fmt(rates.p25)} to ${fmt(rates.p75)} ${periodLabel}. I'm targeting ${fmt(target)} – that's the upper half of the band, and it reflects ${levers[0] ? levers[0].split(' (')[0] : 'the scope of the role'} on top of the core requirements. What's the band you've set for this level?"`
     : `"Before we go further, what band have you set for this level? I want to make sure we're in the same range."`;
 
-  const counterScript = `If they offer below ${fmt(floor)}: "That's below the median for this profile. I can work with the lower number if we revisit it at six months against a written scope — otherwise I'd need to be closer to ${fmt(target)}."`;
+  const counterScript = `If they offer below ${fmt(floor)}: "That's below the median for this profile. I can work with the lower number if we revisit it at six months against a written scope – otherwise I'd need to be closer to ${fmt(target)}."`;
 
   json(res, 200, {
     period: rates.period,
@@ -442,7 +442,7 @@ route('GET', /^\/api\/negotiation$/, async (req, res) => {
     counterScript,
     anchorOpportunity: best ? { id: best.id, title: best.title, company: best.company, compMin: best.comp_min, compMax: best.comp_max, currency: best.currency, period: best.comp_period } : null,
     rules: [
-      'Never name a number before they do — ask for their band first.',
+      'Never name a number before they do – ask for their band first.',
       `Anchor on the p75 (${fmt(target)}), not the median. The median is a floor, not a target.`,
       'Tie every number to evidence from your own market data, not to your current salary.',
       'Negotiate the whole package: base, equity, sign-on, remote allowance, learning budget.',
@@ -810,7 +810,7 @@ route('GET', /^\/api\/learning$/, async (req, res) => {
       shrinkage: Number(shrinkage.toFixed(2)),
       interviewPriorLift: Number((lift * 100).toFixed(1)),
       explanation: n === 0
-        ? 'No outcomes yet — the model is running on published market priors. Every outcome you report moves these numbers toward your reality.'
+        ? 'No outcomes yet – the model is running on published market priors. Every outcome you report moves these numbers toward your reality.'
         : `${n} outcome${n === 1 ? '' : 's'} recorded. Your observed interview rate is being blended into the prior with ${Math.round(shrinkage * 100)}% weight (shrunk by n/(n+20) to stop small samples dominating).`,
       modelVersion: 'v1-rules + outcome blend',
     },
@@ -855,7 +855,7 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
   const body = await readBody(req);
   const q = String(body.message || '').toLowerCase();
   const profile = getProfile(resolveUser(req));
-  if (!profile) return json(res, 200, { reply: 'Load a profile first — paste your CV on the onboarding screen and I can answer with your actual data.' });
+  if (!profile) return json(res, 200, { reply: 'Load a profile first – paste your CV on the onboarding screen and I can answer with your actual data.' });
 
   const twin = E.buildTwin(resolveUser(req));
   const rates = E.rateIntelligence(resolveUser(req));
@@ -871,9 +871,9 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
     const r = rates;
     citations.push({ label: 'Rate intelligence', detail: `${r.sampleSize} comparable postings, ${r.confidence} confidence` });
     reply = r.verdict === 'underpaid'
-      ? `You're underpaid. Your profile sits at ${fmt(r.p50)} median (p25 ${fmt(r.p25)} → p75 ${fmt(r.p75)}) for ${profile.seniority} ${E.guessFamily(profile, twin).replace(/_/g, ' ')} work at your skill mix. You currently report ${fmt(r.current)} — that's ${r.gapPct}% below the median, or ${fmt(r.gapAbs)} per year.\n\nThe gap is not your level, it's your channel. Median by channel: ${r.byChannel.map((c) => `${c.channel} ${fmt(c.median)}`).join(' · ')}.\n\nWhat moves it: ${r.topPayingSkills.map((s) => `${s.skill} (+${s.premium}%)`).join(', ')}. Those are the levers with the highest salary premium in your own skill adjacency.`
+      ? `You're underpaid. Your profile sits at ${fmt(r.p50)} median (p25 ${fmt(r.p25)} → p75 ${fmt(r.p75)}) for ${profile.seniority} ${E.guessFamily(profile, twin).replace(/_/g, ' ')} work at your skill mix. You currently report ${fmt(r.current)} – that's ${r.gapPct}% below the median, or ${fmt(r.gapAbs)} per year.\n\nThe gap is not your level, it's your channel. Median by channel: ${r.byChannel.map((c) => `${c.channel} ${fmt(c.median)}`).join(' · ')}.\n\nWhat moves it: ${r.topPayingSkills.map((s) => `${s.skill} (+${s.premium}%)`).join(', ')}. Those are the levers with the highest salary premium in your own skill adjacency.`
       : r.verdict === 'at_market'
-        ? `You're roughly at market: ${fmt(r.current)} vs a median of ${fmt(r.p50)} (p25 ${fmt(r.p25)} → p75 ${fmt(r.p75)}). The upside isn't a raise, it's a reposition — p75 is ${fmt(r.p75)}, and the channel with the highest median is ${r.byChannel[0] ? r.byChannel[0].channel + ' at ' + fmt(r.byChannel[0].median) : 'n/a'}.`
+        ? `You're roughly at market: ${fmt(r.current)} vs a median of ${fmt(r.p50)} (p25 ${fmt(r.p25)} → p75 ${fmt(r.p75)}). The upside isn't a raise, it's a reposition – p75 is ${fmt(r.p75)}, and the channel with the highest median is ${r.byChannel[0] ? r.byChannel[0].channel + ' at ' + fmt(r.byChannel[0].median) : 'n/a'}.`
         : `You're above market median (${fmt(r.current)} vs ${fmt(r.p50)}). Your leverage now is growth, not rate: the emerging skills in your adjacency are ${r.topPayingSkills.slice(0, 3).map((s) => s.skill).join(', ')}.`;
   } else if (/what should i|next|priorit|focus|best opportunit/.test(q)) {
     const best = top[0];
@@ -884,8 +884,8 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
         ? 'You have signalled a growth horizon, so emerging-skill exposure outranks pay in your ranking.'
         : 'Your ranking is balanced: pay, fit and growth are weighted evenly.';
     reply = best
-      ? `Do this next: **${best.title}** at ${best.company} — ${best.match_score}/100 match, ${best.interview_probability}% interview probability, ${best.offer_probability}% offer probability.${best.income_delta_pct != null ? ` Expected income is ${best.income_delta_pct > 0 ? '+' : ''}${best.income_delta_pct}% vs your current rate.` : ''}\n\nWhy it ranks first: ${best.reasons.slice(0, 3).map((r) => `${r.factor.toLowerCase()} (${r.detail})`).join('; ')}.\n\n${horizonNote}\n\nBlockers: ${best.missing_skills.length ? best.missing_skills.join(', ') : 'none — you cover every listed skill'}.\n\nRunners-up: ${top.slice(1, 4).map((o) => `${o.title} (${o.match_score})`).join(', ')}.`
-      : 'No matches yet — load a profile first.';
+      ? `Do this next: **${best.title}** at ${best.company} – ${best.match_score}/100 match, ${best.interview_probability}% interview probability, ${best.offer_probability}% offer probability.${best.income_delta_pct != null ? ` Expected income is ${best.income_delta_pct > 0 ? '+' : ''}${best.income_delta_pct}% vs your current rate.` : ''}\n\nWhy it ranks first: ${best.reasons.slice(0, 3).map((r) => `${r.factor.toLowerCase()} (${r.detail})`).join('; ')}.\n\n${horizonNote}\n\nBlockers: ${best.missing_skills.length ? best.missing_skills.join(', ') : 'none – you cover every listed skill'}.\n\nRunners-up: ${top.slice(1, 4).map((o) => `${o.title} (${o.match_score})`).join(', ')}.`
+      : 'No matches yet – load a profile first.';
   } else if (/skill|gap|learn|missing|course|study/.test(q)) {
     const mine = new Set(twin.skills);
     const freq = new Map();
@@ -893,8 +893,8 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
     const topGaps = [...freq.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4);
     citations.push({ label: 'Skill gap analysis', detail: 'computed across your top 40 matching opportunities' });
     reply = topGaps.length
-      ? `Your gaps, ranked by how many of your realistic opportunities they block:\n\n${topGaps.map(([s, n], i) => `${i + 1}. **${s}** — blocks ${n} of your top 40 matches`).join('\n')}\n\nYou already have ${mine.size} recognised skills. The pattern is clear: your data-science core is strong, and the missing layer is deployment and LLM infrastructure. Closing ${topGaps[0][0]} alone would unblock the largest number of roles.`
-      : 'No systematic gaps detected across your top 40 matches — your coverage is unusually complete.';
+      ? `Your gaps, ranked by how many of your realistic opportunities they block:\n\n${topGaps.map(([s, n], i) => `${i + 1}. **${s}** – blocks ${n} of your top 40 matches`).join('\n')}\n\nYou already have ${mine.size} recognised skills. The pattern is clear: your data-science core is strong, and the missing layer is deployment and LLM infrastructure. Closing ${topGaps[0][0]} alone would unblock the largest number of roles.`
+      : 'No systematic gaps detected across your top 40 matches – your coverage is unusually complete.';
   } else if (/visa|relocat|move|country|germany|netherlands|abroad/.test(q)) {
     const r = rates;
     citations.push({ label: 'Relocation exposure', detail: `${JSON.parse(profile.target_countries || '[]').join(', ') || 'none set'}` });
@@ -902,20 +902,20 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
     const withVisa = allScored.filter((o) => o.visa_sponsorship === 'yes').length;
     const declared = allScored.filter((o) => o.visa_sponsorship === 'yes' || o.visa_sponsorship === 'no').length;
     const targets = JSON.parse(profile.target_countries || '[]');
-    reply = `You need sponsorship and you're targeting ${targets.join(', ') || 'no countries yet'}.\n\nOf ${allScored.length} scored opportunities, ${withVisa} are explicitly sponsorship-positive — and only ${declared} state a position at all. The other ${allScored.length - declared} are silent, which is the real signal: most employers never say, so a filter that only matches "yes" hides most of the market.\n\nRealistic read: at ${fmt(r.p50)} median for your profile you clear the EU Blue Card threshold in Germany and the highly-skilled migrant threshold in the Netherlands on paper. Your constraint is not your level, and it is not your skills — it is that ${Math.round(((allScored.length - declared) / allScored.length) * 100)}% of the market gives you no signal at all. That is an outreach problem, not an application problem.`;
+    reply = `You need sponsorship and you're targeting ${targets.join(', ') || 'no countries yet'}.\n\nOf ${allScored.length} scored opportunities, ${withVisa} are explicitly sponsorship-positive – and only ${declared} state a position at all. The other ${allScored.length - declared} are silent, which is the real signal: most employers never say, so a filter that only matches "yes" hides most of the market.\n\nRealistic read: at ${fmt(r.p50)} median for your profile you clear the EU Blue Card threshold in Germany and the highly-skilled migrant threshold in the Netherlands on paper. Your constraint is not your level, and it is not your skills – it is that ${Math.round(((allScored.length - declared) / allScored.length) * 100)}% of the market gives you no signal at all. That is an outreach problem, not an application problem.`;
   } else if (/score|how am i|assess|rating/.test(q) || !q) {
     const s = scores || {};
     citations.push({ label: 'Career Score', detail: `overall ${s.overall || 0}/100, p${s.benchmark_percentile || 0}` });
-    reply = `Your Career Score is **${s.overall || 0}/100** — ${s.benchmark_percentile || 0}th percentile for your level.\n\n· Employability ${s.employability || 0} — your top-15 matches average ${top.length ? Math.round(top.reduce((a, b) => a + b.match_score, 0) / top.length) : 0}\n· Interview readiness ${s.interview_readiness || 0}\n· Market demand ${s.market_demand || 0}\n· Salary potential ${s.salary_potential || 0}\n· Future growth ${s.future_growth || 0}\n· Momentum ${s.career_momentum || 0}\n\nBiggest lever: ${weakest(s)}.`;
+    reply = `Your Career Score is **${s.overall || 0}/100** – ${s.benchmark_percentile || 0}th percentile for your level.\n\n· Employability ${s.employability || 0} – your top-15 matches average ${top.length ? Math.round(top.reduce((a, b) => a + b.match_score, 0) / top.length) : 0}\n· Interview readiness ${s.interview_readiness || 0}\n· Market demand ${s.market_demand || 0}\n· Salary potential ${s.salary_potential || 0}\n· Future growth ${s.future_growth || 0}\n· Momentum ${s.career_momentum || 0}\n\nBiggest lever: ${weakest(s)}.`;
   } else {
-    reply = `I can answer from your actual data — try:\n\n· "What should I do next?"\n· "Am I underpaid?"\n· "Which skills are blocking me?"\n· "What's realistic for relocation to Germany?"\n· "How am I doing overall?"`;
+    reply = `I can answer from your actual data – try:\n\n· "What should I do next?"\n· "Am I underpaid?"\n· "Which skills are blocking me?"\n· "What's realistic for relocation to Germany?"\n· "How am I doing overall?"`;
   }
 
   function weakest(s) {
     const pairs = [['employability', s.employability], ['interview readiness', s.interview_readiness], ['market demand', s.market_demand], ['salary potential', s.salary_potential], ['future growth', s.future_growth], ['momentum', s.career_momentum]].filter((p) => p[1] != null);
     if (!pairs.length) return 'load a profile to see it';
     pairs.sort((a, b) => a[1] - b[1]);
-    return `${pairs[0][0]} at ${pairs[0][1]} — it's the lowest of the six and the one worth attacking first`;
+    return `${pairs[0][0]} at ${pairs[0][1]} – it's the lowest of the six and the one worth attacking first`;
   }
 
   log(resolveUser(req), 'copilot.message', null, null, { intent: q.slice(0, 40) });
@@ -946,25 +946,25 @@ route('POST', /^\/api\/copilot\/opportunity$/, async (req, res) => {
 
   let reply;
   if (/apply|worth|should i|chance|odds|realistic/.test(q) || !q) {
-    reply = `${row.match_score >= 80 ? 'Yes — apply.' : row.match_score >= 65 ? 'Apply, but with a tailored CV.' : 'Low priority — better options exist.'}
+    reply = `${row.match_score >= 80 ? 'Yes – apply.' : row.match_score >= 65 ? 'Apply, but with a tailored CV.' : 'Low priority – better options exist.'}
 
 Match ${row.match_score}/100 · interview ${row.interview_probability}% · offer ${row.offer_probability}%.
 The gap between those two numbers is the real story: once you get in front of them, your chance of converting is ${Math.round((row.offer_probability / Math.max(0.1, row.interview_probability)) * 100)}%.
 
 Evidence: ${matched.length}/${skills.length} listed skills covered${missing.length ? `; missing ${missing.join(', ')}` : ''}. ${reasons.find((r) => r.factor === 'Income')?.detail || ''}.
 
-${missing.length ? `If you close ${missing[0]}, the match score moves into the next band and the interview probability roughly doubles — that is the single highest-leverage action available on this listing.` : 'Your coverage is complete. Your edge here is speed: listings seen on multiple boards close faster.'}`;
+${missing.length ? `If you close ${missing[0]}, the match score moves into the next band and the interview probability roughly doubles – that is the single highest-leverage action available on this listing.` : 'Your coverage is complete. Your edge here is speed: listings seen on multiple boards close faster.'}`;
   } else if (/salary|pay|money|negotiat/.test(q)) {
     const expected = row.comp_min != null ? fmt(row.comp_min) + (row.comp_max ? '–' + fmt(row.comp_max) : '') + ' /' + row.comp_period : 'not disclosed';
     reply = `Listed compensation: ${expected}.
 Your benchmark median for this level and skill mix: ${rates ? fmt(rates.p50) : 'n/a'}.
-${row.comp_min == null ? 'Compensation is not disclosed — that is a negotiation risk. Ask in the first call; it also tells you whether the role is real.' : `Anchor on the upper half: ${fmt(row.comp_max || row.comp_min)} is defensible because you match ${matched.length} of ${skills.length} required skills.`}`;
+${row.comp_min == null ? 'Compensation is not disclosed – that is a negotiation risk. Ask in the first call; it also tells you whether the role is real.' : `Anchor on the upper half: ${fmt(row.comp_max || row.comp_min)} is defensible because you match ${matched.length} of ${skills.length} required skills.`}`;
   } else if (/skill|gap|learn/.test(q)) {
     reply = missing.length
       ? `Blocking skills, in order of impact: ${missing.join(', ')}.
 You already have: ${matched.join(', ')}.
-Close ${missing[0]} first — it appears most often across your other matches, so it compounds.`
-      : `No gaps on this listing — you cover every required skill: ${skills.join(', ')}.`;
+Close ${missing[0]} first – it appears most often across your other matches, so it compounds.`
+      : `No gaps on this listing – you cover every required skill: ${skills.join(', ')}.`;
   } else {
     reply = `${row.title} at ${row.company}: match ${row.match_score}/100, interview ${row.interview_probability}%, offer ${row.offer_probability}%. Ask me whether to apply, how to negotiate, or what's blocking you.`;
   }
@@ -1030,10 +1030,10 @@ async function briefFor(uid) {
   }
 
   const actions = [];
-  if (newHighMatch[0]) actions.push({ priority: 1, text: `Apply to ${newHighMatch[0].title} at ${newHighMatch[0].company} — ${newHighMatch[0].interview_probability}% interview probability`, opportunityId: newHighMatch[0].id });
-  if (topGap) actions.push({ priority: 2, text: `Close ${topGap[0]} — it blocks ${topGap[1]} of your opportunities`, skill: topGap[0] });
-  if (rates && rates.gapPct > 5) actions.push({ priority: 2, text: `You are ${rates.gapPct}% below market — open Rate Intelligence and take the number into your next conversation` });
-  if (scores && scores.career_momentum < 30) actions.push({ priority: 3, text: `Momentum is ${scores.career_momentum}/100 — three applications this week moves it more than any CV edit` });
+  if (newHighMatch[0]) actions.push({ priority: 1, text: `Apply to ${newHighMatch[0].title} at ${newHighMatch[0].company} – ${newHighMatch[0].interview_probability}% interview probability`, opportunityId: newHighMatch[0].id });
+  if (topGap) actions.push({ priority: 2, text: `Close ${topGap[0]} – it blocks ${topGap[1]} of your opportunities`, skill: topGap[0] });
+  if (rates && rates.gapPct > 5) actions.push({ priority: 2, text: `You are ${rates.gapPct}% below market – open Rate Intelligence and take the number into your next conversation` });
+  if (scores && scores.career_momentum < 30) actions.push({ priority: 3, text: `Momentum is ${scores.career_momentum}/100 – three applications this week moves it more than any CV edit` });
   if (closingSoon[0]) actions.push({ priority: 1, text: `${closingSoon[0].title} closes in ${Math.max(0, Math.ceil((new Date(closingSoon[0].closes_at) - Date.now()) / 86400000))} days` });
 
   return {
@@ -1094,7 +1094,7 @@ route('POST', /^\/api\/public\/rate-check$/, async (req, res) => {
   const family = classifyFamily(role, skills, role);
   const seniority = classifySeniority(`${role}`, null, '') !== 'mid' ? classifySeniority(role, null, '') : (years >= 12 ? 'staff' : years >= 7 ? 'senior' : years >= 4 ? 'mid' : 'junior');
 
-  // Build a synthetic profile and reuse the real rate engine — no second implementation.
+  // Build a synthetic profile and reuse the real rate engine – no second implementation.
   const fakeUser = `public-check-${Date.now()}`;
   const skillsResolved = Array.from(new Set(skills.map((x) => require('./taxonomy.cjs').resolveSkill(x)).filter(Boolean)));
   db.prepare('INSERT OR IGNORE INTO users (id,email,name) VALUES (?,?,?)').run(fakeUser, `${fakeUser}@anon.local`, 'Anonymous');
@@ -1142,11 +1142,11 @@ route('POST', /^\/api\/public\/rate-check$/, async (req, res) => {
         if (gapPct == null) return `The market pays ${money(rates.p50)} for ${seg} work like yours.`;
         if (gapPct >= 25) return `Someone with your CV was worth ${Math.abs(gapPct)}% more than you are being paid.`;
         if (gapPct >= 15) return `There is a version of your job paying ${money(rates.p50)}. You are not in it.`;
-        if (gapPct >= 5) return `You are ${money(gapAbs)} under the median. Not a scandal — a leak.`;
+        if (gapPct >= 5) return `You are ${money(gapAbs)} under the median. Not a scandal – a leak.`;
         if (gapPct > -10) return `You are priced correctly. Whether you are moving is a different question.`;
         return `You are ahead of the median by ${Math.abs(gapPct)}%. That is leverage, and it expires if you sit still.`;
       })(),
-      gapLine: gapAbs != null && gapAbs > 0 ? `€${Math.round(gapAbs).toLocaleString('en-GB')} a year — ${Math.round(gapAbs * 2).toLocaleString('en-GB')} across two.` : null,
+      gapLine: gapAbs != null && gapAbs > 0 ? `€${Math.round(gapAbs).toLocaleString('en-GB')} a year – ${Math.round(gapAbs * 2).toLocaleString('en-GB')} across two.` : null,
     },
     levers: skillMeta.map((s) => ({ skill: s.canonical, premium: s.salary_premium, growth: s.growth_rate })),
     next: {
@@ -1174,7 +1174,7 @@ route('POST', /^\/api\/onboarding\/draft$/, async (req, res) => {
   json(res, 200, { ok: true, step });
 });
 
-// Live preview of the rate gap mid-onboarding — the payoff before the form is finished.
+// Live preview of the rate gap mid-onboarding – the payoff before the form is finished.
 route('POST', /^\/api\/onboarding\/preview$/, async (req, res) => {
   const body = await readBody(req);
   const role = String(body.role || '').trim();
@@ -1203,13 +1203,13 @@ function sequenceEmail({ user, key, ctx }) {
   const app = MAIL.CONFIG.appUrl + '/?app=1';
   const unsub = `${MAIL.CONFIG.appUrl}/unsubscribe/${user.id}/${MAIL.unsubscribeToken(user.id)}`;
   const gapLine = ctx.rateGapPct != null && ctx.rateGapPct > 3
-    ? `You are ${ctx.rateGapPct}% below the median for your profile — ${MAIL.money(Math.abs(ctx.rateGapAbs || 0))} a year.`
+    ? `You are ${ctx.rateGapPct}% below the median for your profile – ${MAIL.money(Math.abs(ctx.rateGapAbs || 0))} a year.`
     : 'You are at or above the median for your profile. The upside now is growth, not price.';
 
   const bodies = {
     welcome: `Good to have you, ${name}.\n\nHere is the one number that matters: ${gapLine}\n\nThree things worth doing this week:\n\n1. Open the radar and sort by interview odds, not match score. Odds are what decide whether your time was worth it.\n2. Open Negotiation and read the ask out loud once. The number you cannot say out loud is the number you will not get.\n3. Pick one skill gap. Just one. The gaps screen ranks them by how many of your realistic opportunities they block.\n\n${app}\n\n— MirrorSpread\n\nYou can turn these off any time: ${unsub}`,
     first_move: `Two days in, ${name}.\n\nMost people open a feed and scroll. You have something better: a score per opportunity and a probability of getting it.\n\nSo the move is not "apply to more". It is "apply to the ones you can actually win".\n\nOpen the radar, filter to 60%+ interview odds, and pick the top one. Apply today, while it is open.\n\n${app}\n\n— MirrorSpread\n\n${unsub}`,
-    gap: `Four days in, ${name}.\n\n${ctx.topGap ? `${ctx.topGap.skill} is blocking ${ctx.topGap.blocking} of your realistic opportunities. Not the market — your specific set of matches.` : 'Your skill coverage is unusually complete. The next lever is not learning, it is positioning.'}\n\nThat distinction matters. Most advice tells you to learn what is trending. The useful version is: learn what is blocking *your* next move.\n\nThe gaps screen has the sequence, with the weeks and the cumulative unblocking.\n\n${app}\n\n— MirrorSpread\n\n${unsub}`,
+    gap: `Four days in, ${name}.\n\n${ctx.topGap ? `${ctx.topGap.skill} is blocking ${ctx.topGap.blocking} of your realistic opportunities. Not the market – your specific set of matches.` : 'Your skill coverage is unusually complete. The next lever is not learning, it is positioning.'}\n\nThat distinction matters. Most advice tells you to learn what is trending. The useful version is: learn what is blocking *your* next move.\n\nThe gaps screen has the sequence, with the weeks and the cumulative unblocking.\n\n${app}\n\n— MirrorSpread\n\n${unsub}`,
     proof: `One week, ${name}.\n\nHere is what the honest version looks like: three applications to roles you can actually win, one conversation about your number, one gap being closed.\n\nThat is not a productivity system. It is the difference between a job search that runs on hope and one that runs on evidence.\n\nYour streak is ${ctx.streak || 1}. Keep it.\n\n${app}\n\n— MirrorSpread\n\n${unsub}`,
   };
 
@@ -1282,7 +1282,7 @@ route('POST', /^\/api\/email\/brief$/, async (req, res) => {
   const prefs = MAIL.prefsFor(uid);
   if (!prefs.daily_brief) return json(res, 400, { error: 'daily brief is switched off' });
 
-  // Reuse the exact brief the app shows — one source of truth, never a second implementation.
+  // Reuse the exact brief the app shows – one source of truth, never a second implementation.
   const brief = await briefFor(uid);
   if (!brief || brief.needsOnboarding) return json(res, 400, { error: 'no profile yet' });
 
@@ -1404,17 +1404,17 @@ route('GET', /^\/api\/launch$/, async (req, res) => {
 
   // Email
   const mail = MAIL.status();
-  add('email', 'Email delivery', mail.live, mail.live ? `Sending via ${mail.provider}` : 'No provider — briefs and the signup sequence will pile up in the outbox', true);
+  add('email', 'Email delivery', mail.live, mail.live ? `Sending via ${mail.provider}` : 'No provider – briefs and the signup sequence will pile up in the outbox', true);
 
   // Billing
   const bill = BILLING.status();
   add('billing', 'Billing configured', bill.ready, bill.ready ? `Stripe ${bill.mode} mode` : `Missing: ${bill.missing.join(', ')}`, false);
-  add('billing_live', 'Stripe in live mode', bill.mode === 'live', bill.mode === 'live' ? 'Real payments enabled' : 'Test mode — checkout works but no money moves', false);
+  add('billing_live', 'Stripe in live mode', bill.mode === 'live', bill.mode === 'live' ? 'Real payments enabled' : 'Test mode – checkout works but no money moves', false);
 
   // Public URL
   const appUrl = process.env.APP_URL || 'http://127.0.0.1:4173';
   const publicUrl = !/127\.0\.0\.1|localhost/.test(appUrl);
-  add('app_url', 'Public URL set', publicUrl, publicUrl ? appUrl : 'APP_URL points at localhost — every email link will be broken for real users', true);
+  add('app_url', 'Public URL set', publicUrl, publicUrl ? appUrl : 'APP_URL points at localhost – every email link will be broken for real users', true);
 
   // Data
   const total = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open'").get().n;
@@ -1428,12 +1428,12 @@ route('GET', /^\/api\/launch$/, async (req, res) => {
 
   // LLM
   const llm = !!(process.env.LLM_ENDPOINT && process.env.LLM_API_KEY);
-  add('llm', 'AI copilot is generative', llm, llm ? `Using ${process.env.LLM_MODEL || 'configured model'}` : 'Deterministic composer — honest, but not generative', false);
+  add('llm', 'AI copilot is generative', llm, llm ? `Using ${process.env.LLM_MODEL || 'configured model'}` : 'Deterministic composer – honest, but not generative', false);
 
   // Legal / trust
   add('unsubscribe', 'Unsubscribe links work', true, 'Signed HMAC links, tested', false);
   const legalOk = fs.existsSync(path.join(PUBLIC, 'legal', 'privacy.html')) && fs.existsSync(path.join(PUBLIC, 'legal', 'terms.html'));
-  add('legal', 'Privacy and terms published', legalOk, legalOk ? '/legal/privacy.html and /legal/terms.html are live' : 'Legal pages missing — needed before collecting real CVs in the EU', true);
+  add('legal', 'Privacy and terms published', legalOk, legalOk ? '/legal/privacy.html and /legal/terms.html are live' : 'Legal pages missing – needed before collecting real CVs in the EU', true);
 
   const blocking = checks.filter((c) => c.blocking && !c.ok);
   json(res, 200, {
@@ -1463,7 +1463,7 @@ route('GET', /^\/api\/opportunities\/lifecycle$/, async (req, res) => {
   json(res, 200, {
     total, fresh7, stale, noComp, ghost, tracked,
     health: total ? Math.round(((total - ghost) / total) * 100) : 0,
-    note: 'Ghost listings — no compensation and a thin description — are excluded from your feed automatically. This is what was filtered.',
+    note: 'Ghost listings – no compensation and a thin description – are excluded from your feed automatically. This is what was filtered.',
   });
 });
 
@@ -1589,7 +1589,7 @@ route('GET', /^\/api\/habit$/, async (req, res) => {
     else break;
   }
 
-  // What changed since the user last looked — the only reason a daily return is worth it.
+  // What changed since the user last looked – the only reason a daily return is worth it.
   const lastSeen = db.prepare("SELECT MAX(created_at) t FROM events WHERE user_id=? AND name='feed.viewed'").get(uid)?.t;
   const sinceClause = lastSeen ? `AND o.posted_at > datetime(?, '-1 day')` : '';
   const params = lastSeen ? [uid, lastSeen] : [uid];
@@ -1615,7 +1615,7 @@ route('GET', /^\/api\/habit$/, async (req, res) => {
     weeklyTarget,
     onTrack: appliedThisWeek >= weeklyTarget,
     message: appliedThisWeek >= weeklyTarget
-      ? `${appliedThisWeek} applications this week — you are doing the part most people skip.`
+      ? `${appliedThisWeek} applications this week – you are doing the part most people skip.`
       : `${appliedThisWeek} of ${weeklyTarget} applications this week. The score moves when you move.`,
   });
 });
@@ -1644,7 +1644,7 @@ route('POST', /^\/api\/public\/lead$/, async (req, res) => {
   AN.track(null, 'lead.captured', { role: body.role, gapPct: body.gapPct, source: body.source || 'landing' });
   log(null, 'lead.captured', 'lead', id, { source: body.source || 'landing' });
 
-  // The user may already have an account under this email — link it.
+  // The user may already have an account under this email – link it.
   const user = db.prepare('SELECT id FROM users WHERE email=?').get(email);
   if (user) db.prepare('UPDATE leads SET converted_user_id=? WHERE id=?').run(user.id, id);
 
@@ -1842,7 +1842,7 @@ route('POST', /^\/api\/billing\/cancel$/, async (req, res) => {
   json(res, 200, { ok: true, plan: 'free' });
 });
 
-// Verify the configured prices against Stripe — catches mismatches before a customer does.
+// Verify the configured prices against Stripe – catches mismatches before a customer does.
 route('GET', /^\/api\/billing\/verify$/, async (req, res) => {
   const st = BILLING.status();
   if (st.mode !== 'test' && st.mode !== 'live') return json(res, 200, { status: st, prices: null });

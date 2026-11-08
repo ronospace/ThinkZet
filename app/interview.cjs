@@ -77,7 +77,7 @@ function buildPlan(profile, twin, opportunity, missingSkills) {
   const gapQuestions = missingSkills.slice(0, 2).map((s) => ({
     q: `This role uses ${s}, which is not yet on your profile. How would you get productive in it in the first month?`,
     probe: 'Learning velocity and honesty about gaps.',
-    evidence: `Name a specific comparable you have learned fast — and say plainly that ${s} is new.`,
+    evidence: `Name a specific comparable you have learned fast – and say plainly that ${s} is new.`,
   }));
 
   const roleQuestions = [...familyQs.slice(0, 3), ...gapQuestions, ...BEHAVIOURAL.slice(0, 2)];
@@ -86,8 +86,8 @@ function buildPlan(profile, twin, opportunity, missingSkills) {
     q: q.q,
     probe: q.probe,
     structure: {
-      situation: 'One sentence of context — where, when, what was at stake.',
-      task: 'What you specifically owned. Not the team — you.',
+      situation: 'One sentence of context – where, when, what was at stake.',
+      task: 'What you specifically owned. Not the team – you.',
       action: 'Two or three decisions you made, in order.',
       result: 'A number. If there is no number, say what changed instead.',
     },
@@ -107,7 +107,7 @@ function buildPlan(profile, twin, opportunity, missingSkills) {
     `What is the hardest part of the ${opportunity.role_family ? opportunity.role_family.replace(/_/g, ' ') : 'team'} problem right now?`,
     `How are technical decisions made, and who decides?`,
     `What would make you regret this hire in a year?`,
-    `How is compensation reviewed — and against what?`,
+    `How is compensation reviewed – and against what?`,
   ];
 
   return {
@@ -119,7 +119,7 @@ function buildPlan(profile, twin, opportunity, missingSkills) {
     questions: roleQuestions.map(star),
     questionsToAsk,
     prepPlan,
-    note: 'Questions are derived from the posting\'s role family and your own skill gaps. Every scaffold asks you to use something you actually did — none of them hand you a fabricated answer.',
+    note: 'Questions are derived from the posting\'s role family and your own skill gaps. Every scaffold asks you to use something you actually did – none of them hand you a fabricated answer.',
   };
 }
 
