@@ -13,6 +13,7 @@ Last updated: 9 November 2026.
 | ID | Cat | Task | Owner | Status | Next action |
 |---|---|---|---|---|---|
 | PAY-01 | PAY | Real €19.99 payment test, then refund | You | OPEN | Pay with own card on thinkzet.com, confirm Pro unlocks and Stripe shows webhook 200, refund in Stripe |
+| EML-03 | EML | Set `EMAIL_FROM=ThinkZet <onboarding@resend.dev>` in Railway until the domain is verified (current value uses the unverified thinkzet.com and every send fails) | You | OPEN | Railway Variables, then Deploy |
 | EML-01 | EML | Verify thinkzet.com in Resend | You | OPEN | Resend → Domains → Add `thinkzet.com`, send screenshot of DNS records; then add to Cloudflare |
 | EML-02 | EML | Switch sender to `ThinkZet <brief@thinkzet.com>` | Us | BLOCKED | Needs EML-01 |
 | AUTH-01 | AUTH | Google sign-in credentials | You | OPEN | Create OAuth client, redirect `https://thinkzet.com/api/auth/google/callback`, set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in Railway |
@@ -54,6 +55,7 @@ Last updated: 9 November 2026.
 
 ## C. Change log
 
+- 9 Nov 2026 – EML-03: sign-in failing because EMAIL_FROM uses an unverified domain; app now logs the real reason.
 - 9 Nov 2026 – UI-06 logo simplified, widths capped.
 - 9 Nov 2026 – UI-04 desktop layout and UI-05 brand refresh.
 - 9 Nov 2026 – AUTH-04: provider buttons always visible, Soon tag until configured.

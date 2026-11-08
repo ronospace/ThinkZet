@@ -176,7 +176,15 @@ route('POST', /^\/api\/auth\/request$/, async (req, res) => {
         html: `<div style="font-family:system-ui,sans-serif;max-width:420px;margin:0 auto;padding:24px;color:#1a1530"><p style="font-size:15px;margin:0 0 14px">Your ThinkZet sign-in code</p><p style="font-size:34px;font-weight:700;letter-spacing:.3em;margin:0 0 14px">${r.code}</p><p style="font-size:13px;color:#6b6585;margin:0">It expires in 10 minutes. If you did not ask for it, ignore this email.</p></div>`,
       });
       const d = await MAIL.deliver(db.prepare('SELECT * FROM email_queue WHERE id=?').get(id));
-      if (!d.ok) return json(res, 502, { error: 'We could not send the code to that address. Please try again shortly.' });
+      if (!d.ok) {
+        // Say what actually failed in the server log, and give the user an honest message.
+        console.log(`  ! login code email failed: ${d.error}`);
+        log(null, 'auth.code_email_failed', 'user', r.email, { error: String(d.error).slice(0, 200) });
+        const unverified = /not verified|testing email|own email|verify your domain/i.test(String(d.error));
+        return json(res, 502, { error: unverified
+          ? 'Email sign-in is being set up and cannot reach this address yet. Please try again soon.'
+          : 'We could not send the code to that address. Please try again shortly.' });
+      }
       return json(res, 200, { ok: true, sentTo: r.email, expiresAt: r.expiresAt, delivered: true });
     }
     json(res, 200, { ok: true, sentTo: r.email, devCode: r.code, expiresAt: r.expiresAt });
