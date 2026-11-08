@@ -1,22 +1,16 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 160" width="640" height="160" role="img" aria-label="ThinkZet">
   <defs>
-    <linearGradient id="lb" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#25213D"/>
-      <stop offset="1" stop-color="#382541"/>
-    </linearGradient>
-    <linearGradient id="lm" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#A78BFA"/>
-      <stop offset="0.55" stop-color="#E9A6D0"/>
-      <stop offset="1" stop-color="#8DBBFF"/>
-    </linearGradient>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7C4DF0"/><stop offset=".5" stop-color="#A47AF5"/><stop offset="1" stop-color="#E88FC6"/></linearGradient>
+    <radialGradient id="h" cx=".22" cy=".12" r=".85"><stop offset="0" stop-color="#fff" stop-opacity=".46"/><stop offset=".6" stop-color="#fff" stop-opacity=".06"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="w" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#7C4DF0"/><stop offset="1" stop-color="#D96AAE"/></linearGradient>
   </defs>
-
-  <rect x="8" y="24" width="112" height="112" rx="26" fill="url(#lb)"/>
-  <rect x="8.75" y="24.75" width="110.5" height="110.5" rx="25.25" fill="none" stroke="#45405B" stroke-width="1.5"/>
-  <path d="M40 62 H88 L40 106 H88" fill="none" stroke="url(#lm)" stroke-width="10"
-        stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="88" cy="62" r="5.5" fill="#F5F2FC"/>
-
-  <text x="144" y="94" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif"
-        font-size="46" font-weight="700" letter-spacing="-1.4" fill="#F5F2FC">ThinkZet</text>
+  <g transform="translate(8 24) scale(.5833)">
+    <rect width="192" height="192" rx="44" fill="url(#g)"/>
+    <rect width="192" height="192" rx="44" fill="url(#h)"/>
+    <path d="M56 62 H136 L56 130 H136" transform="translate(10 12)" fill="none" stroke="#fff" stroke-opacity=".26" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M56 62 H136 L56 130 H136" fill="none" stroke="#fff" stroke-opacity=".97" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="136" cy="62" r="19" fill="#fff" fill-opacity=".2"/>
+    <circle cx="136" cy="62" r="9.5" fill="#fff"/>
+  </g>
+  <text x="144" y="94" font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Helvetica,Arial,sans-serif" font-size="46" font-weight="780" letter-spacing="-1.4"><tspan fill="#1B1530">Think</tspan><tspan fill="url(#w)">Zet</tspan></text>
 </svg>

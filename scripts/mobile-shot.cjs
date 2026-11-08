@@ -54,7 +54,7 @@ function cdp(port, path, method = 'GET') {
     sock.send(JSON.stringify({ id: myId, method, params }));
   });
   await new Promise((r) => sock.addEventListener('open', r));
-  await send('Emulation.setDeviceMetricsOverride', { width: W, height: H, deviceScaleFactor: 2, mobile: true });
+  await send('Emulation.setDeviceMetricsOverride', { width: W, height: H, deviceScaleFactor: process.env.DESKTOP ? 1 : 2, mobile: !process.env.DESKTOP });
   await send('Page.enable');
   await send('Page.navigate', { url: URL_ });
   await new Promise((r) => setTimeout(r, 3500));
@@ -69,6 +69,9 @@ function cdp(port, path, method = 'GET') {
   require('node:fs').writeFileSync(OUT, Buffer.from(shot.data, 'base64'));
   if (process.env.WIDE) { const w = await send('Runtime.evaluate', { returnByValue: true, expression: "JSON.stringify([...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth+2).slice(0,8).map(e=>e.tagName+'.'+e.className+' w='+Math.round(e.getBoundingClientRect().width)))" }); console.log('wide', w.result.value); }
   if (process.env.TOPBAR) { const w = await send('Runtime.evaluate', { returnByValue: true, expression: "(()=>{const t=document.querySelector('.topbar');const r=e=>{const b=document.querySelector(e).getBoundingClientRect();return Math.round(b.left)+'-'+Math.round(b.right)};return JSON.stringify({vw:innerWidth,topbar:r('.topbar'),sw:t.scrollWidth,cw:t.clientWidth,h1:r('#view-title'),pill:r('#live-pill'),cmdk:r('#cmdk'),theme:r('#theme-btn'),more:r('#tb-more'),pad:getComputedStyle(t).paddingRight,main:r('main')})})()" }); console.log('topbar', w.result.value); }
+  if (process.env.LAYOUT) { const w = await send('Runtime.evaluate', { returnByValue: true, expression: "JSON.stringify(['.land-nav-wrap','.land-nav','.land-brand','.land-nav-links','.land-nav > div:last-child','.land-wrap','.hero-sec','.check','.land-footer','.foot-legal','.view','.topbar'].map(q=>{const e=document.querySelector(q);if(!e||!e.offsetWidth)return q+': -';const b=e.getBoundingClientRect();return q+': '+Math.round(b.left)+'..'+Math.round(b.right)+' w='+Math.round(b.width)}))" }); console.log('layout', w.result.value); }
+  if (process.env.NAVCSS) { const w = await send('Runtime.evaluate', { returnByValue: true, expression: "(()=>{const n=document.querySelector('.land-nav');const c=getComputedStyle(n);const b=document.querySelector('.land-brand').getBoundingClientRect();const m=document.querySelector('.land-brand .mark');return JSON.stringify({pad:c.padding,max:c.maxWidth,margin:c.margin,brandLeft:Math.round(b.left),markLeft:Math.round(m.getBoundingClientRect().left),scrollY:scrollY})})()" }); console.log('navcss', w.result.value); }
+  if (process.env.BRAND) { const w = await send('Runtime.evaluate', { returnByValue: true, expression: "(()=>{const q=(e)=>document.querySelector(e);const m=q('.land-brand .mark');const u=m.querySelector('use');const sym=document.getElementById('tz-mark');const wm=q('.land-brand .wm i');const cs=getComputedStyle(wm);const r=m.getBoundingClientRect();return JSON.stringify({markPx:Math.round(r.width)+'x'+Math.round(r.height),useResolves:!!sym&&u.getAttribute('href')==='#tz-mark',symbolShapes:sym.children.length,wordmarkGradient:cs.backgroundImage.slice(0,40),wordmarkTransparentText:cs.webkitTextFillColor,railMark:!!q('.logo .mark use'),railWordmark:q('.logo .wm')?.textContent,oldTSquare:!!document.querySelector('.logo .mark:not(svg)')})})()" }); console.log('brand', w.result.value); }
   const metrics = await send('Runtime.evaluate', { expression: "JSON.stringify({docW:document.documentElement.scrollWidth,winW:innerWidth})", returnByValue: true });
   console.log('metrics', metrics.result.value);
   console.log('saved', OUT);

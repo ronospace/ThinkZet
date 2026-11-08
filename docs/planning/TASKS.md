@@ -24,6 +24,8 @@ Last updated: 9 November 2026.
 | DEP-02 | DEP | Delete spare Railway project `feisty-optimism`; switch Railway Agent off | You | OPEN | Railway project settings |
 | DEP-03 | DEP | Rename Railway service from MirrorSpread to ThinkZet | You | OPEN | Service settings |
 | REPO-01 | REPO | Rename GitHub repo `MirrorSpread` to `ThinkZet`, update clone URLs in `deploy/*` | You, then Us | OPEN | GitHub → Settings → Rename; then Us updates URLs |
+| UI-04 | UI | Desktop layout: shared 1200px container, hero as two columns, FAQ as two columns, one-line footer legal | Us | DONE | measured: nav, page and footer share the same left and right edges |
+| UI-05 | UI | Brand: translucent gradient mark with echo and halo, two-tone wordmark, one shared symbol, favicon and touch icon | Us | DONE | computed styles verified in both themes |
 | UI-01 | UI | Radar list: 1 column on phones, 2 on tablets, 3 on wide screens, tinted by score | Us | OPEN | Build and measure at 393, 768, 1280 |
 | UI-02 | UI | Structure audit of remaining screens: landing lower sections, pricing, Brief, Tracker, Negotiation, Market Pulse, Onboarding | Us | IN PROGRESS | Screenshot each at 393 and fix paragraph-style blocks |
 | UI-03 | UI | Light-mode audit of the 90 remaining hardcoded colours | Us | OPEN | Tokenise or confirm each |
@@ -50,5 +52,6 @@ Last updated: 9 November 2026.
 
 ## C. Change log
 
+- 9 Nov 2026 – UI-04 desktop layout and UI-05 brand refresh.
 - 9 Nov 2026 – AUTH-04: provider buttons always visible, Soon tag until configured.
 - 9 Nov 2026 – Register created. Engineering rules added in `docs/ENGINEERING.md`.
