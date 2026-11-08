@@ -1,8 +1,8 @@
 # MirrorSpread — Status & Completion Report
 
 **Last updated:** 7 November 2026
-**Tests:** 49 passing, 0 failing (`node scripts/check.cjs`)
-**Commits:** 26
+**Tests:** 57 API + 5 browser routes passing, 0 failing
+**Commits:** 61
 
 ---
 
@@ -38,6 +38,14 @@
 | Programmatic SEO | ✅ 100% | 176 URLs + sitemap from live corpus |
 | Public share pages | ✅ 100% | `/s/<id>` |
 | Auth + sessions | ✅ 100% | Passwordless, HttpOnly cookies |
+| Design system | ✅ 100% | Semantic tokens, three-mode appearance, type and spacing scales |
+| Light mode | ✅ 100% | Tokenised chrome, no dark artefacts, WCAG-safe headline |
+| Landing page | ✅ 100% | Nav, hero, check, how-it-works, nine capabilities, pricing, FAQ, footer |
+| Brand phase 2 | ✅ 100% | Tagline placed per audit Option C, feature names aligned |
+| Collapsible sidebar | ✅ 100% | Persisted state |
+| Skeletons | ✅ 100% | Shimmer matching final layout |
+| Charts | ✅ 100% | KPI sparklines, percentile distribution strips |
+| Scroll containment | ✅ 100% | min-height:0 on grid children, 100dvh shell |
 
 ---
 
