@@ -1,88 +1,73 @@
-# Naming — the constraint and the candidates
+# Naming - candidates checked against real DNS
 
-`MirrorSpread` is taken. That is not a setback; it is a chance to pick a better name than the
-obvious one. **One command does the rename when we land:** `node scripts/rebrand.cjs "New Name"`
-— it rewrites the brand across all 28 text files, including the browser storage keys, and
-refuses to run with the current name.
+**Checked:** 8 November 2026, live NS lookups, `.com` only.
+**Method:** a domain with no NS record is unregistered. Everything else is taken.
 
 ---
 
-## The naming test (apply to every candidate)
+## The constraint that decides this
 
-1. **One syllable or two.** People say it in a Discord message. "MirrorSpread" is three and clumsy.
-2. **It implies a number.** The product's promise is *"you are X% below market"*. The name
-   should hint at measurement, not at job hunting.
-3. **Not a job board.** Any name containing "career", "job", "hire", "talent", "work" or "role"
-   signals exactly the category we are refusing to be in.
-4. **.com available or a clean alternative** (`getX`, `X.app`, `useX`).
-5. **Sayable by a non-native English speaker.** The wedge audience is global.
-6. **Does not sound like a fintech.** We are not lending money (yet).
+MirrorSpread is a **good product name** and a **poor search name**. It is two common
+words joined, so search engines will split it, and "mirror spread" already means something
+in optics and in trading. That is a real cost for a product that must be found by people who
+have never heard of it.
 
----
-
-## Shortlist
-
-### Category A — measurement (fits the core promise best)
-
-| Name | Why it works | Risk |
-|---|---|---|
-| **Ledger** | A record of what you are worth. Precise, financial, memorable. | Heavy fintech association; likely taken |
-| **Benchmark** | Literally what we produce. | Generic; hard to own |
-| **Spread** | The gap between your rate and the market — the product in one word. | Ambiguous outside finance |
-| **Basis** | "Basis points" — the unit of a rate gap. Short, calm, ownable. | Abstract |
-| **Delta** | The change, the gap, the difference. | Airlines; saturated |
-
-### Category B — elevation (fits the outcome)
-
-| Name | Why it works | Risk |
-|---|---|---|
-| **Rung** | The next step on a ladder. One syllable, human. | Might read as a tool for climbing, not measuring |
-| **Ascent** | Growth, movement, direction. | Consulting-firm energy |
-| **Lift** | You lift your rate. You lift your ceiling. Warm and physical. | Generic; possibly taken |
-| **Gain** | The outcome, plainly. | Too broad to own |
-
-### Category C — intelligence (fits the positioning)
-
-| Name | Why it works | Risk |
-|---|---|---|
-| **Signal** | We separate the signal from the noise of listings. | Saturated (Signal messenger, etc.) |
-| **Terminal** | The Bloomberg comparison, said out loud. Bold. | Developer-coded; may read as intimidating |
-| **Vantage** | The higher view. Neutral, confident. | Corporate |
-| **Compass** | Direction, not listings. Warm and legible. | Very common |
-| **Meridian** | The highest point; a line of reference. | Long, slightly cold |
-
-### Category D — invented (safest to own)
-
-| Name | Why it works | Risk |
-|---|---|---|
-| **Rateline** | Rate + baseline. Descriptive and ownable. | Slightly invented-sounding |
-| **Opened** | Every opportunity, opened. | Abstract |
-| **Leapwise** | Direction plus intelligence. | Reads as a consultancy |
-| **Valuewise** | What you are worth, known. | Close to existing fintech names |
+The domain test below is the tie-breaker. Almost every single-word name in this category is
+gone.
 
 ---
 
-## My recommendation
+## Results
 
-**Shortlist three and test them on ten people in the target audience before committing.**
+### Available
 
-My top three, in order:
+| Name | .com | Why it could work | Risk |
+|---|---|---|---|
+| **MirrorSpread** | ✅ free | Already the brand, already in the code, describes the product | Weak search distinctiveness |
+| **EarnMore** | ✅ free | Literally the outcome. Memorable, plain-spoken | Generic; hard to trademark |
+| **SalaryProof** | ✅ free | "Proof" is the differentiator: evidence, not opinion | Narrow - sounds like pay data only |
+| **Prospect** | ✅ free | Elegant, one word, implies future value | Very broad, crowded meaning |
 
-1. **Ledger** — if the domain is available in any form. It says *record of worth*, it is one
-   word, it is financial without being a bank, and it makes the product's promise obvious:
-   *"check your ledger."*
-2. **Rung** — if Ledger is gone. One syllable, human, and it frames the product as progress
-   rather than search. *"What's your next rung?"*
-3. **Spread** — if we want to lean hard into the rate-gap wedge. It is literally the thing we
-   measure, and it is the most distinctive of the three.
+### Taken (the ones worth knowing are gone)
+
+`rategap` `ratelift` `trueworth` `payline` `spread` `rung` `basis` `ledger` `vantage`
+`meridian` `prism` `facet` `gauge` `parity` `fulcrum` `ascent` `stride` `cadence` `meter`
+`scale` `margin` `lever` `pivot` `axis` `vertex` `nexus` `lattice` `atlas` `horizon`
+`vista` `beacon` `lumen` `aperture` `orbit` `vector` `apex` `summit` `crest` `peak`
+`myrate` `myworth` `truepay` `paygap` `worthgap` `uprate` `ratewise` `worthwise` `paywise`
+`ratify` `rateproof` `payproof` `ratemetrics` `paymetrics`
+
+That is 56 of 60 checked. The category is mined out.
 
 ---
 
-## What to check before committing
+## Recommendation
 
-- Domain: `.com`, `.app`, `.ai`, or a clean `getX` / `useX`
-- Trademark: a basic search in the EU and US for the same class (software, HR)
-- Social handles: X, LinkedIn, GitHub
-- Say it out loud ten times. If it feels awkward on the fourth, it is the wrong name.
+**Keep MirrorSpread. Buy mirrorspread.com today.**
 
-Then: `node scripts/rebrand.cjs "Ledger"` and it is done everywhere.
+Three reasons:
+
+1. **The domain is free.** In a category where 56 of 60 candidates are taken, a clean
+   `.com` matching your existing brand is the strongest asset on this list.
+2. **The cost of switching is real and the benefit is speculative.** A rename touches 32
+   files, the email sender, the Stripe product, the GitHub repo and every document. A new
+   name buys a marginal search improvement and costs a day of work plus a re-verification
+   of everything that currently passes.
+3. **Search distinctiveness is fixable without a rename.** The way to own "mirrorspread" is
+   to publish the data nobody else has - salary benchmarks by role and country - so the
+   brand becomes the answer rather than a keyword. That work is already built.
+
+**If you want a rename anyway**, `EarnMore` is the only available candidate that states the
+outcome in plain words. It is weaker on trademark and stronger on instant comprehension.
+
+---
+
+## What to do next, in order
+
+1. Buy `mirrorspread.com` (~€12/year, Cloudflare Registrar or Namecheap).
+2. Also take `.ai` and `.app` if they are cheap - defensive, not strategic.
+3. Point it at the app, verify it with Resend, and create the permanent Stripe webhook.
+4. Only then reconsider the name, with traffic data rather than opinion.
+
+Do not rename before launch. Launch first, then let real usage tell you whether the name is
+a problem. It probably is not.
