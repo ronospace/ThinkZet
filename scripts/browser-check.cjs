@@ -6,6 +6,9 @@ const { execFileSync } = require('node:child_process');
 
 const BASE = process.env.BASE || 'http://127.0.0.1:4173';
 const ROUTES = ['/', '/?app=1', '/legal/privacy.html', '/legal/terms.html', '/sitemap.xml'];
+// Overflow must be checked at a phone width, not only desktop. This is the class of bug
+// that shipped once already and was only caught by looking at a real device.
+const WIDTHS = [1280, 390];
 const errors = [];
 let pass = 0, fail = 0;
 
@@ -14,6 +17,7 @@ function ab(...args) {
 }
 
 (async () => {
+  for (const width of WIDTHS) {
   for (const route of ROUTES) {
     try {
       ab('open', BASE + route);
@@ -30,12 +34,13 @@ function ab(...args) {
         if (!/error/.test(level) && !/error/i.test(t)) return false;
         return !/favicon|net::ERR_ABORTED|Failed to load resource|ERR_CONNECTION/i.test(t);
       });
-      if (real.length) { fail++; errors.push(`${route} -> ${real.map((e) => e.text || e.message).join(' | ').slice(0, 220)}`); }
+      if (real.length) { fail++; errors.push(`${width}px ${route} -> ${real.map((e) => e.text || e.message).join(' | ').slice(0, 220)}`); }
       else pass++;
     } catch (e) {
       fail++; errors.push(`${route} -> ${String(e.message || e).slice(0, 200)}`);
     }
   }
-  console.log(`\n${pass} routes clean, ${fail} with console errors`);
+  }
+  console.log(`\n${pass} route/width combinations clean, ${fail} with console errors`);
   if (errors.length) { console.log('\nFailures:'); errors.forEach((e) => console.log('  - ' + e)); process.exitCode = 1; }
 })();
