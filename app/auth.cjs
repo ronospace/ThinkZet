@@ -55,7 +55,9 @@ function sessionForEmail(clean, displayName) {
   let user = db.prepare('SELECT * FROM users WHERE email=?').get(clean);
   if (!user) {
     const id = crypto.randomUUID();
-    const name = (displayName && String(displayName).trim().slice(0, 80)) || clean.split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    // Never derive a name from the email handle: 'ronnohjeff' cannot be split into a first name.
+    // Google and Apple supply a real name; email sign-in asks for it during onboarding.
+    const name = (displayName && String(displayName).trim().slice(0, 80)) || null;
     db.prepare('INSERT INTO users (id,email,name) VALUES (?,?,?)').run(id, clean, name);
     user = db.prepare('SELECT * FROM users WHERE id=?').get(id);
   }

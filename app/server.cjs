@@ -236,10 +236,31 @@ route('POST', /^\/api\/auth\/apple\/callback$/, async (req, res) => {
   return oauthCallback(req, res, 'apple', Object.fromEntries(new URLSearchParams(raw)));
 });
 
+route('POST', /^\/api\/me\/name$/, async (req, res) => {
+  const u = AUTH.currentUser(req);
+  if (!u) return json(res, 401, { error: 'Sign in first' });
+  const body = await readBody(req);
+  const name = String(body.name || '').replace(/\s+/g, ' ').trim().slice(0, 80);
+  if (name.length < 2 || /@|https?:|\d{3,}/.test(name)) return json(res, 400, { error: 'Enter your name' });
+  db.prepare('UPDATE users SET name=? WHERE id=?').run(name, u.id);
+  json(res, 200, { ok: true, name });
+});
+
 route('POST', /^\/api\/auth\/logout$/, async (req, res) => {
   AUTH.logout(req, res);
   json(res, 200, { ok: true });
 });
+
+// One-time cleanup: earlier versions guessed a name from the email handle ('ronnohjeff' became
+// 'Ronnohjeff'). That is not a name. Clear those so the user is asked for a real one.
+(function clearEmailDerivedNames() {
+  const derive = (email) => String(email).split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+  let n = 0;
+  for (const u of db.prepare("SELECT id,email,name FROM users WHERE name IS NOT NULL AND status!='deleted'").all()) {
+    if (u.name === derive(u.email)) { db.prepare('UPDATE users SET name=NULL WHERE id=?').run(u.id); n++; }
+  }
+  if (n) console.log(`  cleared ${n} email-derived name(s)`);
+})();
 
 route('GET', /^\/api\/auth\/me$/, async (req, res) => {
   const u = AUTH.currentUser(req);
@@ -1277,7 +1298,7 @@ const SEQUENCE = [
 ];
 
 function sequenceEmail({ user, key, ctx }) {
-  const name = (user.name || 'there').split(' ')[0];
+  const name = (user.name || '').trim().split(' ')[0] || 'there';
   const app = MAIL.CONFIG.appUrl + '/?app=1';
   const unsub = `${MAIL.CONFIG.appUrl}/unsubscribe/${user.id}/${MAIL.unsubscribeToken(user.id)}`;
   const gapLine = ctx.rateGapPct != null && ctx.rateGapPct > 3

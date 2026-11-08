@@ -139,7 +139,7 @@ const money = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currenc
 
 function briefEmail({ user, brief, rates, scores, prefs }) {
   const unsub = `${CONFIG.appUrl}/unsubscribe/${user.id}/${unsubscribeToken(user.id)}`;
-  const name = (user.name || 'there').split(' ')[0];
+  const name = (user.name || '').trim().split(' ')[0] || 'there';
   const lines = [];
   lines.push(`${brief.headline}`);
   lines.push('');

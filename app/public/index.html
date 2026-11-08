@@ -299,8 +299,8 @@ textarea.cv:focus{border-color:var(--accent2)}
 .kpi-spark{margin:12px calc(var(--sp-4) * -1) 0}
 .kpi-delta{display:flex;align-items:center;gap:7px;margin-top:7px;flex-wrap:wrap}
 .delta{display:inline-flex;align-items:center;gap:3px;font-size:var(--text-2xs);font-weight:650;padding:2px 7px;border-radius:999px;font-variant-numeric:tabular-nums}
-.delta.up{background:rgba(56,201,138,.14);color:var(--good)}
-.delta.down{background:rgba(240,86,102,.14);color:var(--bad)}
+.delta.up{background:color-mix(in srgb,var(--good) 14%,transparent);color:var(--good)}
+.delta.down{background:color-mix(in srgb,var(--bad) 13%,transparent);color:var(--bad)}
 .delta.flat{background:var(--panel2);color:var(--muted)}
 html[data-theme="light"] .rate-gap{
   --tone-ink:#2D1B40;--tone-kicker:#7C3AED;
@@ -323,9 +323,7 @@ html[data-theme="light"] pre{background:var(--panel3)}
 html[data-theme="light"] .toast{background:var(--panel3);border-color:var(--panel3);color:var(--ink)}
 html[data-theme="light"] .msg.user{background:var(--accent-soft);border-color:var(--line2)}
 html[data-theme="light"] .msg.bot{background:#fff;border-color:var(--line)}
-html[data-theme="light"] .delta.up{background:var(--accent-soft)}
-html[data-theme="light"] .delta.down{background:var(--accent-soft)}
-html[data-theme="light"] .delta.flat{background:#f1f4f9}
+html[data-theme="light"] .delta.flat{background:var(--panel2)}
 .kpi:hover{border-color:var(--line2);box-shadow:var(--shadow);transform:translateY(-1px)}
 .kpi-k{font-size:var(--text-2xs);letter-spacing:.11em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .kpi-v{font-size:var(--text-2xl);font-weight:720;letter-spacing:var(--tracking-tighter);line-height:1.15;margin-top:6px}
@@ -625,8 +623,9 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 /* Centred hero: headline, one line, one button. Everything else waits below. */
 .hero-sec{display:flex;flex-direction:column}
 .hero-sec .hero-copy{order:0;text-align:center;display:flex;flex-direction:column;align-items:center}
-.hero-sec .check{order:1}
-.hero-sec .proof{order:2}
+.hero-sec .story{order:1}
+.hero-sec .check{order:2}
+.hero-sec .proof{order:3}
 .hero-copy .land-sub{margin:20px auto 0;max-width:none;font-size:19px;color:var(--ink2)}
 .hero-copy .land-cta{justify-content:center;margin-top:28px}
 @media(min-width:1024px){
@@ -655,6 +654,19 @@ html[data-theme="light"] .wm i{background-image:linear-gradient(100deg,var(--acc
 .logo b{font-size:16px}
 .shell.rail-collapsed .logo-text{display:none}
 @media(min-width:901px){.topbar{padding-left:max(28px,calc((100% - 1120px)/2 + 28px));padding-right:max(28px,calc((100% - 1120px)/2 + 28px))}}
+
+/* ---------- story strip ---------- */
+.land-kicker i{width:3px;height:3px;border-radius:50%;background:currentColor;opacity:.55;display:inline-block}
+.hero-copy .land-kicker{margin-bottom:6px}
+.hero-copy .land-sub{max-width:560px;text-wrap:balance}
+.story{margin-top:var(--sp-12);text-align:center}
+.story-beats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-3);max-width:920px;margin:0 auto}
+.story-beats p{margin:0;padding:18px 18px 20px;border:1px solid var(--line);border-radius:var(--radius);background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 9%,var(--panel)),var(--panel));font-size:var(--text-md);font-weight:600;letter-spacing:-.01em;line-height:1.4;color:var(--ink);text-align:left}
+.story-beats p span{display:block;margin-bottom:10px;font-size:var(--text-2xs);font-weight:700;letter-spacing:.14em;color:var(--accent);opacity:.7}
+.story-beats p:nth-child(2){background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 6%,var(--panel)),var(--panel))}
+.story-beats p:nth-child(3){background:linear-gradient(180deg,color-mix(in srgb,var(--rose) 11%,var(--panel)),var(--panel))}
+.story-close{max-width:560px;margin:var(--sp-6) auto 0;color:var(--ink2);font-size:var(--text-md);line-height:1.6;text-wrap:balance}
+@media(max-width:760px){.story{margin-top:var(--sp-8)}.story-beats{grid-template-columns:1fr}.story-beats p{padding:14px 16px}.story-beats p span{display:inline;margin:0 10px 0 0}}
 </style>
 </head>
 <body>
@@ -691,11 +703,20 @@ html[data-theme="light"] .wm i{background-image:linear-gradient(100deg,var(--acc
   <div class="land-wrap">
     <section class="hero-sec">
       <div class="hero-copy">
+      <span class="land-kicker">Career intelligence <i aria-hidden="true"></i> Free to check</span>
       <h1 class="land-h1">The market has been<br/><span class="accent">pricing you without you.</span></h1>
-      <p class="land-sub">One profile, every opportunity.</p>
+      <p class="land-sub">Somewhere out there, a salary band exists with your name on it.</p>
       <div class="land-cta">
         <a class="btn" href="#check">Check my market value</a>
       </div>
+      </div>
+      <div class="story">
+        <div class="story-beats">
+          <p><span>01</span>Your employer knows it.</p>
+          <p><span>02</span>The recruiter who called last month knew it.</p>
+          <p><span>03</span>You have never seen it.</p>
+        </div>
+        <p class="story-close">ThinkZet reads live postings and shows you the number, then every opportunity that pays it.</p>
       </div>
       <section class="check" id="check">
       <h2>What should you be earning?</h2>
@@ -1300,7 +1321,7 @@ async function renderAuth() {
   $('#auth-verify').onclick = async () => {
     const r = await post('/api/auth/verify', { email: $('#auth-email').value.trim(), code: $('#auth-code').value.trim() });
     if (r.error) return toast(r.error);
-    toast(`Welcome, ${r.user.name}`);
+    toast(r.user.name ? `Welcome, ${r.user.name.split(' ')[0]}` : 'Welcome');
     await boot();
     go(r.hasProfile ? 'radar' : 'onboard');
   };
@@ -1318,10 +1339,12 @@ function renderOnboarding() {
 
   const stepDots = [1, 2, 3].map((n) => `<span style="width:${n === D.step ? 26 : 8}px;height:8px;border-radius:4px;background:${n <= D.step ? 'var(--accent)' : 'var(--line2)'};transition:.25s"></span>`).join('');
 
+  const hasName = !!(STATE.userRecord && STATE.userRecord.name && STATE.userRecord.name.trim());
   const stepOne = `
     <p class="lead">What do you do?</p>
     <p class="sub">This is what everything else is scored against.</p>
-    <div class="field"><label>Your role</label><input id="ob-role" placeholder="e.g. Senior Data Scientist" value="${esc(D.role || '')}" autofocus/></div>
+    ${hasName ? '' : '<div class="field"><label>Your name</label><input id="ob-name" placeholder="First and last name" autocomplete="name" autofocus/></div>'}
+    <div class="field"><label>Your role</label><input id="ob-role" placeholder="e.g. Senior Data Scientist" value="${esc(D.role || '')}" /></div>
     <div class="form-grid">
       <div class="field"><label>Years of experience</label><input id="ob-years" type="number" min="0" max="45" placeholder="8" value="${D.years ?? ''}"/></div>
       <div class="field"><label>Country</label>
@@ -1407,6 +1430,12 @@ function renderOnboarding() {
     $('#ob-next').onclick = async () => {
       const role = $('#ob-role').value.trim();
       const years = $('#ob-years').value;
+      const nm = $('#ob-name');
+      if (nm) {
+        const nr = await post('/api/me/name', { name: nm.value });
+        if (nr.error) return toast(nr.error);
+        STATE.userRecord.name = nr.name; if (STATE.user) STATE.user.name = nr.name;
+      }
       if (!role) return toast('What is your role?');
       if (years === '') return toast('How many years of experience?');
       await save(2, { role, years: Number(years), country: $('#ob-country').value, remote: $('#ob-remote').value });
@@ -1488,7 +1517,7 @@ async function renderRadar() {
   const hour = now.getHours();
   const greeting = hour < 5 ? 'Still up' : hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : hour < 23 ? 'Good evening' : 'Still up';
   const rawName = (STATE.user?.name || '').trim();
-  const firstName = rawName ? rawName.split(/\s+/)[0].replace(/^./, (c) => c.toUpperCase()) : '';
+  const firstName = rawName && !/@/.test(rawName) ? rawName.split(/\s+/)[0].replace(/^./, (c) => c.toUpperCase()) : '';
   const salutation = firstName ? `${greeting}, ${firstName}` : greeting;
 
   let planBanner = '';
@@ -1562,7 +1591,7 @@ async function renderRadar() {
       </div>
       <div class="hello-score" style="text-align:right">
         <div class="muted" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase">Highest Opportunity Score</div>
-        <div style="font-size:28px;font-weight:750;letter-spacing:-.02em;color:${scoreColor(s.topScore)[0]}">${s.topScore}<span style="font-size:14px;color:var(--muted)">/100</span></div>
+        <div style="font-size:28px;font-weight:750;letter-spacing:-.02em;color:var(--ink)">${s.topScore}<span style="font-size:14px;color:var(--muted)">/100</span></div>
       </div>
     </div>
     <div id="kpis" style="margin-bottom:14px"></div>
@@ -1651,14 +1680,14 @@ async function renderRadar() {
       };
       const series = (seed, n) => Array.from({ length: n }, (_, i) => Math.max(1, Math.round(seed * (0.55 + Math.sin(i * 1.1 + seed) * 0.22 + i * 0.05))));
       const cards = [
-        { k: 'Rate gap', v: h.rateGapPct != null ? h.rateGapPct + '%' : '–', delta: h.rateGapPct != null ? h.rateGapPct + ' pts' : 'no data', dir: h.rateGapPct > 5 ? -1 : h.rateGapPct < -5 ? 1 : 0, sub: 'vs market', tone: h.rateGapPct > 10 ? 'var(--bad)' : 'var(--good)', s: series(14, 12) },
+        { k: 'Rate gap', v: h.rateGapPct != null ? h.rateGapPct + '%' : '–', delta: h.rateGapPct != null ? h.rateGapPct + ' pts' : 'no data', dir: h.rateGapPct > 5 ? -1 : h.rateGapPct < -5 ? 1 : 0, sub: 'vs market', tone: 'var(--accent)', s: series(14, 12) },
         { k: 'New at 70+', v: h.fresh, delta: h.fresh + ' new', dir: h.fresh > 0 ? 1 : 0, sub: 'last 24h', tone: 'var(--accent)', s: series(h.fresh || 6, 12) },
         { k: 'Career score', v: h.overall != null ? h.overall : '–', delta: (h.scoreDelta > 0 ? '+' : '') + (h.scoreDelta || 0), dir: h.scoreDelta || 0, sub: 'this week', tone: 'var(--accent)', s: series(h.overall || 60, 12) },
-        { k: 'Applications', v: h.appliedThisWeek + '/' + h.weeklyTarget, delta: h.appliedThisWeek + ' sent', dir: h.appliedThisWeek > 0 ? 1 : 0, sub: 'this week', tone: h.onTrack ? 'var(--good)' : 'var(--warn)', s: series(Math.max(2, h.appliedThisWeek * 3), 12) },
+        { k: 'Applications', v: h.appliedThisWeek + '/' + h.weeklyTarget, delta: h.appliedThisWeek + ' sent', dir: h.appliedThisWeek > 0 ? 1 : 0, sub: 'this week', tone: 'var(--accent)', s: series(Math.max(2, h.appliedThisWeek * 3), 12) },
       ];
       kbox.innerHTML = `<div class="kpi-grid">${cards.map((c) => `<div class="kpi">
         <div class="kpi-k">${esc(c.k)}</div>
-        <div class="kpi-v mono" style="color:${c.tone}">${esc(String(c.v))}</div>
+        <div class="kpi-v mono">${esc(String(c.v))}</div>
         <div class="kpi-delta"><span class="delta ${c.dir > 0 ? 'up' : c.dir < 0 ? 'down' : 'flat'}">${c.dir > 0 ? '&#8599;' : c.dir < 0 ? '&#8600;' : '&#8212;'} ${esc(c.delta)}</span><span class="kpi-s">${esc(c.sub)}</span></div>
         <div class="kpi-spark">${spark(c.s, c.tone)}</div>
       </div>`).join('')}</div>`;
@@ -2998,7 +3027,7 @@ async function renderOps() {
 /* ---------------- router ---------------- */
 const VIEWS = {
   onboard: [async () => { if (!STATE.draft) { try { STATE.draft = await api('/api/onboarding/draft'); } catch (e) { STATE.draft = { step: 1 }; } } renderOnboarding(); }, 'Build your Career Twin', 'Ninety seconds to your first real number.'],
-  radar: [renderRadar, 'Opportunity Radar', 'Continuously scored against your Career Twin'],
+  radar: [renderRadar, 'Opportunity Radar', 'Scored against your Career Twin'],
   scores: [renderScores, 'Career Score', 'Eight scores, benchmarked and recomputed on every action'],
   rates: [renderRates, 'Rate Intelligence', 'What your exact profile is worth – the wedge'],
   gaps: [renderGaps, 'Skill Gaps', 'What is actually blocking your next move'],
