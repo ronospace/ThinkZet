@@ -232,6 +232,17 @@ function handleEvent(event) {
     case 'customer.subscription.deleted':
       if (userId) { setPlan(userId, 'free', { source: 'stripe', externalId: obj.id, status: 'canceled' }); return { handled: true, effect: 'downgraded to free' }; }
       return { handled: false, reason: 'no user id on subscription' };
+    case 'invoice.paid': {
+      // The invoice is the source of truth for money actually received. If a checkout event
+      // is missed or delayed, this still grants access.
+      const subId = typeof obj.subscription === 'string' ? obj.subscription : obj.subscription?.id;
+      const uid = userId || (subId ? resolveUserId({ object: 'subscription', id: subId }) : null);
+      if (!uid) return { handled: false, reason: 'no user id on paid invoice' };
+      setPlan(uid, 'pro', { cycle: 'monthly', source: 'stripe', externalId: obj.id, status: 'paid', periodEnd });
+      return { handled: true, effect: 'pro granted on paid invoice' };
+    }
+    case 'invoice.payment_action_required':
+      return { handled: true, effect: 'payment needs customer action – no change' };
     case 'invoice.payment_failed':
       if (userId) { setPlan(userId, 'free', { source: 'stripe', externalId: obj.id, status: 'past_due' }); return { handled: true, effect: 'downgraded on failed payment' }; }
       return { handled: false, reason: 'no user id on invoice' };
