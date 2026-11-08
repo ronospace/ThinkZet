@@ -90,7 +90,8 @@ async function verifyPrices() {
       };
       if (!price.active) out.problems.push(`${key} price is inactive`);
       if (price.type !== 'recurring') out.problems.push(`${key} price is not recurring`);
-      if (price.livemode) out.problems.push(`${key} price is a LIVE price while the key is test – mismatch`);
+      const keyLive = CONFIG.secretKey.startsWith('sk_live');
+      if (price.livemode !== keyLive) out.problems.push(`${key} price livemode (${price.livemode}) does not match the key mode (${keyLive ? 'live' : 'test'})`);
     } catch (e) {
       out.problems.push(`${key}: ${e.message}`);
     }
