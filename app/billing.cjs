@@ -272,7 +272,20 @@ async function reconcile() {
         results.push({ userId, action: `ok (${sub.status})` });
       }
     } catch (e) {
-      results.push({ userId, action: 'lookup failed: ' + String(e.message || e).slice(0, 80) });
+      const msg = String(e.message || e);
+      // Stripe saying "no such subscription" is not an error to retry: it means the record
+      // does not exist, so the user is not paying. Correct the entitlement instead.
+      if (/no such subscription|resource_missing/i.test(msg)) {
+        const current = db.prepare('SELECT plan FROM plan_state WHERE user_id=?').get(userId)?.plan;
+        if (current && current !== 'free') {
+          setPlan(userId, 'free', { source: 'reconcile', externalId: link.external_id, status: 'missing' });
+          results.push({ userId, action: 'downgraded (subscription not found in Stripe)' });
+        } else {
+          results.push({ userId, action: 'ok (already free)' });
+        }
+      } else {
+        results.push({ userId, action: 'lookup failed: ' + msg.slice(0, 80) });
+      }
     }
   }
   return { checked: rows.length, results };
