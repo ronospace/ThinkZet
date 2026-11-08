@@ -107,9 +107,9 @@ button{font:inherit;color:inherit;cursor:pointer;border:none;background:none}
 input,textarea,select{font:inherit;color:inherit}
 a{color:var(--accent);text-decoration:none}
 
-.shell{display:grid;grid-template-columns:236px 1fr;height:100vh;height:100dvh;overflow:hidden;transition:grid-template-columns .18s ease}
+.shell{display:grid;grid-template-columns:236px minmax(0,1fr);height:100vh;height:100dvh;overflow:hidden;transition:grid-template-columns .18s ease}
 .shell > *{min-height:0}
-.shell.rail-collapsed{grid-template-columns:68px 1fr}
+.shell.rail-collapsed{grid-template-columns:68px minmax(0,1fr)}
 .shell.rail-collapsed .nav-label,
 .shell.rail-collapsed .logo-text,
 .shell.rail-collapsed .rail-foot,
@@ -146,7 +146,7 @@ a{color:var(--accent);text-decoration:none}
 .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--good);margin-right:5px;vertical-align:1px}
 
 /* ---------- main ---------- */
-main{overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .topbar{position:sticky;top:0;z-index:5;background:var(--topbar-bg);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:14px 28px;display:flex;align-items:center;gap:16px}
 .topbar h1{font-size:20px;margin:0;font-weight:700;letter-spacing:-.01em}
 .topbar .sub{font-size:12px;color:var(--muted)}
@@ -173,7 +173,10 @@ html[data-mode="dark"] .theme-btn .ico-moon{display:block}
 .pill.live{border-color:color-mix(in srgb,var(--good) 40%,var(--line));background:color-mix(in srgb,var(--good) 12%,var(--panel));color:var(--good);display:inline-flex;align-items:center;gap:6px}
 .pill.live i{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 20%,transparent)}
 html[data-theme="light"] .pill.live{background:#eaf7f0;border-color:transparent;color:#0a7a45}
-.view{padding:26px 28px 48px;max-width:1440px}
+.view{padding:26px 28px 48px;max-width:1440px;min-width:0}
+.view>*{min-width:0}
+.tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 calc(var(--sp-5) * -1);padding:0 var(--sp-5)}
+.tscroll table.t{min-width:640px}
 
 /* ---------- shared ---------- */
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-5);box-shadow:var(--shadow-sm);transition:border-color .16s ease,box-shadow .16s ease}
@@ -395,7 +398,8 @@ html[data-theme="light"] .delta.flat{background:#f1f4f9}
 .score-card .drv{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5}
 .overall{display:flex;gap:26px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:16px}
 .ring{width:118px;height:118px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
-.ring div{width:92px;height:92px;border-radius:50%;background:var(--panel);display:grid;place-items:center;flex-direction:column}
+.ring div{width:92px;height:92px;border-radius:50%;background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
+.ring .v{line-height:1}
 .ring .v{font-size:30px;font-weight:750;letter-spacing:-.03em}
 .ring .c{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
 
@@ -441,7 +445,7 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
 
 /* ---------- mobile polish ---------- */
 @media(max-width:900px){
-  .shell{grid-template-columns:1fr;height:auto;min-height:100vh}
+  .shell{grid-template-columns:minmax(0,1fr);height:auto;min-height:100vh}
   .rail{position:fixed;left:0;right:0;bottom:0;top:auto;height:auto;border-right:none;border-top:1px solid var(--line);
         padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:60;background:var(--panel)}
   .rail .logo,.rail-foot{display:none}
@@ -593,7 +597,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
   .proof > div{gap:8px}
   .proof b{font-size:var(--text-md);min-width:64px}}
 @media(max-width:760px){.check .row3,.check .row2,.trust{grid-template-columns:1fr!important}.land-wrap{padding:24px 18px 60px}.land-nav{margin-bottom:40px}}
-@media(max-width:900px){.shell{grid-template-columns:1fr}.rail{display:none}.scores-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.opp{grid-template-columns:52px 1fr}.opp .right{display:none}}
+@media(max-width:900px){.shell{grid-template-columns:minmax(0,1fr)}.rail{display:none}.scores-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.opp{grid-template-columns:52px 1fr}.opp .right{display:none}}
 </style>
 </head>
 <body>
@@ -895,6 +899,7 @@ const TYPE_LABEL = { job: 'Jobs', contract: 'Contracts', fellowship: 'Fellowship
 
 // Score tone is semantic, not decorative: good / fair / weak, expressed through the
 // same three tokens as the rest of the system so both themes stay in balance.
+const factorRows = (factors) => factors.map((f) => `<div class="kv"><span>${esc(f.k)}</span><span class="chip ${f.d === 'strong' ? 'have' : f.d === 'thin' ? 'miss' : ''}">${esc(f.d)}</span></div>`).join('');
 function scoreColor(s) {
   const light = document.documentElement.dataset.theme === 'light';
   if (s >= 85) return light ? ['#0a7a45', 'var(--accent-soft)'] : ['#38c98a', '#0e2119'];
@@ -946,7 +951,7 @@ async function renderSeo() {
           <div style="margin-top:16px;font-size:12.5px;color:var(--muted)">${esc(b.segment)} · ${b.exactComparables} exact-profile comparables · ${esc(b.confidence)} confidence</div>
         </div>
         <h2 style="font-size:17px;margin:32px 0 10px">Where the money is</h2>
-        <div class="card">${(b.byChannel || []).filter((c) => c.n >= 5).map((c) => `<div class="kv"><span>${esc(c.channel)} <span class="muted">(${c.n})</span></span><span class="mono">${fmt(c.median)}</span></div>`).join('')}</div>
+        <div class="card">${(b.byChannel || []).filter((c) => c.n >= 5).map((c) => `<div class="kv"><span style="text-transform:capitalize">${esc(c.channel)} <span class="muted">· ${c.n} postings</span></span><span class="mono">${fmt(c.median)}</span></div>`).join('')}</div>
         <h2 style="font-size:17px;margin:32px 0 10px">Skills that pay more</h2>
         <div class="card">${r.levers.slice(0, 6).map((l) => `<div class="kv"><span>${esc(l.skill)}</span><span class="mono" style="color:var(--good)">+${l.premium}%</span></div>`).join('')}</div>
         <div class="card" style="margin-top:26px;text-align:center;">
@@ -1270,8 +1275,8 @@ function renderOnboarding() {
       </div>
     </div>
     <div class="row" style="margin-top:20px;gap:10px">
-      <button class="btn" id="ob-next">Continue <span style="opacity:.7">&gt;</span></button>
-      <button class="btn ghost" id="ob-demo">Skip – use the demo persona</button>
+      <button class="btn" id="ob-next">Continue <span aria-hidden="true">&rarr;</span></button>
+      <button class="btn ghost" id="ob-demo">Use the demo profile instead</button>
     </div>`;
 
   const stepTwo = `
@@ -2029,6 +2034,7 @@ async function renderScores() {
   ].filter(([, v]) => v != null);
   const overallV = v2 ? v2.overall : scores.overall;
   const percentileV = v2 ? v2.percentile : scores.benchmark_percentile;
+  const ordinal = (n) => { const m = n % 100; if (m >= 11 && m <= 13) return n + 'th'; return n + (['th', 'st', 'nd', 'rd'][n % 10] || 'th'); };
   const circ = 2 * Math.PI * 52;
   $('#view').innerHTML = `
     <div class="overall">
@@ -2036,9 +2042,9 @@ async function renderScores() {
         <div><div class="v">${overallV}</div><div class="c">overall</div></div>
       </div>
       <div>
-        <div style="font-size:15px;font-weight:600">${percentileV}th percentile</div>
-        <div class="dim" style="margin-top:4px;max-width:520px">Eight scores, benchmarked against professionals at your level. It moves when you move – that is the entire point of it being a score and not a certificate.</div>
-        <div class="muted" style="font-size:11.5px;margin-top:8px">${history.length} computation${history.length === 1 ? '' : 's'} recorded</div>
+        <div style="font-size:var(--text-lg);font-weight:700;letter-spacing:-.01em">${ordinal(percentileV)} percentile</div>
+        <div class="dim" style="margin-top:6px;max-width:460px;font-size:var(--text-sm);line-height:1.55">Benchmarked against professionals at your level. It moves when you move.</div>
+        <div class="muted" style="font-size:var(--text-xs);margin-top:10px">${history.length} update${history.length === 1 ? '' : 's'} recorded</div>
       </div>
     </div>
     <div class="card" style="margin-bottom:14px">
@@ -2125,10 +2131,10 @@ async function renderRates() {
               <div class="kv"><span>${esc(c.channel)} <span class="muted">(${c.n})</span></span><span class="mono">${money(c.median)}</span></div>
             `).join('') || '<div class="muted">not enough data</div>'}
           </div>
-          <div class="note" style="margin-top:12px">This is the number nobody gives you: the same profile pays differently on a marketplace, a contract and a full-time role.</div>
+          <div class="note" style="margin-top:12px">The same profile pays differently as a hire, a contractor and on a marketplace. This is the split.</div>
         ${r.confidenceDetail ? `<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px">
-          <div class="row" style="justify-content:space-between"><span style="font-size:12px">Benchmark confidence</span><span class="mono">${esc(r.confidenceDetail.level)}</span></div>
-          <div style="margin-top:8px;font-size:11.5px;color:var(--muted);line-height:1.7">${r.confidenceDetail.factors.map((f) => `${esc(f.k)} <span class="mono">${esc(f.d)}</span>`).join('<br/>')}</div>
+          <div class="row" style="justify-content:space-between"><span style="font-size:var(--text-sm);font-weight:600">Benchmark confidence</span><span class="chip ${r.confidenceDetail.level === 'high' ? 'have' : r.confidenceDetail.level === 'low' ? 'miss' : ''}">${esc(r.confidenceDetail.level)}</span></div>
+          <div style="margin-top:6px">${factorRows(r.confidenceDetail.factors)}</div>
           ${r.confidenceDetail.caveat ? `<div style="margin-top:8px;font-size:11.5px;color:var(--warn)">${esc(r.confidenceDetail.caveat)}</div>` : ''}
         </div>` : ''}
         </div>
@@ -2151,7 +2157,7 @@ async function renderGaps() {
   $('#view').innerHTML = `
     <div class="card" style="margin-bottom:14px">
       <h3>Skill gap detection</h3>
-      <div class="dim" style="margin-top:6px">Computed by comparing your skills against the required skills of your top ${sampleOf} realistic opportunities – weighted by how many roles each gap blocks, its salary premium and its growth rate.</div>
+      <div class="dim" style="margin-top:6px;font-size:var(--text-sm);line-height:1.55">Computed by comparing your skills against the required skills of your top ${sampleOf} realistic opportunities – weighted by how many roles each gap blocks, its salary premium and its growth rate.</div>
     </div>
     <div class="card tone-violet" style="margin-bottom:14px;border-color:var(--line);">
       <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">The shortest path</div>
@@ -2181,7 +2187,7 @@ async function renderGaps() {
         </div>`).join('')}
       </div>
     </div>` : ''}
-    ${gaps.length ? `<div class="card"><table class="t">
+    ${gaps.length ? `<div class="card"><div class="tscroll"><table class="t">
       <thead><tr><th>Skill</th><th>Blocks</th><th>Share of matches</th><th>Market demand</th><th>Salary premium</th><th>Growth</th><th>Effort</th></tr></thead>
       <tbody>${gaps.map((g) => `<tr>
         <td><b>${esc(g.skill)}</b></td>
@@ -2192,7 +2198,7 @@ async function renderGaps() {
         <td class="mono" style="color:${g.growth > 20 ? 'var(--good)' : 'inherit'}">${g.growth > 0 ? '+' : ''}${g.growth}%</td>
         <td class="mono muted">~${g.effortWeeks}w</td>
       </tr>`).join('')}</tbody>
-    </table></div>` : '<div class="empty">No systematic gaps detected.</div>'}
+    </table></div></div>` : '<div class="empty">No systematic gaps detected.</div>'}
   `;
   document.querySelectorAll('.pr').forEach((b) => {
     b.onclick = async () => {

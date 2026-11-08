@@ -52,7 +52,7 @@ function opportunityConfidence(o) {
 function rateConfidence(exactComparables, sampleSize, confidenceLabel) {
   const factors = [
     { k: `${exactComparables} exact-profile comparables`, d: exactComparables >= 25 ? 'strong' : exactComparables >= 10 ? 'adequate' : 'thin' },
-    { k: `${sampleSize} comparables after widening`, d: sampleSize >= 100 ? 'strong' : sampleSize >= 30 ? 'adequate' : 'thin' },
+    { k: `${sampleSize} comparables in the widened sample`, d: sampleSize >= 100 ? 'strong' : sampleSize >= 30 ? 'adequate' : 'thin' },
   ];
   return {
     level: confidenceLabel,
