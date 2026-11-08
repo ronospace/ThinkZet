@@ -165,7 +165,10 @@ html[data-theme="light"] .pill.live{background:#eaf7f0;border-color:transparent;
 /* ---------- shared ---------- */
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-5);box-shadow:var(--shadow-sm);transition:border-color .16s ease,box-shadow .16s ease}
 .card.tone-violet{background:linear-gradient(135deg,#1a1030,#101a2e 60%,#0f1c1a);border-color:#2f2a4d;--tone-ink:#cfe0ff;--tone-kicker:#a99bf0}
-.rate-gap{--tone-ink:#e8edf4;--tone-kicker:#a99bf0}
+.rate-gap{--tone-ink:#eef2f8;--tone-kicker:#a99bf0}
+.rate-gap .k{color:var(--tone-kicker)}
+.rate-gap .dim,.rate-gap .muted{color:#9aa7b8}
+.rate-gap b{color:#eef2f8}
 .card.tone-blue{background:linear-gradient(135deg,#12182a,#101a1e);border-color:#253247}
 html[data-theme="light"] .card.tone-violet{--tone-ink:#1f2c3d;--tone-kicker:#5b45b8;background:linear-gradient(135deg,#f7f3ff 0%,#eef4ff 55%,#eefaf5 100%);border-color:#e2dbf6;box-shadow:0 1px 2px rgba(16,32,64,.05),0 14px 34px -22px rgba(80,60,160,.4)}
 html[data-theme="light"] .card.tone-blue{background:linear-gradient(135deg,#f5f8ff,#fbfcfe);border-color:#e4eaf4;box-shadow:0 1px 2px rgba(16,32,64,.05),0 12px 30px -20px rgba(16,32,64,.28)}
@@ -224,7 +227,7 @@ textarea.cv:focus{border-color:var(--accent2)}
 .rate-gap{background:linear-gradient(135deg,#161033 0%,#101827 58%,#0e1a17 100%);border:1px solid #2b2547;border-radius:var(--radius-lg);padding:26px 28px;margin-bottom:var(--sp-4);position:relative;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.4),0 22px 50px -34px rgba(90,60,180,.7)}
 .rate-gap::after{content:"";position:absolute;right:-40px;top:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(139,92,246,.22),transparent 70%)}
 .rate-gap .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, #a99bf0);font-weight:600}
-.rate-gap .amount{font-size:clamp(30px,4.2vw,44px);font-weight:780;letter-spacing:-.035em;line-height:1.06;margin:8px 0 4px}
+.rate-gap .amount{font-size:clamp(30px,4.2vw,44px);font-weight:780;letter-spacing:-.035em;line-height:1.06;margin:8px 0 4px;color:var(--tone-ink)}
 .rate-gap .amount .neg{color:#ff8f96}
 .rate-gap .scale{margin-top:16px;height:8px;border-radius:5px;background:#221d38;position:relative}
 .rate-gap .scale .band{position:absolute;height:100%;border-radius:5px;background:linear-gradient(90deg,#3d2f6b,#6d5bd0)}
@@ -241,6 +244,27 @@ textarea.cv:focus{border-color:var(--accent2)}
 .delta.up{background:rgba(56,201,138,.14);color:var(--good)}
 .delta.down{background:rgba(240,86,102,.14);color:var(--bad)}
 .delta.flat{background:var(--panel2);color:var(--muted)}
+html[data-theme="light"] .rate-gap{
+  --tone-ink:#0f1b2b;--tone-kicker:#5b45b8;
+  background:linear-gradient(135deg,#fbfaff 0%,#f4f8ff 55%,#f3fbf7 100%);
+  border-color:#e9e4f6;
+  box-shadow:0 1px 1px rgba(16,32,64,.04),0 18px 40px -30px rgba(80,60,160,.4);
+}
+html[data-theme="light"] .rate-gap .dim,html[data-theme="light"] .rate-gap .muted{color:#5c6a7d}
+html[data-theme="light"] .rate-gap b{color:#0f1b2b}
+html[data-theme="light"] .rate-gap .scale{background:#e8e2f7}
+html[data-theme="light"] .rate-gap .scale .you{background:#1e2235}
+html[data-theme="light"] .rate-gap::after{background:radial-gradient(circle,rgba(139,92,246,.10),transparent 70%)}
+html[data-theme="light"] .result{--tone-ink:#0f1b2b;background:linear-gradient(135deg,#fbfaff,#f4f8ff 55%,#f3fbf7);border-color:#e9e4f6}
+html[data-theme="light"] .result .scale{background:#e8e2f7}
+html[data-theme="light"] .result .scale .you{background:#1e2235}
+html[data-theme="light"] .palette{background:rgba(232,238,247,.72)}
+html[data-theme="light"] .palette-box{box-shadow:0 30px 80px -30px rgba(16,32,64,.45)}
+html[data-theme="light"] .palette-item.sel{background:#eaf1ff}
+html[data-theme="light"] pre{background:#0f1621}
+html[data-theme="light"] .toast{background:#0b1220;border-color:#0b1220;color:#f4f7fb}
+html[data-theme="light"] .msg.user{background:#eaf1ff;border-color:#d3ddff}
+html[data-theme="light"] .msg.bot{background:#fff;border-color:#e6ebf3}
 html[data-theme="light"] .delta.up{background:#e9f7f0}
 html[data-theme="light"] .delta.down{background:#fdeef0}
 html[data-theme="light"] .delta.flat{background:#f1f4f9}
