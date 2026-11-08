@@ -428,6 +428,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .trust p{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
 .land-nav-wrap{position:sticky;top:0;z-index:40;background:var(--topbar-bg);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .land-nav{max-width:1080px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 24px}
+.land-tag{font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-left:10px;padding-left:10px;border-left:1px solid var(--line2)}
 .land-nav-links{display:flex;gap:22px;font-size:var(--text-sm)}
 .land-nav-links a{color:var(--ink2);text-decoration:none;transition:color .14s}
 .land-nav-links a:hover{color:var(--ink)}
@@ -485,7 +486,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 <div class="landing" id="landing">
   <div class="land-nav-wrap">
     <div class="land-nav">
-      <div class="land-brand"><span class="mark">M</span> MirrorSpread</div>
+      <div class="land-brand"><span class="mark">M</span> MirrorSpread<span class="land-tag">See your value</span></div>
       <div class="land-nav-links">
         <a href="#how">How it works</a>
         <a href="#capabilities">Capabilities</a>
@@ -643,7 +644,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
       <div class="foot-grid">
         <div>
           <div class="land-brand" style="margin-bottom:10px"><span class="mark">M</span> MirrorSpread</div>
-          <div class="foot-note">Career intelligence. See your value, expand your possibilities.</div>
+          <div class="foot-note">See your value. Expand your possibilities.</div>
         </div>
         <div>
           <div class="foot-h">Product</div>
@@ -673,7 +674,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
     <button class="rail-toggle" id="rail-toggle" title="Collapse sidebar" aria-label="Collapse sidebar">‹</button>
     <div class="logo">
       <div class="mark">M</div>
-      <div class="logo-text"><b>MirrorSpread</b><span>Career Intelligence</span></div>
+      <div class="logo-text"><b>MirrorSpread</b><span>See your value</span></div>
     </div>
     <nav class="nav" id="nav">
       <div class="nav-group"><span class="nav-label">Today</span>
@@ -1071,8 +1072,8 @@ async function renderAuth() {
   $('#view').innerHTML = `
   <div class="onboard" style="max-width:460px">
     <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#4c8dff,#8b5cf6);display:grid;place-items:center;font-weight:800;color:#fff;margin-bottom:20px">M</div>
-    <p class="lead">Your career, with a memory.</p>
-    <p class="sub">One profile. Every opportunity. Sign in and the engine starts watching.</p>
+    <p class="lead">See your value. Expand your possibilities.</p>
+    <p class="sub">One profile, every opportunity. Sign in and the engine starts watching.</p>
     <div id="auth-step1">
       <div class="field"><label>Email</label><input id="auth-email" type="email" placeholder="you@example.com" autocomplete="email"/></div>
       <button class="btn" id="auth-send" style="width:100%;margin-top:6px">Send me a code</button>

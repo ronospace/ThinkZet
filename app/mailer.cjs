@@ -183,6 +183,7 @@ function renderHtml({ name, brief, rates, scores, unsub }) {
   <div style="max-width:560px;margin:0 auto;background:#12161c;border:1px solid #222a35;border-radius:14px;overflow:hidden">
     <div style="padding:22px 24px;border-bottom:1px solid #222a35">
       <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#4c8dff;font-weight:700">MirrorSpread · Morning brief</div>
+      <div style="font-size:10.5px;color:#6b7683;margin-top:4px">See your value. Expand your possibilities.</div>
       <div style="font-size:20px;font-weight:700;letter-spacing:-.02em;margin-top:8px;line-height:1.35">${escHtml(brief.headline)}</div>
     </div>
     <div style="padding:22px 24px">

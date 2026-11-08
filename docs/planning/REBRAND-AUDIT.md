@@ -219,5 +219,17 @@ where it earns its keep and gives the brand a calm, repeatable line everywhere e
 
 ---
 
-**STOPPING HERE.** No implementation until §7 (tagline placement) is decided and this
-plan is approved.
+## 11. Decision record
+
+**§7 tagline placement: Option C, approved and implemented.**
+
+- The tagline *"See your value. Expand your possibilities."* owns the brand lockup, the
+  sidebar subtitle, the auth screen, the email header and the footer note.
+- The landing hero keeps the confrontational headline, because that is what earns the scroll.
+- Feature naming: **all nine** capabilities retained, with Trajectory, Tracker and Copilot
+  renamed to Career Trajectory, Career Tracker and Career Copilot.
+
+**§6 feature count: nine, not five.** The four the brief omitted (Negotiation, Skill Gaps,
+Career Tracker, Career Copilot) are the highest-value screens and were kept.
+
+Implementation completed across 8 files. See `STATUS.md` for verification evidence.
