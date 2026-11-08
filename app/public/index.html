@@ -146,12 +146,15 @@ a{color:var(--accent);text-decoration:none}
 .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--good);margin-right:5px;vertical-align:1px}
 
 /* ---------- main ---------- */
+html,body{max-width:100%;overflow-x:hidden}
 main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .topbar{position:sticky;top:0;z-index:5;background:var(--topbar-bg);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:14px 28px;display:flex;align-items:center;gap:16px}
 .topbar h1{font-size:20px;margin:0;font-weight:700;letter-spacing:-.01em}
 .topbar .sub{font-size:12px;color:var(--muted)}
 .topbar .spacer{flex:1}
-.tb-title{min-width:0}
+.tb-title{min-width:0;flex:0 1 auto}
+.topbar .pill{flex:none}
+.topbar .tb-icon,.topbar .theme-btn,.topbar .tb-menu{flex:none}
 .tb-icon{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
 .tb-icon:hover{color:var(--ink);border-color:var(--line2);background:var(--panel3)}
 .tb-icon svg{width:15px;height:15px}
@@ -240,9 +243,10 @@ textarea.cv:focus{border-color:var(--accent2)}
 /* ---------- sign in ---------- */
 .auth-wrap{max-width:420px;margin:0 auto;padding:clamp(20px,6vh,56px) 4px 40px}
 .auth-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg,16px);padding:28px 24px 22px;box-shadow:var(--shadow)}
-.auth-logo{display:block;border-radius:12px;margin:0 0 18px}
+.auth-head{display:flex;align-items:center;gap:14px;margin:0 0 14px}
+.auth-logo{display:block;flex:none;border-radius:12px}
 .auth-title{margin:0;font-size:var(--text-xl);font-weight:720;letter-spacing:var(--tracking-tighter);line-height:1.2}
-.auth-sub{margin:6px 0 22px;color:var(--ink2);font-size:var(--text-sm);line-height:1.5}
+.auth-sub{margin:0 0 22px;color:var(--ink2);font-size:var(--text-sm);line-height:1.5}
 .auth-socials{display:grid;gap:10px}
 .auth-social{display:flex;align-items:center;justify-content:center;gap:10px;padding:11px 14px;border-radius:var(--radius-sm,10px);border:1px solid var(--line2);background:var(--panel2);color:var(--ink);font-size:var(--text-sm);font-weight:600;text-decoration:none;transition:border-color .14s,background .14s}
 .auth-social:hover{border-color:var(--accent2);background:var(--panel3)}
@@ -840,8 +844,8 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
         <h1 id="view-title">Opportunity Radar</h1>
         <div class="sub" id="view-sub">Live</div>
       </div>
-      <div class="spacer"></div>
       <span class="pill live" id="live-pill"><i></i>live</span>
+      <div class="spacer"></div>
       <button class="tb-icon" id="cmdk" title="Search everything (Cmd K)" aria-label="Search everything">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7.2" cy="7.2" r="4.4"/><path d="M10.4 10.4L13.6 13.6"/></svg>
       </button>
@@ -1201,8 +1205,10 @@ async function renderAuth() {
   $('#view').innerHTML = `
   <div class="auth-wrap">
     <div class="auth-card">
-      <img src="/icon.svg" alt="" width="44" height="44" class="auth-logo"/>
-      <h2 class="auth-title">Sign in to ThinkZet</h2>
+      <div class="auth-head">
+        <img src="/icon.svg" alt="" width="44" height="44" class="auth-logo"/>
+        <h2 class="auth-title">Sign in to ThinkZet</h2>
+      </div>
       <p class="auth-sub">Your rate check, matches and daily brief in one place.</p>
       ${social ? `<div class="auth-socials">${social}</div><div class="auth-or"><span>or use email</span></div>` : ''}
       <div id="auth-step1">

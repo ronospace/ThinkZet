@@ -65,7 +65,8 @@ function cdp(port, path, method = 'GET') {
   await new Promise((r) => setTimeout(r, 2500));
   const shot = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
   require('node:fs').writeFileSync(OUT, Buffer.from(shot.data, 'base64'));
-  if (process.env.WIDE) { const w = await send('Runtime.evaluate', { returnByValue: true, expression: "JSON.stringify([...document.querySelectorAll('#view *')].filter(e=>e.getBoundingClientRect().right>innerWidth+2).slice(0,8).map(e=>e.tagName+'.'+e.className+' w='+Math.round(e.getBoundingClientRect().width)))" }); console.log('wide', w.result.value); }
+  if (process.env.WIDE) { const w = await send('Runtime.evaluate', { returnByValue: true, expression: "JSON.stringify([...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth+2).slice(0,8).map(e=>e.tagName+'.'+e.className+' w='+Math.round(e.getBoundingClientRect().width)))" }); console.log('wide', w.result.value); }
+  if (process.env.TOPBAR) { const w = await send('Runtime.evaluate', { returnByValue: true, expression: "(()=>{const t=document.querySelector('.topbar');const r=e=>{const b=document.querySelector(e).getBoundingClientRect();return Math.round(b.left)+'-'+Math.round(b.right)};return JSON.stringify({vw:innerWidth,topbar:r('.topbar'),sw:t.scrollWidth,cw:t.clientWidth,h1:r('#view-title'),pill:r('#live-pill'),cmdk:r('#cmdk'),theme:r('#theme-btn'),more:r('#tb-more'),pad:getComputedStyle(t).paddingRight,main:r('main')})})()" }); console.log('topbar', w.result.value); }
   const metrics = await send('Runtime.evaluate', { expression: "JSON.stringify({docW:document.documentElement.scrollWidth,winW:innerWidth})", returnByValue: true });
   console.log('metrics', metrics.result.value);
   console.log('saved', OUT);
