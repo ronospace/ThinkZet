@@ -178,7 +178,7 @@ html[data-mode="dark"] .theme-btn .ico-moon{display:block}
 .pill.live{border-color:color-mix(in srgb,var(--good) 40%,var(--line));background:color-mix(in srgb,var(--good) 12%,var(--panel));color:var(--good);display:inline-flex;align-items:center;gap:6px}
 .pill.live i{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 20%,transparent)}
 html[data-theme="light"] .pill.live{background:#eaf7f0;border-color:transparent;color:#0a7a45}
-.view{padding:26px 28px 48px;max-width:1440px;min-width:0}
+.view{padding:26px 28px 48px;max-width:1120px;margin:0 auto;min-width:0}
 .view>*{min-width:0}
 .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 calc(var(--sp-5) * -1);padding:0 var(--sp-5)}
 .tscroll table.t{min-width:640px}
@@ -520,7 +520,7 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
 /* ---------- landing ---------- */
 .landing{min-height:100vh;background:var(--bg-grad)}
 html[data-theme="light"] .landing{background:radial-gradient(1100px 560px at 50% -10%,var(--panel2) 0%,var(--bg) 62%)}
-.land-wrap{max-width:1200px;margin:0 auto;padding:38px 32px 90px}
+.land-wrap{max-width:1080px;margin:0 auto;padding:38px 32px 90px}
 .land-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:64px}
 .land-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:.02em}
 .land-brand .mark{width:30px;height:30px}
@@ -558,7 +558,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .trust h3{margin:0 0 6px;font-size:13px;color:var(--ink)}
 .trust p{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
 .land-nav-wrap{position:sticky;top:0;z-index:40;background:var(--topbar-bg);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
-.land-nav{max-width:1200px;margin:0 auto!important;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 32px}
+.land-nav{max-width:1080px;margin:0 auto!important;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 32px}
 .land-tag{font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-left:10px;padding-left:10px;border-left:1px solid var(--line2)}
 .land-nav-links{display:flex;gap:22px;font-size:var(--text-sm)}
 .land-nav-links a{color:var(--ink2);text-decoration:none;transition:color .14s}
@@ -640,26 +640,23 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
   .foot-legal span+span::before{content:" \00b7  "}
 }
 
-.mark{flex:none;display:block;border-radius:9px;filter:drop-shadow(0 5px 12px color-mix(in srgb,var(--accent2) 38%,transparent))}
+.mark{flex:none;display:block;border-radius:9px}
 .wm{font-weight:780;letter-spacing:-.025em}
 .wm i{font-style:normal;background:linear-gradient(100deg,var(--accent2) 0%,var(--rose) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 html[data-theme="light"] .wm i{background-image:linear-gradient(100deg,var(--accent2) 0%,#C2418F 100%)}
 .land-brand{font-size:18px}
 .logo b{font-size:16px}
 .shell.rail-collapsed .logo-text{display:none}
+@media(min-width:901px){.topbar{padding-left:max(28px,calc((100% - 1120px)/2 + 28px));padding-right:max(28px,calc((100% - 1120px)/2 + 28px))}}
 </style>
 </head>
 <body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
 <linearGradient id="tz-g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#7C4DF0"/><stop offset=".5" stop-color="#A47AF5"/><stop offset="1" stop-color="#E88FC6"/></linearGradient>
-<radialGradient id="tz-h" cx=".22" cy=".12" r=".85"><stop offset="0" stop-color="#fff" stop-opacity=".46"/><stop offset=".6" stop-color="#fff" stop-opacity=".06"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></radialGradient>
 <symbol id="tz-mark" viewBox="0 0 192 192">
 <rect width="192" height="192" rx="44" fill="url(#tz-g)"/>
-<rect width="192" height="192" rx="44" fill="url(#tz-h)"/>
-<rect x=".75" y=".75" width="190.5" height="190.5" rx="43.25" fill="none" stroke="#fff" stroke-opacity=".3" stroke-width="1.5"/>
-<path d="M56 62 H136 L56 130 H136" transform="translate(10 12)" fill="none" stroke="#fff" stroke-opacity=".26" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
-<path d="M56 62 H136 L56 130 H136" fill="none" stroke="#fff" stroke-opacity=".97" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
-<circle cx="136" cy="62" r="19" fill="#fff" fill-opacity=".2"/>
+<rect x=".75" y=".75" width="190.5" height="190.5" rx="43.25" fill="none" stroke="#fff" stroke-opacity=".28" stroke-width="1.5"/>
+<path d="M56 62 H136 L56 130 H136" fill="none" stroke="#fff" stroke-opacity=".96" stroke-width="15" stroke-linecap="round" stroke-linejoin="round"/>
 <circle cx="136" cy="62" r="9.5" fill="#fff"/>
 </symbol></defs></svg>
 
