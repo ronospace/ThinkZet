@@ -1126,18 +1126,20 @@ async function renderRadar() {
     if (brief && !brief.needsOnboarding) {
       STATE.brief = brief;
       briefHtml = `
-      <div class="card tone-violet" style="margin-bottom:14px;border-color:#253247">
-        <div class="row" style="justify-content:space-between;align-items:flex-start">
-          <div style="flex:1">
-            <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Today's brief · ${brief.counts.newSinceYesterday} new · ${brief.counts.closingSoon} closing soon</div>
-            <div style="font-size:16px;font-weight:600;margin-top:6px;letter-spacing:-.01em">${esc(brief.headline)}</div>
-          </div>
-          <span class="muted" style="font-size:11px;white-space:nowrap">auto-acknowledged · <kbd>⌘</kbd><kbd>K</kbd> to search</span>
+      <div class="card tone-blue" style="margin-bottom:14px">
+        <div class="row" style="justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap">
+          <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Today's brief · ${brief.counts.newSinceYesterday} new · ${brief.counts.closingSoon} closing soon</div>
+          <span class="muted" style="font-size:11px">auto-acknowledged</span>
         </div>
-        <div style="margin-top:14px;display:grid;grid-template-columns:repeat(${Math.min(4, brief.actions.length || 1)},1fr);gap:8px">
-          ${brief.actions.map((a) => `<div class="action" data-opp="${a.opportunityId || ''}" style="border:1px solid var(--line);border-radius:9px;padding:9px 11px;background:var(--panel2);cursor:pointer">
-            <div class="muted" style="font-size:10px;letter-spacing:.08em;text-transform:uppercase">${a.priority === 1 ? 'do now' : a.priority === 2 ? 'this week' : 'keep warm'}</div>
-            <div style="font-size:12.5px;margin-top:3px;line-height:1.45">${esc(a.text)}</div>
+        <div style="font-size:var(--text-lg);font-weight:600;margin-top:8px;letter-spacing:var(--tracking-tight);line-height:var(--leading-snug)">${esc(brief.headline)}</div>
+        <div style="margin-top:14px">
+          ${brief.actions.map((a, i) => `<div class="action" data-opp="${a.opportunityId || ''}" style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line);cursor:pointer">
+            <div class="mono" style="color:var(--muted);font-size:12px;width:16px;padding-top:2px;flex-shrink:0">${i + 1}</div>
+            <div style="flex:1;min-width:0">
+              <div style="font-size:var(--text-sm);line-height:var(--leading-normal)">${esc(a.text)}</div>
+              <div class="muted" style="font-size:var(--text-2xs);margin-top:2px;letter-spacing:.06em;text-transform:uppercase">${a.priority === 1 ? 'do now' : a.priority === 2 ? 'this week' : 'keep warm'}</div>
+            </div>
+            <div class="muted" style="opacity:.45;font-size:12px;padding-top:1px">›</div>
           </div>`).join('')}
         </div>
       </div>`;
