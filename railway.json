@@ -5,6 +5,7 @@
     "dockerfilePath": "deploy/Dockerfile"
   },
   "deploy": {
+    "startCommand": "node app/server.cjs",
     "healthcheckPath": "/api/health",
     "healthcheckTimeout": 120,
     "restartPolicyType": "ALWAYS",
