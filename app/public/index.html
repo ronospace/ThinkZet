@@ -686,12 +686,12 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
       <button data-view="rates"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 12V6M8 12V3M13 12V8"/><path d="M2 13.5h12"/></svg></span>Rate Intelligence</button>
       <button data-view="pulse"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M1.6 8.4h2.6L6 3.6l2.4 9 2-6.2 1.4 2h2.6"/></svg></span>Market Pulse</button>
       <button data-view="negotiation"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.4 11.4l3.2-3.6 2.4 2 3-3.8"/><path d="M13.6 4v3.4h-3.4"/><path d="M2.4 13.6h11.2"/></svg></span>Negotiation</button>
-      <button data-view="trajectory"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 13.4h12"/><path d="M2.6 10.6l3-3.4 2.4 1.8 3.4-4.6 2 1.6"/></svg></span>Trajectory</button>
+      <button data-view="trajectory"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 13.4h12"/><path d="M2.6 10.6l3-3.4 2.4 1.8 3.4-4.6 2 1.6"/></svg></span>Career Trajectory</button>
       </div>
       <div class="nav-group"><span class="nav-label">Act</span>
       <button data-view="gaps"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 12l4-5 3 2.5L14 4"/><path d="M11 4h3v3"/></svg></span>Skill Gaps</button>
-      <button data-view="tracker"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2.2" y="3" width="3.4" height="10" rx="1"/><rect x="6.4" y="3" width="3.4" height="6.5" rx="1"/><rect x="10.6" y="3" width="3.4" height="8.5" rx="1"/></svg></span>Tracker</button>
-      <button data-view="copilot"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.5 3.6L13 7l-3.5 1.4L8 12l-1.5-3.6L3 7l3.5-1.4z"/><path d="M12.4 11.2l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/></svg></span>Copilot</button>
+      <button data-view="tracker"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2.2" y="3" width="3.4" height="10" rx="1"/><rect x="6.4" y="3" width="3.4" height="6.5" rx="1"/><rect x="10.6" y="3" width="3.4" height="8.5" rx="1"/></svg></span>Career Tracker</button>
+      <button data-view="copilot"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.5 3.6L13 7l-3.5 1.4L8 12l-1.5-3.6L3 7l3.5-1.4z"/><path d="M12.4 11.2l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/></svg></span>Career Copilot</button>
       <button data-view="searches"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2.4l1.8 3.7 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4L2.2 6.7l4-.6z"/></svg></span>Saved Searches</button>
       </div>
       <div class="nav-group"><span class="nav-label">Account</span>
@@ -2797,15 +2797,15 @@ const VIEWS = {
   scores: [renderScores, 'Career Score', 'Eight scores, benchmarked and recomputed on every action'],
   rates: [renderRates, 'Rate Intelligence', 'What your exact profile is worth – the wedge'],
   gaps: [renderGaps, 'Skill Gaps', 'What is actually blocking your next move'],
-  tracker: [renderTracker, 'Tracker', 'Your pipeline and the outcome loop'],
+  tracker: [renderTracker, 'Career Tracker', 'Your pipeline and the outcome loop'],
   twin: [renderTwin, 'Career Twin', 'The model of you that gets better with use'],
   auth: [renderAuth, 'Sign in', 'Passwordless access'],
-  copilot: [renderCopilot, 'AI Career Copilot', 'Grounded in your data, not generic advice'],
+  copilot: [renderCopilot, 'Career Copilot', 'Grounded in your data, not generic advice'],
   learning: [renderLearning, 'Learning Loop', 'Outcomes recalibrate the model – the flywheel'],
   searches: [renderSearches, 'Saved Searches', 'Standing questions the engine keeps answering'],
   brief: [renderBrief, 'Morning Brief', 'What changed since you last looked'],
   negotiation: [renderNegotiation, 'Negotiation', 'The number to say, the evidence, and the fallback'],
-  trajectory: [renderTrajectory, 'Trajectory', 'Where each path actually lands'],
+  trajectory: [renderTrajectory, 'Career Trajectory', 'Where each path actually lands'],
   pulse: [renderPulse, 'Market Pulse', 'What the live corpus says right now'],
   analytics: [renderAnalytics, 'Funnel', 'Where users actually leak out'],
   leads: [renderLeads, 'Leads', 'People who saw their number'],
