@@ -1227,10 +1227,62 @@ function sequenceEmail({ user, key, ctx }) {
     : 'You are at or above the median for your profile. The upside now is growth, not price.';
 
   const bodies = {
-    welcome: `Good to have you, ${name}.\n\nHere is the one number that matters: ${gapLine}\n\nThree things worth doing this week:\n\n1. Open the radar and sort by interview odds, not match score. Odds are what decide whether your time was worth it.\n2. Open Negotiation and read the ask out loud once. The number you cannot say out loud is the number you will not get.\n3. Pick one skill gap. Just one. The gaps screen ranks them by how many of your realistic opportunities they block.\n\n${app}\n\n— MirrorSpread\n\nYou can turn these off any time: ${unsub}`,
-    first_move: `Two days in, ${name}.\n\nMost people open a feed and scroll. You have something better: a score per opportunity and a probability of getting it.\n\nSo the move is not "apply to more". It is "apply to the ones you can actually win".\n\nOpen the radar, filter to 60%+ interview odds, and pick the top one. Apply today, while it is open.\n\n${app}\n\n— MirrorSpread\n\n${unsub}`,
-    gap: `Four days in, ${name}.\n\n${ctx.topGap ? `${ctx.topGap.skill} is blocking ${ctx.topGap.blocking} of your realistic opportunities. Not the market – your specific set of matches.` : 'Your skill coverage is unusually complete. The next lever is not learning, it is positioning.'}\n\nThat distinction matters. Most advice tells you to learn what is trending. The useful version is: learn what is blocking *your* next move.\n\nThe gaps screen has the sequence, with the weeks and the cumulative unblocking.\n\n${app}\n\n— MirrorSpread\n\n${unsub}`,
-    proof: `One week, ${name}.\n\nHere is what the honest version looks like: three applications to roles you can actually win, one conversation about your number, one gap being closed.\n\nThat is not a productivity system. It is the difference between a job search that runs on hope and one that runs on evidence.\n\nYour streak is ${ctx.streak || 1}. Keep it.\n\n${app}\n\n— MirrorSpread\n\n${unsub}`,
+    welcome: `${name},
+
+Here is the number that matters: ${gapLine}
+
+That figure comes from live postings that state a salary, priced against your seniority, your skills and your market. It is not a survey and nobody guessed it.
+
+Three things worth doing this week:
+
+1. Open the radar and sort by interview odds, not match score. Odds decide whether your time was worth spending.
+2. Read the negotiation brief out loud once. The number you cannot say is the number you will not get.
+3. Pick one skill gap. Just one. The gaps screen ranks them by how many of your realistic opportunities they block.
+
+${app}
+
+– MirrorSpread
+You can turn these off any time: ${unsub}`,
+    first_move: `${name},
+
+Two days in. Most people open a feed and scroll. You have something better: a score per opportunity and a probability of getting it.
+
+So the move is not to apply to more. It is to apply to the ones you can actually win.
+
+Open the radar, filter to 60% interview odds or above, and take the top one today while it is still open. One application you can defend beats ten you cannot.
+
+${app}
+
+– MirrorSpread
+${unsub}`,
+    gap: `${name},
+
+Four days in.
+
+${ctx.topGap ? `${ctx.topGap.skill} is blocking ${ctx.topGap.blocking} of your realistic opportunities. Not the market in general. Your specific set of matches.` : 'Your skill coverage is unusually complete. The next lever is not learning, it is positioning.'}
+
+That distinction is the whole point. Most advice tells you to learn what is trending. The useful version is: learn what is blocking your next move, and nothing else.
+
+The gaps screen has the sequence, with the weeks and the cumulative unblocking attached.
+
+${app}
+
+– MirrorSpread
+${unsub}`,
+    proof: `${name},
+
+One week.
+
+Here is what the honest version looks like: three applications to roles you can actually win, one conversation about your number, one gap being closed.
+
+That is not a productivity system. It is the difference between a search that runs on hope and one that runs on evidence.
+
+Your streak is ${ctx.streak || 1}. Keep it.
+
+${app}
+
+– MirrorSpread
+${unsub}`,
   };
 
   return { subject: SEQUENCE.find((x) => x.key === key)?.subject || 'MirrorSpread', text: bodies[key] || bodies.welcome };
