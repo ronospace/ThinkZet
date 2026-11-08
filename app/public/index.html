@@ -482,11 +482,11 @@ html[data-theme="light"] .landing{background:radial-gradient(1100px 560px at 50%
 .land-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:64px}
 .land-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:.02em}
 .land-brand .mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff}
-.land-kicker{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#9fb4d4;border:1px solid #24344d;background:#111a28;padding:5px 11px;border-radius:999px}
-html[data-theme="light"] .land-kicker{color:#3d5a86;border-color:#cdddf2;background:#eaf1fb}
+.land-kicker{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border:1px solid var(--ai-border);background:var(--accent-soft);padding:5px 11px;border-radius:999px}
+html[data-theme="light"] .land-kicker{color:var(--accent2)}
 .land-h1{font-size:clamp(32px,5.2vw,52px);line-height:1.08;letter-spacing:-.03em;margin:20px 0 0;font-weight:750}
-.land-h1 .accent{background:linear-gradient(100deg,#6ea8ff,#a78bfa 55%,#5eead4);-webkit-background-clip:text;background-clip:text;color:transparent}
-html[data-theme="light"] .land-h1 .accent{background:none;color:#2752c4;-webkit-text-fill-color:#2752c4}
+.land-h1 .accent{background:linear-gradient(100deg,var(--accent) 0%,var(--rose) 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+html[data-theme="light"] .land-h1 .accent{background:linear-gradient(100deg,var(--accent2),#C2418F);-webkit-background-clip:text;background-clip:text;color:transparent}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
 .land-sub{font-size:17px;line-height:1.6;color:var(--ink2);margin:18px 0 0;max-width:620px}
 .land-cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap;align-items:center}
