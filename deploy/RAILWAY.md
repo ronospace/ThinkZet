@@ -11,8 +11,9 @@ Same code, same database, same behaviour. About 5 USD/month.
 2. **New Project**, then **Deploy from GitHub repo**.
 3. Choose `ronospace/MirrorSpread`. Authorise Railway to read the private repo if asked.
 
-Railway reads `deploy/railway.json` automatically and sets the start command to
-`node app/server.cjs` with a health check on `/api/health`.
+Railway reads the `railway.json` at the repository root, which points to `deploy/Dockerfile`
+and sets a health check on `/api/health`. The Dockerfile starts the app with
+`node app/server.cjs`.
 
 ## 2. Add a persistent volume
 
