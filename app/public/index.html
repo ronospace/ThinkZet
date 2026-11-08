@@ -126,7 +126,7 @@ a{color:var(--accent);text-decoration:none}
 /* ---------- rail ---------- */
 .rail{background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px}
 .logo{display:flex;align-items:center;gap:9px;padding:4px 8px 18px}
-.logo .mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#4c8dff,#8b5cf6);display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff}
+.logo .mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff}
 .logo b{font-size:14px;letter-spacing:.02em}
 .logo span{font-size:10px;color:var(--muted);display:block;letter-spacing:.12em;text-transform:uppercase;margin-top:1px}
 .nav{display:flex;flex-direction:column;gap:2px;overflow:auto;flex:1;padding-bottom:6px}
@@ -169,7 +169,7 @@ html[data-mode="system"] .theme-btn .ico-auto{display:block}
 html[data-mode="light"] .theme-btn .ico-sun{display:block}
 html[data-mode="dark"] .theme-btn .ico-moon{display:block}
 .pill{font-size:11px;padding:4px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2);white-space:nowrap}
-.pill.live{border-color:#1f4d33;background:#0f2419;color:#6fe3a4;display:inline-flex;align-items:center;gap:6px}
+.pill.live{border-color:#1f4d33;background:#0f2419;color:var(--good);display:inline-flex;align-items:center;gap:6px}
 .pill.live i{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px rgba(111,227,164,.16)}
 html[data-theme="light"] .pill.live{background:#eaf7f0;border-color:transparent;color:#0a7a45}
 .view{padding:26px 28px 48px;max-width:1440px}
@@ -177,16 +177,16 @@ html[data-theme="light"] .pill.live{background:#eaf7f0;border-color:transparent;
 /* ---------- shared ---------- */
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-5);box-shadow:var(--shadow-sm);transition:border-color .16s ease,box-shadow .16s ease}
 .card.tone-violet{background:var(--hero-grad);border-color:var(--ai-border);--tone-ink:var(--ink);--tone-kicker:var(--rose)}
-.rate-gap{--tone-ink:#eef2f8;--tone-kicker:#a99bf0}
+.rate-gap{--tone-ink:var(--ink);--tone-kicker:var(--tone-kicker)}
 .rate-gap .k{color:var(--tone-kicker)}
 .rate-gap .dim,.rate-gap .muted{color:#9aa7b8}
-.rate-gap b{color:#eef2f8}
+.rate-gap b{color:var(--ink)}
 .card.tone-blue{background:linear-gradient(135deg,var(--panel),var(--panel2));border-color:var(--line)}
 html[data-theme="light"] .card.tone-violet{--tone-ink:var(--ink);--tone-kicker:var(--accent2);background:var(--hero-grad);border-color:var(--ai-border);box-shadow:var(--shadow)}
 html[data-theme="light"] .card.tone-blue{background:linear-gradient(135deg,var(--panel),var(--panel2));border-color:var(--line);box-shadow:var(--shadow)}
 html[data-theme="light"] .card.tone-violet .muted,html[data-theme="light"] .card.tone-blue .muted{color:#6d7c90}
-html[data-theme="light"] .card.tone-violet [style*="#a99bf0"]{color:#5b45b8 !important}
-html[data-theme="light"] .card.tone-blue [style*="#cfe0ff"]{color:#1d4ed8 !important}
+html[data-theme="light"] .card.tone-violet [style*="var(--tone-kicker)"]{color:#5b45b8 !important}
+html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed8 !important}
 .card h3{margin:0 0 4px;font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--ink2)}
 .grid{display:grid;gap:14px}
 .row{display:flex;gap:12px;align-items:center}
@@ -201,9 +201,9 @@ html[data-theme="light"] .card.tone-blue [style*="#cfe0ff"]{color:#1d4ed8 !impor
 .btn.ghost:hover{color:var(--ink);border-color:#3d4a5c}
 .btn.sm{padding:5px 10px;font-size:12px;border-radius:7px}
 .chip{font-size:11px;padding:2px 7px;border-radius:5px;background:#1b2431;color:var(--ink2);border:1px solid var(--line2);white-space:nowrap}
-.chip.miss{background:#2a1c1e;border-color:#4a2b30;color:#f08b91}
-.chip.have{background:#14251c;border-color:#24462f;color:#71d69c}
-.chip.type{background:#161d2b;border-color:#26344a;color:#8fb4ee}
+.chip.miss{background:#2a1c1e;border-color:var(--bad);color:var(--bad)}
+.chip.have{background:#14251c;border-color:var(--good);color:var(--good)}
+.chip.type{background:#161d2b;border-color:#26344a;color:var(--blue)}
 .bar{height:6px;border-radius:4px;background:var(--track);overflow:hidden}
 .pct-row{margin:14px 0}
 .pct-head{display:flex;justify-content:space-between;align-items:baseline;font-size:var(--text-sm);margin-bottom:6px}
@@ -246,16 +246,16 @@ textarea.cv:focus{border-color:var(--accent2)}
 .hello .date-sub{color:var(--muted);font-size:12.5px;opacity:.75;line-height:1.4}
 .rate-gap{background:var(--hero-grad);border:1px solid var(--ai-border);border-radius:var(--radius-lg);padding:26px 28px;margin-bottom:var(--sp-4);position:relative;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.4),0 22px 50px -34px rgba(90,60,180,.7)}
 .rate-gap::after{content:"";position:absolute;right:-40px;top:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(139,92,246,.22),transparent 70%)}
-.rate-gap .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, #a99bf0);font-weight:600}
+.rate-gap .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker));font-weight:600}
 .rate-gap .amount{font-size:clamp(30px,4.2vw,44px);font-weight:780;letter-spacing:-.035em;line-height:1.06;margin:8px 0 4px;color:var(--tone-ink)}
-.rate-gap .amount .neg{color:#ff8f96}
+.rate-gap .amount .neg{color:var(--bad)}
 .rate-gap .scale{margin-top:16px;height:8px;border-radius:5px;background:#221d38;position:relative}
 .rate-gap .scale .band{position:absolute;height:100%;border-radius:5px;background:linear-gradient(90deg,#3d2f6b,#6d5bd0)}
 .rate-gap .scale .you{position:absolute;top:-5px;width:3px;height:18px;border-radius:2px;background:#fff}
 .rate-gap .legend{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px}
 .types{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
 .types button{font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2)}
-.types button.on{background:#1b2637;border-color:#33507a;color:var(--tone-ink, #cfe0ff)}
+.types button.on{background:var(--nav-active);border-color:var(--accent2);color:var(--tone-ink, var(--tone-ink))}
 .brief-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 .brief-meta{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;line-height:1.5}
 .brief-ack{font-size:11px;white-space:nowrap}
@@ -276,21 +276,21 @@ html[data-theme="light"] .rate-gap{
 }
 html[data-theme="light"] .rate-gap .dim,html[data-theme="light"] .rate-gap .muted{color:#5c6a7d}
 html[data-theme="light"] .rate-gap b{color:#0f1b2b}
-html[data-theme="light"] .rate-gap .scale{background:#e8e2f7}
+html[data-theme="light"] .rate-gap .scale{background:var(--track)}
 html[data-theme="light"] .rate-gap .scale .you{background:#1e2235}
 html[data-theme="light"] .rate-gap::after{background:radial-gradient(circle,rgba(139,92,246,.10),transparent 70%)}
 html[data-theme="light"] .result{--tone-ink:#0f1b2b;background:linear-gradient(135deg,#fbfaff,#f4f8ff 55%,#f3fbf7);border-color:#e9e4f6}
-html[data-theme="light"] .result .scale{background:#e8e2f7}
+html[data-theme="light"] .result .scale{background:var(--track)}
 html[data-theme="light"] .result .scale .you{background:#1e2235}
 html[data-theme="light"] .palette{background:rgba(232,238,247,.72)}
 html[data-theme="light"] .palette-box{box-shadow:0 30px 80px -30px rgba(16,32,64,.45)}
-html[data-theme="light"] .palette-item.sel{background:#eaf1ff}
-html[data-theme="light"] pre{background:#0f1621}
-html[data-theme="light"] .toast{background:#0b1220;border-color:#0b1220;color:#f4f7fb}
-html[data-theme="light"] .msg.user{background:#eaf1ff;border-color:#d3ddff}
-html[data-theme="light"] .msg.bot{background:#fff;border-color:#e6ebf3}
-html[data-theme="light"] .delta.up{background:#e9f7f0}
-html[data-theme="light"] .delta.down{background:#fdeef0}
+html[data-theme="light"] .palette-item.sel{background:var(--accent-soft)}
+html[data-theme="light"] pre{background:var(--panel3)}
+html[data-theme="light"] .toast{background:var(--panel3);border-color:var(--panel3);color:var(--ink)}
+html[data-theme="light"] .msg.user{background:var(--accent-soft);border-color:var(--line2)}
+html[data-theme="light"] .msg.bot{background:#fff;border-color:var(--line)}
+html[data-theme="light"] .delta.up{background:var(--accent-soft)}
+html[data-theme="light"] .delta.down{background:var(--accent-soft)}
 html[data-theme="light"] .delta.flat{background:#f1f4f9}
 .kpi:hover{border-color:var(--line2);box-shadow:var(--shadow);transform:translateY(-1px)}
 .kpi-k{font-size:var(--text-2xs);letter-spacing:.11em;text-transform:uppercase;color:var(--muted);font-weight:600}
@@ -388,7 +388,7 @@ table.t tr:hover td{background:var(--panel2)}
 .chat{display:flex;flex-direction:column;height:calc(100vh - 130px);max-width:820px}
 .msgs{flex:1;overflow:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:14px}
 .msg{max-width:82%;padding:11px 14px;border-radius:12px;white-space:pre-wrap;line-height:1.6;font-size:13.5px}
-.msg.user{align-self:flex-end;background:#1b2637;border:1px solid #2a3b52}
+.msg.user{align-self:flex-end;background:var(--nav-active);border:1px solid #2a3b52}
 .msg.bot{align-self:flex-start;background:var(--panel);border:1px solid var(--line)}
 .msg .cite{margin-top:8px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:7px}
 .suggest{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
@@ -408,11 +408,11 @@ table.t tr:hover td{background:var(--panel2)}
 .palette-list{max-height:46vh;overflow:auto;padding:6px}
 .palette-item{display:flex;gap:12px;align-items:center;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:13.5px}
 .palette-item .k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;border:1px solid var(--line2);padding:1px 5px;border-radius:4px;flex-shrink:0}
-.palette-item.sel{background:#1b2637}
+.palette-item.sel{background:var(--nav-active)}
 .palette-item .s{margin-left:auto;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
 .palette-foot{display:flex;gap:16px;padding:9px 16px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
 kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2px;border-radius:4px;padding:0 4px;font-size:10px;font-family:inherit;color:var(--ink2)}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1b2637;border:1px solid #33507a;color:var(--tone-ink, #cfe0ff);padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:50}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--nav-active);border:1px solid var(--accent2);color:var(--tone-ink, var(--tone-ink));padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:50}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:s .7s linear infinite;vertical-align:-2px;margin-right:6px}
 @keyframes s{to{transform:rotate(360deg)}}
@@ -431,7 +431,7 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
   .nav button{flex-direction:column;gap:3px;padding:7px 10px;font-size:9.5px;white-space:nowrap;border-radius:9px}
   .nav button .ico{width:18px;height:18px}
   .nav button .ico svg{width:17px;height:17px}
-  .nav button.active{box-shadow:none;background:#1b2637}
+  .nav button.active{box-shadow:none;background:var(--nav-active)}
   main{overflow:visible;padding-bottom:78px}
   .topbar{padding:10px 14px;gap:8px;flex-wrap:wrap}
   .topbar h1{font-size:15px}
@@ -478,7 +478,7 @@ html[data-theme="light"] .landing{background:radial-gradient(1100px 560px at 50%
 .land-wrap{max-width:940px;margin:0 auto;padding:38px 24px 90px}
 .land-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:64px}
 .land-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:15px;letter-spacing:.02em}
-.land-brand .mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,#4c8dff,#8b5cf6);display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff}
+.land-brand .mark{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:800;font-size:13px;color:#fff}
 .land-kicker{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:#9fb4d4;border:1px solid #24344d;background:#111a28;padding:5px 11px;border-radius:999px}
 html[data-theme="light"] .land-kicker{color:#3d5a86;border-color:#cdddf2;background:#eaf1fb}
 .land-h1{font-size:clamp(32px,5.2vw,52px);line-height:1.08;letter-spacing:-.03em;margin:20px 0 0;font-weight:750}
@@ -499,7 +499,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .check input,.check select{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 12px;font-size:14px;outline:none;color:var(--ink)}
 .check input:focus,.check select:focus{border-color:var(--accent2)}
 .check .go{margin-top:16px;width:100%;padding:13px;font-size:14px;border-radius:10px}
-.result{margin-top:22px;border-radius:14px;padding:22px;border:1px solid #2f2a4d;display:none}
+.result{margin-top:22px;border-radius:14px;padding:22px;border:1px solid var(--ai-border);display:none}
 .result.show{display:block;animation:rise .35s cubic-bezier(.2,.7,.3,1) both}
 .result .big-gap{font-size:clamp(26px,4.4vw,38px);font-weight:780;letter-spacing:-.03em;line-height:1.12;margin:6px 0 4px}
 .result .scale{margin-top:20px;height:10px;border-radius:6px;background:#221d38;position:relative}
@@ -866,10 +866,10 @@ const TYPE_LABEL = { job: 'Jobs', contract: 'Contracts', fellowship: 'Fellowship
 // same three tokens as the rest of the system so both themes stay in balance.
 function scoreColor(s) {
   const light = document.documentElement.dataset.theme === 'light';
-  if (s >= 85) return light ? ['#0a7a45', '#e9f7f0'] : ['#38c98a', '#0e2119'];
+  if (s >= 85) return light ? ['#0a7a45', 'var(--accent-soft)'] : ['#38c98a', '#0e2119'];
   if (s >= 70) return light ? ['#1d4ed8', '#eef3fd'] : ['#6b93f7', '#141b2b'];
   if (s >= 55) return light ? ['#a86400', '#fdf3e3'] : ['#e2a83a', '#241c0f'];
-  return light ? ['#b02439', '#fdeef0'] : ['#f05666', '#241417'];
+  return light ? ['#b02439', 'var(--accent-soft)'] : ['#f05666', '#241417'];
 }
 
 
@@ -917,7 +917,7 @@ async function renderSeo() {
         <h2 style="font-size:17px;margin:32px 0 10px">Where the money is</h2>
         <div class="card">${(b.byChannel || []).filter((c) => c.n >= 5).map((c) => `<div class="kv"><span>${esc(c.channel)} <span class="muted">(${c.n})</span></span><span class="mono">${fmt(c.median)}</span></div>`).join('')}</div>
         <h2 style="font-size:17px;margin:32px 0 10px">Skills that pay more</h2>
-        <div class="card">${r.levers.slice(0, 6).map((l) => `<div class="kv"><span>${esc(l.skill)}</span><span class="mono" style="color:#6fe3a4">+${l.premium}%</span></div>`).join('')}</div>
+        <div class="card">${r.levers.slice(0, 6).map((l) => `<div class="kv"><span>${esc(l.skill)}</span><span class="mono" style="color:var(--good)">+${l.premium}%</span></div>`).join('')}</div>
         <div class="card" style="margin-top:26px;text-align:center;">
           <div style="font-size:15px;font-weight:600">Where do you sit against this?</div>
           <div class="dim" style="font-size:12.5px;margin-top:6px">Find out in 60 seconds. Free, no account.</div>
@@ -942,7 +942,7 @@ async function renderSeo() {
         <p class="land-sub">${esc(s1.category)} · demand index ${s1.demand_index} · salary premium +${s1.salary_premium}% · growth ${s1.growth_rate > 0 ? '+' : ''}${s1.growth_rate}%</p>
         <div class="card" style="margin-top:24px">
           <div class="kv"><span>Market demand index</span><span class="mono">${s1.demand_index}/200</span></div>
-          <div class="kv"><span>Salary premium</span><span class="mono" style="color:#6fe3a4">+${s1.salary_premium}%</span></div>
+          <div class="kv"><span>Salary premium</span><span class="mono" style="color:var(--good)">+${s1.salary_premium}%</span></div>
           <div class="kv"><span>90-day growth</span><span class="mono">${s1.growth_rate > 0 ? '+' : ''}${s1.growth_rate}%</span></div>
           <div class="kv"><span>Emerging</span><span class="mono">${s1.is_emerging ? 'yes' : 'no'}</span></div>
         </div>
@@ -972,14 +972,14 @@ async function renderSharedCard(id) {
   document.getElementById('landing').innerHTML = `
     <div class="land-wrap" style="max-width:620px">
       <div class="land-nav"><div class="land-brand"><span class="mark">M</span> MirrorSpread</div></div>
-      <div class="card tone-violet" style="padding:34px;border-color:#2f2a4d">
-        <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, #a99bf0)">Market value report</div>
-        <div style="font-size:clamp(26px,4.6vw,36px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:12px 0 8px;color:${under ? '#ff8f96' : '#6fe3a4'}">
+      <div class="card tone-violet" style="padding:34px;border-color:var(--ai-border)">
+        <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">Market value report</div>
+        <div style="font-size:clamp(26px,4.6vw,36px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:12px 0 8px;color:${under ? 'var(--bad)' : 'var(--good)'}">
           ${p.gapPct != null ? (under ? `${p.gapPct}% below market` : `${Math.abs(p.gapPct)}% above market`) : 'Market value'}
         </div>
         <div style="font-size:14px;color:var(--ink2)">
           ${esc(p.role || 'This profile')}${p.country ? ' · ' + esc(p.country) : ''} – median <b style="color:var(--ink)">${fmt(p.median)}${per}</b>
-          ${p.gapAbs && under ? ` · about <b style="color:#ff8f96">${fmt(Math.abs(p.gapAbs))} a year</b> left on the table` : ''}
+          ${p.gapAbs && under ? ` · about <b style="color:var(--bad)">${fmt(Math.abs(p.gapAbs))} a year</b> left on the table` : ''}
         </div>
       </div>
       <div style="text-align:center;margin-top:26px">
@@ -1029,7 +1029,7 @@ async function runRateCheck() {
     const fmt = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
     const per = b.period === 'hour' ? '/hr' : '/yr';
 
-    const tone = v.level === 'underpaid' ? '#ff8f96' : v.level === 'slightly_under' ? '#e0c273' : v.level === 'above_market' ? '#6fe3a4' : '#8fb4ee';
+    const tone = v.level === 'underpaid' ? 'var(--bad)' : v.level === 'slightly_under' ? 'var(--warn)' : v.level === 'above_market' ? 'var(--good)' : 'var(--blue)';
     const box = document.getElementById('c-result');
     box.className = 'result show';
     const line = (() => {
@@ -1042,7 +1042,7 @@ async function runRateCheck() {
       return `You are ahead of the median. That is leverage, and it expires if you sit still.`;
     })();
     box.innerHTML = `
-      <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, #a99bf0)">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
+      <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
       <div class="big-gap" style="color:${tone}">${esc(line)}</div>
       <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b>${v.gapAbs != null ? ` · you report ${fmt(r.input.current)}${per}` : ''}</div>
       <div class="scale">
@@ -1056,7 +1056,7 @@ async function runRateCheck() {
       </div>
       <div style="margin-top:12px;font-size:13px;color:var(--ink2)">
         <b style="color:var(--ink)">Skills that pay more than yours:</b>
-        ${r.levers.slice(0, 4).map((l) => `${esc(l.skill)} <span style="color:#6fe3a4">+${l.premium}%</span>`).join(' · ')}
+        ${r.levers.slice(0, 4).map((l) => `${esc(l.skill)} <span style="color:var(--good)">+${l.premium}%</span>`).join(' · ')}
       </div>
       <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn ghost sm" id="c-share">Share this result</button>
@@ -1104,7 +1104,7 @@ async function runRateCheck() {
       btn.disabled = false; btn.innerHTML = 'Email me my report <span style="opacity:.7">&gt;</span>';
       if (lead.error) { msg.textContent = lead.error; return; }
       msg.innerHTML = lead.hasAccount
-        ? 'We found your account – <a href="/?app=1" style="color:#8fb4ee">open the radar</a>.'
+        ? 'We found your account – <a href="/?app=1" style="color:var(--blue)">open the radar</a>.'
         : 'Saved. Continue to build your Career Twin and see the opportunities that pay this.';
       if (!lead.hasAccount) {
         setTimeout(() => {
@@ -1155,7 +1155,7 @@ async function renderAuth() {
   $('#view-sub').textContent = 'Passwordless. One code, no passwords stored.';
   $('#view').innerHTML = `
   <div class="onboard" style="max-width:460px">
-    <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,#4c8dff,#8b5cf6);display:grid;place-items:center;font-weight:800;color:#fff;margin-bottom:20px">M</div>
+    <div style="width:38px;height:38px;border-radius:11px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:grid;place-items:center;font-weight:800;color:#fff;margin-bottom:20px">M</div>
     <p class="lead">See your value. Expand your possibilities.</p>
     <p class="sub">One profile, every opportunity. Sign in and the engine starts watching.</p>
     <div id="auth-step1">
@@ -1180,7 +1180,7 @@ async function renderAuth() {
     if (r.error) return toast(r.error);
     $('#auth-step1').style.display = 'none';
     $('#auth-step2').style.display = 'block';
-    $('#auth-hint').innerHTML = `Code for <b>${esc(r.sentTo)}</b> – <span class="mono" style="color:var(--tone-ink, #cfe0ff);font-size:15px;letter-spacing:.2em">${esc(r.devCode)}</span> <span class="muted">(dev only – this would be an email)</span>`;
+    $('#auth-hint').innerHTML = `Code for <b>${esc(r.sentTo)}</b> – <span class="mono" style="color:var(--tone-ink, var(--tone-ink));font-size:15px;letter-spacing:.2em">${esc(r.devCode)}</span> <span class="muted">(dev only – this would be an email)</span>`;
     $('#auth-code').focus();
   };
   $('#auth-verify').onclick = async () => {
@@ -1331,9 +1331,9 @@ function renderOnboarding() {
       const b = preview.benchmark, v = preview.verdict;
       const fmt = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
       const per = b.period === 'hour' ? '/hr' : '/yr';
-      const tone = v.gapPct > 15 ? '#ff8f96' : v.gapPct > 5 ? '#e0c273' : '#6fe3a4';
+      const tone = v.gapPct > 15 ? 'var(--bad)' : v.gapPct > 5 ? 'var(--warn)' : 'var(--good)';
       box.innerHTML = `
-        <div class="card tone-violet" style="border-color:#2f2a4d;">
+        <div class="card tone-violet" style="border-color:var(--ai-border);">
           <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
           <div style="font-size:clamp(24px,4.4vw,34px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:10px 0 6px;color:${tone}">${esc(v.headline)}</div>
           <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b></div>
@@ -1382,7 +1382,7 @@ async function renderRadar() {
     const plan = await api('/api/plan');
     STATE.plan = plan;
     if (plan.plan !== 'pro') {
-      planBanner = `<div class="card tone-violet" style="margin-bottom:14px;border-color:#2f2a4d;">
+      planBanner = `<div class="card tone-violet" style="margin-bottom:14px;border-color:var(--ai-border);">
         <div class="row" style="justify-content:space-between;gap:16px;flex-wrap:wrap">
           <div style="flex:1;min-width:260px">
             <div style="font-size:13.5px;font-weight:600">You are on Free – showing your top ${plan.limits.matches} scored opportunities</div>
@@ -1426,7 +1426,7 @@ async function renderRadar() {
     <div class="rate-gap">
       <div class="k">Rate intelligence · ${rates.sampleSize} comparable postings · ${rates.confidence} confidence · ${esc(rates.segment || '')}</div>
       <div class="amount">${rates.gapPct > 0 ? 'You are ' + rates.gapPct + '% below market' : rates.gapPct < 0 ? 'You are ' + Math.abs(rates.gapPct) + '% above market' : 'You are at market'}</div>
-      <div class="dim">Median for your exact profile: <b>${money(rates.p50)}</b>${PERIOD_LABEL[rates.period] || ''} · you report <b>${money(rates.current)}</b>${PERIOD_LABEL[rates.period] || ''} ${rates.gapAbs > 0 ? `<span style="color:#ff8f96">(${money(rates.gapAbs)}/yr on the table)</span>` : ''}</div>
+      <div class="dim">Median for your exact profile: <b>${money(rates.p50)}</b>${PERIOD_LABEL[rates.period] || ''} · you report <b>${money(rates.current)}</b>${PERIOD_LABEL[rates.period] || ''} ${rates.gapAbs > 0 ? `<span style="color:var(--bad)">(${money(rates.gapAbs)}/yr on the table)</span>` : ''}</div>
       <div class="scale">
         <div class="band" style="left:${pos(rates.p25)}%;width:${pos(rates.p75) - pos(rates.p25)}%"></div>
         <div class="you" style="left:${pos(rates.current)}%"></div>
@@ -1561,8 +1561,8 @@ async function renderRadar() {
           <div class="row" style="gap:20px;flex-wrap:wrap">
             <div><span class="mono" style="font-size:17px;font-weight:700">${h.streak}</span> <span class="muted" style="font-size:12px">day streak</span></div>
             <div><span class="mono" style="font-size:17px;font-weight:700">${h.fresh}</span> <span class="muted" style="font-size:12px">new at 70+</span></div>
-            ${h.rateGapPct != null ? `<div><span class="mono" style="font-size:17px;font-weight:700;color:${h.rateGapPct > 10 ? '#ff8f96' : '#6fe3a4'}">${h.rateGapPct}%</span> <span class="muted" style="font-size:12px">below market</span></div>` : ''}
-            ${h.scoreDelta ? `<div><span class="mono" style="font-size:17px;font-weight:700;color:${h.scoreDelta > 0 ? '#6fe3a4' : '#ff8f96'}">${h.scoreDelta > 0 ? '+' : ''}${h.scoreDelta}</span> <span class="muted" style="font-size:12px">career score</span></div>` : ''}
+            ${h.rateGapPct != null ? `<div><span class="mono" style="font-size:17px;font-weight:700;color:${h.rateGapPct > 10 ? 'var(--bad)' : 'var(--good)'}">${h.rateGapPct}%</span> <span class="muted" style="font-size:12px">below market</span></div>` : ''}
+            ${h.scoreDelta ? `<div><span class="mono" style="font-size:17px;font-weight:700;color:${h.scoreDelta > 0 ? 'var(--good)' : 'var(--bad)'}">${h.scoreDelta > 0 ? '+' : ''}${h.scoreDelta}</span> <span class="muted" style="font-size:12px">career score</span></div>` : ''}
           </div>
           <div class="row" style="gap:10px">
             <div class="bar" style="width:80px"><i style="width:${Math.min(100, (h.appliedThisWeek / h.weeklyTarget) * 100)}%"></i></div>
@@ -1576,7 +1576,7 @@ async function renderRadar() {
   // First-run teachable moment: explain the one number that matters before showing the feed.
   const teach = $('#teach');
   if (teach && !localStorage.getItem('karyvo-taught')) {
-    teach.innerHTML = `<div class="card tone-violet" style="border-color:#253247;background:linear-gradient(90deg,#131a24,#11161d)">
+    teach.innerHTML = `<div class="card tone-violet" style="border-color:var(--line);background:linear-gradient(90deg,#131a24,#11161d)">
       <div class="row" style="justify-content:space-between;gap:16px;flex-wrap:wrap">
         <div style="flex:1;min-width:280px">
           <div style="font-size:13.5px;font-weight:600">Every card here is scored against your twin.</div>
@@ -1605,7 +1605,7 @@ async function renderRadar() {
       if (sortKey === 'fresh') return new Date(b.posted_at) - new Date(a.posted_at);
       return b.match_score - a.match_score;
     });
-    $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="card tone-violet" style="text-align:center;border-color:#2f2a4d"><div class="dim" style="font-size:13px">${rows.length - capped.length} more scored opportunities are hidden on the Free plan.</div><div style="margin-top:10px"><button class="btn sm" onclick="go('plan')">See what Pro unlocks</button></div></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
+    $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="card tone-violet" style="text-align:center;border-color:var(--ai-border)"><div class="dim" style="font-size:13px">${rows.length - capped.length} more scored opportunities are hidden on the Free plan.</div><div style="margin-top:10px"><button class="btn sm" onclick="go('plan')">See what Pro unlocks</button></div></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
     $('#f-count').textContent = `${rows.length} of ${feed.opportunities.length} shown`;
     bindOppActions();
     renderFacets(rows);
@@ -1659,7 +1659,7 @@ async function renderRadar() {
   let cursor = -1;
   const paint = () => {
     rows().forEach((el, i) => {
-      el.style.outline = i === cursor ? '1px solid #33507a' : 'none';
+      el.style.outline = i === cursor ? '1px solid var(--accent2)' : 'none';
       el.style.background = i === cursor ? '#161e2a' : 'var(--panel)';
     });
   };
@@ -1748,7 +1748,7 @@ function oppCard(o, idx = 0) {
         <span>${esc(o.city)}${o.country ? ', ' + esc(o.country) : ''} · ${esc(o.remote_type)}</span>
         ${o.visa_sponsorship === 'yes' ? '<span class="chip have">visa sponsorship</span>' : ''}
         ${o.source_count > 1 ? `<span class="chip">${o.source_count} sources</span>` : ''}
-        ${o.confidence ? `<span class="chip" title="${esc(o.confidence.factors.map((f) => f.k + ' ' + f.d).join(' · '))}" style="border-color:${o.confidence.level === 'high' ? '#24462f' : o.confidence.level === 'medium' ? '#3d3a24' : '#4a2b30'};color:${o.confidence.level === 'high' ? '#71d69c' : o.confidence.level === 'medium' ? '#e0c273' : '#f08b91'}">${o.confidence.level} evidence</span>` : ''}
+        ${o.confidence ? `<span class="chip" title="${esc(o.confidence.factors.map((f) => f.k + ' ' + f.d).join(' · '))}" style="border-color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? '#3d3a24' : 'var(--bad)'};color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'}">${o.confidence.level} evidence</span>` : ''}
         ${(o.missing_skills || []).slice(0, 3).map((m) => `<span class="chip miss">${esc(m)}</span>`).join('')}
       </div>
       <div class="why">${esc(top)}</div>
@@ -1827,7 +1827,7 @@ function openDetail(id) {
         <h3 style="margin-top:18px">What would move you up</h3>
         <div style="font-size:12.5px" class="dim">${(o.missing_skills || []).length ? 'Close: <b>' + o.missing_skills.map(esc).join(', ') + '</b> – each one raises both match and interview probability.' : 'You cover every listed skill. Your edge here is speed of application.'}</div>
         ${o.confidence ? `<div style="margin-top:16px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)">
-          <div class="row" style="justify-content:space-between"><span style="font-size:12px">Evidence quality</span><span class="mono" style="color:${o.confidence.level === 'high' ? '#71d69c' : o.confidence.level === 'medium' ? '#e0c273' : '#f08b91'}">${o.confidence.score}/100 · ${o.confidence.level}</span></div>
+          <div class="row" style="justify-content:space-between"><span style="font-size:12px">Evidence quality</span><span class="mono" style="color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'}">${o.confidence.score}/100 · ${o.confidence.level}</span></div>
           <div style="margin-top:8px;font-size:11.5px;color:var(--muted);line-height:1.7">${o.confidence.factors.map((f) => `${esc(f.k)} <span class="mono">${esc(f.d)}</span>${f.note ? ' <span style="opacity:.7">– ' + esc(f.note) + '</span>' : ''}`).join('<br/>')}</div>
         </div>` : ''}
         <div class="kv" style="margin-top:16px"><span>Income potential</span><span class="mono">${o.income_potential}/100</span></div>
@@ -1919,7 +1919,7 @@ function openDetail(id) {
           ${esc(r.factCheck.note)} · matched: ${r.evidence.matchedSkills.map(esc).join(', ') || 'none listed'}${r.evidence.gaps.length ? ' · gaps acknowledged: ' + r.evidence.gaps.map(esc).join(', ') : ''}
         </div>`;
       $('#cl-body').dataset.text = r.text;
-      document.querySelectorAll('.cl-tone').forEach((x) => { x.style.borderColor = x.dataset.t === b.dataset.t ? '#33507a' : ''; });
+      document.querySelectorAll('.cl-tone').forEach((x) => { x.style.borderColor = x.dataset.t === b.dataset.t ? 'var(--accent2)' : ''; });
     };
   });
   const cc = document.querySelector('.cl-copy');
@@ -1988,7 +1988,7 @@ async function renderScores() {
   const circ = 2 * Math.PI * 52;
   $('#view').innerHTML = `
     <div class="overall">
-      <div class="ring" style="background:conic-gradient(#4c8dff ${overallV * 3.6}deg,#1c2431 0)">
+      <div class="ring" style="background:conic-gradient(var(--accent) ${overallV * 3.6}deg,#1c2431 0)">
         <div><div class="v">${overallV}</div><div class="c">overall</div></div>
       </div>
       <div>
@@ -2041,7 +2041,7 @@ async function renderScores() {
         <div class="mono muted" style="width:18px">${i + 1}</div>
         <div style="flex:1"><div style="font-size:13.5px;font-weight:550">${esc(l.lever)}</div>
         <div class="muted" style="font-size:12px;margin-top:3px">${esc(l.why)}</div></div>
-        <div class="mono" style="font-size:12px;color:${l.value < 40 ? '#ff8f96' : l.value < 70 ? '#e0c273' : '#6fe3a4'}">${l.value}</div>
+        <div class="mono" style="font-size:12px;color:${l.value < 40 ? 'var(--bad)' : l.value < 70 ? 'var(--warn)' : 'var(--good)'}">${l.value}</div>
       </div>`).join('')}
       <div class="note" style="margin-top:12px">Ranked by your weakest score. Fixing the lowest number moves the overall score more than polishing the highest.</div>
     </div>` : `<h2 class="section">What to attack first</h2>
@@ -2061,14 +2061,14 @@ async function renderRates() {
         <div class="big mono" style="margin:10px 0 2px">${money(r.p50)}</div>
         <div class="dim">median across ${r.sampleSize} comparable postings (${r.confidence} confidence)</div>
         <div class="scale" style="margin-top:22px;height:10px;border-radius:6px;background:#1c2431;position:relative">
-          <div style="position:absolute;height:100%;border-radius:6px;background:linear-gradient(90deg,#2b3f6b,#4c8dff);left:${pos(r.p25)}%;width:${pos(r.p75) - pos(r.p25)}%"></div>
+          <div style="position:absolute;height:100%;border-radius:6px;background:linear-gradient(90deg,#2b3f6b,var(--accent));left:${pos(r.p25)}%;width:${pos(r.p75) - pos(r.p25)}%"></div>
           <div style="position:absolute;top:-6px;width:3px;height:22px;background:#fff;border-radius:2px;left:${pos(r.current || r.p50)}%"></div>
         </div>
         <div class="legend" style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:10px">
           <span>p25 ${money(r.p25)}</span><span>p50 ${money(r.p50)}</span><span>p75 ${money(r.p75)}</span><span>p90 ${money(r.p90)}</span>
         </div>
-        ${r.gapPct != null ? `<div class="card tone-violet" style="margin-top:20px;background:#161b24;border-color:#2f2a4d">
-          <div class="k" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tone-kicker, #a99bf0)">Verdict</div>
+        ${r.gapPct != null ? `<div class="card tone-violet" style="margin-top:20px;background:#161b24;border-color:var(--ai-border)">
+          <div class="k" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">Verdict</div>
           <div style="font-size:17px;font-weight:650;margin-top:6px">${r.verdict === 'underpaid' ? 'The market disagrees with your payslip – by ' + r.gapPct + '%' : r.verdict === 'slightly_under' ? 'Just under the line (' + r.gapPct + '%) – and it compounds' : r.verdict === 'at_market' ? 'Priced correctly. Not the same as paid well.' : 'Ahead of the market. Now use it.'}</div>
           <div class="dim" style="margin-top:4px">${r.gapAbs > 0 ? money(r.gapAbs) + ' per year of headroom at the median – ' + money(r.gapAbs * 2) + ' over two years.' : 'Your rate is defensible. The lever now is growth, not price.'}</div>
         </div>` : ''}
@@ -2085,13 +2085,13 @@ async function renderRates() {
         ${r.confidenceDetail ? `<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px">
           <div class="row" style="justify-content:space-between"><span style="font-size:12px">Benchmark confidence</span><span class="mono">${esc(r.confidenceDetail.level)}</span></div>
           <div style="margin-top:8px;font-size:11.5px;color:var(--muted);line-height:1.7">${r.confidenceDetail.factors.map((f) => `${esc(f.k)} <span class="mono">${esc(f.d)}</span>`).join('<br/>')}</div>
-          ${r.confidenceDetail.caveat ? `<div style="margin-top:8px;font-size:11.5px;color:#e0c273">${esc(r.confidenceDetail.caveat)}</div>` : ''}
+          ${r.confidenceDetail.caveat ? `<div style="margin-top:8px;font-size:11.5px;color:var(--warn)">${esc(r.confidenceDetail.caveat)}</div>` : ''}
         </div>` : ''}
         </div>
         <div class="card" style="margin-top:14px">
           <h3>Highest-premium skills in your adjacency</h3>
           <div style="margin-top:10px">
-            ${r.topPayingSkills.map((s) => `<div class="kv"><span>${esc(s.skill)}</span><span class="mono" style="color:#6fe3a4">+${s.premium}%</span></div>`).join('')}
+            ${r.topPayingSkills.map((s) => `<div class="kv"><span>${esc(s.skill)}</span><span class="mono" style="color:var(--good)">+${s.premium}%</span></div>`).join('')}
           </div>
         </div>
       </div>
@@ -2109,7 +2109,7 @@ async function renderGaps() {
       <h3>Skill gap detection</h3>
       <div class="dim" style="margin-top:6px">Computed by comparing your skills against the required skills of your top ${sampleOf} realistic opportunities – weighted by how many roles each gap blocks, its salary premium and its growth rate.</div>
     </div>
-    <div class="card tone-violet" style="margin-bottom:14px;border-color:#253247;">
+    <div class="card tone-violet" style="margin-bottom:14px;border-color:var(--line);">
       <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">The shortest path</div>
       <div style="font-size:15px;font-weight:600;margin-top:8px;line-height:1.5">${esc(plan.insight)}</div>
       <div style="margin-top:16px">
@@ -2144,8 +2144,8 @@ async function renderGaps() {
         <td class="mono">${g.blocking} roles</td>
         <td><div class="bar" style="width:90px"><i style="width:${g.share}%"></i></div><span class="muted mono" style="font-size:11px">${g.share}%</span></td>
         <td class="mono">${g.demand}</td>
-        <td class="mono" style="color:${g.salaryPremium > 10 ? '#6fe3a4' : 'inherit'}">+${g.salaryPremium}%</td>
-        <td class="mono" style="color:${g.growth > 20 ? '#6fe3a4' : 'inherit'}">${g.growth > 0 ? '+' : ''}${g.growth}%</td>
+        <td class="mono" style="color:${g.salaryPremium > 10 ? 'var(--good)' : 'inherit'}">+${g.salaryPremium}%</td>
+        <td class="mono" style="color:${g.growth > 20 ? 'var(--good)' : 'inherit'}">${g.growth > 0 ? '+' : ''}${g.growth}%</td>
         <td class="mono muted">~${g.effortWeeks}w</td>
       </tr>`).join('')}</tbody>
     </table></div>` : '<div class="empty">No systematic gaps detected.</div>'}
@@ -2235,7 +2235,7 @@ async function renderTwin() {
         <h3 style="margin-top:18px">Your data</h3>
         <div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap">
           <button class="btn sm ghost" id="d-export">Export everything</button>
-          <button class="btn sm ghost" id="d-delete" style="border-color:#4a2b30;color:#f08b91">Delete my account</button>
+          <button class="btn sm ghost" id="d-delete" style="border-color:var(--bad);color:var(--bad)">Delete my account</button>
         </div>
         <div class="muted" style="font-size:11px;margin-top:8px">Export gives you a JSON file of every record we hold. Delete removes your profile, CV, applications, outcomes and preferences within 30 days.</div>
         <div class="note" style="margin-top:14px">This is the switching cost: the twin accumulates history. A competitor can copy the UI in a week; it cannot copy your 12 months of behaviour and outcomes.</div>
@@ -2369,17 +2369,17 @@ async function renderPlan() {
   const p = await api('/api/plan');
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:1fr 1fr 1fr">
-      <div class="card tone-violet" style="${p.plan === 'free' ? 'border-color:#2f2a4d' : ''}">
+      <div class="card tone-violet" style="${p.plan === 'free' ? 'border-color:var(--ai-border)' : ''}">
         <h3>Free</h3>
         <div class="big mono" style="margin:8px 0">€0</div>
         <div style="margin-top:12px">${p.plans.free.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span class="muted">–</span></div>`).join('')}</div>
         ${p.plan === 'free' ? '<div class="chip have" style="margin-top:14px;display:inline-block">current plan</div>' : `<div style="margin-top:14px"><button class="btn ghost sm" id="downgrade">Switch to Free</button></div>`}
       </div>
-      <div class="card tone-violet" style="border-color:#33507a;">
+      <div class="card tone-violet" style="border-color:var(--accent2);">
         <h3>Pro</h3>
         <div class="big mono" style="margin:8px 0">€19.99<span style="font-size:14px;color:var(--muted)">/month</span></div>
         <div class="dim" style="font-size:12.5px">or €149.99/year – two months free</div>
-        <div style="margin-top:12px">${p.plans.pro.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:#6fe3a4">✓</span></div>`).join('')}</div>
+        <div style="margin-top:12px">${p.plans.pro.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--good)">✓</span></div>`).join('')}</div>
         ${p.plan === 'pro'
           ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
           : `<div style="margin-top:14px" class="row"><button class="btn sm" id="up-month">€19.99 monthly</button><button class="btn sm ghost" id="up-year">€149.99 yearly</button></div>`}
@@ -2388,7 +2388,7 @@ async function renderPlan() {
         <h3>Pro+</h3>
         <div class="big mono" style="margin:8px 0">€49<span style="font-size:14px;color:var(--muted)">/month</span></div>
         <div class="dim" style="font-size:12.5px">For people making a move this quarter</div>
-        <div style="margin-top:12px">${(p.plans.plus?.features || []).map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--tone-kicker, #a99bf0)">✦</span></div>`).join('')}</div>
+        <div style="margin-top:12px">${(p.plans.plus?.features || []).map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--tone-kicker, var(--tone-kicker))">✦</span></div>`).join('')}</div>
         ${p.plan === 'plus'
           ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
           : `<div style="margin-top:14px"><button class="btn sm ghost" id="up-plus" style="border-color:#3a2f5a;color:#c9b8ff">Talk to us about Pro+ <span style="opacity:.7">&gt;</span></button></div>`}
@@ -2400,7 +2400,7 @@ async function renderPlan() {
       <div class="kv" style="margin-top:14px"><span>Match scores computed</span><span class="mono">${p.usage.matchScores}</span></div>
       <div class="kv"><span>Opportunities tracked</span><span class="mono">${p.usage.tracked}</span></div>
       <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:12px">
-        <div class="row" style="justify-content:space-between"><span style="font-size:12.5px">Billing mode</span><span class="mono" style="color:${p.billing.ready ? '#6fe3a4' : '#e0c273'}">${esc(p.billing.mode)}</span></div>
+        <div class="row" style="justify-content:space-between"><span style="font-size:12.5px">Billing mode</span><span class="mono" style="color:${p.billing.ready ? 'var(--good)' : 'var(--warn)'}">${esc(p.billing.mode)}</span></div>
         <div class="dim" style="font-size:12px;margin-top:6px">${esc(p.billing.note)}</div>
         ${p.billing.missing && p.billing.missing.length ? `<div class="muted" style="font-size:11px;margin-top:8px">Missing: <span class="mono">${p.billing.missing.map(esc).join(', ')}</span></div>` : ''}
       </div>
@@ -2428,31 +2428,31 @@ async function renderNegotiation() {
   if (!n || n.error) return renderOnboarding();
   const copy = (t) => { navigator.clipboard.writeText(t); toast('Copied – go say it'); };
   $('#view').innerHTML = `
-    <div class="card tone-violet" style="border-color:#253247;">
+    <div class="card tone-violet" style="border-color:var(--line);">
       <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Negotiation brief · ${esc(n.confidence)} confidence · ${n.exactComparables} exact comparables</div>
       <div class="row" style="gap:26px;margin-top:14px;flex-wrap:wrap">
         <div><div class="muted" style="font-size:11px">Floor (p50)</div><div class="big mono" style="font-size:24px">${money(n.floor)}</div></div>
-        <div><div class="muted" style="font-size:11px">Your target (p75)</div><div class="big mono" style="font-size:24px;color:#6fe3a4">${money(n.target)}</div></div>
+        <div><div class="muted" style="font-size:11px">Your target (p75)</div><div class="big mono" style="font-size:24px;color:var(--good)">${money(n.target)}</div></div>
         <div><div class="muted" style="font-size:11px">Stretch (p90)</div><div class="big mono" style="font-size:24px">${money(n.stretch)}</div></div>
-        ${n.current ? `<div><div class="muted" style="font-size:11px">You today</div><div class="big mono" style="font-size:24px;color:#ff8f96">${money(n.current)}</div></div>` : ''}
+        ${n.current ? `<div><div class="muted" style="font-size:11px">You today</div><div class="big mono" style="font-size:24px;color:var(--bad)">${money(n.current)}</div></div>` : ''}
       </div>
     </div>
 
     <h2 class="section">What to say when they name a number</h2>
     <div class="card">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">The ask</h3><button class="chip cp" data-t="${esc(n.askScript)}" style="cursor:pointer">copy</button></div>
-      <div style="margin-top:10px;font-size:13.5px;line-height:1.75;font-style:italic;color:var(--tone-ink, #cfe0ff)">${esc(n.askScript)}</div>
+      <div style="margin-top:10px;font-size:13.5px;line-height:1.75;font-style:italic;color:var(--tone-ink, var(--tone-ink))">${esc(n.askScript)}</div>
     </div>
     <div class="card" style="margin-top:12px">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">If they come in low</h3><button class="chip cp" data-t="${esc(n.counterScript)}" style="cursor:pointer">copy</button></div>
-      <div style="margin-top:10px;font-size:13.5px;line-height:1.75;font-style:italic;color:var(--tone-ink, #cfe0ff)">${esc(n.counterScript)}</div>
+      <div style="margin-top:10px;font-size:13.5px;line-height:1.75;font-style:italic;color:var(--tone-ink, var(--tone-ink))">${esc(n.counterScript)}</div>
     </div>
 
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
       <div class="card">
         <h3>Your leverage</h3>
         <div style="margin-top:10px">
-          ${n.levers.map((l) => `<div class="kv"><span>${esc(l.split(' (')[0])}</span><span class="mono" style="color:#6fe3a4">${esc(l.split('(')[1].replace(')', ''))}</span></div>`).join('')}
+          ${n.levers.map((l) => `<div class="kv"><span>${esc(l.split(' (')[0])}</span><span class="mono" style="color:var(--good)">${esc(l.split('(')[1].replace(')', ''))}</span></div>`).join('')}
         </div>
         ${n.channelUpside ? `<div class="note" style="margin-top:12px">${esc(n.channelUpside)}</div>` : ''}
       </div>
@@ -2472,7 +2472,7 @@ async function renderNegotiation() {
 async function renderEmail() {
   const [st, prefs, outbox, seq] = await Promise.all([api('/api/email/status'), api('/api/email/prefs'), api('/api/email/outbox'), api('/api/email/sequence')]);
   const toggle = (key, label, hint) => `<div class="kv"><span>${label}<div class="muted" style="font-size:11px">${hint}</div></span>
-    <span><button class="chip tg" data-k="${key}" style="cursor:pointer;${prefs[key] ? 'border-color:#24462f;color:#71d69c' : ''}">${prefs[key] ? 'on' : 'off'}</button></span></div>`;
+    <span><button class="chip tg" data-k="${key}" style="cursor:pointer;${prefs[key] ? 'border-color:var(--good);color:var(--good)' : ''}">${prefs[key] ? 'on' : 'off'}</button></span></div>`;
   $('#view').innerHTML = `
     <div class="card" style="margin-bottom:14px">
       <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
@@ -2559,7 +2559,7 @@ async function renderLeads() {
           <td class="mono">${l.years ?? '–'}</td>
           <td class="mono">${esc(l.country || '–')}</td>
           <td class="mono">${l.current_salary ? money(l.current_salary) : '–'}</td>
-          <td class="mono" style="color:${l.gap_pct > 10 ? '#ff8f96' : l.gap_pct > 0 ? '#e0c273' : '#6fe3a4'}">${l.gap_pct != null ? (l.gap_pct > 0 ? '+' : '') + l.gap_pct + '%' : '–'}</td>
+          <td class="mono" style="color:${l.gap_pct > 10 ? 'var(--bad)' : l.gap_pct > 0 ? 'var(--warn)' : 'var(--good)'}">${l.gap_pct != null ? (l.gap_pct > 0 ? '+' : '') + l.gap_pct + '%' : '–'}</td>
           <td class="mono">${l.median ? money(l.median) : '–'}</td>
           <td>${l.converted_user_id ? '<span class="chip have">account</span>' : '<span class="chip">lead</span>'}</td>
           <td class="muted" style="font-size:11px">${new Date(l.created_at).toLocaleDateString('en-GB')}</td>
@@ -2579,13 +2579,13 @@ async function renderLaunch() {
   const blocking = l.checks.filter((c) => c.blocking && !c.ok);
   const envFile = 'app/' + '.env';
   $('#view').innerHTML = `
-    <div class="card" style="border-color:${l.ready ? '#24462f' : '#4a2b30'};background:${l.ready ? 'linear-gradient(135deg,#0f1c16,#101a2e)' : 'linear-gradient(135deg,#1c1014,#101a2e)'}">
+    <div class="card" style="border-color:${l.ready ? 'var(--good)' : 'var(--bad)'};background:${l.ready ? 'linear-gradient(135deg,#0f1c16,#101a2e)' : 'linear-gradient(135deg,#1c1014,#101a2e)'}">
       <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Launch readiness</div>
-      <div style="font-size:clamp(18px,3vw,26px);font-weight:720;letter-spacing:-.02em;margin-top:10px;color:${l.ready ? '#6fe3a4' : '#ff8f96'}">${esc(l.verdict)}</div>
+      <div style="font-size:clamp(18px,3vw,26px);font-weight:720;letter-spacing:-.02em;margin-top:10px;color:${l.ready ? 'var(--good)' : 'var(--bad)'}">${esc(l.verdict)}</div>
     </div>
     <div class="card" style="margin-top:14px">
       ${l.checks.map((c) => `<div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)">
-        <div style="width:16px;text-align:center;font-size:13px;color:${c.ok ? '#6fe3a4' : c.blocking ? '#ff8f96' : '#e0c273'}">${c.ok ? '✓' : c.blocking ? '✕' : '!'}</div>
+        <div style="width:16px;text-align:center;font-size:13px;color:${c.ok ? 'var(--good)' : c.blocking ? 'var(--bad)' : 'var(--warn)'}">${c.ok ? '✓' : c.blocking ? '✕' : '!'}</div>
         <div style="flex:1">
           <div style="font-size:13px;font-weight:550">${esc(c.label)}${c.blocking ? '' : ' <span class="muted" style="font-size:10.5px;font-weight:400">(not blocking)</span>'}</div>
           <div class="muted" style="font-size:12px;margin-top:2px">${esc(c.detail)}</div>
@@ -2624,7 +2624,7 @@ async function renderAnalytics() {
   const daily = a.summary.daily || [];
   const maxDay = Math.max(...daily.map((d) => d.n), 1);
   $('#view').innerHTML = `
-    <div class="card tone-violet" style="border-color:#253247;">
+    <div class="card tone-violet" style="border-color:var(--line);">
       <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Funnel · last ${f.windowDays} days · measured from real events</div>
       <div style="font-size:15px;font-weight:600;margin-top:8px;line-height:1.5">${esc(f.verdict)}</div>
       <div class="row" style="margin-top:14px;gap:24px">
@@ -2640,7 +2640,7 @@ async function renderAnalytics() {
           <div><span class="mono muted" style="margin-right:10px">${i + 1}</span><b style="font-size:13px">${esc(s.label)}</b><span class="muted" style="font-size:11.5px;margin-left:8px">${esc(s.meaning)}</span></div>
           <div class="row" style="gap:14px">
             <span class="mono">${s.events}</span>
-            ${s.conversionFromPrevious != null ? `<span class="mono" style="font-size:11px;color:${s.conversionFromPrevious < 30 ? '#f08b91' : s.conversionFromPrevious < 60 ? '#e0c273' : '#6fe3a4'}">${s.conversionFromPrevious}%</span>` : '<span class="muted" style="font-size:11px">–</span>'}
+            ${s.conversionFromPrevious != null ? `<span class="mono" style="font-size:11px;color:${s.conversionFromPrevious < 30 ? 'var(--bad)' : s.conversionFromPrevious < 60 ? 'var(--warn)' : 'var(--good)'}">${s.conversionFromPrevious}%</span>` : '<span class="muted" style="font-size:11px">–</span>'}
           </div>
         </div>
         <div class="bar" style="margin-top:6px"><i style="width:${Math.round((s.events / maxN) * 100)}%"></i></div>
@@ -2652,7 +2652,7 @@ async function renderAnalytics() {
         <h3>Events per day</h3>
         <div style="display:flex;align-items:flex-end;gap:4px;height:120px;margin-top:14px">
           ${daily.length ? daily.map((d) => `<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center" title="${d.d}: ${d.n}">
-            <div style="width:100%;background:linear-gradient(180deg,#4c8dff,#8b5cf6);border-radius:3px 3px 0 0;height:${Math.max(3, Math.round((d.n / maxDay) * 100))}%"></div>
+            <div style="width:100%;background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:3px 3px 0 0;height:${Math.max(3, Math.round((d.n / maxDay) * 100))}%"></div>
           </div>`).join('') : '<div class="muted">no events yet</div>'}
         </div>
         <div class="muted" style="font-size:11px;margin-top:8px">${daily.length} active day${daily.length === 1 ? '' : 's'} in the last 14</div>
@@ -2705,11 +2705,11 @@ async function renderPulse() {
     <div class="grid" style="grid-template-columns:1fr 1fr 1fr;margin-top:14px">
       <div class="card">
         <h3>Skills rising</h3>
-        <div style="margin-top:10px">${p.skills.rising.map((s) => `<div class="kv"><span>${esc(s.canonical)}</span><span class="mono" style="color:#6fe3a4">+${s.growth_rate}%</span></div>`).join('')}</div>
+        <div style="margin-top:10px">${p.skills.rising.map((s) => `<div class="kv"><span>${esc(s.canonical)}</span><span class="mono" style="color:var(--good)">+${s.growth_rate}%</span></div>`).join('')}</div>
       </div>
       <div class="card">
         <h3>Highest salary premium</h3>
-        <div style="margin-top:10px">${p.skills.premium.map((s) => `<div class="kv"><span>${esc(s.canonical)}</span><span class="mono" style="color:#6fe3a4">+${s.salary_premium}%</span></div>`).join('')}</div>
+        <div style="margin-top:10px">${p.skills.premium.map((s) => `<div class="kv"><span>${esc(s.canonical)}</span><span class="mono" style="color:var(--good)">+${s.salary_premium}%</span></div>`).join('')}</div>
       </div>
       <div class="card">
         <h3>Supply – postings in 14 days</h3>
@@ -2731,11 +2731,11 @@ async function renderTrajectory(months) {
   const max = Math.max(...t.paths.map((p) => p.endSalary));
   const bar = (v) => Math.max(4, Math.round((v / max) * 100));
   $('#view').innerHTML = `
-    <div class="card tone-violet" style="border-color:#253247;">
+    <div class="card tone-violet" style="border-color:var(--line);">
       <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Trajectory · ${months} months · transparent model, not a forecast</div>
       <div style="font-size:16px;font-weight:600;margin-top:8px;line-height:1.5">${esc(t.insight)}</div>
       <div class="row" style="margin-top:16px;gap:8px">
-        ${[12, 24, 36, 60].map((m) => `<button class="tm" data-m="${m}" style="font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid ${m === months ? '#33507a' : 'var(--line2)'};background:${m === months ? '#1b2637' : 'transparent'};color:${m === months ? '#cfe0ff' : 'var(--ink2)'}">${m} months</button>`).join('')}
+        ${[12, 24, 36, 60].map((m) => `<button class="tm" data-m="${m}" style="font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid ${m === months ? 'var(--accent2)' : 'var(--line2)'};background:${m === months ? 'var(--nav-active)' : 'transparent'};color:${m === months ? 'var(--tone-ink)' : 'var(--ink2)'}">${m} months</button>`).join('')}
       </div>
     </div>
 
@@ -2744,7 +2744,7 @@ async function renderTrajectory(months) {
       ${t.paths.map((p) => `<div style="padding:12px 0;border-bottom:1px solid var(--line)">
         <div class="row" style="justify-content:space-between;align-items:baseline">
           <div><b style="font-size:13.5px">${esc(p.label)}</b><div class="muted" style="font-size:11.5px;margin-top:2px">${esc(p.note)}</div></div>
-          <div style="text-align:right"><div class="mono" style="font-size:16px;font-weight:650">${money(p.endSalary)}</div><div class="mono" style="font-size:11px;color:${p.deltaPct > 0 ? '#6fe3a4' : '#f08b91'}">${p.deltaPct > 0 ? '+' : ''}${p.deltaPct}%</div></div>
+          <div style="text-align:right"><div class="mono" style="font-size:16px;font-weight:650">${money(p.endSalary)}</div><div class="mono" style="font-size:11px;color:${p.deltaPct > 0 ? 'var(--good)' : 'var(--bad)'}">${p.deltaPct > 0 ? '+' : ''}${p.deltaPct}%</div></div>
         </div>
         <div class="bar" style="margin-top:9px"><i style="width:${bar(p.endSalary)}%"></i></div>
         <div class="row" style="justify-content:space-between;margin-top:6px;font-size:11px;color:var(--muted)">
@@ -2829,7 +2829,7 @@ async function renderOps() {
         <table class="t" style="margin-top:8px"><thead><tr><th>Adapter</th><th>Status</th><th>Rows</th><th>Latency</th></tr></thead><tbody>
         ${(last ? last.report : live.adapters.map((a) => ({ key: a.key, ok: null, count: 0, ms: 0 }))).map((r) => `<tr>
           <td>${esc(r.label || r.key)}<div class="muted" style="font-size:11px">${esc((live.adapters.find((a) => a.key === r.key) || {}).note || '')}</div></td>
-          <td>${r.ok === null ? '<span class="muted">not run</span>' : r.ok ? '<span style="color:#6fe3a4">● ok</span>' : `<span style="color:#f08b91">● ${esc(r.error || 'fail')}</span>`}</td>
+          <td>${r.ok === null ? '<span class="muted">not run</span>' : r.ok ? '<span style="color:var(--good)">● ok</span>' : `<span style="color:var(--bad)">● ${esc(r.error || 'fail')}</span>`}</td>
           <td class="mono">${r.count}</td><td class="mono">${r.ms}ms</td></tr>`).join('')}
         </tbody></table>
         <div class="note" style="margin-top:10px">Four real adapters. Each fails in isolation – a broken source degrades to zero rows and reports, it never takes the pipeline down.</div>
@@ -2975,7 +2975,7 @@ async function renderBrief() {
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:1fr 300px">
       <div>
-        <div class="card tone-violet" style="border-color:#253247;">
+        <div class="card tone-violet" style="border-color:var(--line);">
           <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Brief · ${new Date(b.generatedAt).toLocaleString('en-GB', { weekday: 'long', hour: '2-digit', minute: '2-digit' })}</div>
           <div style="font-size:20px;font-weight:650;margin-top:8px;letter-spacing:-.02em;line-height:1.35">${esc(b.headline)}</div>
           <div class="row" style="margin-top:16px;gap:20px;flex-wrap:wrap">
@@ -3005,7 +3005,7 @@ async function renderBrief() {
         <div class="card">
           <h3>Signal of the day</h3>
           ${b.rates ? `<div class="kv" style="margin-top:10px"><span>Your market median</span><span class="mono">${money(b.rates.p50)}</span></div>
-          <div class="kv"><span>Your position</span><span class="mono" style="color:${b.rates.gapPct > 5 ? '#ff8f96' : '#6fe3a4'}">${b.rates.gapPct > 0 ? b.rates.gapPct + '% below' : Math.abs(b.rates.gapPct) + '% above'}</span></div>` : ''}
+          <div class="kv"><span>Your position</span><span class="mono" style="color:${b.rates.gapPct > 5 ? 'var(--bad)' : 'var(--good)'}">${b.rates.gapPct > 0 ? b.rates.gapPct + '% below' : Math.abs(b.rates.gapPct) + '% above'}</span></div>` : ''}
           ${b.topGap ? `<div class="kv"><span>Biggest blocker</span><span class="mono">${esc(b.topGap.skill)} <span class="muted">(${b.topGap.blocking})</span></span></div>` : ''}
           ${b.scoreDelta != null ? `<div class="kv"><span>Career Score change</span><span class="mono">${b.scoreDelta > 0 ? '+' : ''}${b.scoreDelta}</span></div>` : ''}
         </div>
