@@ -22,6 +22,7 @@ const { seedIfEmpty, ingestLive, lastRun } = require('./pipeline.cjs');
 const SOURCES = require('./sources.cjs');
 const E = require('./engine.cjs');
 const AUTH = require('./auth.cjs');
+const OAUTH = require('./oauth.cjs');
 const REF = require('./referrals.cjs');
 const CONF = require('./confidence.cjs');
 const TRAJ = require('./trajectory.cjs');
@@ -191,6 +192,40 @@ route('POST', /^\/api\/auth\/verify$/, async (req, res) => {
   AN.track(r.user.id, 'auth.verified', { hasProfile: !!getProfile(r.user.id) });
   try { scheduleSequence(r.user.id); } catch (e) { /* sequence is best-effort */ }
   json(res, 200, { ok: true, user: r.user, hasProfile: !!getProfile(r.user.id) });
+});
+
+// ---- Google / Apple sign-in ----
+route('GET', /^\/api\/auth\/providers$/, async (req, res) => json(res, 200, OAUTH.providers()));
+
+route('GET', /^\/api\/auth\/(google|apple)\/start$/, async (req, res, url, m) => {
+  try {
+    const to = OAUTH.startUrl(m[1], publicOrigin(req));
+    res.writeHead(302, { Location: to, 'Cache-Control': 'no-store' });
+    res.end();
+  } catch (e) { res.writeHead(302, { Location: '/?app=1&auth_error=' + encodeURIComponent(e.message) }); res.end(); }
+});
+
+async function oauthCallback(req, res, provider, params) {
+  const fail = (msg) => { res.writeHead(303, { Location: '/?app=1&auth_error=' + encodeURIComponent(msg), 'Cache-Control': 'no-store' }); res.end(); };
+  if (params.error) return fail(params.error === 'access_denied' || params.error === 'user_cancelled_authorize' ? 'Sign-in was cancelled' : 'Sign-in failed');
+  if (!params.code || !params.state) return fail('Sign-in failed');
+  try {
+    const r = await OAUTH.finish(provider, publicOrigin(req), params.code, params.state, params.user);
+    AUTH.setCookie(res, AUTH.COOKIE, r.token, AUTH.SESSION_DAYS * 86400);
+    log(r.user.id, 'auth.login', 'user', r.user.id, { via: provider });
+    AN.track(r.user.id, 'auth.verified', { via: provider, hasProfile: !!getProfile(r.user.id) });
+    try { scheduleSequence(r.user.id); } catch (e) { /* sequence is best-effort */ }
+    res.writeHead(303, { Location: '/?app=1', 'Cache-Control': 'no-store' });
+    res.end();
+  } catch (e) { fail(e.message); }
+}
+
+route('GET', /^\/api\/auth\/google\/callback$/, async (req, res, url) => oauthCallback(req, res, 'google', Object.fromEntries(url.searchParams)));
+// Apple returns by cross-site POST with a form body (response_mode=form_post).
+route('POST', /^\/api\/auth\/apple\/callback$/, async (req, res) => {
+  let raw = '';
+  await new Promise((ok) => { req.on('data', (c) => { raw += c; if (raw.length > 1e5) req.destroy(); }); req.on('end', ok); req.on('error', ok); });
+  return oauthCallback(req, res, 'apple', Object.fromEntries(new URLSearchParams(raw)));
 });
 
 route('POST', /^\/api\/auth\/logout$/, async (req, res) => {

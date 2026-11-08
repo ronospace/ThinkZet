@@ -58,9 +58,10 @@ function cdp(port, path, method = 'GET') {
   await send('Page.enable');
   await send('Page.navigate', { url: URL_ });
   await new Promise((r) => setTimeout(r, 3500));
-  await send('Runtime.evaluate', { expression: "localStorage.setItem('mirrorspread-theme','light');location.reload()" });
+  await send('Runtime.evaluate', { expression: "localStorage.setItem('mirrorspread-theme','" + (process.env.THEME || 'light') + "');location.reload()" });
   await new Promise((r) => setTimeout(r, 3500));
-  await send('Runtime.evaluate', { expression: process.env.APP_MODE === 'app' ? "showApp();go('radar')" : "showLanding()" });
+  const ev = await send('Runtime.evaluate', { returnByValue: true, awaitPromise: true, expression: process.env.APP_MODE === 'auth' ? "showApp();go('auth')" : process.env.APP_MODE === 'app' ? "showApp();go('radar')" : "showLanding()" });
+  if (ev.exceptionDetails) console.log('eval error', JSON.stringify(ev.exceptionDetails).slice(0, 300));
   await new Promise((r) => setTimeout(r, 2500));
   const shot = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
   require('node:fs').writeFileSync(OUT, Buffer.from(shot.data, 'base64'));

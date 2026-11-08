@@ -46,11 +46,16 @@ function verifyCode(email, code) {
     ORDER BY id DESC LIMIT 1`).get(clean, String(code || '').trim());
   if (!row) return null;
   db.prepare('UPDATE login_codes SET used=1 WHERE id=?').run(row.id);
+  return sessionForEmail(clean);
+}
 
+// Shared by the email code and by Google/Apple sign-in. The caller must already have proved
+// that the person owns this address (a code from the inbox, or a provider-verified email).
+function sessionForEmail(clean, displayName) {
   let user = db.prepare('SELECT * FROM users WHERE email=?').get(clean);
   if (!user) {
     const id = crypto.randomUUID();
-    const name = clean.split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+    const name = (displayName && String(displayName).trim().slice(0, 80)) || clean.split('@')[0].replace(/[._-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
     db.prepare('INSERT INTO users (id,email,name) VALUES (?,?,?)').run(id, clean, name);
     user = db.prepare('SELECT * FROM users WHERE id=?').get(id);
   }
@@ -75,4 +80,4 @@ function logout(req, res) {
   setCookie(res, COOKIE, '', 0);
 }
 
-module.exports = { requestCode, verifyCode, currentUser, logout, setCookie, parseCookies, COOKIE, SESSION_DAYS };
+module.exports = { requestCode, verifyCode, sessionForEmail, currentUser, logout, setCookie, parseCookies, COOKIE, SESSION_DAYS };
