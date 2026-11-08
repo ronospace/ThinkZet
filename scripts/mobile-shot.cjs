@@ -63,6 +63,8 @@ function cdp(port, path, method = 'GET') {
   const ev = await send('Runtime.evaluate', { returnByValue: true, awaitPromise: true, expression: process.env.APP_MODE === 'auth' ? "showApp();go('auth')" : process.env.VIEW ? "showApp();go('" + process.env.VIEW + "')" : process.env.APP_MODE === 'app' ? "showApp();go('radar')" : "showLanding()" });
   if (ev.exceptionDetails) console.log('eval error', JSON.stringify(ev.exceptionDetails).slice(0, 300));
   await new Promise((r) => setTimeout(r, 2500));
+  if (process.env.SCROLL) { await send('Runtime.evaluate', { expression: "window.scrollTo(0," + Number(process.env.SCROLL) + ");document.querySelector('main').scrollTo(0," + Number(process.env.SCROLL) + ")" }); await new Promise((r) => setTimeout(r, 600)); }
+  if (process.env.FOCUS) { await send('Runtime.evaluate', { expression: "(()=>{const e=document.querySelector('" + process.env.FOCUS + "');if(e){e.scrollIntoView({block:'start'});window.scrollBy(0,-70)}})()" }); await new Promise((r) => setTimeout(r, 700)); }
   const shot = await send('Page.captureScreenshot', { format: 'png', captureBeyondViewport: false });
   require('node:fs').writeFileSync(OUT, Buffer.from(shot.data, 'base64'));
   if (process.env.WIDE) { const w = await send('Runtime.evaluate', { returnByValue: true, expression: "JSON.stringify([...document.querySelectorAll('body *')].filter(e=>e.getBoundingClientRect().right>innerWidth+2).slice(0,8).map(e=>e.tagName+'.'+e.className+' w='+Math.round(e.getBoundingClientRect().width)))" }); console.log('wide', w.result.value); }
