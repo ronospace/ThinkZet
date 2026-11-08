@@ -34,8 +34,8 @@ const MAIL = require('./mailer.cjs');
 const COMPANY = {
   name: 'ZyraFlow GmbH',
   mark: 'ZyraFlow GmbH™',
-  product: 'ThinkZet AI',
-  productShort: 'ThinkZet',
+  product: 'ThinkZet',
+  descriptor: 'AI Intelligence Platform',
   domain: 'thinkzet.com',
   url: 'https://thinkzet.com',
   copyright: (year = new Date().getFullYear()) => `© ${year} ZyraFlow GmbH™. All rights reserved.`,
@@ -239,8 +239,8 @@ route('GET', /^\/api\/config$/, async (req, res) => {
     appUrlConfigured: !!process.env.APP_URL,
     company: COMPANY.mark,
     product: COMPANY.product,
-    tagline: 'See your value. Expand your possibilities.',
-    category: 'Career Intelligence Platform',
+    tagline: "Think beyond. Build what's next.",
+    category: 'AI Intelligence Platform',
   });
 });
 
