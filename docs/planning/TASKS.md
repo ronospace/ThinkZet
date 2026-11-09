@@ -21,6 +21,7 @@ Last updated: 9 November 2026.
 | 6 | COPY-16 | COPY | "closes in 1 days" reads "closes tomorrow" or "closes today" | IN PROGRESS (code written, to verify) |
 | 7 | AUTH-08 | AUTH | Sign-in rate limit split: 5 codes per address and 40 per network in 15 minutes, so a shared IP no longer locks out new sign-ups | Us | DONE | tested: 5 x 200 then 429 for one address; 8 different addresses from one IP all 200 |
 | NAV-04 | NAV | One gesture at the edge changes screen immediately: no threshold, no progress hint, 420ms settle | Us | DONE | measured: flip on the first wheel event, momentum does not fire, back at the top works |
+| COPY-21 | COPY | Title case for section and menu labels: Signed Out, No Profile, Setting Up, Run Ingest, Demo Mode, Sign Out, Engine Online, How It Works, Free Career Value Check | Us | DONE | labels verified in rendered HTML |
 | COPY-20 | COPY | Title case for labels built from identifiers: "data science" becomes "Data Science", "ai_engineering" becomes "AI Engineering"; small words stay lower case unless they lead | Us | DONE | 10 sample strings verified, family filters and pulse labels use it |
 | UI-14 | UI | The live pill sits inside the title block, directly after the page name | Us | DONE | markup: pill inside .tb-line |
 | UI-13 | UI | Pricing back to three cells on the landing page and the plan screen: Free, Pro monthly, Pro yearly. Yearly is a billing choice, not a fourth tier, and both buttons use the guarded checkout | Us | DONE | 3 cells rendered; annual checkout refuses without a session |

@@ -666,7 +666,7 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
     <div class="land-nav">
       <div class="land-brand"><svg class="mark" viewBox="0 0 192 192" aria-hidden="true" focusable="false"><use href="#tz-mark"/></svg> <span class="wm">Think<i>Zet</i></span><span class="land-tag">Think beyond</span></div>
       <div class="land-nav-links">
-        <a href="#how">How it works</a>
+        <a href="#how">How It Works</a>
         <a href="#capabilities">Capabilities</a>
         <a href="#pricing">Pricing</a>
         <a href="#faq">FAQ</a>
@@ -684,7 +684,7 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 
   <div class="land-wrap">
     <section class="hero-sec">
-      <span class="land-kicker">Free career value check</span>
+      <span class="land-kicker">Free Career Value Check</span>
       <h1 class="land-h1">The market has been<br/><span class="accent">pricing you without you.</span></h1>
       <p class="land-sub"><strong class="land-slogan">One profile, every opportunity.</strong><span class="land-sub-2">Live pay data, matched to you.</span></p>
       <div class="land-cta">
@@ -827,7 +827,7 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
           <div class="foot-h">Product</div>
           <a href="#capabilities">Capabilities</a>
           <a href="#pricing">Pricing</a>
-          <a href="#how">How it works</a>
+          <a href="#how">How It Works</a>
         </div>
         <div class="foot-col">
           <div class="foot-h">Company</div>
@@ -889,7 +889,7 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
       </div>
     </nav>
     <div class="rail-foot">
-      <div><span class="dot"></span><span id="engine-status">engine online</span> <span id="new-badge" class="chip" style="margin-left:6px;display:none"></span></div>
+      <div><span class="dot"></span><span id="engine-status">Engine Online</span> <span id="new-badge" class="chip" style="margin-left:6px;display:none"></span></div>
       <div id="engine-counts">–</div>
       <div style="margin-top:8px"><a href="/strategy.html">Strategy documents</a></div>
       <div style="margin-top:4px"><a href="/legal/privacy.html">Privacy</a> · <a href="/legal/terms.html">Terms</a></div>
@@ -922,15 +922,15 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
           </div>
           <button role="menuitem" id="run-ingest">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg>
-            Run ingest
+            Run Ingest
           </button>
           <button role="menuitem" id="load-demo" hidden>
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5.6" r="2.5"/><path d="M3 13.2c0-2.5 2.2-4 5-4s5 1.5 5 4"/></svg>
-            Demo mode
+            Demo Mode
           </button>
           <button role="menuitem" id="logout">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6.2 2.6H3.4v10.8h2.8"/><path d="M9.4 8h4.2M11.4 5.8L13.6 8l-2.2 2.2"/></svg>
-            Sign out
+            Sign Out
           </button>
         </div>
       </div>
@@ -1309,7 +1309,7 @@ async function renderAuth() {
         <button class="btn auth-cta" id="auth-verify">Verify and continue</button>
         <p class="auth-note" id="auth-hint"></p>
       </div>
-      <button class="auth-skip" id="auth-demo">Demo mode</button>
+      <button class="auth-skip" id="auth-demo">Demo Mode</button>
     </div>
     <p class="auth-legal">By continuing you agree to the <a href="/legal/terms.html">Terms</a> and <a href="/legal/privacy.html">Privacy Policy</a>.</p>
   </div>`;
@@ -1344,7 +1344,7 @@ function renderOnboarding() {
   const D = draft;
   $('#view-title').textContent = 'Build your Career Twin';
   $('#view-sub').textContent = 'Ninety seconds to your first real number.';
-  $('#profile-pill').textContent = 'setting up';
+  $('#profile-pill').textContent = 'Setting Up';
 
   const stepDots = [1, 2, 3].map((n) => `<span style="width:${n === D.step ? 26 : 8}px;height:8px;border-radius:4px;background:${n <= D.step ? 'var(--accent)' : 'var(--line2)'};transition:.25s"></span>`).join('');
 
@@ -1373,7 +1373,7 @@ function renderOnboarding() {
     </div>
     <div class="row" style="margin-top:20px;gap:10px">
       <button class="btn" id="ob-next">Continue</button>
-      <button class="btn ghost" id="ob-demo">Demo mode</button>
+      <button class="btn ghost" id="ob-demo">Demo Mode</button>
     </div>`;
 
   const stepTwo = `
@@ -1508,7 +1508,7 @@ async function loadDemo() {
   b.disabled = true;
   await post('/api/demo', {});
   await boot();
-  b.disabled = false; b.textContent = 'Demo mode';
+  b.disabled = false; b.textContent = 'Demo Mode';
   go('radar');
   toast('Demo persona loaded – 8 years, €78k, targeting DE/NL');
 }
@@ -1690,7 +1690,7 @@ async function renderRadar() {
       };
       const series = (seed, n) => Array.from({ length: n }, (_, i) => Math.max(1, Math.round(seed * (0.55 + Math.sin(i * 1.1 + seed) * 0.22 + i * 0.05))));
       const cards = [
-        { k: 'Rate gap', v: h.rateGapPct != null ? h.rateGapPct + '%' : '–', delta: h.rateGapPct != null ? h.rateGapPct + ' pts' : 'no data', dir: h.rateGapPct > 5 ? -1 : h.rateGapPct < -5 ? 1 : 0, sub: 'vs sample median', tone: 'var(--accent)', s: series(14, 12) },
+        { k: 'Rate gap', v: h.rateGapPct != null ? h.rateGapPct + '%' : '–', delta: h.rateGapPct != null ? h.rateGapPct + ' pts' : 'No Data', dir: h.rateGapPct > 5 ? -1 : h.rateGapPct < -5 ? 1 : 0, sub: 'vs sample median', tone: 'var(--accent)', s: series(14, 12) },
         { k: 'New at 70+', v: h.fresh, delta: h.fresh + ' new', dir: h.fresh > 0 ? 1 : 0, sub: 'last 24h', tone: 'var(--accent)', s: series(h.fresh || 6, 12) },
         { k: 'Career score', v: h.overall != null ? h.overall : '–', delta: (h.scoreDelta > 0 ? '+' : '') + (h.scoreDelta || 0), dir: h.scoreDelta || 0, sub: 'this week', tone: 'var(--accent)', s: series(h.overall || 60, 12) },
         { k: 'Applications', v: h.appliedThisWeek + '/' + h.weeklyTarget, delta: h.appliedThisWeek + ' sent', dir: h.appliedThisWeek > 0 ? 1 : 0, sub: 'this week', tone: 'var(--accent)', s: series(Math.max(2, h.appliedThisWeek * 3), 12) },
@@ -3076,7 +3076,7 @@ async function boot() {
   STATE.userRecord = auth.user;
   const demoBtn = document.getElementById('load-demo'); if (demoBtn) demoBtn.hidden = STATE.authed;
   if (!STATE.authed) {
-    $('#profile-pill').textContent = 'signed out';
+    $('#profile-pill').textContent = 'Signed Out';
     $('#nav').style.opacity = '.35';
     $('#nav').style.pointerEvents = 'none';
     return;
@@ -3087,7 +3087,7 @@ async function boot() {
   STATE.user = me.user; STATE.profile = me.profile;
   const health = await api('/api/health');
   STATE.engineCounts = health.counts;
-  $('#profile-pill').textContent = me.profile ? `${me.profile.seniority} · ${me.profile.years_experience || '?'} yrs` : 'no profile';
+  $('#profile-pill').textContent = me.profile ? `${titleCase(me.profile.seniority)} · ${me.profile.years_experience || '?'} Yrs` : 'No Profile';
   if (me.profile && me.profile.risk_tolerance === 'aggressive') STATE.horizon = 'growth';
   if (me.profile && me.profile.time_to_move === 'asap') STATE.horizon = 'income';
   $('#engine-counts').textContent = `${health.counts.opportunities} opportunities · ${health.counts.sources} sources`;
@@ -3096,7 +3096,7 @@ async function boot() {
     const badge = $('#new-badge');
     if (b && b.unread) { badge.style.display = 'inline-block'; badge.textContent = b.unread + ' new'; badge.className = 'chip have'; }
   } catch (e) {}
-  $('#engine-status').textContent = 'engine online';
+  $('#engine-status').textContent = 'Engine Online';
 }
 
 function showHelp() {
@@ -3190,9 +3190,9 @@ function buildPalette(q) {
   const query = q.trim().toLowerCase();
   const cmds = [
     ...Object.entries(VIEWS).map(([k, v]) => ({ kind: 'go', label: v[1], hint: v[2], action: () => go(k) })),
-    { kind: 'cmd', label: 'Run live ingest', hint: 'Fetch from all four adapters now', action: async () => { toast('Ingesting…'); const r = await post('/api/ingest', {}); toast(`${r.inserted} new · ${r.merged} merged`); await boot(); go(STATE.view); } },
-    ...(STATE.authed ? [] : [{ kind: 'cmd', label: 'Demo mode', hint: '8 years, €78k, targeting DE/NL', action: loadDemo }]),
-    { kind: 'cmd', label: 'Open strategy documents', hint: 'The business analysis behind this product', action: () => { window.open('/strategy.html', '_blank'); } },
+    { kind: 'cmd', label: 'Run Live Ingest', hint: 'Fetch from all four adapters now', action: async () => { toast('Ingesting…'); const r = await post('/api/ingest', {}); toast(`${r.inserted} new · ${r.merged} merged`); await boot(); go(STATE.view); } },
+    ...(STATE.authed ? [] : [{ kind: 'cmd', label: 'Demo Mode', hint: '8 years, €78k, targeting DE/NL', action: loadDemo }]),
+    { kind: 'cmd', label: 'Open Strategy Documents', hint: 'The business analysis behind this product', action: () => { window.open('/strategy.html', '_blank'); } },
   ];
   const opps = (STATE.feed?.opportunities || []).slice(0, 300).map((o) => ({
     kind: 'opp', label: `${o.title} · ${o.company}`, hint: `${o.city}${o.country ? ', ' + o.country : ''} · ${o.match_score}/100`, score: o.match_score, action: () => openDetail(o.id),
@@ -3355,7 +3355,7 @@ $('#run-ingest').onclick = async () => {
   const b = $('#run-ingest');
   b.disabled = true; b.innerHTML = '<span class="spin"></span>Ingesting…';
   const r = await post('/api/ingest', {});
-  b.disabled = false; b.textContent = 'Run ingest';
+  b.disabled = false; b.textContent = 'Run Ingest';
   toast(`${r.fetched} fetched · ${r.kept} kept · ${r.inserted} new · ${r.droppedNonTech} non-tech dropped · ${r.ms}ms`);
   await boot();
   go(STATE.view);
