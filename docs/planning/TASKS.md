@@ -28,6 +28,7 @@ Last updated: 9 November 2026.
 | COPY-25 | COPY | Payoff card no longer claims live postings while labelled sample data | Us | DONE | rendered copy |
 | SEO-02 | SEO | robots.txt added: allows the site, keeps `/?app=1` and `/api/` out of the index, and advertises the sitemap at the public origin | Us | DONE | served as text/plain with the Sitemap line |
 | UI-26 | UI | The salutation mark uses a three-stop gradient (violet, rose, blue) in both themes instead of a two-stop ramp | Us | DONE | computed background-image in light and dark |
+| COPY-27 | COPY | Title case for every h3 heading across the app: 58 headings including Skill Gap Detection, How to Close Them and the table headers | Us | DONE | rendered Skill Gaps screen, 59/59 API, 10/10 browser |
 | UI-25i | UI | A running demo labels the account state "Demo Mode" instead of "Signed Out" | Us | DONE | measured: state Demo Mode, signin flex, demo none |
 | UI-21 | UI | Plan screen restored to the pre-UI-21 three-cell design at the founder's request; the guarded checkout handlers are kept | Us | DONE | renderPlan replaced, plan-grid CSS removed |
 | UI-25h | UI | Signed out with a demo running: Demo Mode is replaced by Sign In in the right-hand slot, so the menu offers the next useful action instead of repeating what is already loaded | Us | DONE | measured: demo none, signin flex, demoRunning true |

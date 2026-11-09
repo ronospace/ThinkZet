@@ -822,7 +822,7 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
           <button class="btn" id="price-pro">Unlock Pro</button>
         </div>
         <div class="price">
-          <h3>Pro, yearly</h3>
+          <h3>Pro, Yearly</h3>
           <div class="price-v">&euro;149.99<span> a year</span></div>
           <div class="price-alt">&euro;12.50 a month, billed once</div>
           <ul>
@@ -1732,7 +1732,7 @@ async function renderRadar() {
       <div id="opps"></div>
       <div class="facets">
         <div class="card">
-          <h3>Your market right now</h3>
+          <h3>Your Market Right Now</h3>
           <div id="facet-body" style="margin-top:10px"><span class="muted" style="font-size:12px">Loading…</span></div>
         </div>
         <div class="card" style="margin-top:12px">
@@ -2040,7 +2040,7 @@ function openDetail(id) {
     </div>
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
       <div class="card">
-        <h3>Why this score</h3>
+        <h3>Why This Score</h3>
         ${(o.reasons || []).map((r) => `
           <div style="margin:10px 0">
             <div class="row" style="justify-content:space-between;font-size:12.5px"><span>${esc(r.factor)}</span><span class="muted mono">weight ${Math.round(r.weight * 100)}%</span></div>
@@ -2049,7 +2049,7 @@ function openDetail(id) {
           </div>`).join('')}
       </div>
       <div class="card">
-        <h3>Skill coverage</h3>
+        <h3>Skill Coverage</h3>
         <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
           ${(o.skills || []).map((s) => `<span class="chip ${(o.missing_skills || []).includes(s) ? 'miss' : 'have'}">${esc(s)}</span>`).join('')}
         </div>
@@ -2071,7 +2071,7 @@ function openDetail(id) {
       </div>
     </div>
     <div class="card" style="margin-top:14px">
-      <h3>Ask about this opportunity</h3>
+      <h3>Ask About This Opportunity</h3>
       <div class="suggest" style="margin-top:10px">
         ${['Should I apply?', 'How do I negotiate the salary?', "What's blocking me?"].map((q) => `<button class="d-ask" data-q="${esc(q)}">${esc(q)}</button>`).join('')}
       </div>
@@ -2128,10 +2128,10 @@ function openDetail(id) {
           <div class="muted" style="font-size:11px;margin-top:6px;padding-left:22px">↳ ${esc(q.evidence)}</div>
         </div>`).join('')}
       </div>
-      <div style="margin-top:16px"><h3>Four-day plan</h3>
+      <div style="margin-top:16px"><h3>Four-Day Plan</h3>
         ${r.prepPlan.map((p) => `<div class="kv"><span><b style="color:var(--ink2)">${esc(p.day)}</b> · ${esc(p.focus)}</span><span class="muted" style="font-size:11px;text-align:right;max-width:180px">${esc(p.why)}</span></div>`).join('')}
       </div>
-      <div style="margin-top:16px"><h3>Ask them these</h3>
+      <div style="margin-top:16px"><h3>Ask Them These</h3>
         ${r.questionsToAsk.map((q) => `<div class="kv"><span>${esc(q)}</span><span></span></div>`).join('')}
       </div>
       <div class="muted" style="font-size:11px;margin-top:12px;border-top:1px solid var(--line);padding-top:8px">${esc(r.note)}</div>`;
@@ -2163,7 +2163,7 @@ function openDetail(id) {
           <div style="margin-top:10px"><a class="btn sm" href="${r.referral.url}" target="_blank" rel="noopener">Open with tracking</a></div>
           <div class="muted" style="font-size:11px;margin-top:10px">${esc(r.referral.disclosure)}</div>`;
       } else {
-        $('#ref-card').innerHTML = `<h3>No referral programme</h3><div class="dim" style="font-size:12.5px;margin-top:6px">This source has no affiliate route. It is shown because it is a good match, and nothing else.</div>`;
+        $('#ref-card').innerHTML = `<h3>No Referral Programme</h3><div class="dim" style="font-size:12.5px;margin-top:6px">This source has no affiliate route. It is shown because it is a good match, and nothing else.</div>`;
       }
     } catch (e) { $('#ref-card').remove(); }
   })();
@@ -2178,7 +2178,7 @@ function openDetail(id) {
     form.id = 'outcome-form';
     form.className = 'card';
     form.style.marginTop = '14px';
-    form.innerHTML = `<h3>Report what actually happened</h3>
+    form.innerHTML = `<h3>Report What Actually Happened</h3>
       <div class="dim" style="font-size:12.5px;margin-top:6px">This is the only data no competitor has: person &gt; opportunity &gt; action &gt; result. It recalibrates your model and, with your consent, the market benchmark.</div>
       <div class="row" style="margin-top:14px;gap:8px;flex-wrap:wrap">
         ${['interview', 'offer', 'rejection', 'no_response', 'rate_increase'].map((t) => `<button class="chip oc" data-t="${t}" style="cursor:pointer;padding:6px 12px">${t.replace(/_/g, ' ')}</button>`).join('')}
@@ -2227,7 +2227,7 @@ async function renderScores() {
       </div>
     </div>
     <div class="card" style="margin-bottom:14px">
-      <h3>Where you sit against people at your level</h3>
+      <h3>Where You Sit Against People at Your Level</h3>
       <div style="margin-top:12px">${[
         ['Employability', scores.employability],
         ['Interview readiness', scores.interview_readiness],
@@ -2304,7 +2304,7 @@ async function renderRates() {
       </div>
       <div>
         <div class="card">
-          <h3>Median by channel</h3>
+          <h3>Median by Channel</h3>
           <div style="margin-top:10px">
             ${r.byChannel.map((c) => `
               <div class="kv"><span>${esc(c.channel)} <span class="muted">(${c.n})</span></span><span class="mono">${money(c.median)}</span></div>
@@ -2318,7 +2318,7 @@ async function renderRates() {
         </div>` : ''}
         </div>
         <div class="card" style="margin-top:14px">
-          <h3>Highest-premium skills in your adjacency</h3>
+          <h3>Highest-Premium Skills in Your Adjacency</h3>
           <div style="margin-top:10px">
             ${r.topPayingSkills.map((s) => `<div class="kv"><span>${esc(s.skill)}</span><span class="mono" style="color:var(--good)">+${s.premium}%</span></div>`).join('')}
           </div>
@@ -2335,7 +2335,7 @@ async function renderGaps() {
   try { partnerRecs = (await api('/api/referrals/recommendations')).recommendations || []; } catch (e) {}
   $('#view').innerHTML = `
     <div class="card" style="margin-bottom:14px">
-      <h3>Skill gap detection</h3>
+      <h3>Skill Gap Detection</h3>
       <div class="dim" style="margin-top:6px;font-size:var(--text-sm);line-height:1.55">Computed by comparing your skills against the required skills of your top ${sampleOf} realistic opportunities – weighted by how many roles each gap blocks, its salary premium and its growth rate.</div>
     </div>
     <div class="card tone-violet" style="margin-bottom:14px;border-color:var(--line);">
@@ -2354,7 +2354,7 @@ async function renderGaps() {
       <div class="muted" style="font-size:11px;margin-top:12px">${esc(plan.rule)}</div>
     </div>
     ${partnerRecs.length ? `<div class="card" style="margin-bottom:14px">
-      <h3>How to close them</h3>
+      <h3>How to Close Them</h3>
       <div class="dim" style="font-size:12.5px;margin-top:6px">Each gap below has a route. Partners are attached to gaps the engine already found – they never change what you see or how it is ranked.</div>
       <div style="margin-top:12px">
         ${partnerRecs.slice(0, 5).map((r) => `<div style="display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)">
@@ -2367,7 +2367,7 @@ async function renderGaps() {
       </div>
     </div>` : ''}
     ${gaps.length ? `<div class="card"><div class="tscroll"><table class="t">
-      <thead><tr><th>Skill</th><th>Blocks</th><th>Share of matches</th><th>Market demand</th><th>Salary premium</th><th>Growth</th><th>Effort</th></tr></thead>
+      <thead><tr><th>Skill</th><th>Blocks</th><th>Share of Matches</th><th>Market Demand</th><th>Salary Premium</th><th>Growth</th><th>Effort</th></tr></thead>
       <tbody>${gaps.map((g) => `<tr>
         <td><b>${esc(g.skill)}</b></td>
         <td class="mono">${g.blocking} role${g.blocking === 1 ? '' : 's'}</td>
@@ -2516,7 +2516,7 @@ async function renderLearning() {
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:1.1fr 1fr">
       <div class="card">
-        <h3>The flywheel</h3>
+        <h3>The Flywheel</h3>
         <div class="big mono" style="margin:10px 0 2px">${l.totalOutcomes}</div>
         <div class="dim">verified outcomes recorded</div>
         <div style="margin-top:18px" class="dim">${esc(l.calibration.explanation)}</div>
@@ -2539,12 +2539,12 @@ async function renderLearning() {
     <h2 class="section">Your measured funnel</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="card"><h3>Applications</h3><div class="big mono">${intel.mine.funnel.applied}</div></div>
-      <div class="card"><h3>Interview rate</h3><div class="big mono">${intel.mine.funnel.interviewRate == null ? '–' : intel.mine.funnel.interviewRate + '%'}</div><div class="muted" style="font-size:11px">measured, not modelled</div></div>
-      <div class="card"><h3>Offer rate</h3><div class="big mono">${intel.mine.funnel.offerRate == null ? '–' : intel.mine.funnel.offerRate + '%'}</div><div class="muted" style="font-size:11px">of interviews</div></div>
+      <div class="card"><h3>Interview Rate</h3><div class="big mono">${intel.mine.funnel.interviewRate == null ? '–' : intel.mine.funnel.interviewRate + '%'}</div><div class="muted" style="font-size:11px">measured, not modelled</div></div>
+      <div class="card"><h3>Offer Rate</h3><div class="big mono">${intel.mine.funnel.offerRate == null ? '–' : intel.mine.funnel.offerRate + '%'}</div><div class="muted" style="font-size:11px">of interviews</div></div>
       <div class="card"><h3>End-to-end</h3><div class="big mono">${intel.mine.funnel.conversion == null ? '–' : intel.mine.funnel.conversion + '%'}</div><div class="muted" style="font-size:11px">application &gt; offer</div></div>
     </div>
     <div class="card" style="margin-top:14px">
-      <h3>Market benchmark</h3>
+      <h3>Market Benchmark</h3>
       <div class="dim" style="font-size:12.5px;margin-top:8px">${esc(intel.market.note)}</div>
       <div class="kv" style="margin-top:12px"><span>Consented outcomes reported</span><span class="mono">${intel.market.reportedOutcomes}</span></div>
       <div class="kv"><span>Offers with compensation</span><span class="mono">${intel.market.offers}</span></div>
@@ -2567,7 +2567,7 @@ async function renderSearches() {
   const { searches } = await api('/api/saved-searches');
   $('#view').innerHTML = `
     <div class="card" style="margin-bottom:14px">
-      <h3>Saved searches</h3>
+      <h3>Saved Searches</h3>
       <div class="dim" style="margin-top:6px;font-size:12.5px">A search you save becomes a standing question the engine keeps answering. This is the difference between a job board (you ask) and an operating system (it watches).</div>
       <div class="row" style="margin-top:14px;gap:8px;flex-wrap:wrap">
         <input id="s-name" placeholder="Name this search – e.g. 'Senior AI roles, DE/NL, visa'" style="flex:1;min-width:260px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:9px 12px;outline:none"/>
@@ -2619,7 +2619,7 @@ async function renderPlan() {
           : `<div style="margin-top:14px"><button class="btn sm" id="up-month">€19.99 monthly</button></div>`}
       </div>
       <div class="card tone-violet" style="border-color:var(--ai-border);">
-        <h3>Pro, yearly</h3>
+        <h3>Pro, Yearly</h3>
         <div class="big mono" style="margin:8px 0">€149.99<span style="font-size:14px;color:var(--muted)">/year</span></div>
         <div class="dim" style="font-size:12.5px">€12.50 a month, billed once</div>
         <div style="margin-top:12px">${p.plans.pro.features.slice(0, 5).map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--good)">✓</span></div>`).join('')}<div class="kv"><span>Two months free against monthly</span><span style="color:var(--good)">✓</span></div></div>
@@ -2629,7 +2629,7 @@ async function renderPlan() {
       </div>
     </div>
     <div class="card" style="margin-top:14px">
-      <h3>Why the paywall sits where it does</h3>
+      <h3>Why the Paywall Sits Where It Does</h3>
       <div class="dim" style="font-size:13px;margin-top:8px">The rate gap is free, always. That is the moment that earns trust – you should be able to find out you are underpaid without paying. What you pay for is the ongoing system: the full radar, saved searches, the daily brief, and a copilot that remembers your whole situation.</div>
       <div class="kv" style="margin-top:14px"><span>Match scores computed</span><span class="mono">${p.usage.matchScores}</span></div>
       <div class="kv"><span>Opportunities tracked</span><span class="mono">${p.usage.tracked}</span></div>
@@ -2680,18 +2680,18 @@ async function renderNegotiation() {
 
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
       <div class="card">
-        <h3>Your leverage</h3>
+        <h3>Your Leverage</h3>
         <div style="margin-top:10px">
           ${n.levers.map((l) => `<div class="kv"><span>${esc(l.split(' (')[0])}</span><span class="mono" style="color:var(--good)">${esc(l.split('(')[1].replace(')', ''))}</span></div>`).join('')}
         </div>
         ${n.channelUpside ? `<div class="note" style="margin-top:12px">${esc(n.channelUpside)}</div>` : ''}
       </div>
       <div class="card">
-        <h3>The five rules</h3>
+        <h3>The Five Rules</h3>
         <div style="margin-top:10px">${n.rules.map((r, i) => `<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:12.5px"><span class="mono muted">${i + 1}</span><span>${esc(r)}</span></div>`).join('')}</div>
       </div>
     </div>
-    ${n.anchorOpportunity ? `<div class="card" style="margin-top:14px"><h3>Anchor this to a live opportunity</h3>
+    ${n.anchorOpportunity ? `<div class="card" style="margin-top:14px"><h3>Anchor This to a Live Opportunity</h3>
       <div class="dim" style="font-size:12.5px;margin-top:6px">${esc(n.anchorOpportunity.title)} at ${esc(n.anchorOpportunity.company)} – listed at ${n.anchorOpportunity.compMin ? money(n.anchorOpportunity.compMin) + '–' + money(n.anchorOpportunity.compMax) + ' ' + esc(n.anchorOpportunity.currency) : 'compensation not disclosed'}.</div>
       <div style="margin-top:10px"><button class="btn sm ghost" onclick="go('radar')">Back to the radar</button></div>
     </div>` : ''}`;
@@ -2718,7 +2718,7 @@ async function renderEmail() {
 
     <div class="grid" style="grid-template-columns:1fr 1.4fr">
       <div class="card">
-        <h3>What you receive</h3>
+        <h3>What You Receive</h3>
         <div style="margin-top:10px">
           ${toggle('daily_brief', 'Daily brief', 'One email a day. What changed, and what to do.')}
           ${toggle('opportunity_alerts', 'High-match alerts', 'Only for 85+ matches. Rare by design.')}
@@ -2728,7 +2728,7 @@ async function renderEmail() {
         <div class="note" style="margin-top:12px">Every email carries a one-click unsubscribe. Unsubscribing is a preference, not a lost user – the app keeps working.</div>
       </div>
       <div class="card" style="margin-top:14px">
-        <h3>Signup sequence</h3>
+        <h3>Signup Sequence</h3>
         <div class="dim" style="font-size:12px;margin-top:6px">Four emails over seven days, scheduled automatically when someone builds their twin. Each one is written from that person's own numbers.</div>
         <div style="margin-top:10px">${(seq.queued.length ? seq.queued : seq.steps.map((x) => ({ kind: 'sequence_' + x.key, subject: x.subject, scheduled_for: 'day ' + x.day, status: 'template' }))).map((q) => `<div class="kv"><span>${esc(q.subject)}</span><span class="muted mono" style="font-size:11px">${esc(String(q.scheduled_for).slice(0, 10))}</span></div>`).join('')}</div>
       </div>
@@ -2773,10 +2773,10 @@ async function renderLeads() {
   const st = d.stats;
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
-      <div class="card"><h3>Leads captured</h3><div class="big mono">${st.total}</div><div class="muted" style="font-size:11px">from the free check</div></div>
-      <div class="card"><h3>Converted to accounts</h3><div class="big mono">${st.converted}</div><div class="muted" style="font-size:11px">${st.conversionRate}% conversion</div></div>
+      <div class="card"><h3>Leads Captured</h3><div class="big mono">${st.total}</div><div class="muted" style="font-size:11px">from the free check</div></div>
+      <div class="card"><h3>Converted to Accounts</h3><div class="big mono">${st.converted}</div><div class="muted" style="font-size:11px">${st.conversionRate}% conversion</div></div>
       <div class="card"><h3>Underpaid &gt;10%</h3><div class="big mono">${st.withGap}</div><div class="muted" style="font-size:11px">highest-intent segment</div></div>
-      <div class="card"><h3>Shares created</h3><div class="big mono">${st.shares}</div><div class="muted" style="font-size:11px">${st.shareViews} views</div></div>
+      <div class="card"><h3>Shares Created</h3><div class="big mono">${st.shares}</div><div class="muted" style="font-size:11px">${st.shareViews} views</div></div>
     </div>
     <div class="card" style="margin-top:14px">
       <h3>Leads</h3>
@@ -2798,7 +2798,7 @@ async function renderLeads() {
       </table>
     </div>
     <div class="card" style="margin-top:14px">
-      <h3>What to do with this</h3>
+      <h3>What to Do With This</h3>
       <div class="dim" style="font-size:12.5px;margin-top:8px">A lead with a gap above 10% is the highest-intent person in the system: they have seen a number, they believe it, and they have not yet acted. That is the list to email first – not the whole database.</div>
     </div>`;
 }
@@ -2823,7 +2823,7 @@ async function renderLaunch() {
       </div>`).join('')}
     </div>
     ${blocking.length ? `<div class="card" style="margin-top:14px">
-      <h3>To get to zero blockers</h3>
+      <h3>To Get to Zero Blockers</h3>
       <div style="margin-top:10px;font-size:12.5px;line-height:1.9">
         ${blocking.map((b) => {
           if (b.key === 'email') return '<div><b>Email:</b> add <span class="mono">RESEND_API_KEY</span> to <span class="mono">' + envFile + '</span> and restart.</div>';
@@ -2833,10 +2833,10 @@ async function renderLaunch() {
           return `<div><b>${esc(b.label)}:</b> ${esc(b.detail)}</div>`;
         }).join('')}
       </div>
-    </div>` : `<div class="card" style="margin-top:14px"><h3>Send it to twenty people</h3>
+    </div>` : `<div class="card" style="margin-top:14px"><h3>Send It to Twenty People</h3>
       <div class="dim" style="font-size:12.5px;margin-top:6px">Not to get customers. To find out whether the rate gap lands the way we think it does. Watch the Funnel screen for the first twenty; the biggest leak it names is what to fix next.</div></div>`}
     <div class="card" style="margin-top:14px">
-      <h3>What to watch in the first week</h3>
+      <h3>What to Watch in the First Week</h3>
       <div class="dim" style="font-size:12.5px;margin-top:8px;line-height:1.9">
         <div>· <b>Rate checks completed</b> – the landing funnel working at all.</div>
         <div>· <b>Lead capture rate</b> – of people who saw a number, how many gave an email.</div>
@@ -2879,7 +2879,7 @@ async function renderAnalytics() {
 
     <div class="grid" style="grid-template-columns:1.4fr 1fr;margin-top:14px">
       <div class="card">
-        <h3>Events per day</h3>
+        <h3>Events per Day</h3>
         <div style="display:flex;align-items:flex-end;gap:4px;height:120px;margin-top:14px">
           ${daily.length ? daily.map((d) => `<div style="flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center" title="${d.d}: ${d.n}">
             <div style="width:100%;background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:3px 3px 0 0;height:${Math.max(3, Math.round((d.n / maxDay) * 100))}%"></div>
@@ -2888,13 +2888,13 @@ async function renderAnalytics() {
         <div class="muted" style="font-size:11px;margin-top:8px">${daily.length} active day${daily.length === 1 ? '' : 's'} in the last 14</div>
       </div>
       <div class="card">
-        <h3>Top events</h3>
+        <h3>Top Events</h3>
         <div style="margin-top:10px">${a.summary.byName.slice(0, 10).map((e) => `<div class="kv"><span>${esc(e.name)}</span><span class="mono">${e.n}</span></div>`).join('') || '<div class="muted">none yet</div>'}</div>
       </div>
     </div>
 
     <div class="card" style="margin-top:14px">
-      <h3>Why this screen exists</h3>
+      <h3>Why This Screen Exists</h3>
       <div class="dim" style="font-size:12.5px;margin-top:8px">Every number here is recorded by the product as it is used – the same events that drive the UI. The point is to find the single biggest leak and fix that, rather than adding features and hoping. Today the answer is above, in one sentence.</div>
     </div>`;
 }
@@ -2909,8 +2909,8 @@ async function renderPulse() {
   $('#view').innerHTML = `
     <div class="row" style="gap:14px;margin-bottom:16px;flex-wrap:wrap">
       <div class="card" style="flex:1;min-width:150px"><h3>Corpus</h3><div class="big mono">${p.totals.opportunities}</div><div class="muted" style="font-size:11px">live opportunities</div></div>
-      <div class="card" style="flex:1;min-width:150px"><h3>With disclosed pay</h3><div class="big mono">${p.sample}</div><div class="muted" style="font-size:11px">used in these benchmarks</div></div>
-      <div class="card" style="flex:1;min-width:150px"><h3>Remote share</h3><div class="big mono">${p.remoteShare}%</div><div class="muted" style="font-size:11px">of all live roles</div></div>
+      <div class="card" style="flex:1;min-width:150px"><h3>With Disclosed Pay</h3><div class="big mono">${p.sample}</div><div class="muted" style="font-size:11px">used in these benchmarks</div></div>
+      <div class="card" style="flex:1;min-width:150px"><h3>Remote Share</h3><div class="big mono">${p.remoteShare}%</div><div class="muted" style="font-size:11px">of all live roles</div></div>
     </div>
     <div class="grid" style="grid-template-columns:1fr 1fr">
       <div class="card">
@@ -2923,7 +2923,7 @@ async function renderPulse() {
         </div>
       </div>
       <div class="card">
-        <h3>Median pay by country</h3>
+        <h3>Median Pay by Country</h3>
         <div style="margin-top:12px">
           ${p.countries.map((c) => `<div style="margin:9px 0">
             <div class="row" style="justify-content:space-between;font-size:12.5px"><span>${esc(c.country)}</span><span class="mono">${money(c.median)} <span class="muted" style="font-size:10.5px">(${c.n})</span></span></div>
@@ -2934,11 +2934,11 @@ async function renderPulse() {
     </div>
     <div class="grid" style="grid-template-columns:1fr 1fr 1fr;margin-top:14px">
       <div class="card">
-        <h3>Skills rising</h3>
+        <h3>Skills Rising</h3>
         <div style="margin-top:10px">${p.skills.rising.map((s) => `<div class="kv"><span>${esc(s.canonical)}</span><span class="mono" style="color:var(--good)">+${s.growth_rate}%</span></div>`).join('')}</div>
       </div>
       <div class="card">
-        <h3>Highest salary premium</h3>
+        <h3>Highest Salary Premium</h3>
         <div style="margin-top:10px">${p.skills.premium.map((s) => `<div class="kv"><span>${esc(s.canonical)}</span><span class="mono" style="color:var(--good)">+${s.salary_premium}%</span></div>`).join('')}</div>
       </div>
       <div class="card">
@@ -2947,7 +2947,7 @@ async function renderPulse() {
       </div>
     </div>
     <div class="card" style="margin-top:14px">
-      <h3>How to read this</h3>
+      <h3>How to Read This</h3>
       <div class="dim" style="font-size:12.5px;margin-top:8px">Every number here is computed from the ${p.sample} live postings that disclose pay, annualised to EUR. It is not a survey and not self-reported – it is what employers are publishing right now. Where a discipline has fewer than eight disclosed postings it is omitted rather than shown with false precision.</div>
     </div>`;
 }
@@ -2986,7 +2986,7 @@ async function renderTrajectory(months) {
 
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
       <div class="card">
-        <h3>Why the model says this</h3>
+        <h3>Why the Model Says This</h3>
         <div style="margin-top:10px">
           <div class="kv"><span>Skill velocity</span><span class="mono">${t.velocity.velocity.toFixed(2)}x</span></div>
           ${t.velocity.drivers.map((d) => `<div class="kv"><span>${esc(d.k)}</span><span class="mono">${esc(d.v)}</span></div>`).join('')}
@@ -2994,7 +2994,7 @@ async function renderTrajectory(months) {
         <div class="note" style="margin-top:12px">Velocity above 1.0 means your skill mix is appreciating; it shortens time-to-promotion. Below 1.0 means the market is moving away from your stack.</div>
       </div>
       <div class="card">
-        <h3>Assumptions (all of them)</h3>
+        <h3>Assumptions (All of Them)</h3>
         <div style="margin-top:10px">${t.assumptions.map((a) => `<div style="padding:6px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--ink2)">${esc(a)}</div>`).join('')}</div>
       </div>
     </div>`;
@@ -3007,7 +3007,7 @@ async function renderReferrals() {
   const catLabel = { ai_marketplace: 'AI marketplaces', freelance: 'Freelance', learning: 'Learning', immigration: 'Immigration', relocation: 'Relocation' };
   $('#view').innerHTML = `
     <div class="card" style="margin-bottom:14px">
-      <h3>Partner routing</h3>
+      <h3>Partner Routing</h3>
       <div class="dim" style="font-size:13px;margin-top:6px">${esc(r.note)}</div>
       <div class="row" style="margin-top:14px;gap:8px;flex-wrap:wrap">
         <input id="p-name" placeholder="Partner name" style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:12.5px"/>
@@ -3049,13 +3049,13 @@ async function renderOps() {
   $('#view').innerHTML = `
     <h2 class="section">Live ingestion</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
-      <div class="card"><h3>Live opportunities</h3><div class="big mono">${live.liveTotal}</div><div class="muted" style="font-size:11px">from real APIs</div></div>
-      <div class="card"><h3>Last run kept</h3><div class="big mono">${last ? last.kept : '–'}</div><div class="muted" style="font-size:11px">${last ? last.droppedNonTech + ' non-tech dropped' : ''}</div></div>
-      <div class="card"><h3>New this run</h3><div class="big mono">${last ? last.inserted : '–'}</div><div class="muted" style="font-size:11px">${last ? last.merged + ' merged into existing' : ''}</div></div>
-      <div class="card"><h3>Run time</h3><div class="big mono">${last ? last.ms + 'ms' : '–'}</div><div class="muted" style="font-size:11px">${last ? new Date(last.at).toLocaleString('en-GB') : ''}</div></div>
+      <div class="card"><h3>Live Opportunities</h3><div class="big mono">${live.liveTotal}</div><div class="muted" style="font-size:11px">from real APIs</div></div>
+      <div class="card"><h3>Last Run Kept</h3><div class="big mono">${last ? last.kept : '–'}</div><div class="muted" style="font-size:11px">${last ? last.droppedNonTech + ' non-tech dropped' : ''}</div></div>
+      <div class="card"><h3>New This Run</h3><div class="big mono">${last ? last.inserted : '–'}</div><div class="muted" style="font-size:11px">${last ? last.merged + ' merged into existing' : ''}</div></div>
+      <div class="card"><h3>Run Time</h3><div class="big mono">${last ? last.ms + 'ms' : '–'}</div><div class="muted" style="font-size:11px">${last ? new Date(last.at).toLocaleString('en-GB') : ''}</div></div>
     </div>
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
-      <div class="card"><h3>Source health</h3>
+      <div class="card"><h3>Source Health</h3>
         <table class="t" style="margin-top:8px"><thead><tr><th>Adapter</th><th>Status</th><th>Rows</th><th>Latency</th></tr></thead><tbody>
         ${(last ? last.report : live.adapters.map((a) => ({ key: a.key, ok: null, count: 0, ms: 0 }))).map((r) => `<tr>
           <td>${esc(r.label || r.key)}<div class="muted" style="font-size:11px">${esc((live.adapters.find((a) => a.key === r.key) || {}).note || '')}</div></td>
@@ -3064,7 +3064,7 @@ async function renderOps() {
         </tbody></table>
         <div class="note" style="margin-top:10px">Four real adapters. Each fails in isolation – a broken source degrades to zero rows and reports, it never takes the pipeline down.</div>
       </div>
-      <div class="card"><h3>What the pipeline did</h3>
+      <div class="card"><h3>What the Pipeline Did</h3>
         <div class="kv"><span>Fetched from APIs</span><span class="mono">${last ? last.fetched : 0}</span></div>
         <div class="kv"><span>Kept as relevant tech roles</span><span class="mono">${last ? last.kept : 0}</span></div>
         <div class="kv"><span>Dropped as non-target (internships, sales, trades)</span><span class="mono">${last ? last.droppedNonTech : 0}</span></div>
@@ -3076,33 +3076,33 @@ async function renderOps() {
     </div>
     <h2 class="section">Listing health</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
-      <div class="card"><h3>Live opportunities</h3><div class="big mono">${lc.total}</div><div class="muted" style="font-size:11px">${lc.fresh7} posted this week</div></div>
-      <div class="card"><h3>Feed health</h3><div class="big mono">${lc.health}%</div><div class="muted" style="font-size:11px">after removing ghosts</div></div>
-      <div class="card"><h3>Ghost listings filtered</h3><div class="big mono">${lc.ghost}</div><div class="muted" style="font-size:11px">no comp + thin description</div></div>
+      <div class="card"><h3>Live Opportunities</h3><div class="big mono">${lc.total}</div><div class="muted" style="font-size:11px">${lc.fresh7} posted this week</div></div>
+      <div class="card"><h3>Feed Health</h3><div class="big mono">${lc.health}%</div><div class="muted" style="font-size:11px">after removing ghosts</div></div>
+      <div class="card"><h3>Ghost Listings Filtered</h3><div class="big mono">${lc.ghost}</div><div class="muted" style="font-size:11px">no comp + thin description</div></div>
       <div class="card"><h3>Stale (&gt;60 days)</h3><div class="big mono">${lc.stale}</div><div class="muted" style="font-size:11px">deprioritised in ranking</div></div>
     </div>
     <div class="card" style="margin-top:14px"><div class="dim" style="font-size:12.5px">${esc(lc.note)}</div></div>
     <h2 class="section">Corpus</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
-      <div class="card"><h3>Raw listings ingested</h3><div class="big mono">${o.ingest.raw}</div></div>
-      <div class="card"><h3>Canonical opportunities</h3><div class="big mono">${o.totalOpportunities}</div></div>
-      <div class="card"><h3>Duplicates merged</h3><div class="big mono">${o.ingest.merged}</div><div class="muted" style="font-size:11px">${o.ingest.duplicateRate}% of raw</div></div>
-      <div class="card"><h3>Salary records</h3><div class="big mono">${o.salaryRecords}</div></div>
+      <div class="card"><h3>Raw Listings Ingested</h3><div class="big mono">${o.ingest.raw}</div></div>
+      <div class="card"><h3>Canonical Opportunities</h3><div class="big mono">${o.totalOpportunities}</div></div>
+      <div class="card"><h3>Duplicates Merged</h3><div class="big mono">${o.ingest.merged}</div><div class="muted" style="font-size:11px">${o.ingest.duplicateRate}% of raw</div></div>
+      <div class="card"><h3>Salary Records</h3><div class="big mono">${o.salaryRecords}</div></div>
     </div>
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
-      <div class="card"><h3>Ingestion by source</h3>
+      <div class="card"><h3>Ingestion by Source</h3>
         <table class="t" style="margin-top:8px"><thead><tr><th>Source</th><th>Listings</th><th>Quality</th></tr></thead><tbody>
         ${o.bySource.map((s) => `<tr><td>${esc(s.source)}</td><td class="mono">${s.n}</td><td class="mono">${Math.round(s.q * 100)}</td></tr>`).join('')}
         </tbody></table>
       </div>
-      <div class="card"><h3>Opportunity types</h3>
+      <div class="card"><h3>Opportunity Types</h3>
         <table class="t" style="margin-top:8px"><thead><tr><th>Type</th><th>Count</th></tr></thead><tbody>
         ${o.byType.map((s) => `<tr><td>${TYPE_LABEL[s.type] || esc(s.type)}</td><td class="mono">${s.n}</td></tr>`).join('')}
         </tbody></table>
       </div>
     </div>
     <div class="card" style="margin-top:14px">
-      <h3>Pipeline honesty</h3>
+      <h3>Pipeline Honesty</h3>
       <div class="kv"><span>Average sources per canonical opportunity</span><span class="mono">${o.avgSourcesPerOpportunity}</span></div>
       <div class="kv"><span>Opportunities seen on more than one board</span><span class="mono">${o.multiSourced}</span></div>
       <div class="kv"><span>Listings with no disclosed compensation</span><span class="mono">${o.missingComp}</span></div>
@@ -3243,7 +3243,7 @@ async function renderBrief() {
       </div>
       <div>
         <div class="card">
-          <h3>Signal of the day</h3>
+          <h3>Signal of the Day</h3>
           ${b.rates ? `<div class="kv" style="margin-top:10px"><span>Your market median</span><span class="mono">${money(b.rates.p50)}</span></div>
           <div class="kv"><span>Your position</span><span class="mono" style="color:${b.rates.gapPct > 5 ? 'var(--bad)' : 'var(--good)'}">${b.rates.gapPct > 0 ? b.rates.gapPct + '% below' : Math.abs(b.rates.gapPct) + '% above'}</span></div>` : ''}
           ${b.topGap ? `<div class="kv"><span>Biggest blocker</span><span class="mono">${esc(b.topGap.skill)} <span class="muted">(${b.topGap.blocking})</span></span></div>` : ''}
