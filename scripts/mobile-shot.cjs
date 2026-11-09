@@ -114,7 +114,7 @@ function cdp(port, path, method = 'GET') {
     const c1 = await send('Runtime.evaluate', { returnByValue: true, expression: "(()=>{const b=document.getElementById('load-demo');if(!b)return 'no button';b.click();return 'clicked'})()" });
     console.log('demorun click', JSON.stringify(c1.result && c1.result.value), c1.exceptionDetails ? JSON.stringify(c1.exceptionDetails).slice(0,200) : '');
     await new Promise((r) => setTimeout(r, 3000));
-    const w = await send('Runtime.evaluate', { returnByValue: true, expression: "(()=>{const d=document.getElementById('load-demo'),o=document.getElementById('logout'),si=document.getElementById('menu-signin');const cs=e=>e?getComputedStyle(e).display:null;return JSON.stringify({authed:STATE.authed,demoRunning:STATE.demo,demo:cs(d),signout:cs(o),signin:cs(si),view:STATE.view})})()" });
+    const w = await send('Runtime.evaluate', { returnByValue: true, expression: "(()=>{const d=document.getElementById('load-demo'),o=document.getElementById('logout'),si=document.getElementById('menu-signin');const cs=e=>e?getComputedStyle(e).display:null;return JSON.stringify({authed:STATE.authed,demoRunning:STATE.demo,demo:cs(d),signout:cs(o),signin:cs(si),state:(document.getElementById('profile-pill')||{}).textContent,view:STATE.view})})()" });
     console.log('demorun', JSON.stringify(w.result && w.result.value), w.exceptionDetails ? JSON.stringify(w.exceptionDetails).slice(0,200) : '');
   }
   const metrics = await send('Runtime.evaluate', { expression: "JSON.stringify({docW:document.documentElement.scrollWidth,winW:innerWidth})", returnByValue: true });

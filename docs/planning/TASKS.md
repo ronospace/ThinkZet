@@ -28,6 +28,8 @@ Last updated: 9 November 2026.
 | COPY-25 | COPY | Payoff card no longer claims live postings while labelled sample data | Us | DONE | rendered copy |
 | SEO-02 | SEO | robots.txt added: allows the site, keeps `/?app=1` and `/api/` out of the index, and advertises the sitemap at the public origin | Us | DONE | served as text/plain with the Sitemap line |
 | UI-26 | UI | The salutation mark uses a three-stop gradient (violet, rose, blue) in both themes instead of a two-stop ramp | Us | DONE | computed background-image in light and dark |
+| UI-25i | UI | A running demo labels the account state "Demo Mode" instead of "Signed Out" | Us | DONE | measured: state Demo Mode, signin flex, demo none |
+| UI-21 | UI | Plan screen restored to the pre-UI-21 three-cell design at the founder's request; the guarded checkout handlers are kept | Us | DONE | renderPlan replaced, plan-grid CSS removed |
 | UI-25h | UI | Signed out with a demo running: Demo Mode is replaced by Sign In in the right-hand slot, so the menu offers the next useful action instead of repeating what is already loaded | Us | DONE | measured: demo none, signin flex, demoRunning true |
 | UI-25g | UI | Once a demo persona is running, Demo Mode disappears from the menu; Run Ingest keeps the row and Sign Out takes the right slot for a real session | Us | DONE | measured: after loading, demo none and demoRunning true |
 | UI-25f | UI | Demo Mode sits to the right of Run Ingest on one row when signed out, the same slot Sign Out uses for a session | Us | DONE | measured at 1440px: both at 107px, Demo Mode right edge 1362px against a 1370px menu edge |
