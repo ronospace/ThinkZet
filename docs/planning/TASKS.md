@@ -103,6 +103,7 @@ Last updated: 9 November 2026.
 | AUTH-02 | AUTH | Apple variables set in Railway and live on production: `apple: true`, start returns appleid.apple.com with the thinkzet.com redirect | production providers |
 | DEP-03 | DEP | Railway service renamed: the project is ThinkZet and the service is no longer MirrorSpread | Railway screenshot 9 Nov 2026 |
 | AUTH-12 | AUTH | Apple key parses on production: providers reports apple true and the callback reaches Apple's token endpoint, which answers "code expired" for a fake code | production diagnostic |
+| PAY-11 | PAY | Temporary test prices created on the live product: `price_1Ua1Np41m9e00I4Dx6Lhej6T` at €2.00/month and `price_1Ua1Np41m9e00I4D8wA8DvYF` at €14.99/year, both active and never wired into the app. The real prices stay in Railway | Us | DONE | both read back from Stripe; a €2 checkout session opens with amount 200 eur |
 | PAY-10 | PAY | Stripe live product, prices, six-event webhook on thinkzet.com | signed event 200, forged 400 |
 | PAY-02 | PAY | Checkout requires a signed-in session; the demo account can never be charged; a missing Stripe key refuses checkout in production instead of granting Pro | `3731853`; payment-check 19/19 |
 | PAY-03 | PAY | Pro+ hidden from the landing page, the plan screen and the catalogue; interest recorded without selling | `3731853`; payment-check 19/19 |
