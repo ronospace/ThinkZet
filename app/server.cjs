@@ -273,8 +273,10 @@ route('POST', /^\/api\/me\/name$/, async (req, res) => {
   const body = await readBody(req);
   const name = String(body.name || '').replace(/\s+/g, ' ').trim().slice(0, 80);
   if (name.length < 2 || /@|https?:|\d{3,}/.test(name)) return json(res, 400, { error: 'Enter your name' });
-  db.prepare('UPDATE users SET name=? WHERE id=?').run(name, u.id);
-  json(res, 200, { ok: true, name });
+  // display_name is the person's own choice and wins everywhere. users.name keeps the provider's name.
+  db.prepare('UPDATE users SET display_name=? WHERE id=?').run(name, u.id);
+  const fresh = db.prepare('SELECT id,email,name,display_name FROM users WHERE id=?').get(u.id);
+  json(res, 200, { ok: true, name, user: fresh });
 });
 
 route('POST', /^\/api\/auth\/logout$/, async (req, res) => {
@@ -297,7 +299,7 @@ route('GET', /^\/api\/auth\/me$/, async (req, res) => {
   const u = AUTH.currentUser(req);
   if (!u) return json(res, 200, { user: null, demo: true });
   const profile = getProfile(u.id);
-  json(res, 200, { user: u, demo: false, hasProfile: !!profile, profile: profile ? { ...profile, target_countries: JSON.parse(profile.target_countries || '[]') } : null });
+  json(res, 200, { user: effectiveUser(u), demo: false, hasProfile: !!profile, profile: profile ? { ...profile, target_countries: JSON.parse(profile.target_countries || '[]') } : null });
 });
 
 
@@ -417,8 +419,11 @@ route('GET', /^\/api\/health$/, async (req, res) => {
   json(res, 200, { ok: true, counts, ingest, ingestMs, uptime: Math.round(process.uptime()) });
 });
 
+// The effective name is the override when set, otherwise the provider name.
+const effectiveUser = (row) => row ? { ...row, name: (row.display_name && row.display_name.trim()) || row.name } : row;
+
 route('GET', /^\/api\/me$/, async (req, res) => {
-  const user = db.prepare('SELECT * FROM users WHERE id=?').get(resolveUser(req));
+  const user = effectiveUser(db.prepare('SELECT * FROM users WHERE id=?').get(resolveUser(req)));
   const profile = getProfile(resolveUser(req));
   const twin = db.prepare('SELECT state, updated_at FROM career_twin WHERE user_id=?').get(resolveUser(req));
   json(res, 200, {

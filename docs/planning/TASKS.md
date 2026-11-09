@@ -90,6 +90,7 @@ Last updated: 9 November 2026.
 |---|---|---|---|
 | COPY-13 | COPY | Hero statistics (1 in 3, €13,500, 72%) have no source in the repo. Replace with computed numbers, or remove | DATA-03 |
 | EML-02 | EML | Sender `ThinkZet <brief@thinkzet.com>` | EML-01 (cleared) |
+| AUTH-06 | AUTH | Display name: provider name on first sign-in, user override in `users.display_name`, the override wins in every API response and the UI, and a later provider name never overwrites it | Us | DONE | 6 checks on an isolated server |
 | AUTH-03 | AUTH | Both providers live on production: providers reports google and apple true, both start routes return the provider with the thinkzet.com redirect, a forged state is refused and recorded in /api/auth/diagnostic. The consent step itself needs a human browser | You: click Continue with Google and Continue with Apple once | OPEN |
 | DATA-02 | DATA | Offsite backup of the SQLite volume | DEP-01 |
 | GRO-01 | GRO | Send the link to the first 20 people | PAY-01 |
@@ -108,7 +109,8 @@ Last updated: 9 November 2026.
 | DATA-03 | DATA | Option B chosen: label salary intelligence as sample data until the rebuild. Chip on every salary figure, plain line on the screens that lead with a number, KPI relabelled "vs sample median" | Us | DONE | rendered HTML carries the label; 57/57 API, 10/10 browser |
 | COPY-19 | COPY | Contact addresses: support@, hello@ and billing@thinkzet.com in the footer; legal pages use support@ and hello@; mailer default sender is support@ | Us | DONE | three mailto links in the footer, one in each legal page |
 | AUTH-02 | AUTH | Apple variables set in Railway and live on production: `apple: true`, start returns appleid.apple.com with the thinkzet.com redirect | production providers |
-| DEP-03 | DEP | Railway service renamed: the project is ThinkZet and the service is no longer MirrorSpread | Railway screenshot 9 Nov 2026 |
+| DEP-03 | DEP | Railway service renamed to ThinkZet | founder confirmed 10 Nov 2026 |
+| DEP-02 | DEP | Railway Agent destroyed, no active agents, spare project `earnest-forgiveness` deleted | founder confirmed 10 Nov 2026 |
 | AUTH-12 | AUTH | Apple key parses on production: providers reports apple true and the callback reaches Apple's token endpoint, which answers "code expired" for a fake code | production diagnostic |
 | PAY-11 | PAY | Temporary test prices created on the live product: `price_1Ua1Np41m9e00I4Dx6Lhej6T` at €2.00/month and `price_1Ua1Np41m9e00I4D8wA8DvYF` at €14.99/year, both active and never wired into the app. The real prices stay in Railway | Us | DONE | both read back from Stripe; a €2 checkout session opens with amount 200 eur |
 | PAY-10 | PAY | Stripe live product, prices, six-event webhook on thinkzet.com | signed event 200, forged 400 |

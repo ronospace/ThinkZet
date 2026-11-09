@@ -2431,6 +2431,15 @@ async function renderTwin() {
   const t = await api('/api/twin');
   if (!t) return renderOnboarding();
   setTimeout(() => {
+    const dn = document.getElementById('dn-input');
+    const dns = document.getElementById('dn-save');
+    if (dn) dn.value = (STATE.userRecord && STATE.userRecord.name) || '';
+    if (dns) dns.onclick = async () => {
+      const nr = await post('/api/me/name', { name: dn.value });
+      if (nr.error) return toast(nr.error);
+      STATE.userRecord.name = nr.name; if (STATE.user) STATE.user.name = nr.name;
+      toast('Name updated'); go('twin');
+    };
     const ex = document.getElementById('d-export');
     const del = document.getElementById('d-delete');
     if (ex) ex.onclick = () => { window.location.href = '/api/me/export'; };
@@ -2466,7 +2475,13 @@ async function renderTwin() {
         <div class="kv"><span>Applications</span><span class="mono">${(t.behaviour?.applications || []).reduce((a, b) => a + b.n, 0)}</span></div>
         <div class="kv"><span>Outcomes recorded</span><span class="mono">${(t.behaviour?.outcomes || []).reduce((a, b) => a + b.n, 0)}</span></div>
         <div class="kv"><span>Momentum</span><span class="mono">${t.momentum}/100</span></div>
-        <h3 style="margin-top:18px">Your data</h3>
+        <h3 style="margin-top:18px">Display Name</h3>
+        <div class="dim" style="font-size:var(--text-sm);margin-top:4px">How your name appears across ThinkZet. Google and Apple supply one; you can change it here.</div>
+        <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap">
+          <input id="dn-input" type="text" maxlength="80" placeholder="Your name" style="flex:1;min-width:200px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;color:var(--ink);font-size:14px"/>
+          <button class="btn sm" id="dn-save">Save Name</button>
+        </div>
+        <h3 style="margin-top:18px">Your Data</h3>
         <div class="ob-actions" style="margin-top:10px;justify-content:flex-start">
           <button class="btn ghost" id="d-export">Export Everything</button>
           <button class="btn danger" id="d-delete">Delete My Account</button>

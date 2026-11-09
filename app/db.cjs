@@ -400,6 +400,7 @@ const MIGRATIONS = [
   ['users.status', () => { if (!columnExists('users', 'status')) db.exec("ALTER TABLE users ADD COLUMN status TEXT DEFAULT 'active'"); }],
   ['opportunities.degree_requirement', () => { if (!columnExists('opportunities', 'degree_requirement')) db.exec("ALTER TABLE opportunities ADD COLUMN degree_requirement TEXT DEFAULT 'unknown'"); }],
   ['opportunities.last_seen', () => { if (!columnExists('opportunities', 'last_seen')) db.exec("ALTER TABLE opportunities ADD COLUMN last_seen TEXT"); }],
+  ['users.display_name', () => { if (!columnExists('users', 'display_name')) db.exec("ALTER TABLE users ADD COLUMN display_name TEXT"); }],
 ];
 
 function migrate() {
