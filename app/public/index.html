@@ -3181,9 +3181,9 @@ document.querySelectorAll('#nav button').forEach((b) => { b.onclick = () => go(b
    the scroll that brought you there, keyboard, touch and pinch-zoom never trigger it. */
 (function screenFlip() {
   if (!window.matchMedia('(pointer:fine)').matches) return;
-  const NEED = 320;            // wheel distance beyond the edge before it moves
-  const GESTURE_GAP = 220;     // ms of silence that separates one gesture from the next
-  const SETTLE = 1100;         // ms before another move is allowed
+  const NEED = 150;            // wheel distance beyond the edge before it moves (about two notches)
+  const GESTURE_GAP = 140;     // ms of silence that separates one gesture from the next
+  const SETTLE = 650;          // ms before another move is allowed
   let acc = 0, dir = 0, armed = false, lastT = 0, lockedUntil = 0, timer = null;
   const hint = document.createElement('div');
   hint.className = 'flip-hint'; hint.setAttribute('aria-hidden', 'true');
@@ -3213,7 +3213,8 @@ document.querySelectorAll('#nav button').forEach((b) => { b.onclick = () => go(b
     if (blocked(e.target) || now < lockedUntil) { return; }
     const d = e.deltaY > 0 ? 1 : -1;
     const el = scroller(); const ed = edge(el);
-    const atEnd = d > 0 ? ed.bottom : ed.top;
+    const noRoom = el.scrollHeight <= el.clientHeight + 2;
+    const atEnd = noRoom || (d > 0 ? ed.bottom : ed.top);
     if (fresh) { armed = atEnd; acc = 0; dir = d; }
     // Reaching the edge DURING a gesture is the end of that scroll, not a request to leave.
     // Only a gesture that began while already at the edge can move to the next screen.
@@ -3226,7 +3227,7 @@ document.querySelectorAll('#nav button').forEach((b) => { b.onclick = () => go(b
     hint.querySelector('.flip-t').textContent = (d > 0 ? 'Keep scrolling for ' : 'Keep scrolling back to ') + (next.querySelector('.lbl')?.textContent || '');
     hint.querySelector('.flip-bar b').style.transform = `scaleX(${pct})`;
     hint.classList.toggle('up', d < 0); hint.classList.add('show');
-    clearTimeout(timer); timer = setTimeout(hide, 650);
+    clearTimeout(timer); timer = setTimeout(hide, 450);
     if (acc >= NEED) {
       lockedUntil = now + SETTLE; hide();
       Promise.resolve(go(next.dataset.view)).then(() => {

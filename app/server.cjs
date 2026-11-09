@@ -161,9 +161,15 @@ Move to a senior/staff role at a product company. Target EUR 100,000+. Want to m
 
 // ---- auth ----
 route('POST', /^\/api\/auth\/request$/, async (req, res) => {
-  const rl = rateLimit('auth:' + clientKey(req), 10, 15 * 60 * 1000);
-  if (!rl.allowed) return json(res, 429, { error: 'Too many code requests. Wait a few minutes.' });
+  // Two buckets: one per address (a person retrying their own code) and a looser one per IP
+  // (a shared office, a phone network, or a household). A single IP bucket locked out everyone
+  // behind the same NAT after ten requests, which is why a new sign-up saw "Too many code requests".
   const body = await readBody(req);
+  const emailKey = String(body.email || '').trim().toLowerCase();
+  const rl = rateLimit('auth:email:' + emailKey, 5, 15 * 60 * 1000);
+  const rlIp = rateLimit('auth:ip:' + clientKey(req), 40, 15 * 60 * 1000);
+  if (!rl.allowed) return json(res, 429, { error: 'Too many codes for this address. Try again in a few minutes.' });
+  if (!rlIp.allowed) return json(res, 429, { error: 'Too many code requests from this network. Try again in a few minutes.' });
   try {
     const r = AUTH.requestCode(body.email);
     log(null, 'auth.code_requested', 'user', r.email);
