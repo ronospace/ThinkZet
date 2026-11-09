@@ -1434,6 +1434,7 @@ function renderOnboarding() {
   const stepDots = [1, 2, 3].map((n) => `<span style="width:${n === D.step ? 26 : 8}px;height:8px;border-radius:4px;background:${n <= D.step ? 'var(--accent)' : 'var(--line2)'};transition:.25s"></span>`).join('');
 
   const hasName = !!(STATE.userRecord && STATE.userRecord.name && STATE.userRecord.name.trim());
+  const showDemo = !STATE.authed;
   const stepOne = `
     <p class="lead">What do you do?</p>
     <p class="sub">This is what everything else is scored against.</p>
@@ -1459,7 +1460,7 @@ function renderOnboarding() {
     <div class="row" style="margin-top:20px;gap:10px">
       <div class="ob-actions">
         <button class="btn" id="ob-next">Continue</button>
-        <button class="btn ghost" id="ob-demo">Demo Mode</button>
+        ${showDemo ? '<button class="btn ghost" id="ob-demo">Demo Mode</button>' : ''}
       </div>
     </div>`;
 
@@ -1522,7 +1523,7 @@ function renderOnboarding() {
   }
 
   if (D.step === 1) {
-    $('#ob-demo').onclick = loadDemo;
+    if ($('#ob-demo')) $('#ob-demo').onclick = loadDemo;
     $('#ob-next').onclick = async () => {
       const role = $('#ob-role').value.trim();
       const years = $('#ob-years').value;
@@ -1593,9 +1594,10 @@ function renderOnboarding() {
 async function loadDemo() {
   const b = $('#load-demo') || document.createElement('button');
   b.disabled = true;
-  await post('/api/demo', {});
-  await boot();
+  const r = await post('/api/demo', {});
   b.disabled = false; b.textContent = 'Demo Mode';
+  if (r && r.error) { toast(r.error); return; }   // never claim a persona that was not loaded
+  await boot();
   go('radar');
   toast('Demo persona loaded – 8 years, €78k, targeting DE/NL');
 }

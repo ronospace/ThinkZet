@@ -28,6 +28,7 @@ Last updated: 9 November 2026.
 | COPY-25 | COPY | Payoff card no longer claims live postings while labelled sample data | Us | DONE | rendered copy |
 | SEO-02 | SEO | robots.txt added: allows the site, keeps `/?app=1` and `/api/` out of the index, and advertises the sitemap at the public origin | Us | DONE | served as text/plain with the Sitemap line |
 | UI-26 | UI | The salutation mark uses a three-stop gradient (violet, rose, blue) in both themes instead of a two-stop ramp | Us | DONE | computed background-image in light and dark |
+| UI-25e | UI | Demo Mode hidden on onboarding for a signed-in person, and loadDemo no longer claims success when the server refuses it | Us | DONE | signed-in demo 403 is now surfaced; button absent when authed |
 | UI-25d | UI | Sign Out is hidden while signed out (demo mode): the menu shows Demo Mode alone, and Sign Out appears only for a real session | Us | DONE | measured: signed out reports demo flex, signout none |
 | UI-25c | UI | `[hidden]` now beats `display:flex`, so Demo Mode is really gone for a signed-in person; the Run Ingest and Sign Out pair cannot wrap and stays flush right | Us | DONE | measured: same row at 93px, Sign Out right edge 371px against a 379px menu edge; hidden button reports display none |
 | UI-25b | UI | Sign Out moved to the right of Run Ingest on one row; the menu is now three rows instead of four | Us | DONE | measured: same row (top 93px both), Sign Out right edge 374px against a 379px menu edge |
