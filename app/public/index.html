@@ -647,6 +647,8 @@ html.is-landing .hero-sec,html.is-landing .land-footer{scroll-margin-top:76px}
 @media(prefers-reduced-motion:no-preference){html.is-landing body{scroll-behavior:smooth}}
 @media(max-width:900px){html.is-landing body{scroll-snap-type:none}}
 sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin-left:1px;letter-spacing:0}
+.chip.sample{background:color-mix(in srgb,var(--warn) 14%,var(--panel));border-color:color-mix(in srgb,var(--warn) 45%,var(--line));color:var(--warn);font-weight:600}
+.sample-line{margin-top:10px;font-size:var(--text-xs);line-height:1.5;color:var(--warn);opacity:.95}
 </style>
 </head>
 <body>
@@ -832,9 +834,14 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
           <a href="/strategy.html">Strategy</a>
           <a href="/legal/terms.html">Terms</a>
           <a href="/legal/privacy.html">Privacy</a>
+          <a href="mailto:support@thinkzet.com">support@thinkzet.com</a>
         </div>
         <div class="foot-col">
-          <div class="foot-h">Data</div>
+          <div class="foot-h">Contact</div>
+          <a href="mailto:support@thinkzet.com">support@thinkzet.com</a>
+          <a href="mailto:hello@thinkzet.com">hello@thinkzet.com</a>
+          <a href="mailto:billing@thinkzet.com">billing@thinkzet.com</a>
+          <div class="foot-h" style="margin-top:14px">Data</div>
           <a href="/sitemap.xml">Sitemap</a>
           <a href="/salary/software-engineer">Salaries</a>
           <a href="/skills/llmops">Skills</a>
@@ -945,6 +952,13 @@ const $ = (s, r = document) => r.querySelector(s);
 const api = async (p, opt) => { const r = await fetch(p, opt); return r.json(); };
 const post = (p, b) => api(p, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(b || {}) });
 const money = (n, cur = 'EUR', d = 0) => n == null ? '–' : new Intl.NumberFormat('en-GB', { style: 'currency', currency: cur, maximumFractionDigits: d }).format(n);
+// Salary intelligence is built on a partly synthetic corpus until DATA-03 is rebuilt, so every
+// salary figure carries the same label: a short chip next to the number, and one plain line on the
+// screens that lead with a number.
+const SAMPLE_NOTE = 'Sample data – not a market benchmark';
+const sampleChip = () => `<span class="chip sample" title="Built from a partly synthetic corpus while the real salary rebuild is pending. Treat it as an indication, not a benchmark.">${SAMPLE_NOTE}</span>`;
+const sampleLine = () => `<div class="sample-line">${SAMPLE_NOTE}. Built from a partly synthetic corpus while the real salary rebuild is pending.</div>`;
+
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2600); };
 
@@ -1140,7 +1154,7 @@ async function runRateCheck() {
     box.innerHTML = `
       <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
       <div class="big-gap" style="color:${tone}">${esc(line)}</div>
-      <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b>${v.gapAbs != null ? ` · you report ${fmt(r.input.current)}${per}` : ''}</div>
+      <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b> ${sampleChip()}${v.gapAbs != null ? ` · you report ${fmt(r.input.current)}${per}` : ''}</div>
       <div class="scale">
         <div class="band" style="left:${pos(b.p25)}%;width:${pos(b.p75) - pos(b.p25)}%"></div>
         ${r.input.current ? `<div class="you" style="left:${pos(r.input.current)}%"></div>` : ''}
@@ -1459,7 +1473,8 @@ function renderOnboarding() {
         <div class="card tone-violet" style="border-color:var(--ai-border);">
           <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
           <div style="font-size:clamp(24px,4.4vw,34px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:10px 0 6px;color:${tone}">${esc(v.headline)}</div>
-          <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b></div>
+          <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b> ${sampleChip()}</div>
+        ${sampleLine()}
         </div>
         <div class="row" style="margin-top:18px;gap:10px">
           <button class="btn" id="ob-finish">Open my radar</button>
@@ -1547,7 +1562,7 @@ async function renderRadar() {
     const pos = (v) => Math.max(0, Math.min(100, ((v - min) / (max - min)) * 100));
     return `
     <div class="rate-gap">
-      <div class="k">Rate intelligence · ${rates.sampleSize} comparable postings · ${rates.confidence} confidence · ${esc(rates.segment || '')}</div>
+      <div class="k">Rate intelligence · ${rates.sampleSize} comparable postings · ${rates.confidence} confidence · ${esc(rates.segment || '')} ${sampleChip()}</div>
       <div class="amount">${rates.gapPct > 0 ? 'You are ' + rates.gapPct + '% below market' : rates.gapPct < 0 ? 'You are ' + Math.abs(rates.gapPct) + '% above market' : 'You are at market'}</div>
       <div class="dim">Median for your exact profile: <b>${money(rates.p50)}</b>${PERIOD_LABEL[rates.period] || ''} · you report <b>${money(rates.current)}</b>${PERIOD_LABEL[rates.period] || ''} ${rates.gapAbs > 0 ? `<span style="color:var(--bad)">(${money(rates.gapAbs)}/yr on the table)</span>` : ''}</div>
       <div class="scale">
@@ -1660,7 +1675,7 @@ async function renderRadar() {
       };
       const series = (seed, n) => Array.from({ length: n }, (_, i) => Math.max(1, Math.round(seed * (0.55 + Math.sin(i * 1.1 + seed) * 0.22 + i * 0.05))));
       const cards = [
-        { k: 'Rate gap', v: h.rateGapPct != null ? h.rateGapPct + '%' : '–', delta: h.rateGapPct != null ? h.rateGapPct + ' pts' : 'no data', dir: h.rateGapPct > 5 ? -1 : h.rateGapPct < -5 ? 1 : 0, sub: 'vs market', tone: 'var(--accent)', s: series(14, 12) },
+        { k: 'Rate gap', v: h.rateGapPct != null ? h.rateGapPct + '%' : '–', delta: h.rateGapPct != null ? h.rateGapPct + ' pts' : 'no data', dir: h.rateGapPct > 5 ? -1 : h.rateGapPct < -5 ? 1 : 0, sub: 'vs sample median', tone: 'var(--accent)', s: series(14, 12) },
         { k: 'New at 70+', v: h.fresh, delta: h.fresh + ' new', dir: h.fresh > 0 ? 1 : 0, sub: 'last 24h', tone: 'var(--accent)', s: series(h.fresh || 6, 12) },
         { k: 'Career score', v: h.overall != null ? h.overall : '–', delta: (h.scoreDelta > 0 ? '+' : '') + (h.scoreDelta || 0), dir: h.scoreDelta || 0, sub: 'this week', tone: 'var(--accent)', s: series(h.overall || 60, 12) },
         { k: 'Applications', v: h.appliedThisWeek + '/' + h.weeklyTarget, delta: h.appliedThisWeek + ' sent', dir: h.appliedThisWeek > 0 ? 1 : 0, sub: 'this week', tone: 'var(--accent)', s: series(Math.max(2, h.appliedThisWeek * 3), 12) },

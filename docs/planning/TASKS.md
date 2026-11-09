@@ -39,7 +39,7 @@ Last updated: 9 November 2026.
 
 
 | DATA-06 | DATA | **The 176% rate gap is an artefact of the synthetic corpus.** Backend/senior comparables are 1,461 records, of which 1,311 are USD/year at an average of 174,705 and 109 are CAD at 229,000; only 4 are EUR. The benchmark is a US-market number applied to a EUR salary, and the headline multiplies it. Country filter does not change it (Any, DE and US all return 138,000). Fixing this is DATA-03 | You decide A or B, then Us | OPEN |
-| DATA-03 | DATA | **Salary benchmarks are 80% synthetic** (648 of 812 records from `corpus.cjs`). Choose: A rebuild on live data only, or B label as sample data | Reply A or B |
+
 | AUTH-01 | AUTH | Google credentials | OAuth client, redirect `https://thinkzet.com/api/auth/google/callback`, set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` |
 | AUTH-02 | AUTH | Apple credentials | Services ID, return URL `https://thinkzet.com/api/auth/apple/callback`, key, four `APPLE_*` variables |
 | PAY-01 | PAY | Real €19.99 payment, confirm Pro unlocks, refund yourself | thinkzet.com → Upgrade |
@@ -56,10 +56,10 @@ Last updated: 9 November 2026.
 | ID | Cat | Task | Needs |
 |---|---|---|---|
 | COPY-13 | COPY | Hero statistics (1 in 3, €13,500, 72%) have no source in the repo. Replace with computed numbers, or remove | DATA-03 |
-| EML-02 | EML | Sender `ThinkZet <brief@thinkzet.com>` | EML-01 |
+| EML-02 | EML | Sender `ThinkZet <brief@thinkzet.com>` | EML-01 (cleared) |
 | AUTH-03 | AUTH | Test Google and Apple sign-in on the live site | AUTH-01, AUTH-02 |
 | DATA-02 | DATA | Offsite backup of the SQLite volume | DEP-01 |
-| GRO-01 | GRO | Send the link to the first 20 people | PAY-01, EML-01 |
+| GRO-01 | GRO | Send the link to the first 20 people | PAY-01 |
 | GRO-02 | GRO | Weekly Funnel and Leads report | GRO-01 |
 
 ## D. Done (verified and pushed)
@@ -72,6 +72,8 @@ Last updated: 9 November 2026.
 | DEP-13 | DEP | `www.thinkzet.com` redirects to the apex (301) | measured |
 | EML-01 | EML | Resend domain verified (SPF and DKIM), sender `ThinkZet <support@thinkzet.com>` delivering to any address | production send 200, `delivered: true` |
 | EML-04 | EML | Railway holds a working Resend key; production queue shows `login_code | sent` | verified 9 Nov 2026 |
+| DATA-03 | DATA | Option B chosen: label salary intelligence as sample data until the rebuild. Chip on every salary figure, plain line on the screens that lead with a number, KPI relabelled "vs sample median" | Us | DONE | rendered HTML carries the label; 57/57 API, 10/10 browser |
+| COPY-19 | COPY | Contact addresses: support@, hello@ and billing@thinkzet.com in the footer; legal pages use support@ and hello@; mailer default sender is support@ | Us | DONE | three mailto links in the footer, one in each legal page |
 | PAY-10 | PAY | Stripe live product, prices, six-event webhook on thinkzet.com | signed event 200, forged 400 |
 | PAY-02 | PAY | Checkout requires a signed-in session; the demo account can never be charged; a missing Stripe key refuses checkout in production instead of granting Pro | `3731853`; payment-check 19/19 |
 | PAY-03 | PAY | Pro+ hidden from the landing page, the plan screen and the catalogue; interest recorded without selling | `3731853`; payment-check 19/19 |
@@ -104,6 +106,7 @@ Last updated: 9 November 2026.
 
 ## F. Change log
 
+- 9 Nov 2026 – DATA-03 option B applied, contact addresses updated, EML-01 and EML-04 closed.
 - 9 Nov 2026 – EML-01 and EML-04 closed on production evidence: code sent, code verified, dashboard reached.
 - 9 Nov 2026 – PAY-02, PAY-03, PAY-04 done and tagged `restore-20261109-1`; PAY-05 added for the live cancellation proof.
 - 9 Nov 2026 – Register rewritten as a ledger: every request numbered, ordered and categorised; done work moved out of Open.

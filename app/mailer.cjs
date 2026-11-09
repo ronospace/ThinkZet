@@ -14,7 +14,7 @@ const { db } = require('./db.cjs');
 const CONFIG = {
   resendKey: process.env.RESEND_API_KEY || '',
   postmarkKey: process.env.POSTMARK_API_KEY || '',
-  from: process.env.EMAIL_FROM || 'ThinkZet <brief@careeros.local>',
+  from: process.env.EMAIL_FROM || 'ThinkZet <support@thinkzet.com>',
   replyTo: process.env.EMAIL_REPLY_TO || '',
   appUrl: process.env.APP_URL || 'http://127.0.0.1:4173',
   originFrom: (req) => {
