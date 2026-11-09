@@ -20,6 +20,7 @@ Last updated: 9 November 2026.
 | 5 | COPY-15 | COPY | "Morning brief" is time-driven; name it "Daily brief" and make the greeting follow the send hour | IN PROGRESS (mailer done, UI labels to do) |
 | 6 | COPY-16 | COPY | "closes in 1 days" reads "closes tomorrow" or "closes today" | IN PROGRESS (code written, to verify) |
 | 7 | AUTH-08 | AUTH | Sign-in rate limit split: 5 codes per address and 40 per network in 15 minutes, so a shared IP no longer locks out new sign-ups | Us | DONE | tested: 5 x 200 then 429 for one address; 8 different addresses from one IP all 200 |
+| NAV-03 | NAV | One firm notch (110px) is now enough to move to the next screen; plural fixed in the gaps table; the live pill is hidden on Sign in and onboarding | Us | DONE | measured: flip fires on the first gesture |
 | NAV-02 | NAV | Scroll-to-next-screen made easier: 150px instead of 320px, shorter settle, screens with no scroll room move on any gesture | Us | DONE | measured: flip fires on the first deliberate gesture |
 | UI-01 | UI | Radar list in columns: 1 on phones, 2 on tablets, 3 on wide screens, softly tinted, blended faded colours | OPEN |
 | 8 | UI-02 | UI | Structure audit of the remaining screens at phone and desktop widths: no paragraph blocks, label-value rows, chips | OPEN |
@@ -34,6 +35,7 @@ Last updated: 9 November 2026.
 |---|---|---|---|
 | EML-04 | EML | Railway still holds an invalid Resend key. The new key `re_LkWNodoS…aDxjT` sends as `support@thinkzet.com` to any address and completes a full code round trip locally, but production still stores `API key is invalid`. Paste the new key into Railway → `RESEND_API_KEY` and Deploy | Railway → Variables → `RESEND_API_KEY` → Deploy |
 | EML-01 | EML | Verify thinkzet.com in Resend so people other than you can sign in | Resend → Domains → Add `thinkzet.com`, region EU, send the DNS screenshot |
+| DATA-06 | DATA | **The 176% rate gap is an artefact of the synthetic corpus.** Backend/senior comparables are 1,461 records, of which 1,311 are USD/year at an average of 174,705 and 109 are CAD at 229,000; only 4 are EUR. The benchmark is a US-market number applied to a EUR salary, and the headline multiplies it. Country filter does not change it (Any, DE and US all return 138,000). Fixing this is DATA-03 | You decide A or B, then Us | OPEN |
 | DATA-03 | DATA | **Salary benchmarks are 80% synthetic** (648 of 812 records from `corpus.cjs`). Choose: A rebuild on live data only, or B label as sample data | Reply A or B |
 | AUTH-01 | AUTH | Google credentials | OAuth client, redirect `https://thinkzet.com/api/auth/google/callback`, set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` |
 | AUTH-02 | AUTH | Apple credentials | Services ID, return URL `https://thinkzet.com/api/auth/apple/callback`, key, four `APPLE_*` variables |

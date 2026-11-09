@@ -2249,7 +2249,7 @@ async function renderGaps() {
       <thead><tr><th>Skill</th><th>Blocks</th><th>Share of matches</th><th>Market demand</th><th>Salary premium</th><th>Growth</th><th>Effort</th></tr></thead>
       <tbody>${gaps.map((g) => `<tr>
         <td><b>${esc(g.skill)}</b></td>
-        <td class="mono">${g.blocking} roles</td>
+        <td class="mono">${g.blocking} role${g.blocking === 1 ? '' : 's'}</td>
         <td><div class="bar" style="width:90px"><i style="width:${g.share}%"></i></div><span class="muted mono" style="font-size:11px">${g.share}%</span></td>
         <td class="mono">${g.demand}</td>
         <td class="mono" style="color:${g.salaryPremium > 10 ? 'var(--good)' : 'inherit'}">+${g.salaryPremium}%</td>
@@ -3004,6 +3004,7 @@ const VIEWS = {
 
 async function go(view) {
   const changed = STATE.view !== view;
+  const pill = document.getElementById('live-pill'); if (pill) pill.style.display = ['auth', 'onboard'].includes(view) ? 'none' : '';
   STATE.view = view;
   document.querySelectorAll('#nav button').forEach((b) => b.classList.toggle('active', b.dataset.view === view));
   const [fn, title, sub] = VIEWS[view];
@@ -3181,7 +3182,7 @@ document.querySelectorAll('#nav button').forEach((b) => { b.onclick = () => go(b
    the scroll that brought you there, keyboard, touch and pinch-zoom never trigger it. */
 (function screenFlip() {
   if (!window.matchMedia('(pointer:fine)').matches) return;
-  const NEED = 150;            // wheel distance beyond the edge before it moves (about two notches)
+  const NEED = 110;            // wheel distance beyond the edge before it moves (one firm notch)
   const GESTURE_GAP = 140;     // ms of silence that separates one gesture from the next
   const SETTLE = 650;          // ms before another move is allowed
   let acc = 0, dir = 0, armed = false, lastT = 0, lockedUntil = 0, timer = null;
