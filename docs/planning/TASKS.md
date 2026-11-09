@@ -12,6 +12,8 @@ Last updated: 9 November 2026.
 
 | ID | Cat | Task | Owner | Status | Next action |
 |---|---|---|---|---|---|
+| DATA-03 | DATA | **Salary benchmarks are 80% synthetic.** Of 812 open salary records, 648 come from the seeded generator (`corpus.cjs`) and 164 from the four live adapters. The site says "live postings". Decide: label it, or rebuild the benchmark on live data only | You decide, then Us | OPEN | Measured locally; production runs the same seed, to be confirmed |
+| COPY-13 | COPY | Hero statistics (1 in 3, €13,500, 72%) have no source in the repo. Replace with numbers computed from live data, or remove | Us | BLOCKED | Needs DATA-03 |
 | PAY-01 | PAY | Real €19.99 payment test, then refund | You | OPEN | Pay with own card on thinkzet.com, confirm Pro unlocks and Stripe shows webhook 200, refund in Stripe |
 | EML-03 | EML | Set `EMAIL_FROM=ThinkZet <onboarding@resend.dev>` in Railway until the domain is verified (current value uses the unverified thinkzet.com and every send fails) | You | OPEN | Railway Variables, then Deploy |
 | EML-01 | EML | Verify thinkzet.com in Resend | You | OPEN | Resend → Domains → Add `thinkzet.com`, send screenshot of DNS records; then add to Cloudflare |
