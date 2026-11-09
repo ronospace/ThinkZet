@@ -87,9 +87,9 @@ function cdp(port, path, method = 'GET') {
     await wheel(120, 40, 12); await pause(900);
     log.push('after momentum   ' + await state());
     // 2. a fresh deliberate gesture at the bottom: must show hint, then flip
-    await wheel(60, 3, 30); await pause(100);
+    await wheel(60, 3, 30); await pause(60);
     log.push('gesture begins   ' + await state());
-    await wheel(60, 8, 30); await pause(1500);
+    await wheel(60, 6, 30); await pause(1200);
     log.push('after gesture    ' + await state());
     // 3. scroll up at the top of the new screen: goes back
     await ev("document.querySelector('main').scrollTop=0"); await pause(400);
