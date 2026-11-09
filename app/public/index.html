@@ -689,6 +689,8 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .ob-actions{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin-top:22px;width:100%}
 .ob-actions .btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 22px;min-width:132px}
 @media(max-width:340px){.ob-actions .btn{flex:1 1 100%}}
+.btn.danger{background:transparent;border:1px solid color-mix(in srgb,var(--bad) 55%,var(--line));color:var(--bad)}
+.btn.danger:hover{background:color-mix(in srgb,var(--bad) 12%,var(--panel));border-color:var(--bad)}
 </style>
 </head>
 <body>
@@ -2467,9 +2469,9 @@ async function renderTwin() {
         <div class="kv"><span>Outcomes recorded</span><span class="mono">${(t.behaviour?.outcomes || []).reduce((a, b) => a + b.n, 0)}</span></div>
         <div class="kv"><span>Momentum</span><span class="mono">${t.momentum}/100</span></div>
         <h3 style="margin-top:18px">Your data</h3>
-        <div class="row" style="gap:8px;margin-top:8px;flex-wrap:wrap">
-          <button class="btn sm ghost" id="d-export">Export everything</button>
-          <button class="btn sm ghost" id="d-delete" style="border-color:var(--bad);color:var(--bad)">Delete my account</button>
+        <div class="ob-actions" style="margin-top:10px;justify-content:flex-start">
+          <button class="btn ghost" id="d-export">Export Everything</button>
+          <button class="btn danger" id="d-delete">Delete My Account</button>
         </div>
         <div class="muted" style="font-size:11px;margin-top:8px">Export gives you a JSON file of every record we hold. Delete removes your profile, CV, applications, outcomes and preferences within 30 days.</div>
         <div class="note" style="margin-top:14px">This is the switching cost: the twin accumulates history. A competitor can copy the UI in a week; it cannot copy your 12 months of behaviour and outcomes.</div>
