@@ -707,8 +707,8 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
     <section class="check" id="check">
       <h2>What should you be earning?</h2>
       <div class="row3">
-        <div><label for="c-role">Your role</label><input id="c-role" placeholder="Senior Data Scientist"/></div>
-        <div><label for="c-years">Years of experience</label><input id="c-years" type="number" min="0" max="45" placeholder="8"/></div>
+        <div><label for="c-role">Your Role</label><input id="c-role" placeholder="Senior Data Scientist"/></div>
+        <div><label for="c-years">Years of Experience</label><input id="c-years" type="number" min="0" max="45" placeholder="8"/></div>
         <div><label for="c-country">Country</label>
           <select id="c-country">
             <option value="">Any</option>
@@ -724,8 +724,8 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
         </div>
       </div>
       <div class="row2">
-        <div><label for="c-current">What you are paid now (EUR)</label><input id="c-current" type="number" placeholder="78000"/></div>
-        <div><label for="c-skills">Strongest skills, comma separated</label><input id="c-skills" placeholder="Python, SQL, Machine Learning"/></div>
+        <div><label for="c-current">What You Are Paid Now (EUR)</label><input id="c-current" type="number" placeholder="78000"/></div>
+        <div><label for="c-skills">Strongest Skills, Comma Separated</label><input id="c-skills" placeholder="Python, SQL, Machine Learning"/></div>
       </div>
       <button class="btn go" id="c-run">Show me the number</button>
       <div class="muted" id="c-err" style="font-size:12px;margin-top:10px"></div>
@@ -849,7 +849,9 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
           <a href="mailto:hello@thinkzet.com">hello@thinkzet.com</a>
           <a href="mailto:billing@thinkzet.com">billing@thinkzet.com</a>
           <a href="mailto:privacy@thinkzet.com">privacy@thinkzet.com</a>
-          <div class="foot-h" style="margin-top:14px">Data</div>
+        </div>
+        <div class="foot-col">
+          <div class="foot-h">Data</div>
           <a href="/sitemap.xml">Sitemap</a>
           <a href="/salary/software-engineer">Salaries</a>
           <a href="/skills/llmops">Skills</a>
@@ -1388,17 +1390,17 @@ function renderOnboarding() {
   const stepOne = `
     <p class="lead">What do you do?</p>
     <p class="sub">This is what everything else is scored against.</p>
-    ${hasName ? '' : '<div class="field"><label>Your name</label><input id="ob-name" placeholder="First and last name" autocomplete="name" autofocus/></div>'}
-    <div class="field"><label>Your role</label><input id="ob-role" placeholder="e.g. Senior Data Scientist" value="${esc(D.role || '')}" /></div>
+    ${hasName ? '' : '<div class="field"><label>Your Name</label><input id="ob-name" placeholder="First and last name" autocomplete="name" autofocus/></div>'}
+    <div class="field"><label>Your Role</label><input id="ob-role" placeholder="e.g. Senior Data Scientist" value="${esc(D.role || '')}" /></div>
     <div class="form-grid">
-      <div class="field"><label>Years of experience</label><input id="ob-years" type="number" min="0" max="45" placeholder="8" value="${D.years ?? ''}"/></div>
+      <div class="field"><label>Years of Experience</label><input id="ob-years" type="number" min="0" max="45" placeholder="8" value="${D.years ?? ''}"/></div>
       <div class="field"><label>Country</label>
         <select id="ob-country">
           <option value="">Any</option>
           ${['DE','NL','GB','PT','ES','FR','PL','CH','SE','IE','CA','US','IN','AE','WW'].map((c) => `<option value="${c}" ${D.country === c ? 'selected' : ''}>${c}</option>`).join('')}
         </select>
       </div>
-      <div class="field"><label>Remote preference</label>
+      <div class="field"><label>Remote Preference</label>
         <select id="ob-remote">
           <option value="any" ${D.remote === 'any' || !D.remote ? 'selected' : ''}>Any</option>
           <option value="remote" ${D.remote === 'remote' ? 'selected' : ''}>Remote only</option>
@@ -1416,13 +1418,13 @@ function renderOnboarding() {
     <p class="lead">What are you paid now?</p>
     <p class="sub">This is the only way to tell you what you're leaving on the table. It never leaves your account.</p>
     <div class="form-grid" style="grid-template-columns:1.2fr .8fr .8fr">
-      <div class="field"><label>Current pay</label><input id="ob-current" type="number" placeholder="78000" value="${D.currentSalary ?? ''}" autofocus/></div>
+      <div class="field"><label>Current Pay</label><input id="ob-current" type="number" placeholder="78000" value="${D.currentSalary ?? ''}" autofocus/></div>
       <div class="field"><label>Unit</label>
         <select id="ob-unit"><option value="year" ${D.unit === 'year' || !D.unit ? 'selected' : ''}>Per year</option><option value="hour" ${D.unit === 'hour' ? 'selected' : ''}>Per hour</option><option value="month" ${D.unit === 'month' ? 'selected' : ''}>Per month</option></select>
       </div>
-      <div class="field"><label>Target minimum</label><input id="ob-target" type="number" placeholder="100000" value="${D.target ?? ''}"/></div>
+      <div class="field"><label>Target Minimum</label><input id="ob-target" type="number" placeholder="100000" value="${D.target ?? ''}"/></div>
     </div>
-    <div class="field" style="margin-top:4px"><label>Your strongest skills (comma separated)</label><input id="ob-skills" placeholder="Python, SQL, Machine Learning" value="${esc(D.skills || '')}"/></div>
+    <div class="field" style="margin-top:4px"><label>Your Strongest Skills (Comma Separated)</label><input id="ob-skills" placeholder="Python, SQL, Machine Learning" value="${esc(D.skills || '')}"/></div>
     <div class="row" style="margin-top:20px;gap:10px">
       <button class="btn" id="ob-next2">See my market value</button>
       <button class="btn ghost" id="ob-back">Back</button>
