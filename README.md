@@ -142,3 +142,8 @@ node scripts/rebrand.cjs "New Name"
 
 Launch gate reads green. Remaining: a model provider key for the copilot, and a permanent
 host once the Hetzner account clears.
+
+- Progress board: `docs/planning/PROGRESS.md`
+- Task register: `docs/planning/TASKS.md`
+- Engineering rules: `docs/ENGINEERING.md`
+- Payments runbook: `docs/planning/PAYMENTS.md`

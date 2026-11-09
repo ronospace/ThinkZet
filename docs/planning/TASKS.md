@@ -1,6 +1,7 @@
 # ThinkZet – Task Register
 
 Single source of truth for all work. Rules: `docs/ENGINEERING.md` section 1.
+Summary board: `docs/planning/PROGRESS.md`.
 Last updated: 9 November 2026.
 
 **Owner:** `Us` = engineering, `You` = needs the founder.
