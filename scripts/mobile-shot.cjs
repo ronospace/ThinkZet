@@ -117,6 +117,7 @@ function cdp(port, path, method = 'GET') {
     const w = await send('Runtime.evaluate', { returnByValue: true, expression: "(()=>{const d=document.getElementById('load-demo'),o=document.getElementById('logout'),si=document.getElementById('menu-signin');const cs=e=>e?getComputedStyle(e).display:null;return JSON.stringify({authed:STATE.authed,demoRunning:STATE.demo,demo:cs(d),signout:cs(o),signin:cs(si),state:(document.getElementById('profile-pill')||{}).textContent,view:STATE.view})})()" });
     console.log('demorun', JSON.stringify(w.result && w.result.value), w.exceptionDetails ? JSON.stringify(w.exceptionDetails).slice(0,200) : '');
   }
+  if (process.env.FOOTQ) { const w = await send('Runtime.evaluate', { returnByValue: true, expression: "(()=>{const g=document.querySelector('.foot-grid');const cs=getComputedStyle(g);return JSON.stringify({cols:cs.gridTemplateColumns,display:cs.display,cells:[...g.children].map(c=>({cls:c.className||'(brand)',w:Math.round(c.getBoundingClientRect().width),x:Math.round(c.getBoundingClientRect().left),y:Math.round(c.getBoundingClientRect().top)}))})})()" }); console.log('footq', w.result.value); }
   const metrics = await send('Runtime.evaluate', { expression: "JSON.stringify({docW:document.documentElement.scrollWidth,winW:innerWidth})", returnByValue: true });
   console.log('metrics', metrics.result.value);
   console.log('saved', OUT);
