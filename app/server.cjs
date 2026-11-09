@@ -181,9 +181,12 @@ route('POST', /^\/api\/auth\/request$/, async (req, res) => {
         console.log(`  ! login code email failed: ${d.error}`);
         log(null, 'auth.code_email_failed', 'user', r.email, { error: String(d.error).slice(0, 200) });
         const unverified = /not verified|testing email|own email|verify your domain/i.test(String(d.error));
+        const misconfigured = /missing `?html`? or `?text`?|missing.*field|invalid.*from|validation_error/i.test(String(d.error));
         return json(res, 502, { error: unverified
           ? 'Email sign-in is being set up and cannot reach this address yet. Please try again soon.'
-          : 'We could not send the code to that address. Please try again shortly.' });
+          : misconfigured
+            ? 'Sign-in email is misconfigured on our side, not yours. We have been alerted.'
+            : 'We could not send the code to that address. Please try again shortly.' });
       }
       return json(res, 200, { ok: true, sentTo: r.email, expiresAt: r.expiresAt, delivered: true });
     }
