@@ -36,6 +36,7 @@ Last updated: 9 November 2026.
 | AUTH-01 | AUTH | Google credentials | OAuth client, redirect `https://thinkzet.com/api/auth/google/callback`, set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` |
 | AUTH-02 | AUTH | Apple credentials | Services ID, return URL `https://thinkzet.com/api/auth/apple/callback`, key, four `APPLE_*` variables |
 | PAY-01 | PAY | Real €19.99 payment, confirm Pro unlocks, refund yourself | thinkzet.com → Upgrade |
+| PAY-05 | PAY | Live proof of cancellation against a real Stripe subscription (steps in `docs/planning/PAYMENTS.md`) | After PAY-01: subscribe, cancel in the app, confirm Stripe shows "cancels at period end" |
 | SEC-01 | SEC | Roll the Stripe live key, webhook secret and Resend key (all pasted in chat) | Roll in each dashboard, update Railway |
 | DEP-01 | DEP | Confirm the volume keeps data across a redeploy | Sign up, redeploy, reload |
 | DEP-02 | DEP | Delete spare Railway project `feisty-optimism`; switch Railway Agent off | Railway settings |
@@ -63,6 +64,9 @@ Last updated: 9 November 2026.
 | DEP-12 | DEP | Entrypoint fixes volume ownership, drops to `node` | `381a3b0`, `1b96d63` |
 | DEP-13 | DEP | `www.thinkzet.com` redirects to the apex (301) | measured |
 | PAY-10 | PAY | Stripe live product, prices, six-event webhook on thinkzet.com | signed event 200, forged 400 |
+| PAY-02 | PAY | Checkout requires a signed-in session; the demo account can never be charged; a missing Stripe key refuses checkout in production instead of granting Pro | `3731853`; payment-check 19/19 |
+| PAY-03 | PAY | Pro+ hidden from the landing page, the plan screen and the catalogue; interest recorded without selling | `3731853`; payment-check 19/19 |
+| PAY-04 | PAY | Cancellation calls Stripe (`cancel_at_period_end`), access runs to the period end, a refusal changes nothing | `3731853`; billing-unit 9/9 |
 | SEC-10 | SEC | Sign-in code never returned when mail is live | `47454dc` |
 | AUTH-04 | AUTH | Google and Apple buttons always visible, Soon tag until configured | `7ccaaa9` |
 | AUTH-05 | AUTH | Names never derived from the email; asked at onboarding; old derived names cleared | tested 400/200/401 |
@@ -91,4 +95,5 @@ Last updated: 9 November 2026.
 
 ## F. Change log
 
+- 9 Nov 2026 – PAY-02, PAY-03, PAY-04 done and tagged `restore-20261109-1`; PAY-05 added for the live cancellation proof.
 - 9 Nov 2026 – Register rewritten as a ledger: every request numbered, ordered and categorised; done work moved out of Open.
