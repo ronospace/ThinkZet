@@ -47,7 +47,7 @@ Last updated: 9 November 2026.
 | DATA-06 | DATA | **The 176% rate gap is an artefact of the synthetic corpus.** Backend/senior comparables are 1,461 records, of which 1,311 are USD/year at an average of 174,705 and 109 are CAD at 229,000; only 4 are EUR. The benchmark is a US-market number applied to a EUR salary, and the headline multiplies it. Country filter does not change it (Any, DE and US all return 138,000). Fixing this is DATA-03 | You decide A or B, then Us | OPEN |
 
 | AUTH-01 | AUTH | Google credentials set in Railway and live on production; the client JSON confirms redirect `https://thinkzet.com/api/auth/google/callback` | none |
-| AUTH-02 | AUTH | Apple credentials supplied and verified: the ES256 client secret built from the .p8 is accepted by Apple (`invalid_grant` on a fake code). Set the four `APPLE_*` variables in Railway and Deploy | Railway → Variables → Deploy |
+
 | PAY-01 | PAY | Real €19.99 payment, confirm Pro unlocks, refund yourself | thinkzet.com → Upgrade |
 | PAY-05 | PAY | Live proof of cancellation against a real Stripe subscription (steps in `docs/planning/PAYMENTS.md`) | After PAY-01: subscribe, cancel in the app, confirm Stripe shows "cancels at period end" |
 | SEC-01 | SEC | Roll the Stripe live key, webhook secret and Resend key (all pasted in chat) | Roll in each dashboard, update Railway |
@@ -63,7 +63,7 @@ Last updated: 9 November 2026.
 |---|---|---|---|
 | COPY-13 | COPY | Hero statistics (1 in 3, €13,500, 72%) have no source in the repo. Replace with computed numbers, or remove | DATA-03 |
 | EML-02 | EML | Sender `ThinkZet <brief@thinkzet.com>` | EML-01 (cleared) |
-| AUTH-03 | AUTH | Google live on production: providers reports google true, start returns a Google URL with the thinkzet.com redirect, forged state refused. Apple still needs its four variables in Railway | Us: run the consent step once Apple is set | OPEN |
+| AUTH-03 | AUTH | Both providers live on production: providers reports google and apple true, both start routes return the provider with the thinkzet.com redirect, a forged state is refused and recorded in /api/auth/diagnostic. The consent step itself needs a human browser | You: click Continue with Google and Continue with Apple once | OPEN |
 | DATA-02 | DATA | Offsite backup of the SQLite volume | DEP-01 |
 | GRO-01 | GRO | Send the link to the first 20 people | PAY-01 |
 | GRO-02 | GRO | Weekly Funnel and Leads report | GRO-01 |
@@ -80,6 +80,7 @@ Last updated: 9 November 2026.
 | EML-04 | EML | Railway holds a working Resend key; production queue shows `login_code | sent` | verified 9 Nov 2026 |
 | DATA-03 | DATA | Option B chosen: label salary intelligence as sample data until the rebuild. Chip on every salary figure, plain line on the screens that lead with a number, KPI relabelled "vs sample median" | Us | DONE | rendered HTML carries the label; 57/57 API, 10/10 browser |
 | COPY-19 | COPY | Contact addresses: support@, hello@ and billing@thinkzet.com in the footer; legal pages use support@ and hello@; mailer default sender is support@ | Us | DONE | three mailto links in the footer, one in each legal page |
+| AUTH-02 | AUTH | Apple variables set in Railway and live on production: `apple: true`, start returns appleid.apple.com with the thinkzet.com redirect | production providers |
 | PAY-10 | PAY | Stripe live product, prices, six-event webhook on thinkzet.com | signed event 200, forged 400 |
 | PAY-02 | PAY | Checkout requires a signed-in session; the demo account can never be charged; a missing Stripe key refuses checkout in production instead of granting Pro | `3731853`; payment-check 19/19 |
 | PAY-03 | PAY | Pro+ hidden from the landing page, the plan screen and the catalogue; interest recorded without selling | `3731853`; payment-check 19/19 |
