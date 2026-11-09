@@ -659,6 +659,31 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .ds-cell .v{font-size:var(--text-md);font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
 .ds-note{margin-top:12px;font-size:var(--text-xs);color:var(--warn);line-height:1.5}
 @media(max-width:760px){.ds-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.foot-grid{grid-template-columns:1fr 1fr}.foot-col{padding:12px 10px}.foot-grid a{font-size:11.5px}}
+.plan-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-4);align-items:start}
+.plan-card{position:relative;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-6);box-shadow:var(--shadow-sm)}
+.plan-card.is-featured{border-color:var(--accent2);box-shadow:0 0 0 1px var(--accent2),var(--shadow)}
+.plan-card.is-current{border-color:var(--good)}
+.plan-badge{position:absolute;top:-9px;left:var(--sp-5);background:var(--accent2);color:#fff;font-size:var(--text-2xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:6px}
+.plan-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.plan-head h3{margin:0;font-size:var(--text-lg)}
+.plan-price{font-size:var(--text-3xl);font-weight:760;letter-spacing:var(--tracking-tighter);line-height:1.1;margin-top:10px}
+.plan-price span{font-size:var(--text-sm);font-weight:600;color:var(--muted)}
+.plan-alt{font-size:var(--text-xs);color:var(--muted);margin-top:4px}
+.plan-list{list-style:none;padding:0;margin:var(--sp-4) 0 var(--sp-5)}
+.plan-list li{font-size:var(--text-sm);color:var(--ink2);padding:8px 0 8px 20px;position:relative;border-bottom:1px solid var(--line)}
+.plan-list li:last-child{border-bottom:none}
+.plan-list li:before{content:"";position:absolute;left:2px;top:15px;width:6px;height:6px;border-radius:50%;background:var(--accent2);opacity:.75}
+.plan-cta{width:100%}
+.plan-actions{display:grid;gap:8px}
+@media(max-width:900px){.plan-grid{grid-template-columns:1fr}.plan-card{padding:var(--sp-5)}.plan-price{font-size:var(--text-2xl)}}
+.outcome-card{margin-top:var(--sp-4)}
+.outcome-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px}
+.outcome-row{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
+.outcome-row:last-child{border-bottom:none}
+.outcome-row .o-type{font-size:var(--text-sm);font-weight:600;text-transform:capitalize}
+.outcome-row .o-meta{font-size:var(--text-xs);color:var(--muted)}
+.outcome-row .o-delta{font-variant-numeric:tabular-nums;font-weight:700;font-size:var(--text-sm)}
+@media(max-width:560px){.outcome-row{grid-template-columns:minmax(0,1fr) auto}.outcome-row .o-meta{grid-column:1/-1;margin-top:2px}}
 </style>
 </head>
 <body>
@@ -2378,10 +2403,15 @@ async function renderTracker() {
         </div>`;
       }).join('')}
     </div>
-    <h2 class="section">Outcome log – the moat</h2>
-    <div class="card">
-      <div class="dim" style="font-size:12.5px;margin-bottom:12px">Every outcome recorded here is data no competitor has: person &gt; opportunity &gt; action &gt; result. ${outcomes.length} recorded.</div>
-      ${outcomes.length ? outcomes.map((o) => `<div class="kv"><span>${esc(o.outcome_type)}${o.salary_delta_pct != null ? ' · ' + (o.salary_delta_pct > 0 ? '+' : '') + o.salary_delta_pct + '%' : ''}</span><span class="muted">${new Date(o.occurred_at).toLocaleDateString('en-GB')}</span></div>`).join('') : '<div class="muted">No outcomes yet. Report one from any opportunity detail.</div>'}
+    <div class="card outcome-card">
+      <div class="outcome-head">
+        <div>
+          <h3 style="margin:0">Outcome Log</h3>
+          <div class="dim" style="font-size:var(--text-sm);margin-top:4px">Person, opportunity, action, result. Every entry sharpens the next estimate.</div>
+        </div>
+        <span class="chip">${outcomes.length} recorded</span>
+      </div></div>
+      ${outcomes.length ? outcomes.map((o) => `<div class="outcome-row"><div><div class="o-type">${esc(String(o.outcome_type).replace(/_/g, ' '))}</div><div class="o-meta">${esc(o.title || 'Opportunity')}${o.company ? ' · ' + esc(o.company) : ''}</div></div><div class="o-delta" style="color:${o.salary_delta_pct > 0 ? 'var(--good)' : o.salary_delta_pct < 0 ? 'var(--bad)' : 'var(--muted)'}">${o.salary_delta_pct != null ? (o.salary_delta_pct > 0 ? '+' : '') + o.salary_delta_pct + '%' : '–'}</div><span class="muted o-meta">${new Date(o.occurred_at).toLocaleDateString('en-GB')}</span></div>`).join('') : '<div class="muted">No outcomes yet. Report one from any opportunity detail.</div>'}
     </div>`;
   document.querySelectorAll('.mv').forEach((b) => {
     b.onclick = async () => { await post('/api/applications/status', { opportunityId: b.dataset.id, status: b.dataset.to }); toast('Moved'); renderTracker(); };
@@ -2564,30 +2594,21 @@ async function renderSearches() {
 async function renderPlan() {
   const p = await api('/api/plan');
   $('#view').innerHTML = `
-    <div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
-      <div class="card tone-violet" style="${p.plan === 'free' ? 'border-color:var(--ai-border)' : ''}">
-        <h3>Free</h3>
-        <div class="big mono" style="margin:8px 0">€0</div>
-        <div style="margin-top:12px">${p.plans.free.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span class="muted">–</span></div>`).join('')}</div>
-        ${p.plan === 'free' ? '<div class="chip have" style="margin-top:14px;display:inline-block">current plan</div>' : `<div style="margin-top:14px"><button class="btn ghost sm" id="downgrade">Switch to Free</button></div>`}
+    <div class="plan-grid">
+      <div class="plan-card${p.plan === 'free' ? ' is-current' : ''}">
+        <div class="plan-head"><h3>Free</h3>${p.plan === 'free' ? '<span class="chip have">Current Plan</span>' : ''}</div>
+        <div class="plan-price">€0</div>
+        <div class="plan-alt">The diagnosis, always free</div>
+        <ul class="plan-list">${p.plans.free.features.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
+        ${p.plan === 'free' ? '' : '<button class="btn ghost plan-cta" id="downgrade">Switch to Free</button>'}
       </div>
-      <div class="card tone-violet" style="border-color:var(--accent2);">
-        <h3>Pro</h3>
-        <div class="big mono" style="margin:8px 0">€19.99<span style="font-size:14px;color:var(--muted)">/month</span></div>
-        <div class="dim" style="font-size:12.5px">or €149.99/year – two months free</div>
-        <div style="margin-top:12px">${p.plans.pro.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--good)">✓</span></div>`).join('')}</div>
-        ${p.plan === 'pro'
-          ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
-          : `<div style="margin-top:14px"><button class="btn sm" id="up-month">€19.99 monthly</button></div>`}
-      </div>
-      <div class="card tone-violet" style="border-color:var(--ai-border);">
-        <h3>Pro, yearly</h3>
-        <div class="big mono" style="margin:8px 0">€149.99<span style="font-size:14px;color:var(--muted)">/year</span></div>
-        <div class="dim" style="font-size:12.5px">€12.50 a month, billed once</div>
-        <div style="margin-top:12px">${p.plans.pro.features.slice(0, 5).map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--good)">✓</span></div>`).join('')}<div class="kv"><span>Two months free against monthly</span><span style="color:var(--good)">✓</span></div></div>
-        ${p.plan === 'pro'
-          ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
-          : `<div style="margin-top:14px"><button class="btn sm ghost" id="up-year">€149.99 yearly</button></div>`}
+      <div class="plan-card is-featured">
+        <div class="plan-badge">Most Chosen</div>
+        <div class="plan-head"><h3>Pro</h3>${p.plan === 'pro' ? '<span class="chip have">Active</span>' : ''}</div>
+        <div class="plan-price">€19.99<span> a month</span></div>
+        <div class="plan-alt">or €149.99 a year · two months free</div>
+        <ul class="plan-list">${p.plans.pro.features.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
+        ${p.plan === 'pro' ? '' : '<div class="plan-actions"><button class="btn plan-cta" id="up-month">€19.99 Monthly</button><button class="btn ghost plan-cta" id="up-year">€149.99 Yearly</button></div>'}
       </div>
     </div>
     <div class="card" style="margin-top:14px">
