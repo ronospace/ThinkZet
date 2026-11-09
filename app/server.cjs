@@ -2266,7 +2266,7 @@ const server = http.createServer(async (req, res) => {
     }
     for (const sk of skills) urls.push(`/skills/${encodeURIComponent(sk.canonical.toLowerCase().replace(/\s+/g, '-'))}`);
     const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
-      urls.map((u) => `  <url><loc>http://127.0.0.1:${PORT}${u}</loc><changefreq>daily</changefreq></url>`).join('\n') +
+      urls.map((u) => `  <url><loc>${publicOrigin(req)}${u}</loc><changefreq>daily</changefreq></url>`).join('\n') +
       `\n</urlset>`;
     res.writeHead(200, { 'Content-Type': 'application/xml' });
     return res.end(xml);
