@@ -200,8 +200,8 @@ html[data-theme="light"] .pill.live{background:#eaf7f0;border-color:transparent;
 .rate-gap .dim,.rate-gap .muted{color:#9aa7b8}
 .rate-gap b{color:var(--ink)}
 .card.tone-blue{background:linear-gradient(135deg,var(--panel),var(--panel2));border-color:var(--line)}
-html[data-theme="light"] .card.tone-violet{--tone-ink:var(--ink);--tone-kicker:var(--accent2);background:var(--hero-grad);border-color:var(--ai-border);box-shadow:var(--shadow)}
-html[data-theme="light"] .card.tone-blue{background:linear-gradient(135deg,var(--panel),var(--panel2));border-color:var(--line);box-shadow:var(--shadow)}
+html[data-theme="light"] .card.tone-violet{--tone-ink:var(--ink);--tone-kicker:var(--accent2);background:var(--hero-grad);border-color:#DCC6EE;box-shadow:0 0 0 1px rgba(139,92,246,.10),var(--shadow)}
+html[data-theme="light"] .card.tone-blue{background:linear-gradient(135deg,var(--panel),#EEF3FD);border-color:#CBDCF5;box-shadow:0 0 0 1px rgba(86,139,214,.10),var(--shadow)}
 html[data-theme="light"] .card.tone-violet .muted,html[data-theme="light"] .card.tone-blue .muted{color:#6d7c90}
 html[data-theme="light"] .card.tone-violet [style*="var(--tone-kicker)"]{color:#5b45b8 !important}
 html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed8 !important}
@@ -291,6 +291,7 @@ html[data-theme="light"] .hello-mark{background-image:linear-gradient(100deg,var
 @media(max-width:560px){.hello h2{font-size:var(--text-md)}.hello-meta{font-size:var(--text-xs);gap:6px}}
 .hello .date{color:var(--muted);font-size:12.5px;line-height:1.4}
 .hello .date-sub{color:var(--muted);font-size:12.5px;opacity:.75;line-height:1.4}
+html[data-theme="light"] .rate-gap{border-color:#DCC6EE;box-shadow:0 0 0 1px rgba(139,92,246,.10),var(--shadow)}
 .rate-gap{background:var(--hero-grad);border:1px solid var(--ai-border);border-radius:var(--radius-lg);padding:26px 28px;margin-bottom:var(--sp-4);position:relative;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.4),0 22px 50px -34px rgba(90,60,180,.7)}
 .rate-gap::after{content:"";position:absolute;right:-40px;top:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(139,92,246,.22),transparent 70%)}
 .rate-gap .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker));font-weight:600}
