@@ -15,7 +15,7 @@ Last updated: 9 November 2026.
 | # | ID | Cat | Task (what the founder asked) | Status |
 |---|---|---|---|---|
 | 1 | NAV-01 | NAV | Scrolling to the end of a screen moves to the next one in the left menu; scrolling up at the top moves to the previous one. The left tab follows | IN PROGRESS |
-| 2 | AUTH-06 | AUTH | Greeting and every salutation use the first name Google or Apple supplies, not the email | IN PROGRESS (code written, to verify) |
+| 2 | AUTH-06 | AUTH | Display name: provider default, user override, used everywhere | DONE |
 | 3 | AUTH-07 | AUTH | Signed-in users never see demo mode. Menu item removed for them; server refuses `/api/demo` | IN PROGRESS (code written, to verify) |
 | 4 | COPY-14 | COPY | "Explore the demo profile first" becomes "Demo mode" | OPEN |
 | 5 | COPY-15 | COPY | "Morning brief" is time-driven; name it "Daily brief" and make the greeting follow the send hour | IN PROGRESS (mailer done, UI labels to do) |
@@ -79,7 +79,7 @@ Last updated: 9 November 2026.
 | PAY-05 | PAY | Live proof of cancellation against a real Stripe subscription (steps in `docs/planning/PAYMENTS.md`) | After PAY-01: subscribe, cancel in the app, confirm Stripe shows "cancels at period end" |
 | SEC-01 | SEC | Roll the Stripe live key, webhook secret and Resend key (all pasted in chat) | Roll in each dashboard, update Railway |
 | DEP-01 | DEP | Confirm the volume keeps data across a redeploy | Sign up, redeploy, reload |
-| DEP-02 | DEP | Delete spare Railway project `feisty-optimism`; switch Railway Agent off | Railway settings |
+
 
 | REPO-01 | REPO | Rename GitHub repo `MirrorSpread` to `ThinkZet` | GitHub → Settings; then Us updates `deploy/*` |
 | DATA-01 | DATA | Make the copilot and cover letters generative | Supply `LLM_ENDPOINT`, `LLM_API_KEY`, `LLM_MODEL` |
