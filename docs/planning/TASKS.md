@@ -32,7 +32,7 @@ Last updated: 9 November 2026.
 
 | ID | Cat | Task | Next action |
 |---|---|---|---|
-| EML-04 | EML | **Railway holds a different, invalid Resend key.** Production stores `API key is invalid` (401) for every send, while the key in the local `.env` sends fine as `support@thinkzet.com` to any address. Copy the working key into Railway → `RESEND_API_KEY`, Deploy, then re-run the sign-in test | Railway → Variables → `RESEND_API_KEY` → Deploy |
+| EML-04 | EML | Railway still holds an invalid Resend key. The new key `re_LkWNodoS…aDxjT` sends as `support@thinkzet.com` to any address and completes a full code round trip locally, but production still stores `API key is invalid`. Paste the new key into Railway → `RESEND_API_KEY` and Deploy | Railway → Variables → `RESEND_API_KEY` → Deploy |
 | EML-01 | EML | Verify thinkzet.com in Resend so people other than you can sign in | Resend → Domains → Add `thinkzet.com`, region EU, send the DNS screenshot |
 | DATA-03 | DATA | **Salary benchmarks are 80% synthetic** (648 of 812 records from `corpus.cjs`). Choose: A rebuild on live data only, or B label as sample data | Reply A or B |
 | AUTH-01 | AUTH | Google credentials | OAuth client, redirect `https://thinkzet.com/api/auth/google/callback`, set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` |
