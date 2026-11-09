@@ -233,6 +233,7 @@ h2.section:first-child{margin-top:0}
 
 /* ---------- onboarding ---------- */
 .onboard{max-width:760px;margin:0 auto;padding:48px 24px 80px;width:100%;box-sizing:border-box}
+@media(max-width:900px){.onboard{padding:28px 18px 56px}}
 .onboard .lead{font-size:22px;font-weight:650;letter-spacing:-.02em;margin:0 0 6px}
 .onboard .sub{color:var(--ink2);margin:0 0 22px}
 textarea.cv{width:100%;height:260px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px;font:12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink);resize:vertical;outline:none}
@@ -685,9 +686,9 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .outcome-row .o-meta{font-size:var(--text-xs);color:var(--muted)}
 .outcome-row .o-delta{font-variant-numeric:tabular-nums;font-weight:700;font-size:var(--text-sm)}
 @media(max-width:560px){.outcome-row{grid-template-columns:minmax(0,1fr) auto}.outcome-row .o-meta{grid-column:1/-1;margin-top:2px}}
-.ob-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
-.ob-actions .btn{width:100%;display:flex;align-items:center;justify-content:center;padding:11px 14px}
-@media(max-width:340px){.ob-actions{grid-template-columns:1fr}}
+.ob-actions{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin-top:22px;width:100%}
+.ob-actions .btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 22px;min-width:132px}
+@media(max-width:340px){.ob-actions .btn{flex:1 1 100%}}
 </style>
 </head>
 <body>
@@ -1567,9 +1568,9 @@ function renderOnboarding() {
           <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b> ${sampleChip()}</div>
         ${sampleLine()}
         </div>
-        <div class="row" style="margin-top:18px;gap:10px">
-          <button class="btn" id="ob-finish">Open my radar</button>
-          <button class="btn ghost" id="ob-edit">Edit details</button>
+        <div class="ob-actions" style="margin-top:20px">
+          <button class="btn ghost" id="ob-edit">Edit Details</button>
+          <button class="btn" id="ob-finish">Open My Radar</button>
         </div>`;
       $('#ob-finish').onclick = async () => { STATE.draft = null; await boot(); go('radar'); };
       $('#ob-edit').onclick = async () => { await save(2, {}); renderOnboarding(); };
