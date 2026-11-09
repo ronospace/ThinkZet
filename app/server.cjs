@@ -222,13 +222,27 @@ route('GET', /^\/api\/auth\/(google|apple)\/start$/, async (req, res, url, m) =>
   } catch (e) { res.writeHead(302, { Location: '/?app=1&auth_error=' + encodeURIComponent(e.message) }); res.end(); }
 });
 
+// The last few OAuth outcomes, so a failure in production can be read without Railway logs.
+const OAUTH_LOG = [];
+function noteOauth(provider, outcome, detail) {
+  OAUTH_LOG.unshift({ at: new Date().toISOString(), provider, outcome, detail: String(detail || '').slice(0, 200) });
+  if (OAUTH_LOG.length > 10) OAUTH_LOG.pop();
+  console.log(`  oauth ${provider}: ${outcome} ${detail ? '- ' + String(detail).slice(0, 160) : ''}`);
+}
+route('GET', /^\/api\/auth\/diagnostic$/, async (req, res) => json(res, 200, { recent: OAUTH_LOG }));
+
 async function oauthCallback(req, res, provider, params) {
-  const fail = (msg) => { res.writeHead(303, { Location: '/?app=1&auth_error=' + encodeURIComponent(msg), 'Cache-Control': 'no-store' }); res.end(); };
+  const fail = (msg) => {
+    noteOauth(provider, 'failed', msg);
+    res.writeHead(303, { Location: '/?app=1&auth_error=' + encodeURIComponent(msg), 'Cache-Control': 'no-store' });
+    res.end();
+  };
   if (params.error) return fail(params.error === 'access_denied' || params.error === 'user_cancelled_authorize' ? 'Sign-in was cancelled' : 'Sign-in failed');
   if (!params.code || !params.state) return fail('Sign-in failed');
   try {
     const r = await OAUTH.finish(provider, publicOrigin(req), params.code, params.state, params.user);
     AUTH.setCookie(res, AUTH.COOKIE, r.token, AUTH.SESSION_DAYS * 86400);
+    noteOauth(provider, 'signed in', r.user.email);
     log(r.user.id, 'auth.login', 'user', r.user.id, { via: provider });
     AN.track(r.user.id, 'auth.verified', { via: provider, hasProfile: !!getProfile(r.user.id) });
     try { scheduleSequence(r.user.id); } catch (e) { /* sequence is best-effort */ }

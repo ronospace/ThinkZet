@@ -3414,6 +3414,9 @@ $('#logout') && ($('#logout').onclick = async () => {
   if (/^\/(salary|skills)\//.test(location.pathname)) { await renderSeo(); return; }
 
   const params = new URLSearchParams(location.search);
+  // Coming back from Google or Apple the URL carries ?app=1, but the app shell is still hidden, so
+  // the person lands on the landing page and looks signed out. Show the shell first, then boot.
+  if (params.get('app')) showApp();
   const authed = await api('/api/auth/me');
   if (!authed.user && !params.get('app')) {
     // Not signed in: the landing page is the product. The app stays behind it.
