@@ -30,6 +30,7 @@ Last updated: 9 November 2026.
 | UI-26 | UI | The salutation mark uses a three-stop gradient (violet, rose, blue) in both themes instead of a two-stop ramp | Us | DONE | computed background-image in light and dark |
 | COPY-27 | COPY | Title case for every h3 heading across the app: 58 headings including Skill Gap Detection, How to Close Them and the table headers | Us | DONE | rendered Skill Gaps screen, 59/59 API, 10/10 browser |
 | UI-25i | UI | A running demo labels the account state "Demo Mode" instead of "Signed Out" | Us | DONE | measured: state Demo Mode, signin flex, demo none |
+| UI-27b | UI | Plan screen reverted to the exact pre-UI-27 design: three cards, small pill actions, no Most Chosen tag, no full-width buttons | Us | DONE | renderPlan restored from 9396776; 1440px render, 59/59 API, 10/10 browser |
 | UI-28 | UI | Footer grid: four columns above 900px, two by two below it, measured at 1440, 1280, 1024, 900, 760 and 393 | Us | DONE | cells per row 4 then 2 by 2; 59/59 API, 10/10 browser |
 | UI-27 | UI | Plan screen aligned to the approved landing pricing: Most Chosen tag on Pro, full-width primary action on Pro, yearly action on its own card, equal-height cards | Us | DONE | 1440px render, 59/59 API, 10/10 browser |
 | UI-21 | UI | Plan screen restored to the pre-UI-21 three-cell design at the founder's request; the guarded checkout handlers are kept | Us | DONE | renderPlan replaced, plan-grid CSS removed |
