@@ -22,6 +22,10 @@ Last updated: 9 November 2026.
 | 6 | COPY-16 | COPY | "closes in 1 days" reads "closes tomorrow" or "closes today" | IN PROGRESS (code written, to verify) |
 | 7 | AUTH-08 | AUTH | Sign-in rate limit split: 5 codes per address and 40 per network in 15 minutes, so a shared IP no longer locks out new sign-ups | Us | DONE | tested: 5 x 200 then 429 for one address; 8 different addresses from one IP all 200 |
 | NAV-04 | NAV | One gesture at the edge changes screen immediately: no threshold, no progress hint, 420ms settle | Us | DONE | measured: flip on the first wheel event, momentum does not fire, back at the top works |
+| NAV-06 | NAV | Scroll flip keeps the measured rule (a gesture that begins at the edge) with a shorter gap and settle; the push-at-edge variant was tried and reverted because it fired during a normal scroll to the bottom | Us | DONE | momentum does not flip, first deliberate gesture does, back at top works |
+| COPY-26 | COPY | Hero pill reads "Free Intelligent Career Value Check" | Us | DONE | rendered HTML |
+| UI-19 | UI | Onboarding step indicator centred with its heading | Us | DONE | markup |
+| COPY-25 | COPY | Payoff card no longer claims live postings while labelled sample data | Us | DONE | rendered copy |
 | UI-21 | UI | Plan screen uses the landing layout: two wide cards, features as a proper list with a bullet, yearly as a line inside Pro, badge inside the card, actions stacked | Us | DONE | 1440px screenshot, 59/59 API, 10/10 browser |
 | UI-22 | UI | Outcome Log as a structured table: type, opportunity and company, salary delta in colour, date; heading row with a count chip | Us | DONE | rendered markup |
 | AUTH-11 | AUTH | Apple private key normalised: literal `\n`, real newlines, surrounding quotes and a bare base64 body all produce a valid PEM, so a dashboard paste cannot surface as `DECODER routines::unsupported`. Configuration errors now read as our fault, not the user's | Us | DONE | 4 paste shapes verified; callback reaches Apple and answers "code expired" |
