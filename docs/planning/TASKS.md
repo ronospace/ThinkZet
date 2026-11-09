@@ -35,6 +35,7 @@ Last updated: 9 November 2026.
 | COPY-12 | COPY | Hero returned to the original layout (tag, headline, slogan, button, statistics, then the check) after the centred and story variants were rejected | Us | DONE | 940px column, left-aligned, order hero > check > sections |
 | AUTH-05 | AUTH | Names are never derived from the email handle; asked at onboarding, validated server-side; old derived names cleared | Us | DONE | tested: junk rejected 400, real name saved, signed-out 401 |
 | UI-08 | UI | Sign-in card: centred logo and title, "Continue to ThinkZet", logo links home. Sidebar and top bar stay (a full-screen focus mode was tried and rejected) | Us | DONE | measured: logo, title and card centre equal the content area centre at 1440, 1920 and 393 |
+| UI-09 | UI | Landing sections snap into place on desktop (proximity, smooth, off on phones and for reduced motion); app screens unaffected | Us | DONE | measured: sections settle 76px under the nav from either side at 1440; snap type none at 393 |
 | UI-01 | UI | Radar list: 1 column on phones, 2 on tablets, 3 on wide screens, tinted by score | Us | OPEN | Build and measure at 393, 768, 1280 |
 | UI-02 | UI | Structure audit of remaining screens: landing lower sections, pricing, Brief, Tracker, Negotiation, Market Pulse, Onboarding | Us | IN PROGRESS | Screenshot each at 393 and fix paragraph-style blocks |
 | UI-03 | UI | Light-mode audit of the 90 remaining hardcoded colours | Us | OPEN | Tokenise or confirm each |

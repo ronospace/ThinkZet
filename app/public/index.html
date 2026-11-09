@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="is-landing">
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -635,6 +635,15 @@ html[data-theme="light"] .wm i{background-image:linear-gradient(100deg,var(--acc
 .shell.rail-collapsed .logo-text{display:none}
 @media(min-width:901px){.topbar{padding-left:max(28px,calc((100% - 1120px)/2 + 28px));padding-right:max(28px,calc((100% - 1120px)/2 + 28px))}}
 
+
+/* ---------- landing: section snapping ---------- */
+/* Proximity, not mandatory: it settles on the nearest section when you stop, and never traps
+   keyboard users or anyone on a phone where a section is taller than the screen. */
+html.is-landing body{scroll-snap-type:y proximity}
+html.is-landing .hero-sec,html.is-landing .check,html.is-landing .land-sec,html.is-landing .land-footer{scroll-snap-align:start}
+html.is-landing .hero-sec,html.is-landing .land-footer{scroll-margin-top:76px}
+@media(prefers-reduced-motion:no-preference){html.is-landing body{scroll-behavior:smooth}}
+@media(max-width:900px){html.is-landing body{scroll-snap-type:none}}
 </style>
 </head>
 <body>
@@ -1070,11 +1079,13 @@ async function renderSharedCard(id) {
 
 /* ---------------- landing: the free rate check ---------------- */
 function showApp() {
+  document.documentElement.classList.remove('is-landing');
   const l = document.getElementById('landing');
   if (l) l.style.display = 'none';
   document.getElementById('app-shell').style.display = '';
 }
 function showLanding() {
+  document.documentElement.classList.add('is-landing');
   const l = document.getElementById('landing');
   if (l) l.style.display = '';
   document.getElementById('app-shell').style.display = 'none';
