@@ -11,7 +11,18 @@ These rules apply to every change, by every contributor, human or agent. They ex
 5. Nothing is dropped silently. If scope changes, the task is edited and the reason is written next to it.
 6. The register is updated in the same commit as the work it describes.
 
-## 2. Repository hygiene
+## 2. Git discipline
+
+1. Work happens on `master`. No feature branches, no stashes left behind, no second clone.
+2. One task, one commit. A commit is made only after the task is verified clean (section 4) and the files for that task are staged by name, never with a blanket add that sweeps in unrelated edits.
+3. Before staging: `git status` shows only files belonging to the task. Anything else is either finished and committed on its own, or left alone.
+4. The commit message starts with the task ID, then says what changed and why. Example: `AUTH-06: use the provider's first name for the greeting`.
+5. After every set of related tasks, an annotated tag marks a restore point (`restore-YYYYMMDD-N`) with a one-line note of what is safe about it. To go back: `git checkout <tag> -- <path>` for a file, or `git revert <commit>` for a change. History is never rewritten once pushed.
+6. No duplicate work: before starting, search the register and the code for the same task. If it exists, extend it.
+7. If a verification fails, the change stays unstaged until it passes. A failing change is never committed to be fixed later.
+8. The register (`docs/planning/TASKS.md`) is updated in the same commit as the work.
+
+## 2b. Repository hygiene
 
 1. `master` is always deployable. Railway builds from it on every push.
 2. One logical change per commit. The message says what changed and why, in the imperative.
