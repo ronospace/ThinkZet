@@ -46,7 +46,7 @@ Last updated: 9 November 2026.
 
 | DATA-06 | DATA | **The 176% rate gap is an artefact of the synthetic corpus.** Backend/senior comparables are 1,461 records, of which 1,311 are USD/year at an average of 174,705 and 109 are CAD at 229,000; only 4 are EUR. The benchmark is a US-market number applied to a EUR salary, and the headline multiplies it. Country filter does not change it (Any, DE and US all return 138,000). Fixing this is DATA-03 | You decide A or B, then Us | OPEN |
 
-| AUTH-01 | AUTH | Google credentials | OAuth client, redirect `https://thinkzet.com/api/auth/google/callback`, set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` |
+| AUTH-01 | AUTH | Google credentials supplied and verified against Google (`invalid_grant` on a fake code means the pair is accepted). Set both values in Railway and Deploy | Railway → Variables → `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` → Deploy |
 | AUTH-02 | AUTH | Apple credentials | Services ID, return URL `https://thinkzet.com/api/auth/apple/callback`, key, four `APPLE_*` variables |
 | PAY-01 | PAY | Real €19.99 payment, confirm Pro unlocks, refund yourself | thinkzet.com → Upgrade |
 | PAY-05 | PAY | Live proof of cancellation against a real Stripe subscription (steps in `docs/planning/PAYMENTS.md`) | After PAY-01: subscribe, cancel in the app, confirm Stripe shows "cancels at period end" |
@@ -63,7 +63,7 @@ Last updated: 9 November 2026.
 |---|---|---|---|
 | COPY-13 | COPY | Hero statistics (1 in 3, €13,500, 72%) have no source in the repo. Replace with computed numbers, or remove | DATA-03 |
 | EML-02 | EML | Sender `ThinkZet <brief@thinkzet.com>` | EML-01 (cleared) |
-| AUTH-03 | AUTH | Test Google and Apple sign-in on the live site | AUTH-01, AUTH-02 |
+| AUTH-03 | AUTH | Test Google and Apple sign-in on the live site | AUTH-02 (Google side ready) |
 | DATA-02 | DATA | Offsite backup of the SQLite volume | DEP-01 |
 | GRO-01 | GRO | Send the link to the first 20 people | PAY-01 |
 | GRO-02 | GRO | Weekly Funnel and Leads report | GRO-01 |
