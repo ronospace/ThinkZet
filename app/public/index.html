@@ -680,6 +680,14 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 @media(max-width:340px){.ob-actions .btn{flex:1 1 100%}}
 .btn.danger{background:transparent;border:1px solid color-mix(in srgb,var(--bad) 55%,var(--line));color:var(--bad)}
 .btn.danger:hover{background:color-mix(in srgb,var(--bad) 12%,var(--panel));border-color:var(--bad)}
+.plan-cell{position:relative;display:flex;flex-direction:column}
+.plan-cell .kv{margin-top:0}
+.plan-cell.is-featured{border-color:var(--accent2);box-shadow:0 0 0 1px var(--accent2),var(--shadow)}
+.plan-cell.is-current{border-color:var(--good)}
+.plan-tag{position:absolute;top:-9px;left:var(--sp-5);background:var(--accent2);color:#fff;font-size:var(--text-2xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:6px}
+.plan-action{margin-top:auto;padding-top:16px}
+.plan-action .btn{width:100%;justify-content:center;padding:11px 14px}
+@media(max-width:900px){.plan-tag{left:var(--sp-4)}}
 </style>
 </head>
 <body>
@@ -2618,29 +2626,30 @@ async function renderPlan() {
   const p = await api('/api/plan');
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
-      <div class="card tone-violet" style="${p.plan === 'free' ? 'border-color:var(--ai-border)' : ''}">
+      <div class="card tone-violet plan-cell${p.plan === 'free' ? ' is-current' : ''}">
         <h3>Free</h3>
         <div class="big mono" style="margin:8px 0">€0</div>
         <div style="margin-top:12px">${p.plans.free.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span class="muted">–</span></div>`).join('')}</div>
         ${p.plan === 'free' ? '<div class="chip have" style="margin-top:14px;display:inline-block">current plan</div>' : `<div style="margin-top:14px"><button class="btn ghost sm" id="downgrade">Switch to Free</button></div>`}
       </div>
-      <div class="card tone-violet" style="border-color:var(--accent2);">
+      <div class="card tone-violet plan-cell is-featured">
+        <div class="plan-tag">Most Chosen</div>
         <h3>Pro</h3>
         <div class="big mono" style="margin:8px 0">€19.99<span style="font-size:14px;color:var(--muted)">/month</span></div>
         <div class="dim" style="font-size:12.5px">or €149.99/year – two months free</div>
         <div style="margin-top:12px">${p.plans.pro.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--good)">✓</span></div>`).join('')}</div>
         ${p.plan === 'pro'
           ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
-          : `<div style="margin-top:14px"><button class="btn sm" id="up-month">€19.99 monthly</button></div>`}
+          : `<div class="plan-action"><button class="btn" id="up-month">€19.99 Monthly</button></div>`}
       </div>
-      <div class="card tone-violet" style="border-color:var(--ai-border);">
+      <div class="card tone-violet plan-cell">
         <h3>Pro, Yearly</h3>
         <div class="big mono" style="margin:8px 0">€149.99<span style="font-size:14px;color:var(--muted)">/year</span></div>
         <div class="dim" style="font-size:12.5px">€12.50 a month, billed once</div>
         <div style="margin-top:12px">${p.plans.pro.features.slice(0, 5).map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--good)">✓</span></div>`).join('')}<div class="kv"><span>Two months free against monthly</span><span style="color:var(--good)">✓</span></div></div>
         ${p.plan === 'pro'
           ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
-          : `<div style="margin-top:14px"><button class="btn sm ghost" id="up-year">€149.99 yearly</button></div>`}
+          : `<div class="plan-action"><button class="btn ghost" id="up-year">€149.99 Yearly</button></div>`}
       </div>
     </div>
     <div class="card" style="margin-top:14px">
