@@ -11,6 +11,72 @@ const SENIORITY_RANK = { junior: 1, mid: 2, senior: 3, staff: 4, lead: 4, princi
 // ---------- CV parsing (deterministic, explainable, no external model) ----------
 const SECTION_HINTS = ['experience', 'education', 'skills', 'projects', 'certifications', 'languages', 'summary'];
 
+
+// ---------- pay extraction ----------
+const CUR = { '€': 'EUR', eur: 'EUR', euro: 'EUR', euros: 'EUR', '$': 'USD', usd: 'USD', '£': 'GBP', gbp: 'GBP', cad: 'CAD', chf: 'CHF', inr: 'INR', pln: 'PLN' };
+const TARGET_WORDS = /(expect|target|desired|looking for|seeking|aim|want|ideal|minimum|at least|hoping)/;
+const CURRENT_WORDS = /(salary|earn|earning|compensation|paid|pay\b|base|package|ctc|income|remuneration|wage|currently|current|make|making)/;
+function extractPay(text) {
+  const out = { current: null, target: null, currency: null };
+  const lines = String(text).split(/\n+/);
+  const num = String.raw`(\d{1,3}(?:[ ,.\u202f]\d{3})+|\d{2,7})(\s?k\b)?`;
+  const cur = String.raw`(€|\$|£|eur(?:os?)?|usd|gbp|cad|chf|inr|pln)`;
+  const unit = String.raw`(?:\s*(?:\/|per\s+|a\s+|an\s+|p\.?\s?)\s*(hr|hour|h|day|d|month|mo|year|yr|annum|p\.?a\.?))?`;
+  const rx = new RegExp(`(?:${cur}\\s?${num}|${num}\\s?${cur})${unit}`, 'gi');
+  for (const line of lines) {
+    const low = line.toLowerCase();
+    let m;
+    rx.lastIndex = 0;
+    while ((m = rx.exec(line))) {
+      const symbol = (m[1] || m[6] || '').toLowerCase();
+      const rawNum = m[2] || m[4];
+      const kflag = m[3] || m[5];
+      let amount = parseInt(String(rawNum).replace(/[ ,.\u202f]/g, ''), 10);
+      if (!Number.isFinite(amount)) continue;
+      if (kflag) amount *= 1000;
+      const u = (m[7] || '').toLowerCase();
+      let unitName = /^(hr|hour|h)$/.test(u) ? 'hour' : /^d(ay)?$/.test(u) ? 'day' : /^(month|mo)$/.test(u) ? 'month' : /^(year|yr|annum|pa|p\.a\.?)$/.test(u.replace(/\s/g, '')) ? 'year' : null;
+      // Words BEFORE the number decide whether it is current or target pay. Words AFTER it
+      // ("38,000 EUR gross salary") can only confirm that it is pay, never flip it to a target.
+      const behind = low.slice(Math.max(0, m.index - 48), m.index + m[0].length);
+      const ahead = low.slice(m.index + m[0].length, m.index + m[0].length + 26).split(/[.;\n]/)[0];
+      const before = behind + ' ' + ahead;
+      const target = TARGET_WORDS.test(behind);
+      const current = CURRENT_WORDS.test(behind) || CURRENT_WORDS.test(ahead) || /(day|hourly|hour) rate|rate:/.test(behind);
+      if (!unitName) {
+        if (/day rate|per day/.test(before)) unitName = 'day';
+        else if (/hourly|per hour|\/hr/.test(before)) unitName = 'hour';
+        else if (/monthly|per month/.test(before)) unitName = 'month';
+        else unitName = 'year';
+      }
+      // plausibility per unit, so "2018" or a phone fragment can never become a salary
+      const ok = unitName === 'year' ? amount >= 8000 && amount <= 2000000
+        : unitName === 'month' ? amount >= 700 && amount <= 150000
+        : unitName === 'day' ? amount >= 50 && amount <= 5000
+        : amount >= 8 && amount <= 1000;
+      if (!ok || !(target || current)) continue;
+      const code = CUR[symbol] || null;
+      const hit = { amount, unit: unitName, currency: code };
+      if (target) { if (!out.target) out.target = hit; }
+      else if (!out.current) out.current = hit;
+      if (code && !out.currency) out.currency = code;
+    }
+    // bare "38k" next to a pay word, no currency symbol
+    if (!out.current || !out.target) {
+      const bare = low.match(/(salary|earn(?:ing)?|compensation|paid|package|expect\w*|target)\D{0,24}?(\d{2,3})\s?k\b/);
+      if (bare) {
+        const amount = parseInt(bare[2], 10) * 1000;
+        const isTarget = TARGET_WORDS.test(bare[1]);
+        if (amount >= 8000 && amount <= 2000000) {
+          if (isTarget && !out.target) out.target = { amount, unit: 'year', currency: null };
+          if (!isTarget && !out.current) out.current = { amount, unit: 'year', currency: null };
+        }
+      }
+    }
+  }
+  return out;
+}
+
 function parseResume(text) {
   const lower = text.toLowerCase();
   const found = new Map();
@@ -66,18 +132,12 @@ function parseResume(text) {
     if (hits > best) { best = hits; roleFamily = fam; }
   }
 
-  // Current rate / salary
-  let currentRate = null, rateUnit = null;
-  const rateMatch = lower.match(/([€$£])\s?(\d{2,4})(?:k)?\s*(?:\/|per\s*)?(hr|hour|h|day|month|mo|year|yr|annum)/);
-  const kMatch = lower.match(/([€$£])?\s?(\d{2,3})k\s*(?:\/|per\s*)?(year|yr|annum|month|mo)?/);
-  if (rateMatch) {
-    currentRate = parseInt(rateMatch[2], 10);
-    const u = rateMatch[3];
-    rateUnit = /hr|hour|^h$/.test(u) ? 'hour' : /day/.test(u) ? 'day' : /month|mo/.test(u) ? 'month' : 'year';
-  } else if (kMatch) {
-    currentRate = parseInt(kMatch[2], 10) * 1000;
-    rateUnit = kMatch[3] && /month|mo/.test(kMatch[3]) ? 'month' : 'year';
-  }
+  // Current pay vs. target pay. Both are read from the text, never invented. A number only counts
+  // when a pay word or a currency sits right next to it, so years ("2018") and phone numbers never match.
+  const pay = extractPay(text);
+  const currentRate = pay.current ? pay.current.amount : null;
+  const rateUnit = pay.current ? pay.current.unit : null;
+  const targetRate = pay.target ? pay.target.amount : null;
 
   const countries = [];
   const countryMap = { germany: 'DE', netherlands: 'NL', portugal: 'PT', poland: 'PL', ireland: 'IE', spain: 'ES', france: 'FR', canada: 'CA', uk: 'GB', 'united kingdom': 'GB', switzerland: 'CH', sweden: 'SE', india: 'IN', dubai: 'AE', uae: 'AE', 'united states': 'US', usa: 'US' };
@@ -88,7 +148,7 @@ function parseResume(text) {
 
   return {
     skills: [...found.entries()].map(([canonical, v]) => ({ canonical, confidence: v.confidence, evidence: v.evidence })),
-    years, seniority, roleFamily, currentRate, rateUnit,
+    years, seniority, roleFamily, currentRate, rateUnit, targetRate, rateCurrency: pay.currency,
     countries: Array.from(new Set(countries)), wantsRemote, needsVisa,
     sectionsDetected: SECTION_HINTS.filter((s) => lower.includes(s)),
   };
@@ -517,7 +577,17 @@ function rateIntelligence(userId) {
   const p90 = weightedPercentile(0.9);
   const exactTier = converted.filter((c) => c.tier === 'exact profile').length;
 
-  const current = profile.current_rate ? Number(profile.current_rate) : null;
+  // Put the person's own pay on the same footing as the market figures: EUR, and the same period.
+  // Without this a GBP 62,000 salary is compared as if it were EUR 62,000, and a monthly or daily
+  // figure is compared against annual medians.
+  const toBase = (n) => {
+    if (!n) return null;
+    const eur = Number(n) * (CURRENCY_RATES[profile.rate_currency] || 1);
+    const u = profile.rate_unit || 'year';
+    const annual = u === 'hour' ? eur * 1600 : u === 'day' ? eur * 220 : u === 'month' ? eur * 12 : eur;
+    return targetPeriod === 'hour' ? annual / 1600 : annual;
+  };
+  const current = toBase(profile.current_rate);
   let gapPct = null, gapAbs = null, verdict = 'unknown';
   if (current && p50) {
     gapPct = Math.round(((p50 - current) / current) * 100);

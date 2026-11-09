@@ -352,7 +352,9 @@ route('POST', /^\/api\/onboarding$/, async (req, res) => {
   const years = body.years != null ? Number(body.years) : (parsed ? parsed.years : null);
   const currentRate = body.currentRate != null ? Number(body.currentRate) : (parsed ? parsed.currentRate : null);
   const rateUnit = body.rateUnit || (parsed ? parsed.rateUnit : 'year') || 'year';
-  const targetRateMin = body.targetRateMin != null ? Number(body.targetRateMin) : (currentRate ? Math.round(currentRate * 1.25) : null);
+  // Target pay: what the person wrote, else what the CV says. Only when neither exists do we leave it empty;
+  // a guessed +25% would be a made-up number presented as theirs.
+  const targetRateMin = body.targetRateMin != null ? Number(body.targetRateMin) : (parsed && parsed.targetRate ? parsed.targetRate : null);
   const targetCountries = body.targetCountries || (parsed ? parsed.countries : []);
   const remotePref = body.remotePreference || (parsed && parsed.wantsRemote ? 'remote' : 'any');
   const willingRelocate = body.willingToRelocate != null ? (body.willingToRelocate ? 1 : 0) : (targetCountries.length ? 1 : 0);
@@ -381,7 +383,7 @@ route('POST', /^\/api\/onboarding$/, async (req, res) => {
       visa_needed=excluded.visa_needed, goals=excluded.goals, resume_text=excluded.resume_text,
       completeness=excluded.completeness, updated_at=datetime('now')`)
     .run(resolveUser(req), headline, body.summary || (cv ? cv.slice(0, 400) : null), years, seniority,
-      body.currentRole || null, body.currentCompany || null, currentRate, rateUnit, 'EUR', targetRateMin,
+      body.currentRole || null, body.currentCompany || null, currentRate, rateUnit, (body.currency || (parsed && parsed.rateCurrency) || 'EUR'), targetRateMin,
       remotePref, willingRelocate, JSON.stringify(targetCountries), visaNeeded,
       goals.riskTolerance || 'balanced', goals.timeToMove || 'exploring',
       JSON.stringify(goals), cv || null, Math.min(100, completeness));
