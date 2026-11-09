@@ -243,7 +243,7 @@ textarea.cv:focus{border-color:var(--accent2)}
 
 
 /* ---------- sign in ---------- */
-.auth-wrap{max-width:440px;margin:0 auto;padding:clamp(24px,10vh,96px) 4px 40px;position:relative}
+.auth-wrap{max-width:440px;margin:0 auto;padding:clamp(16px,6vh,56px) 4px 40px;position:relative}
 .auth-wrap::before{content:"";position:absolute;inset:-120px -200px auto;height:520px;background:radial-gradient(closest-side,color-mix(in srgb,var(--accent) 16%,transparent),transparent);pointer-events:none;z-index:-1}
 .auth-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg,16px);padding:32px 28px 24px;box-shadow:var(--shadow)}
 .auth-head{display:flex;flex-direction:column;align-items:center;gap:14px;margin:0 0 26px;text-align:center}
@@ -635,10 +635,6 @@ html[data-theme="light"] .wm i{background-image:linear-gradient(100deg,var(--acc
 .shell.rail-collapsed .logo-text{display:none}
 @media(min-width:901px){.topbar{padding-left:max(28px,calc((100% - 1120px)/2 + 28px));padding-right:max(28px,calc((100% - 1120px)/2 + 28px))}}
 
-.shell.auth-mode{grid-template-columns:minmax(0,1fr)}
-.shell.auth-mode .rail,.shell.auth-mode .topbar{display:none}
-.shell.auth-mode main{display:flex;flex-direction:column;justify-content:center}
-.shell.auth-mode .view{width:100%;padding-top:0}
 </style>
 </head>
 <body>
@@ -3014,7 +3010,6 @@ const VIEWS = {
 
 async function go(view) {
   STATE.view = view;
-  document.getElementById('app-shell').classList.toggle('auth-mode', view === 'auth');
   document.querySelectorAll('#nav button').forEach((b) => b.classList.toggle('active', b.dataset.view === view));
   const [fn, title, sub] = VIEWS[view];
   $('#view-title').textContent = title;
