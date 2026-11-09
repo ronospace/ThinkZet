@@ -165,8 +165,9 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 .tb-menu{position:relative}
 .tb-drop{position:absolute;right:0;top:calc(100% + 8px);min-width:216px;background:var(--panel);border:1px solid var(--line2);border-radius:var(--radius);box-shadow:var(--shadow);padding:5px;display:none;z-index:90}
 .tb-drop.open{display:block;animation:rise .14s ease both}
-.tb-drop-head{padding:7px 10px 9px;border-bottom:1px solid var(--line);margin-bottom:4px}
-.tb-drop-head span{font-size:var(--text-xs);color:var(--muted)}
+.tb-drop-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 10px 9px;border-bottom:1px solid var(--line);margin-bottom:4px}
+.tb-drop-label{font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.tb-drop-state{font-size:var(--text-xs);color:var(--ink2);font-weight:600}
 .tb-drop button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:8px 10px;border-radius:8px;font-size:var(--text-sm);color:var(--ink2)}
 .tb-drop button:hover{background:var(--panel2);color:var(--ink)}
 .tb-drop button svg{width:14px;height:14px;opacity:.75}
@@ -684,6 +685,9 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .outcome-row .o-meta{font-size:var(--text-xs);color:var(--muted)}
 .outcome-row .o-delta{font-variant-numeric:tabular-nums;font-weight:700;font-size:var(--text-sm)}
 @media(max-width:560px){.outcome-row{grid-template-columns:minmax(0,1fr) auto}.outcome-row .o-meta{grid-column:1/-1;margin-top:2px}}
+.ob-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:18px}
+.ob-actions .btn{width:100%;display:flex;align-items:center;justify-content:center;padding:11px 14px}
+@media(max-width:340px){.ob-actions{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -961,7 +965,8 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
         </button>
         <div class="tb-drop" id="tb-drop" role="menu">
           <div class="tb-drop-head">
-            <span id="profile-pill">no profile</span>
+            <span class="tb-drop-label">Account</span>
+            <span id="profile-pill" class="tb-drop-state">No Profile</span>
           </div>
           <button role="menuitem" id="run-ingest">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg>
@@ -1441,8 +1446,10 @@ function renderOnboarding() {
       </div>
     </div>
     <div class="row" style="margin-top:20px;gap:10px">
-      <button class="btn" id="ob-next">Continue</button>
-      <button class="btn ghost" id="ob-demo">Demo Mode</button>
+      <div class="ob-actions">
+        <button class="btn" id="ob-next">Continue</button>
+        <button class="btn ghost" id="ob-demo">Demo Mode</button>
+      </div>
     </div>`;
 
   const stepTwo = `

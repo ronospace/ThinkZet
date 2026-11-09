@@ -26,6 +26,7 @@ Last updated: 9 November 2026.
 | COPY-26 | COPY | Hero pill reads "Free Intelligent Career Value Check" | Us | DONE | rendered HTML |
 | UI-19 | UI | Onboarding step indicator centred with its heading | Us | DONE | markup |
 | COPY-25 | COPY | Payoff card no longer claims live postings while labelled sample data | Us | DONE | rendered copy |
+| UI-23 | UI | Account menu: the state is a label on the right of an "Account" heading instead of a row that repeated "Signed Out"; onboarding Continue and Demo Mode are equal cells side by side | Us | DONE | 393px screenshot, 59/59 API, 10/10 browser |
 | UI-21 | UI | Plan screen uses the landing layout: two wide cards, features as a proper list with a bullet, yearly as a line inside Pro, badge inside the card, actions stacked | Us | DONE | 1440px screenshot, 59/59 API, 10/10 browser |
 | UI-22 | UI | Outcome Log as a structured table: type, opportunity and company, salary delta in colour, date; heading row with a count chip | Us | DONE | rendered markup |
 | AUTH-11 | AUTH | Apple private key normalised: literal `\n`, real newlines, surrounding quotes and a bare base64 body all produce a valid PEM, so a dashboard paste cannot surface as `DECODER routines::unsupported`. Configuration errors now read as our fault, not the user's | Us | DONE | 4 paste shapes verified; callback reaches Apple and answers "code expired" |
