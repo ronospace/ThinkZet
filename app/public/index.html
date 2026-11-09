@@ -986,6 +986,10 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6.2 2.6H3.4v10.8h2.8"/><path d="M9.4 8h4.2M11.4 5.8L13.6 8l-2.2 2.2"/></svg>
               Sign Out
             </button>
+            <button role="menuitem" id="menu-signin" class="tb-signout" hidden>
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9.8 2.6h2.8v10.8H9.8"/><path d="M2.6 8h7.2M7.6 5.8L9.8 8l-2.2 2.2"/></svg>
+              Sign In
+            </button>
             <button role="menuitem" id="load-demo" class="tb-signout" hidden>
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5.6" r="2.5"/><path d="M3 13.2c0-2.5 2.2-4 5-4s5 1.5 5 4"/></svg>
               Demo Mode
@@ -3163,6 +3167,7 @@ async function boot() {
   STATE.authed = !!auth.user;
   STATE.userRecord = auth.user;
   const demoBtn = document.getElementById('load-demo'); if (demoBtn) demoBtn.hidden = STATE.authed || STATE.demo;
+  const inBtn = document.getElementById('menu-signin'); if (inBtn) inBtn.hidden = STATE.authed || !STATE.demo;
   const outBtn = document.getElementById('logout'); if (outBtn) outBtn.hidden = !STATE.authed;
   if (!STATE.authed) {
     $('#profile-pill').textContent = 'Signed Out';
@@ -3440,6 +3445,7 @@ function setTheme(mode) { try { localStorage.setItem(THEME_KEY, mode); } catch (
 })();
 $('#cmdk').onclick = openPalette;
 $('#load-demo').onclick = loadDemo;
+if ($('#menu-signin')) $('#menu-signin').onclick = () => { document.getElementById('tb-drop').classList.remove('open'); go('auth'); };
 $('#run-ingest').onclick = async () => {
   const b = $('#run-ingest');
   b.disabled = true; b.innerHTML = '<span class="spin"></span>Ingesting…';
