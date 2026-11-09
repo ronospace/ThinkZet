@@ -47,7 +47,7 @@ Last updated: 9 November 2026.
 | DATA-06 | DATA | **The 176% rate gap is an artefact of the synthetic corpus.** Backend/senior comparables are 1,461 records, of which 1,311 are USD/year at an average of 174,705 and 109 are CAD at 229,000; only 4 are EUR. The benchmark is a US-market number applied to a EUR salary, and the headline multiplies it. Country filter does not change it (Any, DE and US all return 138,000). Fixing this is DATA-03 | You decide A or B, then Us | OPEN |
 
 | AUTH-01 | AUTH | Google credentials supplied and verified against Google (`invalid_grant` on a fake code means the pair is accepted). Set both values in Railway and Deploy | Railway → Variables → `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET` → Deploy |
-| AUTH-02 | AUTH | Apple credentials | Services ID, return URL `https://thinkzet.com/api/auth/apple/callback`, key, four `APPLE_*` variables |
+| AUTH-02 | AUTH | Apple credentials supplied and verified: the ES256 client secret built from the .p8 is accepted by Apple (`invalid_grant` on a fake code). Set the four `APPLE_*` variables in Railway and Deploy | Railway → Variables → Deploy |
 | PAY-01 | PAY | Real €19.99 payment, confirm Pro unlocks, refund yourself | thinkzet.com → Upgrade |
 | PAY-05 | PAY | Live proof of cancellation against a real Stripe subscription (steps in `docs/planning/PAYMENTS.md`) | After PAY-01: subscribe, cancel in the app, confirm Stripe shows "cancels at period end" |
 | SEC-01 | SEC | Roll the Stripe live key, webhook secret and Resend key (all pasted in chat) | Roll in each dashboard, update Railway |
