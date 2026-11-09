@@ -10,13 +10,29 @@
 'use strict';
 const crypto = require('node:crypto');
 const AUTH = require('./auth.cjs');
+const { db: AUTH_DB } = require('./db.cjs');
 
 const env = (k) => (process.env[k] || '').trim();
-const pending = new Map(); // state -> { provider, nonce, exp }
+// state -> { provider, nonce, exp }. Kept in the database, not in memory: Apple returns by a
+// cross-site POST that can land on a different instance, and any redeploy would wipe an in-memory
+// map, which reads as "this sign-in link expired" immediately after a successful consent.
+const pending = {
+  set(state, v) {
+    AUTH_DB.prepare('INSERT OR REPLACE INTO oauth_states (state,provider,nonce,expires_at) VALUES (?,?,?,?)')
+      .run(state, v.provider, v.nonce, new Date(v.exp).toISOString());
+  },
+  get(state) {
+    const row = AUTH_DB.prepare('SELECT provider,nonce,expires_at FROM oauth_states WHERE state=?').get(state);
+    if (!row) return undefined;
+    return { provider: row.provider, nonce: row.nonce, exp: new Date(row.expires_at).getTime() };
+  },
+  delete(state) { AUTH_DB.prepare('DELETE FROM oauth_states WHERE state=?').run(state); },
+  sweep() { AUTH_DB.prepare("DELETE FROM oauth_states WHERE expires_at < datetime('now')").run(); },
+};
 
 function sweep() {
   const now = Date.now();
-  for (const [k, v] of pending) if (v.exp < now) pending.delete(k);
+  pending.sweep();
 }
 
 function providers() {

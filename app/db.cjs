@@ -339,6 +339,14 @@ CREATE TABLE IF NOT EXISTS sessions (
   expires_at TEXT
 );
 
+CREATE TABLE IF NOT EXISTS oauth_states (
+  state TEXT PRIMARY KEY,
+  provider TEXT NOT NULL,
+  nonce TEXT NOT NULL,
+  expires_at TEXT NOT NULL,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS login_codes (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   email TEXT NOT NULL,
