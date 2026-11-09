@@ -38,7 +38,7 @@ function sweep() {
 function providers() {
   return {
     google: !!(env('GOOGLE_CLIENT_ID') && env('GOOGLE_CLIENT_SECRET')),
-    apple: !!(env('APPLE_CLIENT_ID') && env('APPLE_TEAM_ID') && env('APPLE_KEY_ID') && env('APPLE_PRIVATE_KEY')),
+    apple: !!(env('APPLE_CLIENT_ID') && env('APPLE_TEAM_ID') && env('APPLE_KEY_ID') && appleKeyUsable()),
   };
 }
 
@@ -59,6 +59,12 @@ function normalisePem(raw) {
   return v;
 }
 
+
+// True only when the private key actually parses. A key that is present but unreadable must not
+// advertise the provider as ready, or the button looks live and fails after consent.
+function appleKeyUsable() {
+  try { crypto.createPrivateKey(normalisePem(env('APPLE_PRIVATE_KEY'))); return true; } catch { return false; }
+}
 function appleClientSecret() {
   const now = Math.floor(Date.now() / 1000);
   const head = b64u(JSON.stringify({ alg: 'ES256', kid: env('APPLE_KEY_ID'), typ: 'JWT' }));
