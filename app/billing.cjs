@@ -235,6 +235,8 @@ function handleEvent(event) {
     case 'checkout.session.completed': {
       if (!userId) return { handled: false, reason: 'no user id on checkout session' };
       setPlan(userId, 'pro', { cycle: obj.metadata?.plan === 'annual' ? 'annual' : 'monthly', source: 'stripe', externalId: obj.id, status: 'active' });
+      // Funnel: money confirmed by Stripe, recorded once per session (the webhook is idempotent upstream).
+      try { require('./analytics.cjs').track(userId, 'payment.completed', { cycle: obj.metadata?.plan || 'monthly' }); } catch { /* analytics must never block entitlement */ }
       // Remember the subscription and customer so later lifecycle events can find the user.
       const subId = typeof obj.subscription === 'string' ? obj.subscription : obj.subscription?.id;
       const custId = typeof obj.customer === 'string' ? obj.customer : obj.customer?.id;

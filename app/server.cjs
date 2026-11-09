@@ -329,6 +329,62 @@ route('GET', /^\/api\/config$/, async (req, res) => {
   });
 });
 
+// Data transparency: what the corpus actually contains, when it last changed, and how much of it
+// is real. The counts are measured, never asserted.
+// Funnel events the client sends. Only names in this list are stored, so the table cannot be
+// polluted by arbitrary strings, and the payload is trimmed to small primitives.
+const FUNNEL_EVENTS = new Set(['landing.view', 'signup.started', 'signup.completed', 'radar.opened',
+  'upgrade.clicked', 'payment.completed', 'cancel.started']);
+route('POST', /^\/api\/track$/, async (req, res) => {
+  const body = await readBody(req);
+  const name = String(body.event || '').trim();
+  if (!FUNNEL_EVENTS.has(name)) return json(res, 400, { error: 'unknown event' });
+  const u = AUTH.currentUser(req);
+  const props = {};
+  for (const [k, v] of Object.entries(body.props || {})) {
+    if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') props[k] = String(v).slice(0, 120);
+  }
+  AN.track(u ? u.id : resolveUser(req), name, props, String(body.path || '').slice(0, 200));
+  json(res, 200, { ok: true });
+});
+
+route('GET', /^\/api\/data-sources$/, async (req, res) => {
+  const LIVE = ['arbeitnow', 'jobicy', 'remoteok', 'hackernews'];
+  const ph = LIVE.map(() => '?').join(',');
+  const open = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open'").get().n;
+  const sal = db.prepare("SELECT COUNT(*) n FROM salary_records").get().n;
+  const salLive = db.prepare(`SELECT COUNT(*) n FROM salary_records WHERE source IN (${ph})`).get(...LIVE).n;
+  const countries = db.prepare("SELECT COUNT(DISTINCT country) n FROM opportunities WHERE status='open' AND country NOT IN ('WW','EU')").get().n;
+  const last = db.prepare("SELECT MAX(created_at) t FROM opportunities").get().t;
+  const lastRun = db.prepare("SELECT MAX(created_at) t FROM ingestion_runs").get().t;
+  const perSource = db.prepare(`SELECT source, COUNT(*) n, SUM(comp_min IS NOT NULL) withPay
+    FROM opportunities WHERE status='open' GROUP BY source ORDER BY n DESC`).all();
+  // Counted per distinct (amount, role, seniority), because the same posting is re-inserted on every
+  // ingest run. Counting rows would report 94% live on data that carries only 160 distinct values.
+  const uniq = db.prepare(`SELECT COUNT(*) n FROM (
+      SELECT DISTINCT amount, role_family, seniority FROM salary_records WHERE source IN (${ph})
+    )`).get(...LIVE).n;
+  const uniqAll = db.prepare(`SELECT COUNT(*) n FROM (
+      SELECT DISTINCT amount, role_family, seniority FROM salary_records
+    )`).get().n;
+  const share = uniqAll ? Math.round((uniq / uniqAll) * 100) : 0;
+  json(res, 200, {
+    opportunities: open,
+    salaryRecords: sal,
+    salaryRecordsFromLiveFeeds: salLive,
+    distinctSalaryValues: uniqAll,
+    distinctSalaryValuesFromLive: uniq,
+    liveSharePct: share,
+    countries,
+    lastOpportunity: last,
+    lastIngest: lastRun,
+    sources: perSource.map((r) => ({ source: r.source, postings: r.n, disclosesPay: r.withPay || 0,
+      live: LIVE.includes(r.source) })),
+    confidence: share >= 90 ? 'high' : share >= 50 ? 'mixed' : 'sample',
+    note: 'Salary intelligence is built on a partly synthetic corpus while the real salary rebuild is pending. Treat every figure as an indication, not a benchmark.',
+  });
+});
+
 route('GET', /^\/api\/health$/, async (req, res) => {
   const counts = {
     opportunities: db.prepare('SELECT COUNT(*) n FROM opportunities').get().n,
@@ -2033,6 +2089,7 @@ route('POST', /^\/api\/billing\/cancel$/, async (req, res) => {
     if (r.ok) {
       log(u.id, 'billing.cancel_at_period_end', 'billing', u.id, { subscription: r.subscriptionId, periodEnd: r.periodEnd });
       AN.track(u.id, 'billing.cancel_requested', { periodEnd: r.periodEnd });
+      AN.track(u.id, 'cancel.started', { periodEnd: r.periodEnd });
       return json(res, 200, { ok: true, plan: 'pro', cancelAtPeriodEnd: true, periodEnd: r.periodEnd,
         note: r.periodEnd ? `Cancelled. Pro stays until ${String(r.periodEnd).slice(0, 10)}, then you move to Free.` : 'Cancelled at the end of the period.' });
     }

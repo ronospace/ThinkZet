@@ -649,6 +649,13 @@ html.is-landing .hero-sec,html.is-landing .land-footer{scroll-margin-top:76px}
 sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin-left:1px;letter-spacing:0}
 .chip.sample{background:color-mix(in srgb,var(--warn) 14%,var(--panel));border-color:color-mix(in srgb,var(--warn) 45%,var(--line));color:var(--warn);font-weight:600}
 .sample-line{margin-top:10px;font-size:var(--text-xs);line-height:1.5;color:var(--warn);opacity:.95}
+.data-sources{margin-top:var(--sp-8);padding:16px 18px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
+.ds-h{font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);font-weight:700;margin-bottom:10px}
+.ds-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
+.ds-cell .k{font-size:var(--text-2xs);color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
+.ds-cell .v{font-size:var(--text-md);font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
+.ds-note{margin-top:12px;font-size:var(--text-xs);color:var(--warn);line-height:1.5}
+@media(max-width:760px){.ds-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style>
 </head>
 <body>
@@ -841,11 +848,17 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
           <a href="mailto:support@thinkzet.com">support@thinkzet.com</a>
           <a href="mailto:hello@thinkzet.com">hello@thinkzet.com</a>
           <a href="mailto:billing@thinkzet.com">billing@thinkzet.com</a>
+          <a href="mailto:privacy@thinkzet.com">privacy@thinkzet.com</a>
           <div class="foot-h" style="margin-top:14px">Data</div>
           <a href="/sitemap.xml">Sitemap</a>
           <a href="/salary/software-engineer">Salaries</a>
           <a href="/skills/llmops">Skills</a>
         </div>
+      </div>
+      <div class="data-sources" id="data-sources">
+        <div class="ds-h">Data Sources</div>
+        <div class="ds-grid" id="ds-grid"><span class="muted">Loading…</span></div>
+        <div class="ds-note" id="ds-note"></div>
       </div>
       <div class="foot-legal"><span>&copy; 2026 ZyraFlow GmbH&trade;. All rights reserved.</span><span>ThinkZet is a product of ZyraFlow GmbH&trade;.</span></div>
     </footer>
@@ -973,6 +986,9 @@ function titleCase(input) {
     return lower.charAt(0).toUpperCase() + lower.slice(1);
   }).join(' ');
 }
+
+// Funnel: only the seven events the register names, so the table stays readable.
+const track = (event, props) => { try { post('/api/track', { event, props: props || {}, path: location.pathname + location.search }); } catch (e) { /* never block the UI */ } };
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2600); };
@@ -1254,6 +1270,7 @@ document.getElementById('c-current').onkeydown = (e) => { if (e.key === 'Enter')
 // Both landing buttons go through the same guarded checkout: it refuses without a session,
 // so the honest answer is "sign in first", never a fake unlock.
 const startCheckout = async (cycle) => {
+  track('upgrade.clicked', { cycle });
   const r = await post('/api/billing/checkout', { cycle });
   if (r.url) { window.location.href = r.url; return; }
   toast(r.error || r.note || 'Sign in first to unlock Pro');
@@ -1268,6 +1285,23 @@ if (proBtn) proBtn.onclick = () => startCheckout('monthly');
 const proYearBtn = document.getElementById('price-pro-year');
 if (proYearBtn) proYearBtn.onclick = () => startCheckout('annual');
 
+(async () => {
+  const box = document.getElementById('ds-grid'); if (!box) return;
+  try {
+    const d = await api('/api/data-sources');
+    const cell = (k, v) => `<div class="ds-cell"><div class="k">${esc(k)}</div><div class="v">${esc(String(v))}</div></div>`;
+    box.innerHTML = [
+      cell('Opportunities', d.opportunities.toLocaleString('en-GB')),
+      cell('Salary records', d.distinctSalaryValues.toLocaleString('en-GB') + ' distinct'),
+      cell('Countries', d.countries),
+      cell('Live share', d.liveSharePct + '%'),
+      cell('Confidence', titleCase(d.confidence)),
+    ].join('');
+    document.getElementById('ds-note').textContent = d.note + ' Last ingest ' + String(d.lastIngest || '').slice(0, 16) + ' UTC.';
+  } catch (e) { box.innerHTML = '<span class="muted">Data sources unavailable right now.</span>'; }
+})();
+
+track('landing.view');
 document.getElementById('land-signin').onclick = () => {
   document.getElementById('landing').style.display = 'none';
   document.getElementById('app-shell').style.display = '';
@@ -1316,6 +1350,7 @@ async function renderAuth() {
 
   document.querySelectorAll('.auth-social.is-soon').forEach((b) => { b.onclick = () => toast(b.dataset.soon + ' sign-in is coming soon – use email for now'); });
   $('#auth-send').onclick = async () => {
+    track('signup.started');
     const email = $('#auth-email').value.trim();
     if (!email) return toast('Enter an email');
     const r = await post('/api/auth/request', { email });
@@ -1331,6 +1366,7 @@ async function renderAuth() {
     const r = await post('/api/auth/verify', { email: $('#auth-email').value.trim(), code: $('#auth-code').value.trim() });
     if (r.error) return toast(r.error);
     toast(r.user.name ? `Welcome, ${r.user.name.split(' ')[0]}` : 'Welcome');
+    track('signup.completed');
     await boot();
     go(r.hasProfile ? 'radar' : 'onboard');
   };
@@ -2564,9 +2600,9 @@ async function renderPlan() {
     toast(r.fallback ? 'Pro unlocked locally – Stripe not configured yet' : 'Pro unlocked');
     go('plan');
   };
-  if ($('#up-month')) $('#up-month').onclick = () => checkout('monthly');
-  if ($('#up-year')) $('#up-year').onclick = () => checkout('annual');
-  if ($('#downgrade')) $('#downgrade').onclick = async () => { await post('/api/billing/cancel', {}); toast('Switched to Free'); go('plan'); };
+  if ($('#up-month')) $('#up-month').onclick = () => { track('upgrade.clicked', { cycle: 'monthly' }); checkout('monthly'); };
+  if ($('#up-year')) $('#up-year').onclick = () => { track('upgrade.clicked', { cycle: 'annual' }); checkout('annual'); };
+  if ($('#downgrade')) $('#downgrade').onclick = async () => { track('cancel.started'); const cr = await post('/api/billing/cancel', {}); toast(cr.note || cr.error || 'Cancellation requested'); go('plan'); };
 }
 
 /* ---------------- negotiation ---------------- */
@@ -3056,6 +3092,7 @@ const VIEWS = {
 
 async function go(view) {
   const changed = STATE.view !== view;
+  if (view === 'radar' && changed) track('radar.opened');
   const pill = document.getElementById('live-pill'); if (pill) pill.style.display = ['auth', 'onboard'].includes(view) ? 'none' : '';
   STATE.view = view;
   document.querySelectorAll('#nav button').forEach((b) => b.classList.toggle('active', b.dataset.view === view));

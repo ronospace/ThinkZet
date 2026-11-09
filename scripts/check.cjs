@@ -11,6 +11,7 @@ const GETS = [
   '/api/billing/status', '/api/leads', '/api/email/status', '/api/email/prefs', '/api/email/outbox',
   '/api/onboarding/draft', '/api/launch', '/api/opportunities/lifecycle', '/api/email/sequence',
   '/api/habit', '/api/scores/v2', '/api/referrals/recommendations',
+  '/api/data-sources',
 ];
 const POSTS = [
   ['/api/demo', {}],
@@ -23,6 +24,7 @@ const POSTS = [
   ['/api/copilot', { message: 'Am I underpaid?' }],
   ['/api/horizon', { horizon: 'balanced' }],
   ['/api/brief/ack', {}],
+  ['/api/track', { event: 'radar.opened' }],
 ];
 
 let pass = 0, fail = 0;
