@@ -171,6 +171,10 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 .tb-drop button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:8px 10px;border-radius:8px;font-size:var(--text-sm);color:var(--ink2)}
 .tb-drop button:hover{background:var(--panel2);color:var(--ink)}
 .tb-drop button svg{width:14px;height:14px;opacity:.75}
+.tb-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
+.tb-row button{width:auto;flex:0 0 auto}
+.tb-signout{margin-left:auto;color:var(--ink2)}
+.tb-signout:hover{color:var(--bad)}
 .theme-btn{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
 .theme-btn:hover{color:var(--ink);border-color:var(--line2);background:var(--panel3)}
 .theme-btn svg{width:15px;height:15px;display:none}
@@ -971,17 +975,19 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
             <span class="tb-drop-label">Account</span>
             <span id="profile-pill" class="tb-drop-state">No Profile</span>
           </div>
-          <button role="menuitem" id="run-ingest">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg>
-            Run Ingest
-          </button>
+          <div class="tb-row">
+            <button role="menuitem" id="run-ingest">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg>
+              Run Ingest
+            </button>
+            <button role="menuitem" id="logout" class="tb-signout">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6.2 2.6H3.4v10.8h2.8"/><path d="M9.4 8h4.2M11.4 5.8L13.6 8l-2.2 2.2"/></svg>
+              Sign Out
+            </button>
+          </div>
           <button role="menuitem" id="load-demo" hidden>
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5.6" r="2.5"/><path d="M3 13.2c0-2.5 2.2-4 5-4s5 1.5 5 4"/></svg>
             Demo Mode
-          </button>
-          <button role="menuitem" id="logout">
-            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6.2 2.6H3.4v10.8h2.8"/><path d="M9.4 8h4.2M11.4 5.8L13.6 8l-2.2 2.2"/></svg>
-            Sign Out
           </button>
         </div>
       </div>
