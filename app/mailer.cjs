@@ -158,7 +158,7 @@ function briefEmail({ user, brief, rates, scores, prefs }) {
     lines.push('');
   }
   if (scores) {
-    lines.push(`Career Score: ${scores.overall}/100 (${scores.benchmark_percentile}th percentile). Weakest: ${lowestScore(scores)}.`);
+    lines.push(`Career Score: ${scores.overall}/100 (${ordSup(Number(scores.benchmark_percentile))} percentile). Weakest: ${lowestScore(scores)}.`);
     lines.push('');
   }
   lines.push(`Open your radar: ${CONFIG.appUrl}/?app=1`);
@@ -166,8 +166,10 @@ function briefEmail({ user, brief, rates, scores, prefs }) {
   lines.push(`– ThinkZet, a product of ZyraFlow GmbH™
 You get this because you asked for the daily brief. Unsubscribe: ${unsub}`);
 
-  const text = `Good morning ${name},\n\n${lines.join('\n')}`;
-  const html = renderHtml({ name, brief, rates, scores, unsub });
+  const hr = prefs && prefs.send_hour != null ? Number(prefs.send_hour) : 7;
+  const hello = hr < 12 ? 'Good morning' : hr < 18 ? 'Good afternoon' : 'Good evening';
+  const text = `${hello} ${name},\n\n${lines.join('\n')}`;
+  const html = renderHtml({ name, brief, rates, scores, unsub, hello });
   return {
     subject: brief.counts.newSinceYesterday > 0
       ? `${brief.counts.newSinceYesterday} new opportunit${brief.counts.newSinceYesterday === 1 ? 'y' : 'ies'} for you`
@@ -177,23 +179,25 @@ You get this because you asked for the daily brief. Unsubscribe: ${unsub}`);
   };
 }
 
+const ordSup = (n) => { const m = n % 100; const k = (m >= 11 && m <= 13) ? 'th' : (['th','st','nd','rd'][n % 10] || 'th'); return n + k.replace('s','\u02e2').replace('t','\u1d57').replace('h','\u02b0').replace('n','\u207f').replace('d','\u1d48').replace('r','\u02b3'); };
+
 function lowestScore(s) {
   const pairs = [['employability', s.employability], ['interview readiness', s.interview_readiness], ['market demand', s.market_demand], ['salary potential', s.salary_potential], ['future growth', s.future_growth], ['momentum', s.career_momentum]];
   pairs.sort((a, b) => a[1] - b[1]);
   return `${pairs[0][0]} at ${pairs[0][1]}`;
 }
 
-function renderHtml({ name, brief, rates, scores, unsub }) {
+function renderHtml({ name, brief, rates, scores, unsub, hello = 'Hello' }) {
   const row = (label, value) => `<tr><td style="padding:6px 0;color:#6b7683;font-size:13px">${label}</td><td style="padding:6px 0;text-align:right;font-size:13px;font-weight:600">${value}</td></tr>`;
   return `<!doctype html><html><body style="margin:0;background:#0b0d10;padding:28px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;color:#e8edf4">
   <div style="max-width:560px;margin:0 auto;background:#12161c;border:1px solid #222a35;border-radius:14px;overflow:hidden">
     <div style="padding:22px 24px;border-bottom:1px solid #222a35">
-      <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#4c8dff;font-weight:700">ThinkZet · Morning brief</div>
+      <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#4c8dff;font-weight:700">ThinkZet · Daily brief</div>
       <div style="font-size:10.5px;color:#6b7683;margin-top:4px">See your value. Expand your possibilities.</div>
       <div style="font-size:20px;font-weight:700;letter-spacing:-.02em;margin-top:8px;line-height:1.35">${escHtml(brief.headline)}</div>
     </div>
     <div style="padding:22px 24px">
-      <p style="margin:0 0 16px;font-size:14px;color:#9aa7b8">Good morning ${escHtml(name)}.</p>
+      <p style="margin:0 0 16px;font-size:14px;color:#9aa7b8">${hello} ${escHtml(name)}.</p>
       ${rates && rates.gapPct != null ? `<div style="background:#161b24;border:1px solid #2f2a4d;border-radius:10px;padding:14px 16px;margin-bottom:18px">
         <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#a99bf0">Your market position</div>
         <div style="font-size:22px;font-weight:750;margin-top:4px;color:${rates.gapPct > 5 ? '#ff8f96' : '#6fe3a4'}">${rates.gapPct > 0 ? rates.gapPct + '% below market' : Math.abs(rates.gapPct) + '% above market'}</div>

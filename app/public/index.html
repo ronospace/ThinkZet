@@ -644,6 +644,14 @@ html.is-landing .hero-sec,html.is-landing .check,html.is-landing .land-sec,html.
 html.is-landing .hero-sec,html.is-landing .land-footer{scroll-margin-top:76px}
 @media(prefers-reduced-motion:no-preference){html.is-landing body{scroll-behavior:smooth}}
 @media(max-width:900px){html.is-landing body{scroll-snap-type:none}}
+sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin-left:1px;letter-spacing:0}
+.flip-hint{position:fixed;left:50%;bottom:26px;transform:translate(-50%,12px);z-index:55;display:flex;flex-direction:column;gap:7px;align-items:stretch;min-width:240px;padding:10px 16px 12px;border:1px solid var(--ai-border);border-radius:12px;background:var(--panel);box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .16s ease,transform .16s ease}
+.flip-hint.up{bottom:auto;top:84px;transform:translate(-50%,-12px)}
+.flip-hint.show{opacity:1;transform:translate(-50%,0)}
+.flip-t{font-size:var(--text-sm);font-weight:600;color:var(--ink);text-align:center}
+.flip-bar{display:block;height:3px;border-radius:3px;background:var(--track);overflow:hidden}
+.flip-bar b{display:block;height:100%;background:var(--accent2);transform-origin:left;transform:scaleX(0);transition:transform .08s linear}
+@media(prefers-reduced-motion:reduce){.flip-hint,.flip-bar b{transition:none}}
 </style>
 </head>
 <body>
@@ -779,7 +787,7 @@ html.is-landing .hero-sec,html.is-landing .land-footer{scroll-margin-top:76px}
           <ul>
             <li>Unlimited scored opportunities</li>
             <li>Career Twin and all eight scores</li>
-            <li>Saved searches and the morning brief</li>
+            <li>Saved searches and the daily brief</li>
             <li>Negotiation, trajectory, skill gaps</li>
             <li>Cover letters and interview prep</li>
           </ul>
@@ -849,7 +857,7 @@ html.is-landing .hero-sec,html.is-landing .land-footer{scroll-margin-top:76px}
     </div>
     <nav class="nav" id="nav">
       <div class="nav-group"><span class="nav-label">Today</span>
-      <button data-view="brief"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 3.4h10v9.2H3z"/><path d="M5.4 6.2h5.2M5.4 8.4h5.2M5.4 10.6h3"/></svg></span><span class="lbl">Morning Brief</span></button>
+      <button data-view="brief"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M3 3.4h10v9.2H3z"/><path d="M5.4 6.2h5.2M5.4 8.4h5.2M5.4 10.6h3"/></svg></span><span class="lbl">Daily Brief</span></button>
       <button data-view="radar" class="active"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="6.2"/><circle cx="8" cy="8" r="2.6"/><path d="M8 8l5-4"/></svg></span><span class="lbl">Opportunity Radar</span></button>
       </div>
       <div class="nav-group"><span class="nav-label">Intelligence</span>
@@ -914,9 +922,9 @@ html.is-landing .hero-sec,html.is-landing .land-footer{scroll-margin-top:76px}
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg>
             Run ingest
           </button>
-          <button role="menuitem" id="load-demo">
+          <button role="menuitem" id="load-demo" hidden>
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5.6" r="2.5"/><path d="M3 13.2c0-2.5 2.2-4 5-4s5 1.5 5 4"/></svg>
-            Load demo persona
+            Demo mode
           </button>
           <button role="menuitem" id="logout">
             <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6.2 2.6H3.4v10.8h2.8"/><path d="M9.4 8h4.2M11.4 5.8L13.6 8l-2.2 2.2"/></svg>
@@ -952,6 +960,9 @@ const TYPE_LABEL = { job: 'Jobs', contract: 'Contracts', fellowship: 'Fellowship
 // Score tone is semantic, not decorative: good / fair / weak, expressed through the
 // same three tokens as the rest of the system so both themes stay in balance.
 const factorRows = (factors) => factors.map((f) => `<div class="kv"><span>${esc(f.k)}</span><span class="chip ${f.d === 'strong' ? 'have' : f.d === 'thin' ? 'miss' : ''}">${esc(f.d)}</span></div>`).join('');
+// 83rd, 1st, 12th: the suffix is a real superscript so the number stays the hero.
+const ordSuffix = (n) => { const m = n % 100; if (m >= 11 && m <= 13) return 'th'; return ['th', 'st', 'nd', 'rd'][n % 10] || 'th'; };
+const ordinalHtml = (n) => `${n}<sup class="ord">${ordSuffix(n)}</sup>`;
 function scoreColor(s) {
   const light = document.documentElement.dataset.theme === 'light';
   if (s >= 85) return light ? ['#0a7a45', 'var(--accent-soft)'] : ['#38c98a', '#0e2119'];
@@ -1269,7 +1280,7 @@ async function renderAuth() {
         <button class="btn auth-cta" id="auth-verify">Verify and continue</button>
         <p class="auth-note" id="auth-hint"></p>
       </div>
-      <button class="auth-skip" id="auth-demo">Explore the demo profile first</button>
+      <button class="auth-skip" id="auth-demo">Demo mode</button>
     </div>
     <p class="auth-legal">By continuing you agree to the <a href="/legal/terms.html">Terms</a> and <a href="/legal/privacy.html">Privacy Policy</a>.</p>
   </div>`;
@@ -1333,7 +1344,7 @@ function renderOnboarding() {
     </div>
     <div class="row" style="margin-top:20px;gap:10px">
       <button class="btn" id="ob-next">Continue</button>
-      <button class="btn ghost" id="ob-demo">Use the demo profile instead</button>
+      <button class="btn ghost" id="ob-demo">Demo mode</button>
     </div>`;
 
   const stepTwo = `
@@ -1467,7 +1478,7 @@ async function loadDemo() {
   b.disabled = true;
   await post('/api/demo', {});
   await boot();
-  b.disabled = false; b.textContent = 'Load demo persona';
+  b.disabled = false; b.textContent = 'Demo mode';
   go('radar');
   toast('Demo persona loaded – 8 years, €78k, targeting DE/NL');
 }
@@ -2096,7 +2107,6 @@ async function renderScores() {
   ].filter(([, v]) => v != null);
   const overallV = v2 ? v2.overall : scores.overall;
   const percentileV = v2 ? v2.percentile : scores.benchmark_percentile;
-  const ordinal = (n) => { const m = n % 100; if (m >= 11 && m <= 13) return n + 'th'; return n + (['th', 'st', 'nd', 'rd'][n % 10] || 'th'); };
   const circ = 2 * Math.PI * 52;
   $('#view').innerHTML = `
     <div class="overall">
@@ -2104,7 +2114,7 @@ async function renderScores() {
         <div><div class="v">${overallV}</div><div class="c">overall</div></div>
       </div>
       <div>
-        <div style="font-size:var(--text-lg);font-weight:700;letter-spacing:-.01em">${ordinal(percentileV)} percentile</div>
+        <div style="font-size:var(--text-lg);font-weight:700;letter-spacing:-.01em">${ordinalHtml(percentileV)} percentile</div>
         <div class="dim" style="margin-top:6px;max-width:460px;font-size:var(--text-sm);line-height:1.55">Benchmarked against professionals at your level. It moves when you move.</div>
         <div class="muted" style="font-size:var(--text-xs);margin-top:10px">${history.length} update${history.length === 1 ? '' : 's'} recorded</div>
       </div>
@@ -2460,7 +2470,7 @@ async function renderSearches() {
       </div>`).join('') : '<div class="card muted">No saved searches yet.</div>'}
     </div>
     <h2 class="section">Why this matters</h2>
-    <div class="card dim" style="font-size:13px">Saved searches are the foundation of the daily brief: tomorrow morning the engine re-runs them against fresh inventory and tells you only what is new. That is the habit loop – you do not come back to search, you come back because it found something while you were asleep.</div>`;
+    <div class="card dim" style="font-size:13px">Saved searches are the foundation of the daily brief: tomorrow the engine re-runs them against fresh inventory and tells you only what is new. That is the habit loop – you do not come back to search, you come back because it found something while you were asleep.</div>`;
   $('#s-add').onclick = async () => {
     const name = $('#s-name').value.trim() || 'Untitled search';
     const filters = {};
@@ -2602,7 +2612,7 @@ async function renderEmail() {
       <div class="card">
         <h3>What you receive</h3>
         <div style="margin-top:10px">
-          ${toggle('daily_brief', 'Morning brief', 'One email a day. What changed, and what to do.')}
+          ${toggle('daily_brief', 'Daily brief', 'One email a day. What changed, and what to do.')}
           ${toggle('opportunity_alerts', 'High-match alerts', 'Only for 85+ matches. Rare by design.')}
           ${toggle('weekly_digest', 'Weekly digest', 'The week in your market.')}
           ${toggle('marketing', 'Product updates', 'Off by default.')}
@@ -3006,7 +3016,7 @@ const VIEWS = {
   copilot: [renderCopilot, 'Career Copilot', 'Grounded in your data, not generic advice'],
   learning: [renderLearning, 'Learning Loop', 'Outcomes recalibrate the model – the flywheel'],
   searches: [renderSearches, 'Saved Searches', 'Standing questions the engine keeps answering'],
-  brief: [renderBrief, 'Morning Brief', 'What changed since you last looked'],
+  brief: [renderBrief, 'Daily Brief', 'What changed since you last looked'],
   negotiation: [renderNegotiation, 'Negotiation', 'The number to say, the evidence, and the fallback'],
   trajectory: [renderTrajectory, 'Career Trajectory', 'Where each path actually lands'],
   pulse: [renderPulse, 'Market Pulse', 'What the live corpus says right now'],
@@ -3020,6 +3030,7 @@ const VIEWS = {
 };
 
 async function go(view) {
+  const changed = STATE.view !== view;
   STATE.view = view;
   document.querySelectorAll('#nav button').forEach((b) => b.classList.toggle('active', b.dataset.view === view));
   const [fn, title, sub] = VIEWS[view];
@@ -3028,13 +3039,16 @@ async function go(view) {
   $('#view').innerHTML = `<div class="sk-kpis">${'<div class="sk sk-kpi"></div>'.repeat(4)}</div>
     <div class="sk sk-band"></div>
     ${'<div class="sk-row"><div class="sk sk-circle"></div><div><div class="sk sk-line mid"></div><div class="sk sk-line short" style="margin-top:8px"></div></div><div class="sk sk-line" style="width:80px"></div></div>'.repeat(4)}`;
+  if (changed) { const m = document.querySelector('main'); if (m) m.scrollTop = 0; window.scrollTo(0, 0); }
   try { await fn(); } catch (e) { $('#view').innerHTML = '<div class="empty">Error: ' + esc(e.message) + '</div>'; }
+  const act = document.querySelector('#nav button.active'); if (act) act.scrollIntoView({ block: 'nearest' });
 }
 
 async function boot() {
   const auth = await api('/api/auth/me');
   STATE.authed = !!auth.user;
   STATE.userRecord = auth.user;
+  const demoBtn = document.getElementById('load-demo'); if (demoBtn) demoBtn.hidden = STATE.authed;
   if (!STATE.authed) {
     $('#profile-pill').textContent = 'signed out';
     $('#nav').style.opacity = '.35';
@@ -3151,7 +3165,7 @@ function buildPalette(q) {
   const cmds = [
     ...Object.entries(VIEWS).map(([k, v]) => ({ kind: 'go', label: v[1], hint: v[2], action: () => go(k) })),
     { kind: 'cmd', label: 'Run live ingest', hint: 'Fetch from all four adapters now', action: async () => { toast('Ingesting…'); const r = await post('/api/ingest', {}); toast(`${r.inserted} new · ${r.merged} merged`); await boot(); go(STATE.view); } },
-    { kind: 'cmd', label: 'Load demo persona', hint: '8 years, €78k, targeting DE/NL', action: loadDemo },
+    ...(STATE.authed ? [] : [{ kind: 'cmd', label: 'Demo mode', hint: '8 years, €78k, targeting DE/NL', action: loadDemo }]),
     { kind: 'cmd', label: 'Open strategy documents', hint: 'The business analysis behind this product', action: () => { window.open('/strategy.html', '_blank'); } },
   ];
   const opps = (STATE.feed?.opportunities || []).slice(0, 300).map((o) => ({
@@ -3186,6 +3200,69 @@ $('#palette').addEventListener('click', (e) => { if (e.target.id === 'palette') 
 window.go = go;
 window.showLanding = showLanding;
 document.querySelectorAll('#nav button').forEach((b) => { b.onclick = () => go(b.dataset.view); });
+
+/* ---------------- keep scrolling to move to the next or previous screen ---------------- */
+/* Consent-first: this never moves the page on its own. It only reacts when a deliberate wheel
+   gesture STARTS while already sitting at the very end (or very start) of a screen, shows a
+   progress hint, and moves only after the gesture has clearly asked for it. Momentum from
+   the scroll that brought you there, keyboard, touch and pinch-zoom never trigger it. */
+(function screenFlip() {
+  if (!window.matchMedia('(pointer:fine)').matches) return;
+  const NEED = 320;            // wheel distance beyond the edge before it moves
+  const GESTURE_GAP = 220;     // ms of silence that separates one gesture from the next
+  const SETTLE = 1100;         // ms before another move is allowed
+  let acc = 0, dir = 0, armed = false, lastT = 0, lockedUntil = 0, timer = null;
+  const hint = document.createElement('div');
+  hint.className = 'flip-hint'; hint.setAttribute('aria-hidden', 'true');
+  hint.innerHTML = '<span class="flip-t"></span><i class="flip-bar"><b></b></i>';
+  document.body.appendChild(hint);
+
+  const order = () => [...document.querySelectorAll('#nav button')].filter((b) => b.offsetParent !== null);
+  const scroller = () => {
+    const m = document.querySelector('main');
+    if (m && getComputedStyle(m).overflowY !== 'visible') return m;
+    return document.scrollingElement;
+  };
+  const edge = (el) => ({ top: el.scrollTop <= 1, bottom: el.scrollTop + el.clientHeight >= el.scrollHeight - 2 });
+  const blocked = (t) => !!(t.closest && t.closest('textarea,input,select,.msgs,.palette.open,.tb-drop.open,[role="dialog"],.modal'))
+    || ['auth', 'onboard'].includes(STATE.view);
+  const target = (d) => {
+    const list = order(); const i = list.findIndex((b) => b.dataset.view === STATE.view);
+    return i < 0 ? null : list[i + d] || null;
+  };
+  const hide = () => { hint.classList.remove('show'); acc = 0; armed = false; };
+
+  window.addEventListener('wheel', (e) => {
+    const now = performance.now();
+    const fresh = now - lastT > GESTURE_GAP;
+    lastT = now;
+    if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || !e.deltaY) return;
+    if (blocked(e.target) || now < lockedUntil) { return; }
+    const d = e.deltaY > 0 ? 1 : -1;
+    const el = scroller(); const ed = edge(el);
+    const atEnd = d > 0 ? ed.bottom : ed.top;
+    if (fresh) { armed = atEnd; acc = 0; dir = d; }
+    // Reaching the edge DURING a gesture is the end of that scroll, not a request to leave.
+    // Only a gesture that began while already at the edge can move to the next screen.
+    if (!atEnd) { if (hint.classList.contains('show')) hide(); armed = false; return; }
+    if (!armed || d !== dir) return;
+    const next = target(d);
+    if (!next) { hide(); return; }
+    acc += Math.abs(e.deltaY);
+    const pct = Math.min(1, acc / NEED);
+    hint.querySelector('.flip-t').textContent = (d > 0 ? 'Keep scrolling for ' : 'Keep scrolling back to ') + (next.querySelector('.lbl')?.textContent || '');
+    hint.querySelector('.flip-bar b').style.transform = `scaleX(${pct})`;
+    hint.classList.toggle('up', d < 0); hint.classList.add('show');
+    clearTimeout(timer); timer = setTimeout(hide, 650);
+    if (acc >= NEED) {
+      lockedUntil = now + SETTLE; hide();
+      Promise.resolve(go(next.dataset.view)).then(() => {
+        const m = scroller(); if (d < 0) m.scrollTop = m.scrollHeight;
+      });
+    }
+  }, { passive: true });
+})();
+
 // Appearance: three modes. 'system' follows the OS and reacts live; light/dark are explicit
 // and persisted. Applied before first paint so there is never a flash of the wrong theme.
 const THEME_KEY = 'mirrorspread-theme';

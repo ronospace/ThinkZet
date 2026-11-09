@@ -75,6 +75,32 @@ function cdp(port, path, method = 'GET') {
   if (process.env.FLOW) { const w = await send('Runtime.evaluate', { returnByValue: true, expression: "(()=>{const q=e=>document.querySelector(e);const r=e=>{const b=q(e).getBoundingClientRect();return {x:Math.round(b.left),w:Math.round(b.width),y:Math.round(b.top+scrollY),h:Math.round(b.height)}};const h1=q('.land-h1');const lh=parseFloat(getComputedStyle(h1).lineHeight);return JSON.stringify({order:[...q('.land-wrap').children].map(e=>e.className.split(' ')[0]||e.id).join('>'),heroKids:[...q('.hero-sec').children].map(e=>e.className.split(' ')[0]).join('>'),wrap:r('.land-wrap'),h1Lines:Math.round(h1.getBoundingClientRect().height/lh),align:getComputedStyle(q('.hero-sec')).textAlign,check:r('.check'),proof:r('.proof'),gapProofToCheck:r('.check').y-(r('.proof').y+r('.proof').h),gapCheckToHow:r('#how').y-(r('.check').y+r('.check').h),inputPx:Math.min(...[...document.querySelectorAll('.check input')].map(i=>i.clientWidth))})})()" }); console.log('flow', w.result.value); }
   if (process.env.AUTHM) { const w = await send('Runtime.evaluate', { returnByValue: true, expression: "(()=>{const q=e=>document.querySelector(e);const c=e=>{const b=q(e).getBoundingClientRect();return Math.round(b.left+b.width/2)};const mainCx=(()=>{const b=q('main').getBoundingClientRect();return Math.round(b.left+b.width/2)})();const v=e=>{const b=q(e).getBoundingClientRect();return Math.round(b.top+b.height/2)};const vis=e=>{const n=q(e);return !!n&&getComputedStyle(n).display!=='none'};return JSON.stringify({contentAreaCentreX:mainCx,cardX:c('.auth-card'),logoX:c('.auth-logo'),titleX:c('.auth-title'),titleAlign:getComputedStyle(q('.auth-head')).alignItems,railVisible:vis('.rail'),topbarVisible:vis('.topbar'),cardCentreY:v('.auth-card'),viewportCentreY:Math.round(innerHeight/2),cardW:Math.round(q('.auth-card').getBoundingClientRect().width),subtitle:!!q('.auth-sub')})})()" }); console.log('authm', w.result.value); }
   if (process.env.SNAPQ) { const w = await send('Runtime.evaluate', { returnByValue: true, awaitPromise: true, expression: "(async()=>{const wait=ms=>new Promise(r=>setTimeout(r,ms));const sc=document.body;const nav=document.querySelector('.land-nav-wrap').getBoundingClientRect().height;const ids=['#check','#how','#capabilities','#pricing','#faq'];const out={navHeight:Math.round(nav),snapType:getComputedStyle(sc).scrollSnapType,pad:getComputedStyle(sc).scrollPaddingTop,behavior:getComputedStyle(sc).scrollBehavior,tests:[]};for(const id of ids){const e=document.querySelector(id);const abs=e.getBoundingClientRect().top+sc.scrollTop;for(const off of [60,-60]){sc.scrollTo({top:abs-nav+off,behavior:'instant'});await wait(1100);const top=Math.round(e.getBoundingClientRect().top);out.tests.push(id+' dropped '+(off>0?'60px past':'60px short of')+' -> section top at '+top+'px (nav ends '+Math.round(nav)+'px)')}}return JSON.stringify(out,null,1)})()" }); console.log('snapq', w.result.value); }
+  if (process.env.FLIPQ) {
+    const ev = async (expr) => (await send('Runtime.evaluate', { returnByValue: true, awaitPromise: true, expression: expr })).result.value;
+    const wheel = async (dy, n, gap) => { for (let i = 0; i < n; i++) { await send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: 700, y: 500, deltaX: 0, deltaY: dy }); await new Promise((r) => setTimeout(r, gap)); } };
+    const state = () => ev("JSON.stringify({view:STATE.view,top:Math.round(document.querySelector('main').scrollTop),atEnd:(()=>{const m=document.querySelector('main');return m.scrollTop+m.clientHeight>=m.scrollHeight-2})(),hint:document.querySelector('.flip-hint').classList.contains('show')})");
+    const pause = (ms) => new Promise((r) => setTimeout(r, ms));
+    const log = [];
+    await ev("go('pulse')"); await pause(1500);
+    log.push('start            ' + await state());
+    // 1. scroll to the bottom with one long fast gesture (momentum): must NOT flip
+    await wheel(120, 40, 12); await pause(900);
+    log.push('after momentum   ' + await state());
+    // 2. a fresh deliberate gesture at the bottom: must show hint, then flip
+    await wheel(60, 3, 30); await pause(100);
+    log.push('gesture begins   ' + await state());
+    await wheel(60, 8, 30); await pause(1500);
+    log.push('after gesture    ' + await state());
+    // 3. scroll up at the top of the new screen: goes back
+    await ev("document.querySelector('main').scrollTop=0"); await pause(400);
+    await wheel(-60, 14, 30); await pause(1600);
+    log.push('scroll up at top ' + await state());
+    // 4. inside the chat box and the palette: must never flip
+    await ev("go('copilot')"); await pause(1500);
+    await ev("(()=>{const m=document.querySelector('main');m.scrollTop=m.scrollHeight})()"); await pause(500);
+    log.push('copilot (bottom)' + await state());
+    console.log('flipq\n' + log.join('\n'));
+  }
   const metrics = await send('Runtime.evaluate', { expression: "JSON.stringify({docW:document.documentElement.scrollWidth,winW:innerWidth})", returnByValue: true });
   console.log('metrics', metrics.result.value);
   console.log('saved', OUT);

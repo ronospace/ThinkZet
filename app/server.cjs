@@ -406,6 +406,9 @@ route('POST', /^\/api\/onboarding$/, async (req, res) => {
 });
 
 route('POST', /^\/api\/demo$/, async (req, res) => {
+  // Demo mode belongs to signed-out visitors. For a signed-in person this endpoint would
+  // overwrite their real profile with the demo one.
+  if (AUTH.currentUser(req)) return json(res, 403, { error: 'Demo mode is only for signed-out visitors' });
   const body = await readBody(req);
   const uid = resolveUser(req);
   const parsed = E.parseResume(DEMO_CV);
@@ -1005,7 +1008,7 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
   } else if (/score|how am i|assess|rating/.test(q) || !q) {
     const s = scores || {};
     citations.push({ label: 'Career Score', detail: `overall ${s.overall || 0}/100, p${s.benchmark_percentile || 0}` });
-    reply = `Your Career Score is **${s.overall || 0}/100** – ${s.benchmark_percentile || 0}th percentile for your level.\n\n· Employability ${s.employability || 0} – your top-15 matches average ${top.length ? Math.round(top.reduce((a, b) => a + b.match_score, 0) / top.length) : 0}\n· Interview readiness ${s.interview_readiness || 0}\n· Market demand ${s.market_demand || 0}\n· Salary potential ${s.salary_potential || 0}\n· Future growth ${s.future_growth || 0}\n· Momentum ${s.career_momentum || 0}\n\nBiggest lever: ${weakest(s)}.`;
+    reply = `Your Career Score is **${s.overall || 0}/100** – ${ordSup(Number(s.benchmark_percentile || 0))} percentile for your level.\n\n· Employability ${s.employability || 0} – your top-15 matches average ${top.length ? Math.round(top.reduce((a, b) => a + b.match_score, 0) / top.length) : 0}\n· Interview readiness ${s.interview_readiness || 0}\n· Market demand ${s.market_demand || 0}\n· Salary potential ${s.salary_potential || 0}\n· Future growth ${s.future_growth || 0}\n· Momentum ${s.career_momentum || 0}\n\nBiggest lever: ${weakest(s)}.`;
   } else {
     reply = `I can answer from your actual data – try:\n\n· "What should I do next?"\n· "Am I underpaid?"\n· "Which skills are blocking me?"\n· "What's realistic for relocation to Germany?"\n· "How am I doing overall?"`;
   }
@@ -1071,7 +1074,9 @@ Close ${missing[0]} first – it appears most often across your other matches, s
   json(res, 200, { reply, citations });
 });
 
-// ---- morning brief: the diff engine ----
+const ordSup = (n) => { const m = n % 100; const k = (m >= 11 && m <= 13) ? 'th' : (['th','st','nd','rd'][n % 10] || 'th'); return n + k.replace('s','\u02e2').replace('t','\u1d57').replace('h','\u02b0').replace('n','\u207f').replace('d','\u1d48').replace('r','\u02b3'); };
+
+// ---- daily brief: the diff engine ----
 async function briefFor(uid) {
   const profile = getProfile(uid);
   if (!profile) return { needsOnboarding: true };
@@ -1133,7 +1138,7 @@ async function briefFor(uid) {
   if (topGap) actions.push({ priority: 2, text: `Close ${topGap[0]} – it blocks ${topGap[1]} of your opportunities`, skill: topGap[0] });
   if (rates && rates.gapPct > 5) actions.push({ priority: 2, text: `You are ${rates.gapPct}% below market – open Rate Intelligence and take the number into your next conversation` });
   if (scores && scores.career_momentum < 30) actions.push({ priority: 3, text: `Momentum is ${scores.career_momentum}/100 – three applications this week moves it more than any CV edit` });
-  if (closingSoon[0]) actions.push({ priority: 1, text: `${closingSoon[0].title} closes in ${Math.max(0, Math.ceil((new Date(closingSoon[0].closes_at) - Date.now()) / 86400000))} days` });
+  if (closingSoon[0]) actions.push({ priority: 1, text: `${closingSoon[0].title} ${(() => { const d = Math.max(0, Math.ceil((new Date(closingSoon[0].closes_at) - Date.now()) / 86400000)); return d === 0 ? 'closes today' : d === 1 ? 'closes tomorrow' : `closes in ${d} days`; })()}` });
 
   return {
     needsOnboarding: false,

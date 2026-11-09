@@ -53,6 +53,11 @@ function verifyCode(email, code) {
 // that the person owns this address (a code from the inbox, or a provider-verified email).
 function sessionForEmail(clean, displayName) {
   let user = db.prepare('SELECT * FROM users WHERE email=?').get(clean);
+  const provided = displayName && String(displayName).trim().slice(0, 80);
+  if (user && provided && !(user.name && user.name.trim())) {
+    db.prepare('UPDATE users SET name=? WHERE id=?').run(provided, user.id);
+    user = db.prepare('SELECT * FROM users WHERE id=?').get(user.id);
+  }
   if (!user) {
     const id = crypto.randomUUID();
     // Never derive a name from the email handle: 'ronnohjeff' cannot be split into a first name.

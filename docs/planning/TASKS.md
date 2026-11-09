@@ -4,68 +4,91 @@ Single source of truth for all work. Rules: `docs/ENGINEERING.md` section 1.
 Last updated: 9 November 2026.
 
 **Owner:** `Us` = engineering, `You` = needs the founder.
-**Categories:** `DEP` deployment · `SEC` security · `AUTH` sign-in · `PAY` payments · `EML` email · `UI` interface · `COPY` wording · `DATA` data and engine · `GRO` growth · `REPO` repository and docs.
+**Categories:** `DEP` deployment · `SEC` security · `AUTH` sign-in · `PAY` payments · `EML` email · `UI` interface · `NAV` navigation · `COPY` wording · `DATA` data and engine · `GRO` growth · `REPO` repository and docs.
+**Status:** `OPEN` · `IN PROGRESS` · `BLOCKED` (names what unblocks it) · `DONE` (verified, pushed).
 
 ---
 
-## A. Open
+## A. Us – in progress, in this order
 
-| ID | Cat | Task | Owner | Status | Next action |
-|---|---|---|---|---|---|
-| DATA-03 | DATA | **Salary benchmarks are 80% synthetic.** Of 812 open salary records, 648 come from the seeded generator (`corpus.cjs`) and 164 from the four live adapters. The site says "live postings". Decide: label it, or rebuild the benchmark on live data only | You decide, then Us | OPEN | Measured locally; production runs the same seed, to be confirmed |
-| COPY-13 | COPY | Hero statistics (1 in 3, €13,500, 72%) have no source in the repo. Replace with numbers computed from live data, or remove | Us | BLOCKED | Needs DATA-03 |
-| PAY-01 | PAY | Real €19.99 payment test, then refund | You | OPEN | Pay with own card on thinkzet.com, confirm Pro unlocks and Stripe shows webhook 200, refund in Stripe |
-| EML-03 | EML | Set `EMAIL_FROM=ThinkZet <onboarding@resend.dev>` in Railway until the domain is verified (current value uses the unverified thinkzet.com and every send fails) | You | OPEN | Railway Variables, then Deploy |
-| EML-01 | EML | Verify thinkzet.com in Resend | You | OPEN | Resend → Domains → Add `thinkzet.com`, send screenshot of DNS records; then add to Cloudflare |
-| EML-02 | EML | Switch sender to `ThinkZet <brief@thinkzet.com>` | Us | BLOCKED | Needs EML-01 |
-| AUTH-01 | AUTH | Google sign-in credentials | You | OPEN | Create OAuth client, redirect `https://thinkzet.com/api/auth/google/callback`, set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` in Railway |
-| AUTH-02 | AUTH | Apple sign-in credentials | You | OPEN | Services ID, return URL `https://thinkzet.com/api/auth/apple/callback`, key; set four `APPLE_*` variables in Railway |
-| AUTH-04 | AUTH | Sign-in shows Google and Apple buttons with a Soon tag until credentials exist | Us | DONE | Live automatically once AUTH-01 and AUTH-02 are set |
-| AUTH-03 | AUTH | Test Google and Apple sign-in end to end on the live site | Us | BLOCKED | Needs AUTH-01 and AUTH-02 |
-| SEC-01 | SEC | Roll Stripe live key, webhook secret and Resend key (all pasted in chat) | You | OPEN | Roll in each dashboard, update Railway variables; webhook secret must match the Stripe destination |
-| DEP-01 | DEP | Confirm the volume keeps data across a redeploy | You | OPEN | Sign up, redeploy in Railway, reload and confirm the profile survives |
-| DEP-02 | DEP | Delete spare Railway project `feisty-optimism`; switch Railway Agent off | You | OPEN | Railway project settings |
-| DEP-03 | DEP | Rename Railway service from MirrorSpread to ThinkZet | You | OPEN | Service settings |
-| REPO-01 | REPO | Rename GitHub repo `MirrorSpread` to `ThinkZet`, update clone URLs in `deploy/*` | You, then Us | OPEN | GitHub → Settings → Rename; then Us updates URLs |
-| UI-04 | UI | Desktop layout: shared 1200px container, hero as two columns, FAQ as two columns, one-line footer legal | Us | DONE | measured: nav, page and footer share the same left and right edges |
-| UI-05 | UI | Brand: translucent gradient mark with echo and halo, two-tone wordmark, one shared symbol, favicon and touch icon | Us | DONE | computed styles verified in both themes |
-| UI-06 | UI | Logo simplified: removed sheen, echo and halo; content width capped (1080 landing, 1120 app) so wide screens keep calm margins | Us | DONE | measured at 1280, 1440, 1920 |
-| UI-07 | UI | App screens adopt Mercor-style structure: underline tabs for sections, left sub-nav plus a form column, quiet icon rail | Us | OPEN | Study references, then apply to Plan, Twin, Tracker, Brief |
-| COPY-11 | COPY | Removed filler notes and button arrows; hero reduced to headline, one line, one button, centred | Us | DONE | 0 arrow spans left; hero has 3 elements; copy and check card centre offset 0px at 1280, 1440, 1920 |
-| COPY-12 | COPY | Hero returned to the original layout (tag, headline, slogan, button, statistics, then the check) after the centred and story variants were rejected | Us | DONE | 940px column, left-aligned, order hero > check > sections |
-| AUTH-05 | AUTH | Names are never derived from the email handle; asked at onboarding, validated server-side; old derived names cleared | Us | DONE | tested: junk rejected 400, real name saved, signed-out 401 |
-| UI-08 | UI | Sign-in card: centred logo and title, "Continue to ThinkZet", logo links home. Sidebar and top bar stay (a full-screen focus mode was tried and rejected) | Us | DONE | measured: logo, title and card centre equal the content area centre at 1440, 1920 and 393 |
-| UI-09 | UI | Landing sections snap into place on desktop (proximity, smooth, off on phones and for reduced motion); app screens unaffected | Us | DONE | measured: sections settle 76px under the nav from either side at 1440; snap type none at 393 |
-| UI-01 | UI | Radar list: 1 column on phones, 2 on tablets, 3 on wide screens, tinted by score | Us | OPEN | Build and measure at 393, 768, 1280 |
-| UI-02 | UI | Structure audit of remaining screens: landing lower sections, pricing, Brief, Tracker, Negotiation, Market Pulse, Onboarding | Us | IN PROGRESS | Screenshot each at 393 and fix paragraph-style blocks |
-| UI-03 | UI | Light-mode audit of the 90 remaining hardcoded colours | Us | OPEN | Tokenise or confirm each |
-| DATA-01 | DATA | Generative copilot and cover letters | You, then Us | OPEN | Supply `LLM_ENDPOINT`, `LLM_API_KEY`, `LLM_MODEL` |
-| DATA-02 | DATA | Offsite backup of the SQLite volume | Us | OPEN | Nightly snapshot to object storage |
-| GRO-01 | GRO | Send the link to the first 20 people | You | BLOCKED | Needs PAY-01, EML-01 |
-| GRO-02 | GRO | Watch the Funnel and Leads screens, report weekly | Us | BLOCKED | Needs GRO-01 |
+| # | ID | Cat | Task (what the founder asked) | Status |
+|---|---|---|---|---|
+| 1 | NAV-01 | NAV | Scrolling to the end of a screen moves to the next one in the left menu; scrolling up at the top moves to the previous one. The left tab follows | IN PROGRESS |
+| 2 | AUTH-06 | AUTH | Greeting and every salutation use the first name Google or Apple supplies, not the email | IN PROGRESS (code written, to verify) |
+| 3 | AUTH-07 | AUTH | Signed-in users never see demo mode. Menu item removed for them; server refuses `/api/demo` | IN PROGRESS (code written, to verify) |
+| 4 | COPY-14 | COPY | "Explore the demo profile first" becomes "Demo mode" | OPEN |
+| 5 | COPY-15 | COPY | "Morning brief" is time-driven; name it "Daily brief" and make the greeting follow the send hour | IN PROGRESS (mailer done, UI labels to do) |
+| 6 | COPY-16 | COPY | "closes in 1 days" reads "closes tomorrow" or "closes today" | IN PROGRESS (code written, to verify) |
+| 7 | UI-01 | UI | Radar list in columns: 1 on phones, 2 on tablets, 3 on wide screens, softly tinted, blended faded colours | OPEN |
+| 8 | UI-02 | UI | Structure audit of the remaining screens at phone and desktop widths: no paragraph blocks, label-value rows, chips | OPEN |
+| 9 | UI-07 | UI | Mercor-style structure for app screens (underline tabs, left sub-nav plus form column) | OPEN |
+| 10 | UI-03 | UI | Replace the remaining hardcoded colours with tokens | OPEN |
+| 11 | UI-12 | UI | Landing page always checked in both PC mode and mobile mode before it is called done | RULE (in `ENGINEERING.md`) |
+| 12 | COPY-17 | COPY | Mercor sign-in order option: email first, Google below. Only if the founder asks | OPEN (decision) |
 
-## B. Done
+## B. You – needs the founder
+
+| ID | Cat | Task | Next action |
+|---|---|---|---|
+| EML-03 | EML | Sign-in email fails. Set `EMAIL_FROM=ThinkZet <onboarding@resend.dev>` in Railway | Railway → Variables → edit → Deploy |
+| EML-01 | EML | Verify thinkzet.com in Resend so people other than you can sign in | Resend → Domains → Add `thinkzet.com`, region EU, send the DNS screenshot |
+| DATA-03 | DATA | **Salary benchmarks are 80% synthetic** (648 of 812 records from `corpus.cjs`). Choose: A rebuild on live data only, or B label as sample data | Reply A or B |
+| AUTH-01 | AUTH | Google credentials | OAuth client, redirect `https://thinkzet.com/api/auth/google/callback`, set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` |
+| AUTH-02 | AUTH | Apple credentials | Services ID, return URL `https://thinkzet.com/api/auth/apple/callback`, key, four `APPLE_*` variables |
+| PAY-01 | PAY | Real €19.99 payment, confirm Pro unlocks, refund yourself | thinkzet.com → Upgrade |
+| SEC-01 | SEC | Roll the Stripe live key, webhook secret and Resend key (all pasted in chat) | Roll in each dashboard, update Railway |
+| DEP-01 | DEP | Confirm the volume keeps data across a redeploy | Sign up, redeploy, reload |
+| DEP-02 | DEP | Delete spare Railway project `feisty-optimism`; switch Railway Agent off | Railway settings |
+| DEP-03 | DEP | Rename Railway service to ThinkZet | Service settings |
+| REPO-01 | REPO | Rename GitHub repo `MirrorSpread` to `ThinkZet` | GitHub → Settings; then Us updates `deploy/*` |
+| DATA-01 | DATA | Make the copilot and cover letters generative | Supply `LLM_ENDPOINT`, `LLM_API_KEY`, `LLM_MODEL` |
+
+## C. Blocked
+
+| ID | Cat | Task | Needs |
+|---|---|---|---|
+| COPY-13 | COPY | Hero statistics (1 in 3, €13,500, 72%) have no source in the repo. Replace with computed numbers, or remove | DATA-03 |
+| EML-02 | EML | Sender `ThinkZet <brief@thinkzet.com>` | EML-01 |
+| AUTH-03 | AUTH | Test Google and Apple sign-in on the live site | AUTH-01, AUTH-02 |
+| DATA-02 | DATA | Offsite backup of the SQLite volume | DEP-01 |
+| GRO-01 | GRO | Send the link to the first 20 people | PAY-01, EML-01 |
+| GRO-02 | GRO | Weekly Funnel and Leads report | GRO-01 |
+
+## D. Done (verified and pushed)
 
 | ID | Cat | Task | Evidence |
 |---|---|---|---|
-| DEP-10 | DEP | Production live on Railway at thinkzet.com | `/api/health` 200, launch `ready: True`, 57/57 API, 10/10 browser |
-| DEP-11 | DEP | Root `railway.json` with Dockerfile builder | commit `4f5f365` |
-| DEP-12 | DEP | Entrypoint fixes volume ownership, drops to `node` | commits `381a3b0`, `1b96d63` |
+| DEP-10 | DEP | Production live on Railway at thinkzet.com | health 200, launch ready |
+| DEP-11 | DEP | Root `railway.json` with Dockerfile builder | `4f5f365` |
+| DEP-12 | DEP | Entrypoint fixes volume ownership, drops to `node` | `381a3b0`, `1b96d63` |
 | DEP-13 | DEP | `www.thinkzet.com` redirects to the apex (301) | measured |
 | PAY-10 | PAY | Stripe live product, prices, six-event webhook on thinkzet.com | signed event 200, forged 400 |
-| SEC-10 | SEC | Sign-in code no longer returned when mail is live | commit `47454dc` |
-| AUTH-10 | AUTH | Google and Apple sign-in built (state, nonce, verified email) | commit `89318d3` |
-| UI-10 | UI | Top bar: title, live pill, icons pinned right, no sideways scroll | measured at 360 and 393 |
-| UI-11 | UI | Sign-in card, score rings as real arcs, footer in three columns, Skill Gaps fits phone | commits `89318d3` to `487efe6` |
-| COPY-10 | COPY | Slogan on sign-in and hero, two lines max | commit `487efe6` |
-| REPO-10 | REPO | Strategy and planning docs split, README rewritten, `.gitignore` tightened | commit `19f3907` |
+| SEC-10 | SEC | Sign-in code never returned when mail is live | `47454dc` |
+| AUTH-04 | AUTH | Google and Apple buttons always visible, Soon tag until configured | `7ccaaa9` |
+| AUTH-05 | AUTH | Names never derived from the email; asked at onboarding; old derived names cleared | tested 400/200/401 |
+| AUTH-10 | AUTH | Google and Apple sign-in built (state, nonce, verified email) | `89318d3` |
+| UI-04 | UI | Desktop layout: shared container, one-line footer legal | measured |
+| UI-05 | UI | Brand: translucent gradient mark, two-tone wordmark, single shared symbol, favicon | computed styles |
+| UI-06 | UI | Logo simplified (no sheen, echo, halo); content width capped | measured 1280, 1440, 1920 |
+| UI-08 | UI | Sign-in card centred; sidebar and top bar stay | measured at 1440, 1920, 393 |
+| UI-09 | UI | Landing sections snap on desktop, off on phones and reduced motion | measured |
+| UI-10 | UI | Top bar: title, live pill, icons pinned right, no sideways scroll | measured 360 and 393 |
+| UI-11 | UI | Score rings as arcs, footer in three columns, Skill Gaps fits phone | `487efe6` |
+| COPY-10 | COPY | Slogan on sign-in and hero | `487efe6` |
+| COPY-11 | COPY | Filler notes and button arrows removed | 0 arrow spans |
+| COPY-12 | COPY | Landing hero restored to the original layout after variants were rejected | measured |
+| COPY-18 | COPY | Hero: plain pill, "Check my market gap", heavier headline in one purple | `b46d14b` |
+| REPO-10 | REPO | Docs split into strategy and planning; README; `.gitignore` | `19f3907` |
 
-## C. Change log
+## E. Rejected (do not rebuild)
 
-- 9 Nov 2026 – COPY-12 story strip, AUTH-05 real names, Radar KPI cards on one accent.
-- 9 Nov 2026 – COPY-11 filler removed, hero centred.
-- 9 Nov 2026 – EML-03: sign-in failing because EMAIL_FROM uses an unverified domain; app now logs the real reason.
-- 9 Nov 2026 – UI-06 logo simplified, widths capped.
-- 9 Nov 2026 – UI-04 desktop layout and UI-05 brand refresh.
-- 9 Nov 2026 – AUTH-04: provider buttons always visible, Soon tag until configured.
-- 9 Nov 2026 – Register created. Engineering rules added in `docs/ENGINEERING.md`.
+| Item | Why |
+|---|---|
+| Centred hero, story strip, two-column hero | Founder wanted the original layout back |
+| Full-screen sign-in without sidebar | Founder wanted the left side kept |
+| Logo sheen, echo and halo | Founder: "not good" |
+| Salary-band opener line in the hero | Founder: "not supposed to be there" |
+
+## F. Change log
+
+- 9 Nov 2026 – Register rewritten as a ledger: every request numbered, ordered and categorised; done work moved out of Open.
