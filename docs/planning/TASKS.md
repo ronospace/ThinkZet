@@ -20,6 +20,7 @@ Last updated: 9 November 2026.
 | 5 | COPY-15 | COPY | "Morning brief" is time-driven; name it "Daily brief" and make the greeting follow the send hour | IN PROGRESS (mailer done, UI labels to do) |
 | 6 | COPY-16 | COPY | "closes in 1 days" reads "closes tomorrow" or "closes today" | IN PROGRESS (code written, to verify) |
 | 7 | AUTH-08 | AUTH | Sign-in rate limit split: 5 codes per address and 40 per network in 15 minutes, so a shared IP no longer locks out new sign-ups | Us | DONE | tested: 5 x 200 then 429 for one address; 8 different addresses from one IP all 200 |
+| UI-13 | UI | Pricing back to three cells on the landing page and the plan screen: Free, Pro monthly, Pro yearly. Yearly is a billing choice, not a fourth tier, and both buttons use the guarded checkout | Us | DONE | 3 cells rendered; annual checkout refuses without a session |
 | NAV-03 | NAV | One firm notch (110px) is now enough to move to the next screen; plural fixed in the gaps table; the live pill is hidden on Sign in and onboarding | Us | DONE | measured: flip fires on the first gesture |
 | NAV-02 | NAV | Scroll-to-next-screen made easier: 150px instead of 320px, shorter settle, screens with no scroll room move on any gesture | Us | DONE | measured: flip fires on the first deliberate gesture |
 | UI-01 | UI | Radar list in columns: 1 on phones, 2 on tablets, 3 on wide screens, softly tinted, blended faded colours | OPEN |

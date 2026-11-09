@@ -581,7 +581,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .cap:hover{border-color:var(--line2);transform:translateY(-1px)}
 .cap h3{font-size:var(--text-base);margin:0 0 5px;color:var(--ink);letter-spacing:var(--tracking-tight)}
 .cap p{font-size:var(--text-sm);color:var(--muted);line-height:var(--leading-normal);margin:0}
-.price-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px;margin:0 auto;gap:var(--sp-4);align-items:start}
+.price-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-4);align-items:start}
 .price{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-6);box-shadow:var(--shadow-sm);position:relative}
 .price.featured{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),var(--shadow)}
 .price-tag{position:absolute;top:-9px;left:var(--sp-6);background:var(--accent);color:#fff;font-size:var(--text-2xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
@@ -783,7 +783,7 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
           <div class="price-tag">Most chosen</div>
           <h3>Pro</h3>
           <div class="price-v">&euro;19.99<span> a month</span></div>
-          <div class="price-alt">or &euro;149.99 a year</div>
+          <div class="price-alt">or &euro;149.99 a year &middot; two months free</div>
           <ul>
             <li>Unlimited scored opportunities</li>
             <li>Career Twin and all eight scores</li>
@@ -792,6 +792,19 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
             <li>Cover letters and interview prep</li>
           </ul>
           <button class="btn" id="price-pro">Unlock Pro</button>
+        </div>
+        <div class="price">
+          <h3>Pro, yearly</h3>
+          <div class="price-v">&euro;149.99<span> a year</span></div>
+          <div class="price-alt">&euro;12.50 a month, billed once</div>
+          <ul>
+            <li>Everything in Pro</li>
+            <li>Two months free against monthly</li>
+            <li>One payment, no monthly charge</li>
+            <li>Cancel at the end of the year</li>
+            <li>Same 30-day refund terms</li>
+          </ul>
+          <button class="btn ghost" id="price-pro-year">Choose yearly</button>
         </div>
       </div>
     </section>
@@ -1215,15 +1228,22 @@ async function runRateCheck() {
 document.getElementById('c-run').onclick = runRateCheck;
 document.getElementById('c-skills').onkeydown = (e) => { if (e.key === 'Enter') runRateCheck(); };
 document.getElementById('c-current').onkeydown = (e) => { if (e.key === 'Enter') runRateCheck(); };
-const proBtn = document.getElementById('price-pro');
-if (proBtn) proBtn.onclick = async () => {
-  const r = await post('/api/billing/checkout', { cycle: 'monthly' });
+// Both landing buttons go through the same guarded checkout: it refuses without a session,
+// so the honest answer is "sign in first", never a fake unlock.
+const startCheckout = async (cycle) => {
+  const r = await post('/api/billing/checkout', { cycle });
   if (r.url) { window.location.href = r.url; return; }
-  toast(r.note || 'Sign in first to unlock Pro');
-  document.getElementById('landing').style.display = 'none';
-  document.getElementById('app-shell').style.display = '';
-  go('auth');
+  toast(r.error || r.note || 'Sign in first to unlock Pro');
+  if (r.needsAuth) {
+    document.getElementById('landing').style.display = 'none';
+    document.getElementById('app-shell').style.display = '';
+    go('auth');
+  }
 };
+const proBtn = document.getElementById('price-pro');
+if (proBtn) proBtn.onclick = () => startCheckout('monthly');
+const proYearBtn = document.getElementById('price-pro-year');
+if (proYearBtn) proYearBtn.onclick = () => startCheckout('annual');
 
 document.getElementById('land-signin').onclick = () => {
   document.getElementById('landing').style.display = 'none';
@@ -2476,7 +2496,7 @@ async function renderSearches() {
 async function renderPlan() {
   const p = await api('/api/plan');
   $('#view').innerHTML = `
-    <div class="grid" style="grid-template-columns:1fr 1fr 1fr">
+    <div class="grid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
       <div class="card tone-violet" style="${p.plan === 'free' ? 'border-color:var(--ai-border)' : ''}">
         <h3>Free</h3>
         <div class="big mono" style="margin:8px 0">€0</div>
@@ -2490,8 +2510,16 @@ async function renderPlan() {
         <div style="margin-top:12px">${p.plans.pro.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--good)">✓</span></div>`).join('')}</div>
         ${p.plan === 'pro'
           ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
-          : `<div style="margin-top:14px" class="row"><button class="btn sm" id="up-month">€19.99 monthly</button><button class="btn sm ghost" id="up-year">€149.99 yearly</button></div>`}
+          : `<div style="margin-top:14px"><button class="btn sm" id="up-month">€19.99 monthly</button></div>`}
       </div>
+      <div class="card tone-violet" style="border-color:var(--ai-border);">
+        <h3>Pro, yearly</h3>
+        <div class="big mono" style="margin:8px 0">€149.99<span style="font-size:14px;color:var(--muted)">/year</span></div>
+        <div class="dim" style="font-size:12.5px">€12.50 a month, billed once</div>
+        <div style="margin-top:12px">${p.plans.pro.features.slice(0, 5).map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--good)">✓</span></div>`).join('')}<div class="kv"><span>Two months free against monthly</span><span style="color:var(--good)">✓</span></div></div>
+        ${p.plan === 'pro'
+          ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
+          : `<div style="margin-top:14px"><button class="btn sm ghost" id="up-year">€149.99 yearly</button></div>`}
       </div>
     </div>
     <div class="card" style="margin-top:14px">
