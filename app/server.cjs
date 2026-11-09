@@ -248,7 +248,15 @@ async function oauthCallback(req, res, provider, params) {
     try { scheduleSequence(r.user.id); } catch (e) { /* sequence is best-effort */ }
     res.writeHead(303, { Location: '/?app=1', 'Cache-Control': 'no-store' });
     res.end();
-  } catch (e) { fail(e.message); }
+  } catch (e) {
+    const msg = String(e.message || e);
+    // A key or token problem is our fault, not the person's. Say so, and keep the detail in the log.
+    if (/DECODER|PEM|private key|invalid_client|invalid_client_secret/i.test(msg)) {
+      console.log(`  ! oauth ${provider} configuration error: ${msg}`);
+      return fail('Sign-in with ' + provider + ' is misconfigured on our side. We have been alerted.');
+    }
+    fail(msg);
+  }
 }
 
 route('GET', /^\/api\/auth\/google\/callback$/, async (req, res, url) => oauthCallback(req, res, 'google', Object.fromEntries(url.searchParams)));

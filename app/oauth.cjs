@@ -45,6 +45,20 @@ function providers() {
 const b64u = (b) => Buffer.from(b).toString('base64url');
 
 // Apple's client secret is a short-lived ES256 JWT signed with the .p8 key.
+
+// Accepts a PEM with literal \n, real newlines, surrounding quotes, or a bare base64 body.
+function normalisePem(raw) {
+  let v = String(raw || '').trim();
+  if ((v.startsWith('"') && v.endsWith('"')) || (v.startsWith("'") && v.endsWith("'"))) v = v.slice(1, -1);
+  v = v.replace(/\\r/g, '').replace(/\\n/g, '\n').trim();
+  if (!v.includes('-----BEGIN')) {
+    const body = v.replace(/\s+/g, '');
+    const wrapped = (body.match(/.{1,64}/g) || []).join('\n');
+    v = `-----BEGIN PRIVATE KEY-----\n${wrapped}\n-----END PRIVATE KEY-----`;
+  }
+  return v;
+}
+
 function appleClientSecret() {
   const now = Math.floor(Date.now() / 1000);
   const head = b64u(JSON.stringify({ alg: 'ES256', kid: env('APPLE_KEY_ID'), typ: 'JWT' }));
@@ -52,7 +66,10 @@ function appleClientSecret() {
     iss: env('APPLE_TEAM_ID'), iat: now, exp: now + 300,
     aud: 'https://appleid.apple.com', sub: env('APPLE_CLIENT_ID'),
   }));
-  const key = env('APPLE_PRIVATE_KEY').replace(/\\n/g, '\n');
+  // Railway (and any dashboard paste) may deliver the key with literal \n, real newlines, or wrapped
+  // in quotes. Normalise all three, and rebuild the PEM if only the base64 body survived, so a bad
+  // paste cannot surface as a raw OpenSSL "DECODER routines::unsupported" error.
+  const key = normalisePem(env('APPLE_PRIVATE_KEY'));
   const sig = crypto.sign('sha256', Buffer.from(`${head}.${body}`), { key, dsaEncoding: 'ieee-p1363' });
   return `${head}.${body}.${b64u(sig)}`;
 }
