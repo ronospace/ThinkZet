@@ -33,8 +33,8 @@ Last updated: 9 November 2026.
 
 | ID | Cat | Task | Next action |
 |---|---|---|---|
-| EML-04 | EML | Railway still holds an invalid Resend key. The new key `re_LkWNodoS…aDxjT` sends as `support@thinkzet.com` to any address and completes a full code round trip locally, but production still stores `API key is invalid`. Paste the new key into Railway → `RESEND_API_KEY` and Deploy | Railway → Variables → `RESEND_API_KEY` → Deploy |
-| EML-01 | EML | Verify thinkzet.com in Resend so people other than you can sign in | Resend → Domains → Add `thinkzet.com`, region EU, send the DNS screenshot |
+
+
 | DATA-06 | DATA | **The 176% rate gap is an artefact of the synthetic corpus.** Backend/senior comparables are 1,461 records, of which 1,311 are USD/year at an average of 174,705 and 109 are CAD at 229,000; only 4 are EUR. The benchmark is a US-market number applied to a EUR salary, and the headline multiplies it. Country filter does not change it (Any, DE and US all return 138,000). Fixing this is DATA-03 | You decide A or B, then Us | OPEN |
 | DATA-03 | DATA | **Salary benchmarks are 80% synthetic** (648 of 812 records from `corpus.cjs`). Choose: A rebuild on live data only, or B label as sample data | Reply A or B |
 | AUTH-01 | AUTH | Google credentials | OAuth client, redirect `https://thinkzet.com/api/auth/google/callback`, set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` |
@@ -67,6 +67,8 @@ Last updated: 9 November 2026.
 | DEP-11 | DEP | Root `railway.json` with Dockerfile builder | `4f5f365` |
 | DEP-12 | DEP | Entrypoint fixes volume ownership, drops to `node` | `381a3b0`, `1b96d63` |
 | DEP-13 | DEP | `www.thinkzet.com` redirects to the apex (301) | measured |
+| EML-01 | EML | Resend domain verified (SPF and DKIM), sender `ThinkZet <support@thinkzet.com>` delivering to any address | production send 200, `delivered: true` |
+| EML-04 | EML | Railway holds a working Resend key; production queue shows `login_code | sent` | verified 9 Nov 2026 |
 | PAY-10 | PAY | Stripe live product, prices, six-event webhook on thinkzet.com | signed event 200, forged 400 |
 | PAY-02 | PAY | Checkout requires a signed-in session; the demo account can never be charged; a missing Stripe key refuses checkout in production instead of granting Pro | `3731853`; payment-check 19/19 |
 | PAY-03 | PAY | Pro+ hidden from the landing page, the plan screen and the catalogue; interest recorded without selling | `3731853`; payment-check 19/19 |
@@ -99,5 +101,54 @@ Last updated: 9 November 2026.
 
 ## F. Change log
 
+- 9 Nov 2026 – EML-01 and EML-04 closed on production evidence: code sent, code verified, dashboard reached.
 - 9 Nov 2026 – PAY-02, PAY-03, PAY-04 done and tagged `restore-20261109-1`; PAY-05 added for the live cancellation proof.
 - 9 Nov 2026 – Register rewritten as a ledger: every request numbered, ordered and categorised; done work moved out of Open.
+
+## G. DATA-03 / DATA-06 – the decision
+
+**What is wrong.** The benchmark is built from `salary_records`, and that table is not what it looks like.
+
+| | Records | Distinct values |
+|---|---|---|
+| Live feeds (jobicy, hackernews, remoteok, arbeitnow) | 8,470 | 160 |
+| Backend/senior comparables in use | 1,461 | – |
+| of which USD/year | 1,311 | average 174,705 |
+| of which CAD/year | 109 | average 229,000 |
+| of which EUR/year | 4 | average 90,875 |
+
+Two separate faults:
+1. **Repetition.** 8,470 live records carry only 160 distinct (amount, role, seniority) combinations. Every ingest run re-inserts the same postings, so one job advert counts many times and the sample size is fiction.
+2. **Currency.** The backend/senior benchmark is a US number. A EUR salary is compared with it, so the gap is overstated. Country filter does not help: Any, DE and US all return 138,000.
+
+### Option A – rebuild on real data
+
+| Step | Work | Effort |
+|---|---|---|
+| A1 | De-duplicate `salary_records` on (opportunity, amount, period) so each advert counts once | 0.5 day |
+| A2 | Add EUR-first sources that disclose pay (EU boards, StepStone-style feeds, company career pages with structured pay) | 2–4 days, depends on access |
+| A3 | Currency-correct comparison: convert the person's pay to EUR and compare only within the same currency bucket, or convert the market to EUR with a stated rate and date | 0.5 day |
+| A4 | Minimum-sample gate: below N comparables, show a range with "thin data" instead of a single headline number | 0.5 day |
+| A5 | Re-baseline the tests and the landing statistics on the new numbers | 0.5 day |
+
+**Total: 4–6 working days**, of which 2–4 depend on getting EUR pay data.
+
+### Impact on accuracy
+
+| Measure | Now | After A |
+|---|---|---|
+| Distinct comparables, backend/senior | 160 (of 8,470 rows) | 160 to a few hundred, honestly counted |
+| Currency match for a EUR user | none (USD benchmark) | EUR bucket, or FX-converted with a stated rate |
+| Backend/senior median, EUR, after FX on today's data | 138,000 (USD-shaped) | ~155,700 median, p25 140,100, p75 184,000 |
+| Confidence label | "high" on 4 EUR records | driven by the real count |
+| 176% headline for a 50,000 salary | 176% | falls to roughly 210% on FX-converted data, so the number barely moves until A2 adds EUR sources |
+
+**Honest reading:** A1, A3 and A4 fix the counting and the currency and make the number defensible. A2 is what actually changes the answer for a European user, and it is the part that depends on data access.
+
+### Can PAY-01 and PAY-05 run before this?
+
+**Yes, and they should.** They test the payment rail, not the number: checkout, Stripe customer, webhook, entitlement, cancellation. None of that touches `salary_records`.
+
+Two conditions:
+1. Refund the test payment, as planned, so no money changes hands on a benchmark we are about to replace.
+2. Do not send the link to the first 20 people (GRO-01) until A1, A3 and A4 are in, because the headline number is the first thing a new user sees.
