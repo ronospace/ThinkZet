@@ -959,6 +959,21 @@ const SAMPLE_NOTE = 'Sample data – not a market benchmark';
 const sampleChip = () => `<span class="chip sample" title="Built from a partly synthetic corpus while the real salary rebuild is pending. Treat it as an indication, not a benchmark.">${SAMPLE_NOTE}</span>`;
 const sampleLine = () => `<div class="sample-line">${SAMPLE_NOTE}. Built from a partly synthetic corpus while the real salary rebuild is pending.</div>`;
 
+// Title case for labels built from identifiers: "data science" -> "Data Science",
+// "ai_engineering" -> "AI Engineering", but small words stay lower case unless they lead.
+const SMALL_WORDS = new Set(['a', 'an', 'and', 'as', 'at', 'but', 'by', 'for', 'from', 'in', 'into', 'nor', 'of', 'on', 'onto', 'or', 'over', 'per', 'the', 'to', 'up', 'via', 'vs', 'with']);
+const ACRONYMS = { ai: 'AI', ml: 'ML', llm: 'LLM', llmops: 'LLMOps', api: 'API', sql: 'SQL', ui: 'UI', ux: 'UX', qa: 'QA', devops: 'DevOps', saas: 'SaaS', hr: 'HR', id: 'ID', cv: 'CV', ceo: 'CEO', cto: 'CTO' };
+function titleCase(input) {
+  const words = String(input == null ? '' : input).replace(/[_\s]+/g, ' ').trim().split(' ');
+  return words.map((w, i) => {
+    if (!w) return w;
+    const lower = w.toLowerCase();
+    if (ACRONYMS[lower]) return ACRONYMS[lower];
+    if (i > 0 && SMALL_WORDS.has(lower)) return lower;
+    return lower.charAt(0).toUpperCase() + lower.slice(1);
+  }).join(' ');
+}
+
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2600); };
 
@@ -1184,8 +1199,8 @@ async function runRateCheck() {
     STATE.lastCheck = { input: r.input, benchmark: b, verdict: v };
 
     const oneLiner = v.gapPct != null
-      ? `ThinkZet says a ${r.input.seniority} ${r.input.family.replace(/_/g, ' ')} in ${r.input.country || 'the EU'} is worth ${fmt(b.p50)}${per} – I'm ${Math.abs(v.gapPct)}% ${v.gapPct > 0 ? 'below' : 'above'} that.`
-      : `The median for ${r.input.seniority} ${r.input.family.replace(/_/g, ' ')} work is ${fmt(b.p50)}${per}.`;
+      ? `ThinkZet says a ${titleCase(r.input.seniority)} ${titleCase(r.input.family)} in ${r.input.country || 'the EU'} is worth ${fmt(b.p50)}${per} – I'm ${Math.abs(v.gapPct)}% ${v.gapPct > 0 ? 'below' : 'above'} that.`
+      : `The median for ${titleCase(r.input.seniority)} ${titleCase(r.input.family)} work is ${fmt(b.p50)}${per}.`;
     document.getElementById('c-copyline').onclick = () => { navigator.clipboard.writeText(oneLiner); toast('Copied – paste it anywhere'); };
 
     document.getElementById('c-share').onclick = async () => {
@@ -1622,7 +1637,7 @@ async function renderRadar() {
         <div class="refine-row filters">
           <input id="f-q" placeholder="Title, company or skill" value="${esc(FILTERS.q)}"/>
           <select id="f-country"><option value="">All countries</option>${[...new Set(feed.opportunities.map((o) => o.country).filter(Boolean))].sort().map((c) => `<option value="${c}" ${FILTERS.country === c ? 'selected' : ''}>${c}</option>`).join('')}</select>
-          <select id="f-family"><option value="">All roles</option>${[...new Set(feed.opportunities.map((o) => o.role_family).filter(Boolean))].sort().map((c) => `<option value="${c}" ${FILTERS.family === c ? 'selected' : ''}>${c.replace(/_/g, ' ')}</option>`).join('')}</select>
+          <select id="f-family"><option value="">All roles</option>${[...new Set(feed.opportunities.map((o) => o.role_family).filter(Boolean))].sort().map((c) => `<option value="${c}" ${FILTERS.family === c ? 'selected' : ''}>${titleCase(c)}</option>`).join('')}</select>
           <select id="f-seniority"><option value="">All levels</option>${['junior', 'mid', 'senior', 'staff', 'lead', 'principal'].map((c) => `<option value="${c}" ${FILTERS.seniority === c ? 'selected' : ''}>${c}</option>`).join('')}</select>
           <select id="f-degree">
             <option value="">Any education</option>
@@ -1774,7 +1789,7 @@ async function renderRadar() {
     const active = [];
     if (FILTERS.q) active.push(FILTERS.q);
     if (FILTERS.country) active.push(FILTERS.country);
-    if (FILTERS.family) active.push(FILTERS.family.replace(/_/g, ' '));
+    if (FILTERS.family) active.push(titleCase(FILTERS.family));
     if (FILTERS.seniority) active.push(FILTERS.seniority);
     if (FILTERS.degree) active.push('education: ' + FILTERS.degree);
     if (FILTERS.visa) active.push('visa only');
@@ -1865,7 +1880,7 @@ function renderFacets(rows) {
     <div style="margin-top:12px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Top locations</div>
     ${countries.map(([c, n]) => `<div style="margin-top:6px"><div class="facet-row" style="border:none;padding:0"><span>${esc(c)}</span><span class="mono muted">${n}</span></div><div class="facet-mini"><i style="width:${Math.round((n / maxC) * 100)}%"></i></div></div>`).join('')}
     <div style="margin-top:12px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Disciplines</div>
-    ${families.map(([f, n]) => `<div style="margin-top:6px"><div class="facet-row" style="border:none;padding:0"><span>${esc(f.replace(/_/g, ' '))}</span><span class="mono muted">${n}</span></div><div class="facet-mini"><i style="width:${Math.round((n / maxF) * 100)}%"></i></div></div>`).join('')}
+    ${families.map(([f, n]) => `<div style="margin-top:6px"><div class="facet-row" style="border:none;padding:0"><span>${esc(titleCase(f))}</span><span class="mono muted">${n}</span></div><div class="facet-mini"><i style="width:${Math.round((n / maxF) * 100)}%"></i></div></div>`).join('')}
   `;
 }
 
@@ -2807,7 +2822,7 @@ async function renderPulse() {
   const maxFam = Math.max(...p.families.map((f) => f.median), 1);
   const maxCty = Math.max(...p.countries.map((c) => c.median), 1);
   const bar = (v, max) => Math.max(3, Math.round((v / max) * 100));
-  const famLabel = (f) => f.replace(/_/g, ' ');
+  const famLabel = (f) => titleCase(f);
   $('#view').innerHTML = `
     <div class="row" style="gap:14px;margin-bottom:16px;flex-wrap:wrap">
       <div class="card" style="flex:1;min-width:150px"><h3>Corpus</h3><div class="big mono">${p.totals.opportunities}</div><div class="muted" style="font-size:11px">live opportunities</div></div>
