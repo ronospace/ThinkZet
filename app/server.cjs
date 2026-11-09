@@ -2247,6 +2247,21 @@ const server = http.createServer(async (req, res) => {
   // Public SEO surfaces render client-side from the same rate engine.
   if (/^\/(salary|skills)\/[^/]+(\/[A-Za-z]{2})?$/.test(pathname)) return serveStatic(req, res, '/index.html');
 
+  // robots.txt: the sitemap must be advertised here, and the app screens kept out of the index.
+  if (pathname === '/robots.txt') {
+    const body = [
+      'User-agent: *',
+      'Allow: /',
+      'Disallow: /?app=1',
+      'Disallow: /api/',
+      '',
+      `Sitemap: ${publicOrigin(req)}/sitemap.xml`,
+      '',
+    ].join('\n');
+    res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'public, max-age=3600' });
+    return res.end(body);
+  }
+
   // Sitemap built from the live corpus: every role x country we can defend with data.
   if (pathname === '/sitemap.xml') {
     const roles = db.prepare(`SELECT role_family, COUNT(*) n FROM opportunities WHERE status='open'
