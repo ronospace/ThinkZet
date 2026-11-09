@@ -581,7 +581,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .cap:hover{border-color:var(--line2);transform:translateY(-1px)}
 .cap h3{font-size:var(--text-base);margin:0 0 5px;color:var(--ink);letter-spacing:var(--tracking-tight)}
 .cap p{font-size:var(--text-sm);color:var(--muted);line-height:var(--leading-normal);margin:0}
-.price-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4);align-items:start}
+.price-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));max-width:760px;margin:0 auto;gap:var(--sp-4);align-items:start}
 .price{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-6);box-shadow:var(--shadow-sm);position:relative}
 .price.featured{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),var(--shadow)}
 .price-tag{position:absolute;top:-9px;left:var(--sp-6);background:var(--accent);color:#fff;font-size:var(--text-2xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;padding:3px 9px;border-radius:999px}
@@ -792,18 +792,6 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
             <li>Cover letters and interview prep</li>
           </ul>
           <button class="btn" id="price-pro">Unlock Pro</button>
-        </div>
-        <div class="price">
-          <h3>Pro+</h3>
-          <div class="price-v">&euro;49<span> a month</span></div>
-          <div class="price-alt">For people moving this quarter</div>
-          <ul>
-            <li>Everything in Pro</li>
-            <li>One 1:1 session with a vetted coach</li>
-            <li>Relocation readiness pack</li>
-            <li>Quarterly trajectory review</li>
-          </ul>
-          <button class="btn ghost" id="price-plus">Talk to us</button>
         </div>
       </div>
     </section>
@@ -1236,8 +1224,6 @@ if (proBtn) proBtn.onclick = async () => {
   document.getElementById('app-shell').style.display = '';
   go('auth');
 };
-const plusBtn = document.getElementById('price-plus');
-if (plusBtn) plusBtn.onclick = () => { toast('We will be in touch about Pro+'); };
 
 document.getElementById('land-signin').onclick = () => {
   document.getElementById('landing').style.display = 'none';
@@ -2506,14 +2492,6 @@ async function renderPlan() {
           ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
           : `<div style="margin-top:14px" class="row"><button class="btn sm" id="up-month">€19.99 monthly</button><button class="btn sm ghost" id="up-year">€149.99 yearly</button></div>`}
       </div>
-      <div class="card tone-violet" style="border-color:var(--ai-border);background:linear-gradient(180deg,color-mix(in srgb,var(--accent) 10%,var(--panel)),var(--panel))">
-        <h3>Pro+</h3>
-        <div class="big mono" style="margin:8px 0">€49<span style="font-size:14px;color:var(--muted)">/month</span></div>
-        <div class="dim" style="font-size:12.5px">For people making a move this quarter</div>
-        <div style="margin-top:12px">${(p.plans.plus?.features || []).map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--tone-kicker, var(--tone-kicker))">✦</span></div>`).join('')}</div>
-        ${p.plan === 'plus'
-          ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
-          : `<div style="margin-top:14px"><button class="btn sm ghost" id="up-plus" style="border-color:var(--ai-border);color:var(--accent)">Talk to us about Pro+</button></div>`}
       </div>
     </div>
     <div class="card" style="margin-top:14px">
@@ -2537,11 +2515,6 @@ async function renderPlan() {
   if ($('#up-month')) $('#up-month').onclick = () => checkout('monthly');
   if ($('#up-year')) $('#up-year').onclick = () => checkout('annual');
   if ($('#downgrade')) $('#downgrade').onclick = async () => { await post('/api/billing/cancel', {}); toast('Switched to Free'); go('plan'); };
-  if ($('#up-plus')) $('#up-plus').onclick = async () => {
-    const r = await post('/api/plan', { plan: 'plus', cycle: 'monthly' });
-    toast(r.note || 'Pro+ activated');
-    go('plan');
-  };
 }
 
 /* ---------------- negotiation ---------------- */

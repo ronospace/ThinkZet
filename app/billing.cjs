@@ -140,6 +140,29 @@ async function createCheckout({ userId, email, cycle, plan = 'pro' }) {
 }
 
 // ---- entitlement ----
+// The subscription we recorded for this user, if any. Checkout writes a 'link' row with the sub id.
+function subscriptionFor(userId) {
+  const row = db.prepare(`SELECT external_id FROM billing_events
+    WHERE user_id=? AND kind='link' AND external_id LIKE 'sub_%' ORDER BY id DESC LIMIT 1`).get(userId);
+  return row ? row.external_id : null;
+}
+
+// Cancel at the end of the paid period, in Stripe itself. Access continues until the period ends,
+// which is what the customer paid for; the webhook then downgrades on customer.subscription.deleted.
+// Cancelling only in our database would leave Stripe billing the card every month.
+async function cancelSubscription(userId) {
+  // Check what we have on record first: with no subscription there is nothing at Stripe to cancel,
+  // so a local switch-off is the honest answer. With a subscription, Stripe must confirm.
+  const subId = subscriptionFor(userId);
+  if (!subId) return { ok: false, reason: 'no-subscription' };
+  const m = mode();
+  if (m === 'unconfigured' || m === 'blocked-live') return { ok: false, reason: 'no-stripe', note: status().note };
+  const sub = await stripe(`subscriptions/${subId}`, { cancel_at_period_end: 'true' });
+  const periodEnd = sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null;
+  setPlan(userId, 'pro', { source: 'stripe', externalId: sub.id, status: sub.status, periodEnd });
+  return { ok: true, subscriptionId: sub.id, status: sub.status, cancelAtPeriodEnd: !!sub.cancel_at_period_end, periodEnd };
+}
+
 function setPlan(userId, plan, { cycle = 'monthly', source = 'local', externalId = null, status = 'active', periodEnd = null } = {}) {
   db.prepare(`INSERT INTO plan_state (user_id,plan,cycle,since) VALUES (?,?,?,datetime('now'))
     ON CONFLICT(user_id) DO UPDATE SET plan=excluded.plan, cycle=excluded.cycle, since=datetime('now')`)
@@ -291,4 +314,4 @@ async function reconcile() {
   return { checked: rows.length, results };
 }
 
-module.exports = { PLANS, CONFIG, mode, status, createCheckout, setPlan, planFor, verifySignature, handleEvent, verifyPrices, stripeGet, reconcile };
+module.exports = { PLANS, CONFIG, mode, status, createCheckout, cancelSubscription, subscriptionFor, setPlan, planFor, verifySignature, handleEvent, verifyPrices, stripeGet, reconcile };

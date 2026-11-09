@@ -1941,9 +1941,10 @@ route('POST', /^\/api\/referrals\/link$/, async (req, res) => {
 });
 
 // ---- billing / plans ----
-// Pro+ is the expansion tier: the same intelligence, plus a human and a relocation pack.
-// It exists because the top 10% of users will happily pay 3x for someone to review their plan.
-const PLUS_FEATURES = [
+// Pro+ is not on sale. The coach session, relocation pack and multi-profile twins do not exist yet,
+// so the tier is hidden from the catalogue, the landing page and the plan screen until they do.
+// Keep the intended scope here as a note for whoever builds it.
+const PLUS_FEATURES_PLANNED = [
   'Everything in Pro',
   'One 1:1 session with a vetted career coach',
   'Relocation readiness pack (visa, cost of living, salary by city)',
@@ -1962,9 +1963,11 @@ route('GET', /^\/api\/plan$/, async (req, res) => {
   };
   json(res, 200, {
     plan,
-    plans: { ...BILLING.PLANS, plus: { key: 'plus', label: 'Pro+', price: 49, period: 'month', features: PLUS_FEATURES } },
+    // Pro+ is hidden until the coach session, relocation pack and multi-profile twins exist.
+    // The catalogue is the single source for what is on sale, so it is not listed here at all.
+    plans: { ...BILLING.PLANS },
     usage,
-    limits: plan === 'pro' || plan === 'plus' ? null : { matches: 10, tracked: 5 },
+    limits: plan === 'pro' ? null : { matches: 10, tracked: 5 },
     since: row ? row.since : null,
     billing: BILLING.status(),
   });
@@ -1972,15 +1975,24 @@ route('GET', /^\/api\/plan$/, async (req, res) => {
 
 // Checkout: real Stripe when configured, honest local switch when not.
 route('POST', /^\/api\/billing\/checkout$/, async (req, res) => {
+  // Payment must attach to the person paying. Signed out, resolveUser() is the shared demo account,
+  // so a charge would be credited to nobody and the buyer would receive nothing.
+  const signedIn = AUTH.currentUser(req);
+  if (!signedIn) return json(res, 401, { error: 'Sign in first so your plan is attached to your account.', needsAuth: true });
   const body = await readBody(req);
-  const uid = resolveUser(req);
+  const uid = signedIn.id;
   const user = db.prepare('SELECT * FROM users WHERE id=?').get(uid);
   const cycle = body.cycle === 'annual' ? 'annual' : 'monthly';
 
   try {
     const r = await BILLING.createCheckout({ userId: uid, email: user?.email, cycle });
+    if (r.fallback && process.env.NODE_ENV === 'production') {
+      // A misconfigured production server must never hand out paid access for free.
+      console.log(`  ! checkout refused in production: ${r.note}`);
+      return json(res, 503, { error: 'Payments are temporarily unavailable. You have not been charged. Please try again shortly.' });
+    }
     if (r.fallback) {
-      // No keys: grant locally so the product is testable, and say so plainly.
+      // Development only, no keys: grant locally so the product is testable, and say so plainly.
       BILLING.setPlan(uid, 'pro', { cycle, source: 'local-fallback' });
       AN.track(uid, 'plan.activated', { cycle, source: 'local-fallback' });
       return json(res, 200, { ok: true, mode: r.mode, fallback: true, note: r.note });
@@ -1993,11 +2005,39 @@ route('POST', /^\/api\/billing\/checkout$/, async (req, res) => {
   }
 });
 
+// Pro+ has no checkout on purpose: the coach session, relocation pack and multi-profile twins
+// are not built. Taking €49 for them would be selling something that does not exist. Interest is
+// recorded so we know whether to build it.
+route('POST', /^\/api\/plus\/interest$/, async (req, res) => {
+  const u = AUTH.currentUser(req);
+  AN.track(u ? u.id : resolveUser(req), 'plus.interest', { signedIn: !!u });
+  log(u ? u.id : null, 'plus.interest', 'billing', u ? u.id : null);
+  json(res, 200, { ok: true, note: 'You are on the Pro+ list. We will email you when it opens, and you will not be charged before then.' });
+});
+
 route('POST', /^\/api\/billing\/cancel$/, async (req, res) => {
-  const uid = resolveUser(req);
-  BILLING.setPlan(uid, 'free', { source: 'user' });
-  log(uid, 'billing.cancelled', 'billing', uid);
-  json(res, 200, { ok: true, plan: 'free' });
+  // Cancelling must reach Stripe, or the card keeps being charged while the app says "Free".
+  const u = AUTH.currentUser(req);
+  if (!u) return json(res, 401, { error: 'Sign in first', needsAuth: true });
+  try {
+    const r = await BILLING.cancelSubscription(u.id);
+    if (r.ok) {
+      log(u.id, 'billing.cancel_at_period_end', 'billing', u.id, { subscription: r.subscriptionId, periodEnd: r.periodEnd });
+      AN.track(u.id, 'billing.cancel_requested', { periodEnd: r.periodEnd });
+      return json(res, 200, { ok: true, plan: 'pro', cancelAtPeriodEnd: true, periodEnd: r.periodEnd,
+        note: r.periodEnd ? `Cancelled. Pro stays until ${String(r.periodEnd).slice(0, 10)}, then you move to Free.` : 'Cancelled at the end of the period.' });
+    }
+    if (r.reason === 'no-subscription') {
+      // Nothing at Stripe to cancel (no card on file): switch off locally and say so.
+      BILLING.setPlan(u.id, 'free', { source: 'user' });
+      log(u.id, 'billing.cancelled', 'billing', u.id, { stripe: 'no subscription' });
+      return json(res, 200, { ok: true, plan: 'free', note: 'Switched to Free. No Stripe subscription was on file.' });
+    }
+    return json(res, 503, { error: 'Stripe is not reachable right now, so nothing was cancelled. Your plan is unchanged. Please try again shortly.' });
+  } catch (e) {
+    console.log(`  ! cancel failed: ${e.message}`);
+    return json(res, 502, { error: 'Stripe rejected the cancellation, so nothing changed. Please try again or contact us.' });
+  }
 });
 
 // Verify the configured prices against Stripe – catches mismatches before a customer does.

@@ -4,7 +4,10 @@ const { DatabaseSync } = require('node:sqlite');
 const path = require('node:path');
 const fs = require('node:fs');
 
-const DB_PATH = path.join(__dirname, '..', 'data', 'careeros.db');
+// DATA_DIR lets a container (or a test) point the database somewhere explicit. The Dockerfile
+// already sets DATA_DIR=/app/data, which is the same place this resolved to before.
+const DATA_DIR = process.env.DATA_DIR || path.join(__dirname, '..', 'data');
+const DB_PATH = path.join(DATA_DIR, 'careeros.db');
 fs.mkdirSync(path.dirname(DB_PATH), { recursive: true });
 
 const db = new DatabaseSync(DB_PATH);
