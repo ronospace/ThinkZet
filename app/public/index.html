@@ -235,6 +235,12 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .bar > i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent2),var(--rose))}
 .empty{padding:60px 20px;text-align:center;color:var(--muted)}
 h2.section{font-size:15px;margin:26px 0 12px;font-weight:650;letter-spacing:-.01em}
+/* Section headings that describe system health carry a small tinted icon, so the group reads at a glance. */
+h2.section-ico{display:flex;align-items:center;gap:8px}
+h2.section-ico:before{content:"";width:18px;height:18px;border-radius:6px;flex:none;background:color-mix(in srgb,var(--accent2) 16%,var(--panel));border:1px solid color-mix(in srgb,var(--accent2) 40%,var(--line));background-image:radial-gradient(circle at 50% 50%,var(--accent2) 0 2.2px,transparent 2.4px);background-repeat:no-repeat;background-position:center}
+h2.section-ico[data-ico="pulse"]:before{background-image:linear-gradient(90deg,transparent 0 18%,var(--accent2) 18% 26%,transparent 26% 38%,var(--accent2) 38% 48%,transparent 48% 62%,var(--accent2) 62% 70%,transparent 70%);background-size:12px 2px;background-repeat:no-repeat;background-position:center}
+h2.section-ico[data-ico="heart"]:before{background-image:none;border-color:color-mix(in srgb,var(--good) 45%,var(--line));background-color:color-mix(in srgb,var(--good) 14%,var(--panel));box-shadow:inset 0 0 0 3px color-mix(in srgb,var(--good) 22%,transparent)}
+h2.section-ico[data-ico="stack"]:before{background-image:linear-gradient(180deg,var(--accent2) 0 2px,transparent 2px 6px,var(--accent2) 6px 8px,transparent 8px 12px,var(--accent2) 12px 14px,transparent 14px);background-size:10px 14px;background-repeat:no-repeat;background-position:center}
 h2.section:first-child{margin-top:0}
 
 /* ---------- onboarding ---------- */
@@ -2272,7 +2278,7 @@ async function renderScores() {
         </div>`;
       }).join('')}
     </div>
-    ${v2 && v2.levers ? `<h2 class="section">Do this next</h2>
+    ${v2 && v2.levers ? `<h2 class="section">Do This Next</h2>
     <div class="card">
       ${v2.levers.slice(0, 3).map((l, i) => `<div style="display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)">
         <div class="mono muted" style="width:18px">${i + 1}</div>
@@ -2281,7 +2287,7 @@ async function renderScores() {
         <div class="mono" style="font-size:12px;color:${l.value < 40 ? 'var(--bad)' : l.value < 70 ? 'var(--warn)' : 'var(--good)'}">${l.value}</div>
       </div>`).join('')}
       <div class="note" style="margin-top:12px">Ranked by your weakest score. Fixing the lowest number moves the overall score more than polishing the highest.</div>
-    </div>` : `<h2 class="section">What to attack first</h2>
+    </div>` : `<h2 class="section">What to Attack First</h2>
     <div class="card dim" style="font-size:13px">Your lowest score is <b>${cards.slice().sort((a, c) => a[1] - c[1])[0][0].toLowerCase()}</b>.</div>`}
   `;
 }
@@ -2559,7 +2565,7 @@ async function renderLearning() {
         <div style="margin-top:16px"><button class="btn sm" id="l-outcome">Report an outcome</button></div>
       </div>
     </div>
-    <h2 class="section">Your measured funnel</h2>
+    <h2 class="section">Your Measured Funnel</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="card"><h3>Applications</h3><div class="big mono">${intel.mine.funnel.applied}</div></div>
       <div class="card"><h3>Interview Rate</h3><div class="big mono">${intel.mine.funnel.interviewRate == null ? '–' : intel.mine.funnel.interviewRate + '%'}</div><div class="muted" style="font-size:11px">measured, not modelled</div></div>
@@ -2572,7 +2578,7 @@ async function renderLearning() {
       <div class="kv" style="margin-top:12px"><span>Consented outcomes reported</span><span class="mono">${intel.market.reportedOutcomes}</span></div>
       <div class="kv"><span>Offers with compensation</span><span class="mono">${intel.market.offers}</span></div>
     </div>
-    <h2 class="section">Recent outcomes</h2>
+    <h2 class="section">Recent Outcomes</h2>
     <div class="card">
       ${recent.outcomes.length ? recent.outcomes.map((o) => `<div class="kv"><span>${esc(o.outcome_type)}${o.salary_delta_pct != null ? ' · ' + (o.salary_delta_pct > 0 ? '+' : '') + o.salary_delta_pct + '%' : ''}</span><span class="muted">${new Date(o.occurred_at).toLocaleDateString('en-GB')}</span></div>`).join('') : '<div class="muted">No outcomes yet. Every reported outcome is data no competitor has.</div>'}
     </div>`;
@@ -2604,7 +2610,7 @@ async function renderSearches() {
         <div class="muted" style="font-size:11px;margin-top:10px">created ${new Date(s.created_at).toLocaleDateString('en-GB')}</div>
       </div>`).join('') : '<div class="card muted">No saved searches yet.</div>'}
     </div>
-    <h2 class="section">Why this matters</h2>
+    <h2 class="section">Why This Matters</h2>
     <div class="card dim" style="font-size:13px">Saved searches are the foundation of the daily brief: tomorrow the engine re-runs them against fresh inventory and tells you only what is new. That is the habit loop – you do not come back to search, you come back because it found something while you were asleep.</div>`;
   $('#s-add').onclick = async () => {
     const name = $('#s-name').value.trim() || 'Untitled search';
@@ -2691,7 +2697,7 @@ async function renderNegotiation() {
       </div>
     </div>
 
-    <h2 class="section">What to say when they name a number</h2>
+    <h2 class="section">What to Say When They Name a Number</h2>
     <div class="card">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">The ask</h3><button class="chip cp" data-t="${esc(n.askScript)}" style="cursor:pointer">copy</button></div>
       <div style="margin-top:10px;font-size:13.5px;line-height:1.75;font-style:italic;color:var(--tone-ink, var(--tone-ink))">${esc(n.askScript)}</div>
@@ -2886,7 +2892,7 @@ async function renderAnalytics() {
       </div>
     </div>
 
-    <h2 class="section">Step by step</h2>
+    <h2 class="section">Step by Step</h2>
     <div class="card">
       ${f.steps.map((s, i) => `<div style="padding:10px 0;border-bottom:1px solid var(--line)">
         <div class="row" style="justify-content:space-between">
@@ -2992,7 +2998,7 @@ async function renderTrajectory(months) {
       </div>
     </div>
 
-    <h2 class="section">The five paths</h2>
+    <h2 class="section">The Five Paths</h2>
     <div class="card">
       ${t.paths.map((p) => `<div style="padding:12px 0;border-bottom:1px solid var(--line)">
         <div class="row" style="justify-content:space-between;align-items:baseline">
@@ -3070,7 +3076,7 @@ async function renderOps() {
   const lc = await api('/api/opportunities/lifecycle');
   const last = live.last;
   $('#view').innerHTML = `
-    <h2 class="section">Live ingestion</h2>
+    <h2 class="section section-ico" data-ico="pulse">Live Ingestion</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="card"><h3>Live Opportunities</h3><div class="big mono">${live.liveTotal}</div><div class="muted" style="font-size:11px">from real APIs</div></div>
       <div class="card"><h3>Last Run Kept</h3><div class="big mono">${last ? last.kept : '–'}</div><div class="muted" style="font-size:11px">${last ? last.droppedNonTech + ' non-tech dropped' : ''}</div></div>
@@ -3097,7 +3103,7 @@ async function renderOps() {
         <div class="note" style="margin-top:12px">Classification is deterministic: title must contain core tech vocabulary, exclude internships/trades/sales, then map to one of 11 role families by signal priority.</div>
       </div>
     </div>
-    <h2 class="section">Listing health</h2>
+    <h2 class="section section-ico" data-ico="heart">Listing Health</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="card"><h3>Live Opportunities</h3><div class="big mono">${lc.total}</div><div class="muted" style="font-size:11px">${lc.fresh7} posted this week</div></div>
       <div class="card"><h3>Feed Health</h3><div class="big mono">${lc.health}%</div><div class="muted" style="font-size:11px">after removing ghosts</div></div>
@@ -3105,7 +3111,7 @@ async function renderOps() {
       <div class="card"><h3>Stale (&gt;60 days)</h3><div class="big mono">${lc.stale}</div><div class="muted" style="font-size:11px">deprioritised in ranking</div></div>
     </div>
     <div class="card" style="margin-top:14px"><div class="dim" style="font-size:12.5px">${esc(lc.note)}</div></div>
-    <h2 class="section">Corpus</h2>
+    <h2 class="section section-ico" data-ico="stack">Corpus</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="card"><h3>Raw Listings Ingested</h3><div class="big mono">${o.ingest.raw}</div></div>
       <div class="card"><h3>Canonical Opportunities</h3><div class="big mono">${o.totalOpportunities}</div></div>
@@ -3249,7 +3255,7 @@ async function renderBrief() {
           </div>
         </div>
 
-        <h2 class="section">Do these, in this order</h2>
+        <h2 class="section">Do These, in This Order</h2>
         <div class="card">
           ${b.actions.map((a, i) => `<div class="action" data-opp="${a.opportunityId || ''}" style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer">
             <div class="mono" style="color:var(--muted);font-size:12px;width:18px;padding-top:2px">${i + 1}</div>
@@ -3258,10 +3264,10 @@ async function renderBrief() {
           </div>`).join('')}
         </div>
 
-        <h2 class="section">New at your bar</h2>
+        <h2 class="section">New at Your Bar</h2>
         <div>${(b.newHighMatch || []).map(oppCard).join('') || '<div class="card muted">Nothing new at 80+ since your last visit.</div>'}</div>
 
-        ${b.searchHits && b.searchHits.length ? `<h2 class="section">Your saved searches found</h2>
+        ${b.searchHits && b.searchHits.length ? `<h2 class="section">Your Saved Searches Found</h2>
         ${b.searchHits.map((s) => `<div class="card" style="margin-bottom:10px"><h3>${esc(s.name)}</h3><div class="dim" style="font-size:12px;margin-top:6px">${s.hits.map((h) => esc(h.title) + ' · ' + esc(h.company) + ' <span class="muted">(' + h.match_score + ')</span>').join('<br/>')}</div></div>`).join('')}` : ''}
       </div>
       <div>
