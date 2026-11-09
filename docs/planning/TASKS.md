@@ -28,6 +28,7 @@ Last updated: 9 November 2026.
 | COPY-25 | COPY | Payoff card no longer claims live postings while labelled sample data | Us | DONE | rendered copy |
 | SEO-02 | SEO | robots.txt added: allows the site, keeps `/?app=1` and `/api/` out of the index, and advertises the sitemap at the public origin | Us | DONE | served as text/plain with the Sitemap line |
 | UI-26 | UI | The salutation mark uses a three-stop gradient (violet, rose, blue) in both themes instead of a two-stop ramp | Us | DONE | computed background-image in light and dark |
+| UI-25g | UI | Once a demo persona is running, Demo Mode disappears from the menu; Run Ingest keeps the row and Sign Out takes the right slot for a real session | Us | DONE | measured: after loading, demo none and demoRunning true |
 | UI-25f | UI | Demo Mode sits to the right of Run Ingest on one row when signed out, the same slot Sign Out uses for a session | Us | DONE | measured at 1440px: both at 107px, Demo Mode right edge 1362px against a 1370px menu edge |
 | UI-25e | UI | Demo Mode hidden on onboarding for a signed-in person, and loadDemo no longer claims success when the server refuses it | Us | DONE | signed-in demo 403 is now surfaced; button absent when authed |
 | UI-25d | UI | Sign Out is hidden while signed out (demo mode): the menu shows Demo Mode alone, and Sign Out appears only for a real session | Us | DONE | measured: signed out reports demo flex, signout none |

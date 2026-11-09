@@ -1039,7 +1039,7 @@ const track = (event, props) => { try { post('/api/track', { event, props: props
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2600); };
 
-let STATE = { profile: null, view: 'radar', feed: null, types: [], horizon: 'balanced', sort: 'score' };
+let STATE = { profile: null, view: 'radar', feed: null, types: [], horizon: 'balanced', sort: 'score', demo: false };
 const PERIOD_LABEL = { hour: '/hr', year: '/yr', month: '/mo', stipend: ' stipend', oneoff: ' one-off', prize: ' prize', fee: ' fee', investment: ' investment', equity: ' equity' };
 const TYPE_LABEL = { job: 'Jobs', contract: 'Contracts', fellowship: 'Fellowships', grant: 'Grants', accelerator: 'Accelerators', cofounder: 'Co-founder', research: 'Research', hackathon: 'Hackathons', speaking: 'Speaking', mentorship: 'Mentorship' };
 
@@ -1597,6 +1597,7 @@ async function loadDemo() {
   const r = await post('/api/demo', {});
   b.disabled = false; b.textContent = 'Demo Mode';
   if (r && r.error) { toast(r.error); return; }   // never claim a persona that was not loaded
+  STATE.demo = true;
   await boot();
   go('radar');
   toast('Demo persona loaded – 8 years, €78k, targeting DE/NL');
@@ -3161,7 +3162,7 @@ async function boot() {
   const auth = await api('/api/auth/me');
   STATE.authed = !!auth.user;
   STATE.userRecord = auth.user;
-  const demoBtn = document.getElementById('load-demo'); if (demoBtn) demoBtn.hidden = STATE.authed;
+  const demoBtn = document.getElementById('load-demo'); if (demoBtn) demoBtn.hidden = STATE.authed || STATE.demo;
   const outBtn = document.getElementById('logout'); if (outBtn) outBtn.hidden = !STATE.authed;
   if (!STATE.authed) {
     $('#profile-pill').textContent = 'Signed Out';
