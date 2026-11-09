@@ -169,12 +169,14 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 .tb-drop-label{font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
 .tb-drop-state{font-size:var(--text-xs);color:var(--ink2);font-weight:600}
 .tb-drop button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:8px 10px;border-radius:8px;font-size:var(--text-sm);color:var(--ink2)}
+.tb-drop button[hidden]{display:none!important}
 .tb-drop button:hover{background:var(--panel2);color:var(--ink)}
 .tb-drop button svg{width:14px;height:14px;opacity:.75}
-.tb-row{display:flex;align-items:center;justify-content:space-between;gap:6px}
-.tb-row button{width:auto;flex:0 0 auto}
+.tb-row{display:flex;align-items:center;flex-wrap:nowrap;gap:4px;padding:0 2px}
+.tb-row button{width:auto!important;flex:0 1 auto;white-space:nowrap;padding:8px 8px}
 .tb-signout{margin-left:auto;color:var(--ink2)}
 .tb-signout:hover{color:var(--bad)}
+@media(max-width:400px){.tb-row button{font-size:13px;padding:8px 6px}.tb-row button svg{width:13px;height:13px}}
 .theme-btn{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
 .theme-btn:hover{color:var(--ink);border-color:var(--line2);background:var(--panel3)}
 .theme-btn svg{width:15px;height:15px;display:none}

@@ -26,6 +26,7 @@ Last updated: 9 November 2026.
 | COPY-26 | COPY | Hero pill reads "Free Intelligent Career Value Check" | Us | DONE | rendered HTML |
 | UI-19 | UI | Onboarding step indicator centred with its heading | Us | DONE | markup |
 | COPY-25 | COPY | Payoff card no longer claims live postings while labelled sample data | Us | DONE | rendered copy |
+| UI-25c | UI | `[hidden]` now beats `display:flex`, so Demo Mode is really gone for a signed-in person; the Run Ingest and Sign Out pair cannot wrap and stays flush right | Us | DONE | measured: same row at 93px, Sign Out right edge 371px against a 379px menu edge; hidden button reports display none |
 | UI-25b | UI | Sign Out moved to the right of Run Ingest on one row; the menu is now three rows instead of four | Us | DONE | measured: same row (top 93px both), Sign Out right edge 374px against a 379px menu edge |
 | UI-24 | UI | Onboarding actions centred as a group (centre 197px on a 393px screen), equal 132px cells, Edit Details on the left and Open My Radar on the right | Us | DONE | measured: group centre equals viewport centre |
 | UI-23 | UI | Account menu: the state is a label on the right of an "Account" heading instead of a row that repeated "Signed Out"; onboarding Continue and Demo Mode are equal cells side by side | Us | DONE | 393px screenshot, 59/59 API, 10/10 browser |
