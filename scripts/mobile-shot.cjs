@@ -78,7 +78,7 @@ function cdp(port, path, method = 'GET') {
   if (process.env.FLIPQ) {
     const ev = async (expr) => (await send('Runtime.evaluate', { returnByValue: true, awaitPromise: true, expression: expr })).result.value;
     const wheel = async (dy, n, gap) => { for (let i = 0; i < n; i++) { await send('Input.dispatchMouseEvent', { type: 'mouseWheel', x: 700, y: 500, deltaX: 0, deltaY: dy }); await new Promise((r) => setTimeout(r, gap)); } };
-    const state = () => ev("JSON.stringify({view:STATE.view,top:Math.round(document.querySelector('main').scrollTop),atEnd:(()=>{const m=document.querySelector('main');return m.scrollTop+m.clientHeight>=m.scrollHeight-2})(),hint:document.querySelector('.flip-hint').classList.contains('show')})");
+    const state = () => ev("JSON.stringify({view:STATE.view,top:Math.round(document.querySelector('main').scrollTop),atEnd:(()=>{const m=document.querySelector('main');return m.scrollTop+m.clientHeight>=m.scrollHeight-2})(),hint:false})");
     const pause = (ms) => new Promise((r) => setTimeout(r, ms));
     const log = [];
     await ev("go('pulse')"); await pause(1500);

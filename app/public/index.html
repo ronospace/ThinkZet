@@ -155,6 +155,8 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 .topbar .sub{font-size:12px;color:var(--muted)}
 .topbar .spacer{flex:1}
 .tb-title{min-width:0;flex:0 1 auto}
+.tb-line{display:flex;align-items:center;gap:10px;min-width:0}
+.tb-line h1{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .topbar .pill{flex:none}
 .topbar .tb-icon,.topbar .theme-btn,.topbar .tb-menu{flex:none}
 .tb-icon{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
@@ -645,13 +647,6 @@ html.is-landing .hero-sec,html.is-landing .land-footer{scroll-margin-top:76px}
 @media(prefers-reduced-motion:no-preference){html.is-landing body{scroll-behavior:smooth}}
 @media(max-width:900px){html.is-landing body{scroll-snap-type:none}}
 sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin-left:1px;letter-spacing:0}
-.flip-hint{position:fixed;left:50%;bottom:26px;transform:translate(-50%,12px);z-index:55;display:flex;flex-direction:column;gap:7px;align-items:stretch;min-width:240px;padding:10px 16px 12px;border:1px solid var(--ai-border);border-radius:12px;background:var(--panel);box-shadow:var(--shadow);opacity:0;pointer-events:none;transition:opacity .16s ease,transform .16s ease}
-.flip-hint.up{bottom:auto;top:84px;transform:translate(-50%,-12px)}
-.flip-hint.show{opacity:1;transform:translate(-50%,0)}
-.flip-t{font-size:var(--text-sm);font-weight:600;color:var(--ink);text-align:center}
-.flip-bar{display:block;height:3px;border-radius:3px;background:var(--track);overflow:hidden}
-.flip-bar b{display:block;height:100%;background:var(--accent2);transform-origin:left;transform:scaleX(0);transition:transform .08s linear}
-@media(prefers-reduced-motion:reduce){.flip-hint,.flip-bar b{transition:none}}
 </style>
 </head>
 <body>
@@ -898,10 +893,9 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
   <main>
     <div class="topbar">
       <div class="tb-title">
-        <h1 id="view-title">Opportunity Radar</h1>
+        <div class="tb-line"><h1 id="view-title">Opportunity Radar</h1><span class="pill live" id="live-pill"><i></i>live</span></div>
         <div class="sub" id="view-sub">Live</div>
       </div>
-      <span class="pill live" id="live-pill"><i></i>live</span>
       <div class="spacer"></div>
       <button class="tb-icon" id="cmdk" title="Search everything (Cmd K)" aria-label="Search everything">
         <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7.2" cy="7.2" r="4.4"/><path d="M10.4 10.4L13.6 13.6"/></svg>
@@ -3210,15 +3204,12 @@ document.querySelectorAll('#nav button').forEach((b) => { b.onclick = () => go(b
    the scroll that brought you there, keyboard, touch and pinch-zoom never trigger it. */
 (function screenFlip() {
   if (!window.matchMedia('(pointer:fine)').matches) return;
-  const NEED = 110;            // wheel distance beyond the edge before it moves (one firm notch)
-  const GESTURE_GAP = 140;     // ms of silence that separates one gesture from the next
-  const SETTLE = 650;          // ms before another move is allowed
-  let acc = 0, dir = 0, armed = false, lastT = 0, lockedUntil = 0, timer = null;
-  const hint = document.createElement('div');
-  hint.className = 'flip-hint'; hint.setAttribute('aria-hidden', 'true');
-  hint.innerHTML = '<span class="flip-t"></span><i class="flip-bar"><b></b></i>';
-  document.body.appendChild(hint);
-
+  // No threshold to fight through. One gesture at the edge moves the screen; the guard below only
+  // stops a single continuous gesture from firing twice, and momentum from the scroll that brought
+  // you here never counts because that gesture began mid-page.
+  const GESTURE_GAP = 220;   // ms of silence that separates one gesture from the next
+  const SETTLE = 420;        // ms before another move is allowed
+  let dir = 0, armed = false, lastT = 0, lockedUntil = 0;
   const order = () => [...document.querySelectorAll('#nav button')].filter((b) => b.offsetParent !== null);
   const scroller = () => {
     const m = document.querySelector('main');
@@ -3232,37 +3223,27 @@ document.querySelectorAll('#nav button').forEach((b) => { b.onclick = () => go(b
     const list = order(); const i = list.findIndex((b) => b.dataset.view === STATE.view);
     return i < 0 ? null : list[i + d] || null;
   };
-  const hide = () => { hint.classList.remove('show'); acc = 0; armed = false; };
 
   window.addEventListener('wheel', (e) => {
     const now = performance.now();
     const fresh = now - lastT > GESTURE_GAP;
     lastT = now;
     if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || !e.deltaY) return;
-    if (blocked(e.target) || now < lockedUntil) { return; }
+    if (blocked(e.target) || now < lockedUntil) return;
     const d = e.deltaY > 0 ? 1 : -1;
     const el = scroller(); const ed = edge(el);
     const noRoom = el.scrollHeight <= el.clientHeight + 2;
     const atEnd = noRoom || (d > 0 ? ed.bottom : ed.top);
-    if (fresh) { armed = atEnd; acc = 0; dir = d; }
-    // Reaching the edge DURING a gesture is the end of that scroll, not a request to leave.
-    // Only a gesture that began while already at the edge can move to the next screen.
-    if (!atEnd) { if (hint.classList.contains('show')) hide(); armed = false; return; }
+    if (fresh) { armed = atEnd; dir = d; }
+    if (!atEnd) { armed = false; return; }
     if (!armed || d !== dir) return;
     const next = target(d);
-    if (!next) { hide(); return; }
-    acc += Math.abs(e.deltaY);
-    const pct = Math.min(1, acc / NEED);
-    hint.querySelector('.flip-t').textContent = (d > 0 ? 'Keep scrolling for ' : 'Keep scrolling back to ') + (next.querySelector('.lbl')?.textContent || '');
-    hint.querySelector('.flip-bar b').style.transform = `scaleX(${pct})`;
-    hint.classList.toggle('up', d < 0); hint.classList.add('show');
-    clearTimeout(timer); timer = setTimeout(hide, 450);
-    if (acc >= NEED) {
-      lockedUntil = now + SETTLE; hide();
-      Promise.resolve(go(next.dataset.view)).then(() => {
-        const m = scroller(); if (d < 0) m.scrollTop = m.scrollHeight;
-      });
-    }
+    if (!next) return;
+    // Fire immediately: the screen changes under the same gesture, with no hint to hold the user.
+    armed = false; lockedUntil = now + SETTLE;
+    Promise.resolve(go(next.dataset.view)).then(() => {
+      const m = scroller(); if (d < 0) m.scrollTop = m.scrollHeight;
+    });
   }, { passive: true });
 })();
 
