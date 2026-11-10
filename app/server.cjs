@@ -2286,7 +2286,11 @@ function serveStatic(req, res, pathname, origin) {
     if (err) {
       fs.readFile(path.join(PUBLIC, 'index.html'), (e2, d2) => {
         if (e2) { res.writeHead(404); return res.end('not found'); }
-        res.writeHead(200, { 'Content-Type': MIME['.html'] });
+        // Unknown paths must not answer 200 with the app shell: a catch-all that returns 200 for
+        // /wp-login.php or /.env is the signature Safe Browsing treats as a cloaking page.
+        const known = pathname === '/' || pathname === '/index.html' || pathname === '/strategy.html'
+          || /^\/(salary|skills|s|legal|go)\//.test(pathname);
+        res.writeHead(known ? 200 : 404, { 'Content-Type': MIME['.html'] });
         res.end(origin ? withSeo(d2.toString('utf8'), origin, pathname) : d2);
       });
       return;
