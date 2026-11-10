@@ -1463,12 +1463,13 @@ async function renderAuth() {
         <button class="btn auth-cta" id="auth-verify">Verify and continue</button>
         <p class="auth-note" id="auth-hint"></p>
       </div>
-      <button class="auth-skip" id="auth-demo">Demo Mode</button>
+      ${STATE.authed ? `<button class="auth-skip" id="auth-back">Back to the app</button>` : `<button class="auth-skip" id="auth-demo">Demo Mode</button>`}
     </div>
     <p class="auth-legal">By continuing you agree to the <a href="/legal/terms.html">Terms</a> and <a href="/legal/privacy.html">Privacy Policy</a>.</p>
   </div>`;
 
   document.querySelectorAll('.auth-social.is-soon').forEach((b) => { b.onclick = () => toast(b.dataset.soon + ' sign-in is coming soon – use email for now'); });
+  if ($('#auth-back')) $('#auth-back').onclick = () => go(STATE.profile ? 'radar' : 'onboard');
   $('#auth-send').onclick = async () => {
     track('signup.started');
     const email = $('#auth-email').value.trim();
@@ -3270,7 +3271,7 @@ async function boot() {
   STATE.authed = !!auth.user;
   STATE.userRecord = auth.user;
   const demoBtn = document.getElementById('load-demo'); if (demoBtn) demoBtn.hidden = STATE.authed || STATE.demo;
-  const inBtn = document.getElementById('menu-signin'); if (inBtn) inBtn.hidden = STATE.authed || !STATE.demo;
+  const inBtn = document.getElementById('menu-signin'); if (inBtn) inBtn.hidden = STATE.authed;
   const stateEl = document.getElementById('profile-pill'); if (stateEl && !STATE.authed && STATE.demo) stateEl.textContent = 'Demo Mode';
   const outBtn = document.getElementById('logout'); if (outBtn) outBtn.hidden = !STATE.authed;
   if (!STATE.authed) {

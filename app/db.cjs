@@ -403,7 +403,8 @@ const MIGRATIONS = [
   ['users.display_name', () => { if (!columnExists('users', 'display_name')) db.exec("ALTER TABLE users ADD COLUMN display_name TEXT"); }],
   ['salary_records.dedupe_key', () => {
     if (!columnExists('salary_records', 'dedupe_key')) db.exec("ALTER TABLE salary_records ADD COLUMN dedupe_key TEXT");
-    db.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_salary_dedupe ON salary_records(dedupe_key) WHERE dedupe_key IS NOT NULL");
+    db.exec("DROP INDEX IF EXISTS idx_salary_dedupe");
+    db.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_salary_dedupe ON salary_records(dedupe_key)");
   }],
   ['salary_records.dedupe_backfill', () => {
     // Collapse the copies left by earlier ingests: keep the newest row per key, then key it.

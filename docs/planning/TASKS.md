@@ -154,6 +154,8 @@ Last updated: 9 November 2026.
 | AUTH-02 | AUTH | Apple variables set in Railway and live on production: `apple: true`, start returns appleid.apple.com with the thinkzet.com redirect | production providers |
 | DEP-03 | DEP | Railway service renamed to ThinkZet | founder confirmed 10 Nov 2026 |
 | DEP-02 | DEP | Railway Agent destroyed, no active agents, spare project `earnest-forgiveness` deleted | founder confirmed 10 Nov 2026 |
+| AUTH-13 | AUTH | Signed-in visitor is never shown a Demo Mode button: the sign-in screen offers "Back to the app" instead, and the account menu hides Sign In whenever a session exists | Us | DONE | signed-out shows demo, signed-in shows back; session proven on a fresh database |
+| DATA-09 | DATA | A fresh database crashed on boot because SQLite cannot use a partial index as an ON CONFLICT target. The dedupe index is now a plain unique index and the migration drops the old one first | Us | DONE | fresh db boots 200, no conflict error |
 | AUTH-12 | AUTH | Apple key parses on production: providers reports apple true and the callback reaches Apple's token endpoint, which answers "code expired" for a fake code | production diagnostic |
 
 | PAY-12 | PAY | Production switched back to €19.99 and both test prices archived | Us | DONE | billing/verify reads 19.99 EUR/month; both test prices active false |
