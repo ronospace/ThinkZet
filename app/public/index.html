@@ -1093,6 +1093,8 @@ async function mountAds(target) {
   if (!box) return;
   const cfg = await api('/api/ads').catch(() => null);
   if (!cfg || !cfg.enabled) return;
+  // Never ask for ad consent on the sign-in screen: there is no ad there to consent to.
+  if (STATE.view === 'auth') return;
   if (localStorage.getItem('tz-ads-consent') !== 'yes') { askAdConsent(() => mountAds(target)); return; }
   box.classList.add('show');
   box.innerHTML = '<div class="ad-label">Advertisement</div><ins class="adsbygoogle" style="display:block" data-ad-client="' + cfg.client + '"' + (cfg.slot ? ' data-ad-slot="' + cfg.slot + '"' : '') + ' data-ad-format="auto" data-full-width-responsive="true"></ins>';
