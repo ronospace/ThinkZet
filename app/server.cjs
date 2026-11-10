@@ -693,6 +693,39 @@ route('GET', /^\/api\/rates$/, async (req, res) => {
   json(res, 200, { ...rates, confidenceDetail: CONF.rateConfidence(rates.exactComparables || 0, rates.sampleSize, rates.confidence) });
 });
 
+// Side-by-side market comparison: the user's own market, the opportunity's market, and remote.
+// The opportunity market leads, because that is the currency the offer will be made in.
+route('GET', /^\/api\/markets$/, async (req, res, url) => {
+  const uid = resolveUser(req);
+  const profile = getProfile(uid);
+  if (!profile) return json(res, 404, { error: 'no profile' });
+  const country = (url.searchParams.get('country') || '').toUpperCase().slice(0, 2) || null;
+  const own = E.rateIntelligence(uid);
+  if (!own) return json(res, 404, { error: 'no benchmark' });
+  const original = profile.target_countries;
+  const run = (cc) => {
+    try {
+      db.prepare('UPDATE profiles SET target_countries=? WHERE user_id=?').run(JSON.stringify(cc ? [cc] : []), uid);
+      return E.rateIntelligence(uid);
+    } finally {
+      db.prepare('UPDATE profiles SET target_countries=? WHERE user_id=?').run(original, uid);
+    }
+  };
+  const opp = country && country !== (own.market && own.market.country) ? run(country) : own;
+  const remote = run(null);
+  const shape = (r, label) => r ? {
+    label, p25: r.p25, p50: r.p50, p75: r.p75, p90: r.p90, currency: r.currency,
+    sampleSize: r.sampleSize, confidence: r.confidence, thin: r.thin, range: r.range, market: r.market,
+  } : null;
+  json(res, 200, {
+    current: shape(own, 'Your market'),
+    opportunity: shape(opp, country ? 'Opportunity market' : 'Your market'),
+    remote: shape(remote, 'Remote'),
+    country,
+    lead: 'opportunity',
+  });
+});
+
 route('GET', /^\/api\/twin$/, async (req, res) => {
   const twin = db.prepare('SELECT * FROM career_twin WHERE user_id=?').get(resolveUser(req));
   json(res, 200, twin ? { ...JSON.parse(twin.state), updatedAt: twin.updated_at } : null);
