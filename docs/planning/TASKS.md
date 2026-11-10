@@ -126,7 +126,7 @@ Last updated: 9 November 2026.
 | PAY-05 | PAY | Live proof of cancellation against a real Stripe subscription (steps in `docs/planning/PAYMENTS.md`) | After PAY-01: subscribe, cancel in the app, confirm Stripe shows "cancels at period end" |
 | SEC-03 | SEC | Safe Browsing review requested through Search Console by the verified owner; routing fix deployed and transparency API clean | You | DONE | review submitted 10 Nov 2026 |
 | SEC-01 | SEC | Roll the Stripe live key, webhook secret and Resend key (all pasted in chat) | Roll in each dashboard, update Railway |
-| DEP-01 | DEP | Confirm the volume keeps data across a redeploy | Sign up, redeploy, reload |
+| DEP-01 | DEP | Confirm the volume keeps data across a redeploy | DONE 11 Nov 2026: display name DEP01-check and the Applied tracker state both survived, service returned to Active, volume confirmed persistent |
 
 
 | REPO-01 | REPO | Rename GitHub repo `MirrorSpread` to `ThinkZet` | GitHub → Settings; then Us updates `deploy/*` |
