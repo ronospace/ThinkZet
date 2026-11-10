@@ -189,7 +189,7 @@ function lowestScore(s) {
 
 function renderHtml({ name, brief, rates, scores, unsub, hello = 'Hello' }) {
   const row = (label, value) => `<tr><td style="padding:6px 0;color:#6b7683;font-size:13px">${label}</td><td style="padding:6px 0;text-align:right;font-size:13px;font-weight:600">${value}</td></tr>`;
-  return `<!doctype html><html><body style="margin:0;background:#0b0d10;padding:28px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;color:#e8edf4">
+  return `<!doctype html><html><head><meta name="color-scheme" content="dark only"/><meta name="supported-color-schemes" content="dark only"/></head><body style="margin:0;background:#0b0d10;padding:28px 0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,sans-serif;color:#e8edf4">
   <div style="max-width:560px;margin:0 auto;background:#12161c;border:1px solid #222a35;border-radius:14px;overflow:hidden">
     <div style="padding:22px 24px;border-bottom:1px solid #222a35">
       <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#4c8dff;font-weight:700">ThinkZet · Daily brief</div>
@@ -236,7 +236,7 @@ function alertEmail({ user, opportunity, rates }) {
   return {
     subject: `${opportunity.match_score}/100 match: ${opportunity.title} at ${opportunity.company}`,
     text,
-    html: `<div style="font-family:-apple-system,sans-serif;background:#0b0d10;color:#e8edf4;padding:24px">
+    html: `<div style="font-family:-apple-system,sans-serif;background:#0b0d10;color:#e8edf4;padding:24px;-webkit-text-size-adjust:100%;color-scheme:dark only"><meta name="color-scheme" content="dark only"/><meta name="supported-color-schemes" content="dark only"/>
       <div style="max-width:520px;margin:0 auto;background:#12161c;border:1px solid #222a35;border-radius:12px;padding:22px">
         <div style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:#4c8dff;font-weight:700">New high match</div>
         <div style="font-size:19px;font-weight:700;margin-top:8px">${escHtml(opportunity.title)}</div>

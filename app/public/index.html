@@ -1558,7 +1558,7 @@ async function renderAuth() {
         <button class="btn auth-cta" id="auth-verify">Verify and continue</button>
         <p class="auth-note" id="auth-hint"></p>
       </div>
-      ${STATE.authed ? `<button class="auth-skip" id="auth-back">Back to the app</button>` : `<button class="auth-skip" id="auth-demo">Demo Mode</button>`}
+      ${STATE.authed ? `<button class="auth-skip" id="auth-back">Back to The App</button>` : `<button class="auth-skip" id="auth-demo">Demo Mode</button>`}
     </div>
     <p class="auth-legal">By continuing you agree to the <a href="/legal/terms.html">Terms</a> and <a href="/legal/privacy.html">Privacy Policy</a>.</p>
   </div>`;
@@ -2934,7 +2934,7 @@ async function renderNegotiation() {
     </div>
     ${n.anchorOpportunity ? `<div class="card" style="margin-top:14px"><h3>Anchor This to a Live Opportunity</h3>
       <div class="dim" style="font-size:12.5px;margin-top:6px">${esc(n.anchorOpportunity.title)} at ${esc(n.anchorOpportunity.company)} – listed at ${n.anchorOpportunity.compMin ? money(n.anchorOpportunity.compMin) + '–' + money(n.anchorOpportunity.compMax) + ' ' + esc(n.anchorOpportunity.currency) : 'compensation not disclosed'}.</div>
-      <div style="margin-top:10px"><button class="btn sm ghost" onclick="go('radar')">Back to the radar</button></div>
+      <div style="margin-top:10px"><button class="btn sm ghost" onclick="go('radar')">Back to The Radar</button></div>
     </div>` : ''}`;
   document.querySelectorAll('.cp').forEach((b) => { b.onclick = () => copy(b.dataset.t); });
 }
