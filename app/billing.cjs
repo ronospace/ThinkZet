@@ -22,13 +22,13 @@ const CONFIG = {
 const PLANS = {
   free: {
     key: 'free', label: 'Free', price: 0, period: null,
-    features: ['Top 10 scored opportunities', 'Market value and salary gap', 'Opportunity tracker (5)',
-      'Career Score and market pulse', 'Daily brief preview', 'Public salary benchmarks'],
+    features: ['Top 10 scored opportunities', 'Market value & salary gap check', 'Opportunity tracker (5 items)',
+      'Career score & market pulse'],
   },
   pro: {
     key: 'pro', label: 'Pro', price: 19, period: 'month', annual: 149,
-    features: ['Unlimited scored opportunities', 'Career Twin and all six scores', 'Full Radar with filters',
-      'Saved searches and alerts', 'Negotiation and interview prep', 'Unlimited tracker and outcomes'],
+    features: ['Unlimited scored opportunities', 'Career Twin & all scores', 'Full radar & filters',
+      'Saved searches & daily brief', 'Negotiation & interview support', 'Unlimited tracking & outcomes'],
   },
 };
 
