@@ -22,7 +22,8 @@ const CONFIG = {
 const PLANS = {
   free: {
     key: 'free', label: 'Free', price: 0, period: null,
-    features: ['Top 10 scored opportunities', 'Rate gap check (always free)', 'Tracker (5 items)'],
+    features: ['Top 10 scored opportunities', 'Rate gap check (always free)', 'Tracker (5 items)',
+      'Career Score and market pulse', 'Daily brief preview', 'No card required'],
   },
   pro: {
     key: 'pro', label: 'Pro', price: 19, period: 'month', annual: 149,
