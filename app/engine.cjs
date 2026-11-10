@@ -505,7 +505,7 @@ function rateIntelligence(userId) {
   // role and a fellowship stipend are not salaries, and including them inflates the benchmark.
   // Option A: only figures that came from a live source feed the benchmark. The seeded corpus is kept
   // for opportunity display, but it never contributes a salary number.
-  const LIVE_SOURCES = ['arbeitnow', 'jobicy', 'remoteok', 'hackernews'];
+  const LIVE_SOURCES = ['arbeitnow', 'jobicy', 'remoteok', 'hackernews', 'remotive', 'weworkremotely'];
   const recs = db.prepare(`SELECT * FROM salary_records
     WHERE period IN ('year','hour','month','day') AND source IN (${LIVE_SOURCES.map(() => '?').join(',')})`)
     .all(...LIVE_SOURCES);

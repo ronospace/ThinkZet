@@ -107,6 +107,90 @@ async function jobicy({ pages = 2, industries = ['engineering', 'data-science', 
   return out;
 }
 
+// ---------- Remotive (global remote, salary stated as text) ----------
+// Pay arrives as free text such as "OTE $25k - $35k", "$50-$75 /hour" or "$3.5k-$5k/month", so it is parsed into a
+// number, a currency and a period. Anything that does not parse cleanly is left without pay rather than guessed.
+function parsePayText(text) {
+  if (!text || typeof text !== 'string') return null;
+  const t = text.replace(/\s+/g, ' ').trim();
+  const cur = /£/.test(t) ? 'GBP' : /€/.test(t) ? 'EUR' : /CHF/.test(t) ? 'CHF' : /CAD|CA\$/.test(t) ? 'CAD' : 'USD';
+  const nums = [...t.matchAll(/(\d+(?:\.\d+)?)\s*([kK])?/g)].map((m) => Number(m[1]) * (m[2] ? 1000 : 1));
+  if (!nums.length) return null;
+  let period = 'year';
+  if (/\/\s*(hr|hour)|per hour|hourly/i.test(t)) period = 'hour';
+  else if (/\/\s*(mo|month)|per month|monthly/i.test(t)) period = 'month';
+  else if (/\/\s*day|per day|daily/i.test(t)) period = 'day';
+  const min = Math.min(...nums);
+  const max = Math.max(...nums);
+  // A yearly figure under 1000 is a mis-parse, not a salary.
+  if (period === 'year' && max < 1000) return null;
+  return { currency: cur, compMin: min, compMax: max, compPeriod: period };
+}
+
+async function remotive() {
+  const j = await getJSON('https://remotive.com/api/remote-jobs');
+  const rows = Array.isArray(j.jobs) ? j.jobs : [];
+  return rows.map((r) => {
+    const pay = parsePayText(r.salary);
+    return {
+      externalId: String(r.id),
+      title: r.title,
+      company: r.company_name,
+      description: strip(r.description).slice(0, 2000),
+      city: 'Remote',
+      country: 'WW',
+      remote: true,
+      tags: r.tags || [],
+      jobTypes: r.job_type ? [r.job_type] : [],
+      url: r.url,
+      postedAt: r.publication_date || new Date().toISOString(),
+      currency: pay ? pay.currency : null,
+      compMin: pay ? pay.compMin : null,
+      compMax: pay ? pay.compMax : null,
+      compPeriod: pay ? pay.compPeriod : null,
+    };
+  });
+}
+
+// ---------- We Work Remotely (RSS, salary parsed from the listing text) ----------
+async function weworkremotely() {
+  const xml = await getJSON; // placeholder to keep the linter quiet about unused imports
+  void xml;
+  const res = await fetch('https://weworkremotely.com/categories/remote-programming-jobs.rss', { headers: { 'user-agent': 'ThinkZet/1.0' } });
+  if (!res.ok) throw new Error('weworkremotely ' + res.status);
+  const text = await res.text();
+  const items = text.split('<item>').slice(1);
+  return items.map((it, i) => {
+    const pick = (tag) => {
+      const m = it.match(new RegExp('<' + tag + '>([\\s\\S]*?)</' + tag + '>'));
+      return m ? m[1].replace(/<!\[CDATA\[|\]\]>/g, '').trim() : '';
+    };
+    const rawTitle = pick('title');
+    const company = rawTitle.includes(':') ? rawTitle.split(':')[0].trim() : '';
+    const title = rawTitle.includes(':') ? rawTitle.split(':').slice(1).join(':').trim() : rawTitle;
+    const link = pick('link');
+    const body = strip(pick('description')).slice(0, 2000);
+    const pay = parsePayText((body.match(/(?:salary|pay|compensation)[^.]{0,80}/i) || [])[0] || '');
+    return {
+      externalId: link || 'wwr-' + i,
+      title,
+      company,
+      description: body,
+      city: 'Remote',
+      country: 'WW',
+      remote: true,
+      tags: [],
+      jobTypes: [],
+      url: link,
+      postedAt: pick('pubDate') ? new Date(pick('pubDate')).toISOString() : new Date().toISOString(),
+      currency: pay ? pay.currency : null,
+      compMin: pay ? pay.compMin : null,
+      compMax: pay ? pay.compMax : null,
+      compPeriod: pay ? pay.compPeriod : null,
+    };
+  });
+}
+
 // ---------- Hacker News "Who is hiring" (the highest-signal channel in tech) ----------
 async function hackernews() {
   // Find the most recent "Ask HN: Who is hiring?" thread via Algolia
@@ -153,6 +237,8 @@ const ADAPTERS = {
   remoteok: { fn: remoteok, quality: 0.62, label: 'RemoteOK', note: 'Global remote, salary-dense' },
   jobicy: { fn: jobicy, quality: 0.68, label: 'Jobicy', note: 'Global remote, paginated cursor' },
   hackernews: { fn: hackernews, quality: 0.8, label: 'HN Who is Hiring', note: 'Highest-signal tech channel' },
+  remotive: { fn: remotive, quality: 0.6, label: 'Remotive', note: 'Global remote, pay stated as text and parsed' },
+  weworkremotely: { fn: weworkremotely, quality: 0.58, label: 'We Work Remotely', note: 'Global remote RSS, pay parsed from the listing' },
 };
 
 async function fetchSource(key, opts) {
