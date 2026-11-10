@@ -693,12 +693,12 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .btn.danger{background:transparent;border:1px solid color-mix(in srgb,var(--bad) 55%,var(--line));color:var(--bad)}
 .btn.danger:hover{background:color-mix(in srgb,var(--bad) 12%,var(--panel));border-color:var(--bad)}
 .plan-grid-compact{max-width:1000px;margin:0 auto;gap:var(--sp-4)}
-@media(max-width:900px){.plan-grid-compact{grid-template-columns:1fr!important;gap:14px}.plan-grid-compact .price{padding:20px}.plan-grid-compact .price-v{font-size:var(--text-2xl)}.plan-grid-compact .price li{font-size:var(--text-sm);padding:7px 0 7px 20px}.plan-grid-compact .price .btn{padding:11px 14px;font-size:var(--text-sm)}}
-.plan-grid-compact .price{padding:var(--sp-5)}
+@media(max-width:900px){.plan-grid-compact{grid-template-columns:1fr!important;gap:14px}.plan-grid-compact .price{padding:20px}.plan-grid-compact .price-v{font-size:var(--text-2xl)}.plan-grid-compact .price li{font-size:var(--text-sm);padding:6px 0 6px 20px}.plan-grid-compact .price .btn{padding:11px 14px;font-size:var(--text-sm)}}
+.plan-grid-compact .price{padding:18px}
 .plan-grid-compact .price h3{font-size:var(--text-base);margin:0 0 4px}
 .plan-grid-compact .price-alt{font-size:var(--text-xs)}
 .plan-grid-compact .price-v{font-size:var(--text-3xl)}
-.plan-grid-compact .price ul{min-height:0;margin:14px 0 16px;flex:1 1 auto}
+.plan-grid-compact .price ul{min-height:0;margin:10px 0 12px;flex:1 1 auto}
 .plan-grid-compact .price li{font-size:var(--text-sm);padding:7px 0 7px 20px}
 .plan-grid-compact .price .btn{padding:7px 14px;font-size:var(--text-sm);width:100%;justify-content:center;display:block;text-align:center}
 .plan-chip{margin-top:auto;width:100%;text-align:center;justify-content:center;display:block;padding:7px 14px;font-size:var(--text-sm)}
@@ -712,12 +712,14 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .market-snapshot .ds-cell .k{font-size:11px;color:var(--muted);white-space:nowrap}
 .market-snapshot .ds-cell .v{font-size:var(--text-sm);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
 @media(max-width:760px){.market-snapshot{gap:12px;padding:12px}.market-snapshot .ds-grid{gap:14px}}
-.price-tagline{font-size:var(--text-sm);font-weight:500;font-style:italic;color:var(--muted);margin:0 0 10px}
-.plan-grid-compact .price-tagline{font-size:var(--text-sm);margin:0 0 10px}
+.price-tagline{font-size:var(--text-base);font-weight:600;font-style:normal;color:var(--ink);margin:0 0 8px}
+.plan-grid-compact .price-tagline{font-size:var(--text-base);margin:0 0 8px}
 .plan-grid-compact .price.is-current{border-color:color-mix(in srgb,var(--good) 55%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--good) 28%,transparent)}
 html[data-theme="light"] .plan-grid-compact .price.is-current{border-color:#9FD9BC;box-shadow:0 0 0 1px rgba(14,157,99,.14)}
 .plan-grid-compact .price.is-current .chip.have{border-color:color-mix(in srgb,var(--good) 55%,var(--line));background:color-mix(in srgb,var(--good) 12%,var(--panel))}
 .plan-grid-compact .price .chip.have{background:color-mix(in srgb,var(--good) 12%,var(--panel));color:var(--good);border:1px solid color-mix(in srgb,var(--good) 45%,var(--line));border-radius:var(--radius-sm)}
+.plan-state{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-2xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--good);background:color-mix(in srgb,var(--good) 12%,var(--panel));border:1px solid color-mix(in srgb,var(--good) 40%,var(--line));border-radius:999px;padding:2px 8px;margin-top:auto;margin-bottom:6px;align-self:flex-start}
+.plan-grid-compact .price .btn[disabled]{opacity:.55;cursor:default}
 </style>
 </head>
 <body>
@@ -2663,15 +2665,15 @@ async function renderPlan() {
       ${cell(p.plan === 'free' ? 'is-current' : '', '', 'Free', 'Know your value', '€0', '',
         p.plans.free.features,
         p.plan === 'free'
-          ? '<div class="chip have plan-chip">Current Plan</div>'
+          ? '<div class="plan-state">Current Plan</div><button class="btn ghost" id="downgrade" disabled>Continue Free</button>'
           : '<button class="btn ghost" id="downgrade">Continue Free</button>')}
       ${cell('featured', 'Most Chosen', 'Pro', 'Make better moves', '€19.99<span> /month</span>', 'or €149.99/year',
         p.plans.pro.features,
         p.plan === 'pro'
-          ? '<div class="chip have plan-chip">Active</div>'
+          ? '<div class="plan-state">Active Plan</div><button class="btn" id="up-month" disabled>Unlock Pro</button>'
           : '<button class="btn" id="up-month">Unlock Pro</button>')}
-      ${cell('', '', 'Pro+', 'For bigger decisions', '€49<span> /month</span>', 'Relocation and offer decisions',
-        ['Compare relocation offers side by side', 'Compare countries before you move', 'Compare contract & permanent paths', 'Compare salary, tax & living costs', 'See which move pays off over time', 'Offer negotiation briefs'],
+      ${cell('', '', 'Pro+', 'For bigger decisions', '€49<span> /month</span>', '',
+        ['Compare relocation offers side by side', 'Compare countries before you move', 'Compare contract & permanent paths', 'Compare salary, tax & living costs', 'See what each move is really worth', 'Offer negotiation briefs'],
         '<button class="btn plan-plus-cta" id="up-plus">Unlock Pro+</button>')}
     </div>
     <div class="card" style="margin-top:14px">
@@ -3178,7 +3180,7 @@ const VIEWS = {
   email: [renderEmail, 'Email', 'The retention loop – the brief that brings them back'],
   launch: [renderLaunch, 'Launch', 'Whether it is safe to send people here'],
   referrals: [renderReferrals, 'Partners', 'Referral routing, isolated from ranking'],
-  plan: [renderPlan, 'Plan', 'Free vs Pro – and why the paywall sits there'],
+  plan: [renderPlan, 'Choose Your Plan', 'Know your value for free. Use it to make better moves.'],
   ops: [renderOps, 'Engine', 'What the system actually did'],
 };
 
