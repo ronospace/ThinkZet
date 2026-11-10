@@ -147,7 +147,8 @@ a{color:var(--accent);text-decoration:none}
 .rail-foot a{color:var(--ink2)}
 .rf-status{display:flex;align-items:center;gap:6px;font-weight:600;color:var(--ink)}
 .rf-counts{margin-top:3px;font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums}
-.rf-sep{height:1px;background:var(--line);margin:9px 0 8px}
+.rf-sep{height:1px;background:var(--line2);margin:9px 0 8px}
+html[data-theme="light"] .rf-sep{background:var(--line2)}
 .rf-legal{line-height:1.7}
 .rf-copy{margin-top:6px;font-size:10px;opacity:.7;line-height:1.5}
 .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--good);margin-right:5px;vertical-align:1px}
@@ -3296,8 +3297,8 @@ async function go(view) {
     ${'<div class="sk-row"><div class="sk sk-circle"></div><div><div class="sk sk-line mid"></div><div class="sk sk-line short" style="margin-top:8px"></div></div><div class="sk sk-line" style="width:80px"></div></div>'.repeat(4)}`;
   if (changed) { const m = document.querySelector('main'); if (m) m.scrollTop = 0; window.scrollTo(0, 0); }
   try { await fn(); } catch (e) { $('#view').innerHTML = '<div class="empty">Error: ' + esc(e.message) + '</div>'; }
-  // Place the menu so the active item's group label sits at the top of the scroll box. The label is
-  // sticky, so the section stays named while the items under it scroll.
+  // Reveal the active item only when it is out of view, so the menu never jumps.
+  const act = document.querySelector('#nav button.active');
   const navEl = document.getElementById('nav');
   if (act && navEl && navEl.scrollHeight > navEl.clientHeight + 2) {
     const a = act.getBoundingClientRect(), n = navEl.getBoundingClientRect();
@@ -3329,7 +3330,8 @@ async function boot() {
   $('#profile-pill').textContent = me.profile ? `${titleCase(me.profile.seniority)} · ${me.profile.years_experience || '?'} Yrs` : 'No Profile';
   if (me.profile && me.profile.risk_tolerance === 'aggressive') STATE.horizon = 'growth';
   if (me.profile && me.profile.time_to_move === 'asap') STATE.horizon = 'income';
-  $('#engine-counts').textContent = `${health.counts.opportunities} opportunities · ${health.counts.sources} sources`;
+  const nf = (n) => Number(n || 0).toLocaleString('en-GB');
+  $('#engine-counts').textContent = `${nf(health.counts.opportunities)} Opportunities · ${nf(health.counts.sources)} Sources`;
   try {
     const b = await api('/api/brief');
     const badge = $('#new-badge');
