@@ -3338,6 +3338,12 @@ async function boot() {
     $('#profile-pill').textContent = STATE.demo ? 'Demo Mode' : 'Signed Out';
     $('#nav').style.opacity = '.35';
     $('#nav').style.pointerEvents = 'none';
+    // The corpus counts are public, so fill them for a signed-out visitor too.
+    try {
+      const h = await api('/api/health');
+      STATE.engineCounts = h.counts;
+      $('#engine-counts').textContent = `${int(h.counts.opportunities)} Opportunities · ${int(h.counts.sources)} Sources`;
+    } catch (e) { /* the rail must never block boot */ }
     return;
   }
   $('#nav').style.opacity = '1';
@@ -3349,8 +3355,7 @@ async function boot() {
   $('#profile-pill').textContent = me.profile ? `${titleCase(me.profile.seniority)} · ${me.profile.years_experience || '?'} Yrs` : 'No Profile';
   if (me.profile && me.profile.risk_tolerance === 'aggressive') STATE.horizon = 'growth';
   if (me.profile && me.profile.time_to_move === 'asap') STATE.horizon = 'income';
-  const nf = (n) => Number(n || 0).toLocaleString('en-GB');
-  $('#engine-counts').textContent = `${nf(health.counts.opportunities)} Opportunities · ${nf(health.counts.sources)} Sources`;
+  $('#engine-counts').textContent = `${int(health.counts.opportunities)} Opportunities · ${int(health.counts.sources)} Sources`;
   try {
     const b = await api('/api/brief');
     const badge = $('#new-badge');
