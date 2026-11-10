@@ -1168,7 +1168,7 @@ async function mountAds(target) {
   // Never ask for ad consent on the sign-in screen: there is no ad there to consent to.
   if (STATE.view === 'auth') return;
   if (localStorage.getItem('tz-ads-consent') !== 'yes') { askAdConsent(() => mountAds(target)); return; }
-  box.classList.add('show');
+  box.classList.remove('show');
   box.innerHTML = '<div class="ad-label">Advertisement</div><ins class="adsbygoogle" style="display:block" data-ad-client="' + cfg.client + '"' + (cfg.slot ? ' data-ad-slot="' + cfg.slot + '"' : '') + ' data-ad-format="auto" data-full-width-responsive="true"></ins>';
   if (!document.querySelector('script[data-adsense]')) {
     const sc = document.createElement('script');
@@ -1177,6 +1177,16 @@ async function mountAds(target) {
     document.head.appendChild(sc);
   }
   try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { /* blocked or offline */ }
+  // Reveal only when a creative actually rendered. An unfilled unit stays collapsed, so no dead space.
+  const ins = box.querySelector('ins.adsbygoogle');
+  const reveal = () => {
+    const filled = ins && (ins.getAttribute('data-ad-status') === 'filled' || ins.getBoundingClientRect().height > 24);
+    if (filled) box.classList.add('show');
+  };
+  if (ins && 'MutationObserver' in window) {
+    new MutationObserver(reveal).observe(ins, { attributes: true, attributeFilter: ['data-ad-status', 'style'] });
+  }
+  setTimeout(reveal, 2500);
 }
 
 // Answers arrive as plain text. Give the first sentence weight, keep the rest readable, and use a colon
