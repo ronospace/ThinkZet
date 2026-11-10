@@ -688,6 +688,14 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 @media(max-width:340px){.ob-actions .btn{flex:1 1 100%}}
 .btn.danger{background:transparent;border:1px solid color-mix(in srgb,var(--bad) 55%,var(--line));color:var(--bad)}
 .btn.danger:hover{background:color-mix(in srgb,var(--bad) 12%,var(--panel));border-color:var(--bad)}
+.plan-grid-compact{max-width:840px;margin:0 auto;gap:14px}
+.plan-grid-compact .price{padding:20px}
+.plan-grid-compact .price-v{font-size:var(--text-2xl)}
+.plan-grid-compact .price ul{min-height:0;margin:14px 0 16px}
+.plan-grid-compact .price li{font-size:var(--text-xs);padding:6px 0 6px 18px}
+.plan-grid-compact .price .btn{padding:9px 12px;font-size:var(--text-xs)}
+.plan-chip{align-self:center;margin-top:auto}
+@media(max-width:900px){.plan-grid-compact{max-width:100%}}
 </style>
 </head>
 <body>
@@ -2623,8 +2631,8 @@ async function renderSearches() {
 /* ---------------- plan ---------------- */
 async function renderPlan() {
   const p = await api('/api/plan');
-  // Reuses the landing pricing component verbatim: same cards, spacing, hierarchy and CTA wording.
-  const cell = (cls, tag, title, price, alt, features, cta, id) => `
+  // Same compact card component as the landing pricing, carrying the real plan data from the API.
+  const cell = (cls, tag, title, price, alt, features, cta) => `
         <div class="price ${cls}">
           ${tag ? `<div class="price-tag">${tag}</div>` : ''}
           <h3>${title}</h3>
@@ -2634,18 +2642,18 @@ async function renderPlan() {
           ${cta}
         </div>`;
   $('#view').innerHTML = `
-    <div class="price-grid">
+    <div class="price-grid plan-grid-compact">
       ${cell(p.plan === 'free' ? 'is-current' : '', '', 'Free', '€0', '',
         p.plans.free.features,
         p.plan === 'free'
-          ? '<div class="chip have" style="align-self:center">Current Plan</div>'
+          ? '<div class="chip have plan-chip">Current Plan</div>'
           : '<button class="btn ghost" id="downgrade">Continue Free</button>')}
       ${cell('featured', 'Most Chosen', 'Pro', '€19.99<span> a month</span>', 'or €149.99 a year',
         p.plans.pro.features,
         p.plan === 'pro'
-          ? '<div class="chip have" style="align-self:center">Active</div>'
+          ? '<div class="chip have plan-chip">Active</div>'
           : '<button class="btn" id="up-month">Unlock Pro</button>')}
-      ${cell('', '', 'Pro+', 'Coming soon', 'For people moving this quarter',
+      ${cell('', '', 'Pro+', '€49<span> a month</span>', 'For people moving this quarter',
         ['Everything in Pro', 'One 1:1 session with a vetted coach', 'Relocation readiness pack', 'Quarterly trajectory review'],
         '<button class="btn ghost" id="up-plus">Talk to us</button>')}
     </div>
