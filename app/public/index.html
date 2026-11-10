@@ -760,6 +760,10 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
   .nav-group{margin-bottom:3px}
   .rail-foot{font-size:10px;line-height:1.35}
 }
+@media(min-width:901px){
+  html,body{overflow:hidden;height:100%}
+  .shell{position:fixed;inset:0;height:100dvh}
+}
 </style>
 </head>
 <body>
@@ -3308,11 +3312,9 @@ async function go(view) {
   // sticky, so the section stays named while the items under it scroll.
   const navEl = document.getElementById('nav');
   if (act && navEl && navEl.scrollHeight > navEl.clientHeight + 2) {
-    const group = act.closest('.nav-group');
-    const label = group && group.querySelector('.nav-label');
-    const target = label || act;
-    const offset = target.getBoundingClientRect().top - navEl.getBoundingClientRect().top + navEl.scrollTop;
-    navEl.scrollTop = Math.max(0, Math.min(offset - 2, navEl.scrollHeight - navEl.clientHeight));
+    const a = act.getBoundingClientRect(), n = navEl.getBoundingClientRect();
+    if (a.top < n.top) navEl.scrollTop -= (n.top - a.top) + 8;
+    else if (a.bottom > n.bottom) navEl.scrollTop += (a.bottom - n.bottom) + 8;
   }
 }
 
