@@ -522,8 +522,29 @@ function rateIntelligence(userId) {
     { label: 'market-wide, same level', test: (r) => r.seniority === profile.seniority, weight: 0.35 },
   ];
 
+  // Market-aware pooling. A user is benchmarked against their own market first: same country when the
+  // pool is deep enough, then the same currency area, then global remote. EUR is a reporting currency,
+  // never the definition of the market.
+  const MARKET = (profile.target_countries && JSON.parse(profile.target_countries || '[]')[0]) || null;
+  const marketOf = (r) => {
+    if (r.remote === 1 && !r.country) return 'remote';
+    return r.country || 'unknown';
+  };
+  const poolDepth = (pred) => recs.filter(pred).length;
+  const inCountry = MARKET ? (r) => marketOf(r) === MARKET : () => false;
+  const countryDepth = MARKET ? poolDepth(inCountry) : 0;
+  const currencyOf = (r) => r.currency || 'EUR';
+  const myCurrency = (profile.rate_currency || 'EUR');
+  const inCurrency = (r) => currencyOf(r) === myCurrency;
+  const currencyDepth = poolDepth(inCurrency);
+  // Deepest defensible pool wins: country, then currency area, then global. The mode is reported so the
+  // UI can say which market the number came from.
+  const marketMode = countryDepth >= 30 ? 'country' : currencyDepth >= 30 ? 'currency' : 'global';
+
   const scored = [];
   for (const r of recs) {
+    if (marketMode === 'country' && !inCountry(r) && marketOf(r) !== 'remote') continue;
+    if (marketMode === 'currency' && !inCurrency(r) && marketOf(r) !== 'remote') continue;
     const skills = JSON.parse(r.skills || '[]');
     const overlap = skills.filter((s) => userSkills.has(s)).length;
     const skillSim = userSkills.size ? overlap / Math.min(8, userSkills.size) : 0;
@@ -617,6 +638,7 @@ function rateIntelligence(userId) {
 
   return {
     period: targetPeriod,
+    market: { mode: marketMode, country: MARKET, currency: myCurrency, countryDepth, currencyDepth },
     sampleSize: sampleN,
     thin,
     range: thin ? { low: Math.round(p25), high: Math.round(p75) } : null,
