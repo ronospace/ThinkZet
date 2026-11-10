@@ -30,6 +30,7 @@ Last updated: 9 November 2026.
 | UI-26 | UI | The salutation mark uses a three-stop gradient (violet, rose, blue) in both themes instead of a two-stop ramp | Us | DONE | computed background-image in light and dark |
 | COPY-27 | COPY | Title case for every h3 heading across the app: 58 headings including Skill Gap Detection, How to Close Them and the table headers | Us | DONE | rendered Skill Gaps screen, 59/59 API, 10/10 browser |
 | UI-25i | UI | A running demo labels the account state "Demo Mode" instead of "Signed Out" | Us | DONE | measured: state Demo Mode, signin flex, demo none |
+| UI-50 | UI | Bullets trimmed so every card wraps identically: 6 points, line counts 2/2/2/2/2/1 on all three, equal 341px heights, one CTA baseline | Us | DONE | measured line counts at 1440; 59/59 API, 10/10 browser |
 | UI-49 | UI | Bullets rewritten as one family: noun-led capabilities of similar length on all three cards, no explanations, no "no card required"; Pro+ reads Relocation and offer decisions | Us | DONE | points 6/6/6, heights 375 each, one CTA baseline at 1440 |
 | UI-48 | UI | Pro trimmed to six points and every plan action is the same full-width button: 183px wide and 41 to 43px tall, one baseline | Us | DONE | measured at 1440 light: points 6/6/6, heights 426 each, ctaWidths 183/183/183 |
 | UI-47 | UI | Free plan carries six real points so the three cards share one density: 6, 7 and 6 points, equal heights, one CTA baseline | Us | DONE | measured at 1440 light: heights 416 each, sameBaseline true; 59/59 API, 10/10 browser, 9/9 billing |
