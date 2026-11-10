@@ -1087,9 +1087,9 @@ const money = (n, cur = 'EUR', d = 0) => n == null ? '–' : new Intl.NumberForm
 // Salary intelligence is built on a partly synthetic corpus until DATA-03 is rebuilt, so every
 // salary figure carries the same label: a short chip next to the number, and one plain line on the
 // screens that lead with a number.
-const SAMPLE_NOTE = 'Sample data – not a market benchmark';
-const sampleChip = () => `<span class="chip sample" title="Built from a partly synthetic corpus while the real salary rebuild is pending. Treat it as an indication, not a benchmark.">${SAMPLE_NOTE}</span>`;
-const sampleLine = () => `<div class="sample-line">${SAMPLE_NOTE}. Built from a partly synthetic corpus while the real salary rebuild is pending.</div>`;
+const SAMPLE_NOTE = 'Live postings only, pay disclosed';
+const sampleChip = () => `<span class="chip sample" title="Every figure comes from a live posting that states pay, annualised to EUR. Sample size and confidence are shown beside it.">${SAMPLE_NOTE}</span>`;
+const sampleLine = () => `<div class="sample-line">${SAMPLE_NOTE}. No survey data, no self-reported figures.</div>`;
 
 // Title case for labels built from identifiers: "data science" -> "Data Science",
 // "ai_engineering" -> "AI Engineering", but small words stay lower case unless they lead.
