@@ -148,6 +148,7 @@ Last updated: 9 November 2026.
 | DEP-03 | DEP | Railway service renamed to ThinkZet | founder confirmed 10 Nov 2026 |
 | DEP-02 | DEP | Railway Agent destroyed, no active agents, spare project `earnest-forgiveness` deleted | founder confirmed 10 Nov 2026 |
 | AUTH-12 | AUTH | Apple key parses on production: providers reports apple true and the callback reaches Apple's token endpoint, which answers "code expired" for a fake code | production diagnostic |
+| PAY-12 | PAY | **Production still charges the €2 test price.** `STRIPE_PRICE_MONTHLY` in Railway points at `price_1Ua1Np41m9e00I4Dx6Lhej6T`. It must go back to `price_1UZXla41m9e00I4DeCR2mWNe` (€19.99) before the €2 price is archived, or the €2 price cannot be removed | You | OPEN | billing/verify on production, 10 Nov 2026 |
 | PAY-11 | PAY | Temporary test prices created on the live product: `price_1Ua1Np41m9e00I4Dx6Lhej6T` at €2.00/month and `price_1Ua1Np41m9e00I4D8wA8DvYF` at €14.99/year, both active and never wired into the app. The real prices stay in Railway | Us | DONE | both read back from Stripe; a €2 checkout session opens with amount 200 eur |
 | PAY-10 | PAY | Stripe live product, prices, six-event webhook on thinkzet.com | signed event 200, forged 400 |
 | PAY-02 | PAY | Checkout requires a signed-in session; the demo account can never be charged; a missing Stripe key refuses checkout in production instead of granting Pro | `3731853`; payment-check 19/19 |
