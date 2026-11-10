@@ -2236,8 +2236,11 @@ route('GET', /^\/api\/ops$/, async (req, res) => {
   const dup = db.prepare(`SELECT ROUND(AVG(source_count),2) avg_sources, COUNT(*) n FROM opportunities`).get();
   const multi = db.prepare('SELECT COUNT(*) n FROM opportunities WHERE source_count > 1').get().n;
   const quality = db.prepare(`SELECT COUNT(*) n FROM opportunities WHERE comp_min IS NULL`).get().n;
+  const lastRun = db.prepare('SELECT payload, created_at FROM ingestion_runs ORDER BY id DESC LIMIT 1').get();
+  let lastMs = null;
+  if (lastRun && lastRun.payload) { try { lastMs = JSON.parse(lastRun.payload).ms ?? null; } catch { /* ignore */ } }
   json(res, 200, {
-    ingest,
+    ingest: { ...(ingest || {}), ms: (ingest && ingest.ms != null) ? ingest.ms : (lastMs != null ? lastMs : 0) },
     bySource, byType,
     avgSourcesPerOpportunity: dup.avg_sources,
     multiSourced: multi,
