@@ -1537,7 +1537,7 @@ async function renderAuth() {
     go(r.hasProfile ? 'radar' : 'onboard');
   };
   $('#auth-code').onkeydown = (e) => { if (e.key === 'Enter') $('#auth-verify').click(); };
-  $('#auth-demo').onclick = async () => { await loadDemo(); };
+  if ($('#auth-demo')) $('#auth-demo').onclick = async () => { await loadDemo(); };
 }
 
 /* ---------------- onboarding ---------------- */
