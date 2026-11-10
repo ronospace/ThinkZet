@@ -3265,7 +3265,13 @@ async function go(view) {
     ${'<div class="sk-row"><div class="sk sk-circle"></div><div><div class="sk sk-line mid"></div><div class="sk sk-line short" style="margin-top:8px"></div></div><div class="sk sk-line" style="width:80px"></div></div>'.repeat(4)}`;
   if (changed) { const m = document.querySelector('main'); if (m) m.scrollTop = 0; window.scrollTo(0, 0); }
   try { await fn(); } catch (e) { $('#view').innerHTML = '<div class="empty">Error: ' + esc(e.message) + '</div>'; }
-  const act = document.querySelector('#nav button.active'); if (act) act.scrollIntoView({ block: 'nearest' });
+  const act = document.querySelector('#nav button.active');
+  const navEl = document.getElementById('nav');
+  if (act && navEl && navEl.scrollHeight > navEl.clientHeight + 2) {
+    const a = act.getBoundingClientRect(), n = navEl.getBoundingClientRect();
+    if (a.top < n.top) navEl.scrollTop -= (n.top - a.top) + 8;
+    else if (a.bottom > n.bottom) navEl.scrollTop += (a.bottom - n.bottom) + 8;
+  }
 }
 
 async function boot() {
