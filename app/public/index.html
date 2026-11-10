@@ -765,6 +765,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .cap-ico[data-ico="track"]:before{border-radius:2px;background:linear-gradient(90deg,var(--accent2) 0 3px,transparent 3px 6px,var(--accent2) 6px 9px,transparent 9px 12px)}
 .cap-ico[data-ico="neg"]:before{border-radius:50%;box-shadow:inset 0 0 0 2px var(--accent2),inset 0 -4px 0 0 transparent}
 .cap-ico[data-ico="cop"]:before{border-radius:50%;background:radial-gradient(circle at 50% 35%,var(--accent2) 0 3px,transparent 3px),linear-gradient(180deg,transparent 55%,var(--accent2) 55% 100%)}
+.apply-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 </style>
 </head>
 <body>
@@ -2195,7 +2196,10 @@ function openDetail(id) {
         <div class="kv"><span>Seniority fit</span><span class="mono">${o.experience_fit}/100</span></div>
         <div class="kv"><span>Risk</span><span class="mono">${o.risk_score}/100</span></div>
         <div class="row" style="margin-top:16px;gap:8px">
-          <button class="btn sm" id="d-apply">Mark as applied</button>
+          <div class="apply-row">
+            <a class="btn sm" id="d-open" href="${esc(o.apply_url || '#')}" target="_blank" rel="noopener">Apply on the employer site</a>
+            <button class="btn sm ghost" id="d-apply">Already applied</button>
+          </div>
           <button class="btn sm ghost" id="d-save">Save</button>
           <button class="btn sm ghost" id="d-outcome">Report outcome</button>
         </div>
@@ -2300,6 +2304,12 @@ function openDetail(id) {
   })();
 
   $('#back').onclick = () => go('radar');
+  if ($('#d-open')) $('#d-open').onclick = async () => {
+    // Opening the listing is the application; recording it here keeps the tracker honest.
+    track('opportunity.opened', { opportunityId: o.id });
+    await post('/api/applications', { opportunityId: o.id, status: 'applied' });
+    toast('Opened the listing and marked applied');
+  };
   $('#d-apply').onclick = async () => { await post('/api/applications', { opportunityId: o.id, status: 'applied' }); toast('Marked as applied – momentum updated'); };
   $('#d-save').onclick = async () => { await post('/api/applications', { opportunityId: o.id, status: 'saved' }); toast('Saved'); };
   $('#d-outcome').onclick = () => {
