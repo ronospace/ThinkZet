@@ -134,9 +134,12 @@ function seedIfEmpty() {
   }
 
   // Salary records from every posting with comp (the raw material for rate intelligence)
+  // De-duplicate at the source: one advert contributes one salary record per run, not one per ingest.
+  // The key is the posting plus the figure, so a re-run updates the same row instead of appending a copy.
   const insSal = db.prepare(`INSERT INTO salary_records
-    (role_family,seniority,country,city,remote,channel,skills,amount,currency,period,source,sample_size,verified,observed_at)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
+    (role_family,seniority,country,city,remote,channel,skills,amount,currency,period,source,sample_size,verified,observed_at,dedupe_key)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    ON CONFLICT(dedupe_key) DO UPDATE SET observed_at=excluded.observed_at, amount=excluded.amount, sample_size=excluded.sample_size`);
   // Only job and contract compensation belongs in the salary benchmark.
   const SALARY_TYPES = new Set(['job', 'contract']);
   for (const o of canonical) {
@@ -146,7 +149,8 @@ function seedIfEmpty() {
     const amount = (Number(o.comp_min) + Number(o.comp_max || o.comp_min)) / 2;
     const remote = o.remote_type === 'remote' ? 1 : 0;
     insSal.run(o.role_family, o.seniority, o.country, o.city, remote, o.channel || 'fulltime',
-      JSON.stringify(o.skills), amount, o.currency, o.comp_period, o.source, 1, 0, o.posted_at);
+      JSON.stringify(o.skills), amount, o.currency, o.comp_period, o.source, 1, 0, o.posted_at,
+      [o.source, o.source_id || o.id || o.content_hash || o.title, amount, o.comp_period].join('|'));
   }
   db.exec('COMMIT');
 
@@ -248,9 +252,12 @@ async function ingestLive({ keys, pages } = {}) {
       skills=?, last_seen=datetime('now')
     WHERE id=?`);
   const insSrc = db.prepare('INSERT OR IGNORE INTO opportunity_sources (opportunity_id,source_key,external_id,source_url) VALUES (?,?,?,?)');
+  // De-duplicate at the source: one advert contributes one salary record per run, not one per ingest.
+  // The key is the posting plus the figure, so a re-run updates the same row instead of appending a copy.
   const insSal = db.prepare(`INSERT INTO salary_records
-    (role_family,seniority,country,city,remote,channel,skills,amount,currency,period,source,sample_size,verified,observed_at)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)`);
+    (role_family,seniority,country,city,remote,channel,skills,amount,currency,period,source,sample_size,verified,observed_at,dedupe_key)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)
+    ON CONFLICT(dedupe_key) DO UPDATE SET observed_at=excluded.observed_at, amount=excluded.amount, sample_size=excluded.sample_size`);
 
   let inserted = 0, merged = 0, updated = 0;
   db.exec('BEGIN');
@@ -268,7 +275,8 @@ async function ingestLive({ keys, pages } = {}) {
       merged++;
       if (o.comp_min != null && (o.type === 'job' || o.type === 'contract')) {
         insSal.run(o.role_family, o.seniority, o.country, o.city, o.remote_type === 'remote' ? 1 : 0, o.channel,
-          JSON.stringify(o.skills), (o.comp_min + (o.comp_max || o.comp_min)) / 2, o.currency, o.comp_period, o.source, 1, 0, o.posted_at);
+          JSON.stringify(o.skills), (o.comp_min + (o.comp_max || o.comp_min)) / 2, o.currency, o.comp_period, o.source, 1, 0, o.posted_at,
+          [o.source, o.content_hash || o.id || o.title, (o.comp_min + (o.comp_max || o.comp_min)) / 2, o.comp_period].join('|'));
       }
     } else {
       insOpp.run(o.id, o.type, o.title, o.company, o.role_family, o.seniority, o.remote_type, o.city, o.country,
@@ -281,7 +289,8 @@ async function ingestLive({ keys, pages } = {}) {
       inserted++;
       if (o.comp_min != null) {
         insSal.run(o.role_family, o.seniority, o.country, o.city, o.remote_type === 'remote' ? 1 : 0, o.channel,
-          JSON.stringify(o.skills), (o.comp_min + (o.comp_max || o.comp_min)) / 2, o.currency, o.comp_period, o.source, 1, 0, o.posted_at);
+          JSON.stringify(o.skills), (o.comp_min + (o.comp_max || o.comp_min)) / 2, o.currency, o.comp_period, o.source, 1, 0, o.posted_at,
+          [o.source, o.content_hash || o.id || o.title, (o.comp_min + (o.comp_max || o.comp_min)) / 2, o.comp_period].join('|'));
       }
     }
   }

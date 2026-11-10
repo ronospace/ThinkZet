@@ -1343,6 +1343,7 @@ route('POST', /^\/api\/public\/rate-check$/, async (req, res) => {
     benchmark: {
       p25: rates.p25, p50: rates.p50, p75: rates.p75, p90: rates.p90,
       period: rates.period, currency: 'EUR',
+      sampleSize: rates.sampleSize, thin: rates.thin, confidence: rates.confidence, range: rates.range,
       sampleSize: rates.sampleSize, exactComparables: rates.exactComparables,
       confidence: rates.confidence, segment: rates.segment,
       byChannel: rates.byChannel,

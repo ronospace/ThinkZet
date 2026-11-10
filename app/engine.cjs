@@ -587,6 +587,10 @@ function rateIntelligence(userId) {
     const annual = u === 'hour' ? eur * 1600 : u === 'day' ? eur * 220 : u === 'month' ? eur * 12 : eur;
     return targetPeriod === 'hour' ? annual / 1600 : annual;
   };
+  // Minimum-sample gate: a cell with very few comparables reports a range and a thin label instead of
+  // a single confident median. DATA-08 step 3.
+  const sampleN = converted.length;
+  const thin = sampleN < 30;
   const current = toBase(profile.current_rate);
   let gapPct = null, gapAbs = null, verdict = 'unknown';
   if (current && p50) {
@@ -608,8 +612,10 @@ function rateIntelligence(userId) {
 
   return {
     period: targetPeriod,
+    sampleSize: sampleN,
+    thin,
+    range: thin ? { low: Math.round(p25), high: Math.round(p75) } : null,
     currency: 'EUR',
-    sampleSize: converted.length,
     current,
     p25: Math.round(p25 || 0), p50: Math.round(p50 || 0), p75: Math.round(p75 || 0), p90: Math.round(p90 || 0),
     gapPct, gapAbs, verdict,
@@ -618,7 +624,7 @@ function rateIntelligence(userId) {
       .filter((s) => s.salary_premium)
       .sort((a, b) => b.salary_premium - a.salary_premium).slice(0, 5)
       .map((s) => ({ skill: s.canonical, premium: s.salary_premium })),
-    confidence: exactTier >= 25 ? 'high' : exactTier >= 10 ? 'medium' : 'low',
+    confidence: thin ? 'low' : sampleN < 100 ? 'medium' : 'high',
     exactComparables: exactTier,
     segment: myFamily.replace(/_/g, ' ') + ' · ' + profile.seniority,
     tierBreakdown: ['exact profile', 'same role, ±1 level', 'adjacent role, same level', 'market-wide, same level']

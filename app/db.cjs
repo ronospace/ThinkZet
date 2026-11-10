@@ -401,6 +401,17 @@ const MIGRATIONS = [
   ['opportunities.degree_requirement', () => { if (!columnExists('opportunities', 'degree_requirement')) db.exec("ALTER TABLE opportunities ADD COLUMN degree_requirement TEXT DEFAULT 'unknown'"); }],
   ['opportunities.last_seen', () => { if (!columnExists('opportunities', 'last_seen')) db.exec("ALTER TABLE opportunities ADD COLUMN last_seen TEXT"); }],
   ['users.display_name', () => { if (!columnExists('users', 'display_name')) db.exec("ALTER TABLE users ADD COLUMN display_name TEXT"); }],
+  ['salary_records.dedupe_key', () => {
+    if (!columnExists('salary_records', 'dedupe_key')) db.exec("ALTER TABLE salary_records ADD COLUMN dedupe_key TEXT");
+    db.exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_salary_dedupe ON salary_records(dedupe_key) WHERE dedupe_key IS NOT NULL");
+  }],
+  ['salary_records.dedupe_backfill', () => {
+    // Collapse the copies left by earlier ingests: keep the newest row per key, then key it.
+    db.exec(`DELETE FROM salary_records WHERE dedupe_key IS NULL AND id NOT IN (
+      SELECT MAX(id) FROM salary_records GROUP BY source, role_family, seniority, amount, currency, period)`);
+    db.exec(`UPDATE salary_records SET dedupe_key = source || '|' || role_family || '|' || seniority || '|' || amount || '|' || period
+      WHERE dedupe_key IS NULL`);
+  }],
 ];
 
 function migrate() {
