@@ -161,6 +161,7 @@ Last updated: 9 November 2026.
 | COPY-19 | COPY | Contact addresses: support@, hello@ and billing@thinkzet.com in the footer; legal pages use support@ and hello@; mailer default sender is support@ | Us | DONE | three mailto links in the footer, one in each legal page |
 | AUTH-02 | AUTH | Apple variables set in Railway and live on production: `apple: true`, start returns appleid.apple.com with the thinkzet.com redirect | production providers |
 | DEP-03 | DEP | Railway service renamed to ThinkZet | founder confirmed 10 Nov 2026 |
+| DEP-04 | DEP | Persistence test as exact steps, separate from the scrolling issue: save display name DEP01-check, move one tracked opportunity to Applied, redeploy Railway, then confirm both remain | Us | DONE | procedure recorded 11 Nov 2026 |
 | DEP-02 | DEP | Railway Agent destroyed, no active agents, spare project `earnest-forgiveness` deleted | founder confirmed 10 Nov 2026 |
 | AUTH-13 | AUTH | Signed-in visitor is never shown a Demo Mode button: the sign-in screen offers "Back to the app" instead, and the account menu hides Sign In whenever a session exists | Us | DONE | signed-out shows demo, signed-in shows back; session proven on a fresh database |
 | DATA-09 | DATA | A fresh database crashed on boot because SQLite cannot use a partial index as an ON CONFLICT target. The dedupe index is now a plain unique index and the migration drops the old one first | Us | DONE | fresh db boots 200, no conflict error |
