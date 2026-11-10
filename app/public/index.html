@@ -2381,10 +2381,13 @@ function openDetail(id) {
 
   $('#back').onclick = () => go('radar');
   if ($('#d-open')) $('#d-open').onclick = async () => {
-    // Opening the listing is the application; recording it here keeps the tracker honest.
+    // Opening the listing is not applying. Record the open, keep the stage where it is, and let the
+    // person confirm Applied once they have actually sent the application.
     track('opportunity.opened', { opportunityId: o.id });
-    await post('/api/applications', { opportunityId: o.id, status: 'applied' });
-    toast('Opened the listing and marked applied');
+    await post('/api/applications', { opportunityId: o.id, status: 'saved' });
+    const btn = $('#d-apply');
+    if (btn) { btn.classList.remove('ghost'); btn.textContent = 'Mark as applied'; }
+    toast('Listing opened – mark Applied once you have sent it');
   };
   $('#d-apply').onclick = async () => { await post('/api/applications', { opportunityId: o.id, status: 'applied' }); toast('Marked as applied – momentum updated'); };
   $('#d-save').onclick = async () => { await post('/api/applications', { opportunityId: o.id, status: 'saved' }); toast('Saved'); };
