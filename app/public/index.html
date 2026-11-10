@@ -752,6 +752,19 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
   html,body{overflow:hidden;height:100%}
   .shell{position:fixed;inset:0;height:100dvh}
 }
+.cap-h{display:flex;align-items:center;gap:9px;margin-bottom:6px}
+.cap-h h3{margin:0}
+.cap-ico{width:22px;height:22px;flex:none;border-radius:7px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent2) 14%,var(--panel));border:1px solid color-mix(in srgb,var(--accent2) 38%,var(--line))}
+.cap-ico:before{content:"";width:12px;height:12px;background:var(--accent2);opacity:.9}
+.cap-ico[data-ico="twin"]:before{border-radius:50%;box-shadow:inset 0 0 0 3px var(--panel),inset 0 0 0 6px var(--accent2)}
+.cap-ico[data-ico="radar"]:before{border-radius:50%;background:conic-gradient(var(--accent2) 0 25%,transparent 25% 100%);opacity:.85}
+.cap-ico[data-ico="rate"]:before{background:linear-gradient(90deg,var(--accent2) 0 3px,transparent 3px 5px,var(--accent2) 5px 8px,transparent 8px 10px,var(--accent2) 10px 12px)}
+.cap-ico[data-ico="pulse"]:before{background:linear-gradient(90deg,transparent 0 15%,var(--accent2) 15% 30%,transparent 30% 45%,var(--accent2) 45% 60%,transparent 60%);clip-path:polygon(0 60%,25% 60%,35% 20%,50% 80%,65% 40%,100% 40%,100% 55%,68% 55%,50% 95%,33% 35%,28% 75%,0 75%)}
+.cap-ico[data-ico="path"]:before{border-radius:50%;background:radial-gradient(circle at 30% 70%,var(--accent2) 0 3px,transparent 3px),radial-gradient(circle at 70% 30%,var(--accent2) 0 3px,transparent 3px),linear-gradient(45deg,transparent 45%,var(--accent2) 45% 55%,transparent 55%)}
+.cap-ico[data-ico="gap"]:before{background:linear-gradient(180deg,var(--accent2) 0 2px,transparent 2px 5px,var(--accent2) 5px 7px,transparent 7px 10px,var(--accent2) 10px 12px)}
+.cap-ico[data-ico="track"]:before{border-radius:2px;background:linear-gradient(90deg,var(--accent2) 0 3px,transparent 3px 6px,var(--accent2) 6px 9px,transparent 9px 12px)}
+.cap-ico[data-ico="neg"]:before{border-radius:50%;box-shadow:inset 0 0 0 2px var(--accent2),inset 0 -4px 0 0 transparent}
+.cap-ico[data-ico="cop"]:before{border-radius:50%;background:radial-gradient(circle at 50% 35%,var(--accent2) 0 3px,transparent 3px),linear-gradient(180deg,transparent 55%,var(--accent2) 55% 100%)}
 </style>
 </head>
 <body>
@@ -850,18 +863,18 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
     </section>
 
     <section id="capabilities" class="land-sec">
-      <h2 class="land-h2">Nine instruments, one decision</h2>
+      <h2 class="land-h2">Nine Instruments, One Decision</h2>
       <p class="land-sec-sub">Every screen answers a question you would otherwise answer by guessing.</p>
       <div class="cap-grid">
-        <div class="cap"><h3>Career Twin</h3><p>Understand your professional identity. A persistent model of your skills, constraints and trajectory.</p></div>
-        <div class="cap"><h3>Opportunity Radar</h3><p>Discover opportunities. Every listing scored on fit, income and your real odds of getting it.</p></div>
-        <div class="cap"><h3>Rate Intelligence</h3><p>Know your market value. The median for your exact profile, with sample size and confidence attached.</p></div>
-        <div class="cap"><h3>Market Pulse</h3><p>See what the whole market pays, by discipline and country, computed from live postings.</p></div>
-        <div class="cap"><h3>Career Trajectory</h3><p>Where each path lands in 12, 24 or 60 months, with the risk priced in.</p></div>
-        <div class="cap"><h3>Skill Gap Intelligence</h3><p>The shortest sequence to unblock the most opportunities, ranked by what it actually pays.</p></div>
-        <div class="cap"><h3>Career Tracker</h3><p>Your pipeline, and the outcome loop that makes every estimate sharper.</p></div>
-        <div class="cap"><h3>Negotiation Intelligence</h3><p>The number to say, the evidence behind it, and the counter when they come in low.</p></div>
-        <div class="cap"><h3>Career Copilot</h3><p>Grounded in your own data. It cites the sample it used, or says it does not know.</p></div>
+        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="twin" aria-hidden="true"></span><h3>Career Twin</h3></div><p>Understand your professional identity. A persistent model of your skills, constraints and trajectory.</p></div>
+        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="radar" aria-hidden="true"></span><h3>Opportunity Radar</h3></div><p>Discover opportunities. Every listing scored on fit, income and your real odds of getting it.</p></div>
+        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="rate" aria-hidden="true"></span><h3>Rate Intelligence</h3></div><p>Know your market value. The median for your exact profile, with sample size and confidence attached.</p></div>
+        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="pulse" aria-hidden="true"></span><h3>Market Pulse</h3></div><p>See what the whole market pays, by discipline and country, computed from live postings.</p></div>
+        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="path" aria-hidden="true"></span><h3>Career Trajectory</h3></div><p>Where each path lands in 12, 24 or 60 months, with the risk priced in.</p></div>
+        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="gap" aria-hidden="true"></span><h3>Skill Gap Intelligence</h3></div><p>The shortest sequence to unblock the most opportunities, ranked by what it actually pays.</p></div>
+        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="track" aria-hidden="true"></span><h3>Career Tracker</h3></div><p>Your pipeline, and the outcome loop that makes every estimate sharper.</p></div>
+        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="neg" aria-hidden="true"></span><h3>Negotiation Intelligence</h3></div><p>The number to say, the evidence behind it, and the counter when they come in low.</p></div>
+        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="cop" aria-hidden="true"></span><h3>Career Copilot</h3></div><p>Grounded in your own data. It cites the sample it used, or says it does not know.</p></div>
       </div>
     </section>
 
