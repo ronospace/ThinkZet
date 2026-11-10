@@ -144,7 +144,7 @@ Last updated: 9 November 2026.
 | FB-01 | FB | In-app feedback: a short rating (1 to 5) plus an optional comment, stored against the account or the lead, surfaced on a Leads screen with an average and a distribution | Us | OPEN | founder request 10 Nov 2026 |
 | FB-02 | FB | Ask for a rating at the right moment only: after the first rate check result, after a recorded outcome, and once at day 7. Never on the paywall, never twice | Us | OPEN | needs FB-01 |
 | FB-03 | FB | Public proof: a review request by email to paying customers after 14 days, and a testimonials block on the landing page that shows only real, attributed quotes | Us | OPEN | needs FB-01 and a first paying cohort |
-| GRO-01 | GRO | Send the link to the first 20 people | PAY-01 |
+| GRO-01 | GRO | Send the link to the first 20 people | PAUSED by founder 11 Nov 2026: the founder collects reviews and feedback personally and sends the results for recording. No invites are sent or prepared until the founder says so. The runbook stays at `GRO-01-FIRST-20.md` |
 | GRO-02 | GRO | Weekly Funnel and Leads report | GRO-01 |
 
 ## D. Done (verified and pushed)
