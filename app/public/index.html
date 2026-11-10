@@ -843,12 +843,14 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
         <div class="price">
           <h3>Pro+</h3>
           <div class="price-v">&euro;49<span> /month</span></div>
-          <div class="price-alt">For people moving this quarter</div>
+          <div class="price-alt">Automation, not consulting</div>
           <ul>
             <li>Everything in Pro</li>
-            <li>One 1:1 session with a vetted coach</li>
-            <li>Relocation readiness pack</li>
-            <li>Quarterly trajectory review</li>
+            <li>Priority alerts on 90+ matches</li>
+            <li>Automated negotiation briefs</li>
+            <li>Advanced trajectory modelling</li>
+            <li>Multi-profile: hire, contract, freelance</li>
+            <li>Premium copilot with deeper context</li>
           </ul>
           <button class="btn ghost" id="price-plus">Talk to Us</button>
         </div>
@@ -2656,8 +2658,8 @@ async function renderPlan() {
         p.plan === 'pro'
           ? '<div class="chip have plan-chip">Active</div>'
           : '<button class="btn" id="up-month">Unlock Pro</button>')}
-      ${cell('', '', 'Pro+', '€49<span> /month</span>', 'For people moving this quarter',
-        ['Everything in Pro', 'One 1:1 session with a vetted coach', 'Relocation readiness pack', 'Quarterly trajectory review'],
+      ${cell('', '', 'Pro+', '€49<span> /month</span>', 'Automation, not consulting',
+        ['Everything in Pro', 'Priority alerts on 90+ matches', 'Automated negotiation briefs', 'Advanced trajectory modelling', 'Multi-profile: hire, contract, freelance', 'Premium copilot with deeper context'],
         '<button class="btn ghost" id="up-plus">Talk to Us</button>')}
     </div>
     <div class="card" style="margin-top:14px">

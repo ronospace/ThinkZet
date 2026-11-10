@@ -2038,11 +2038,11 @@ route('POST', /^\/api\/referrals\/link$/, async (req, res) => {
 // Keep the intended scope here as a note for whoever builds it.
 const PLUS_FEATURES_PLANNED = [
   'Everything in Pro',
-  'One 1:1 session with a vetted career coach',
-  'Relocation readiness pack (visa, cost of living, salary by city)',
-  'Multi-profile: full-time, contract and freelance twins',
   'Priority alerts on 90+ matches',
-  'Quarterly trajectory re-run with a written review',
+  'Automated negotiation briefs',
+  'Advanced trajectory modelling',
+  'Multi-profile: hire, contract, freelance',
+  'Premium copilot with deeper context',
 ];
 
 route('GET', /^\/api\/plan$/, async (req, res) => {
