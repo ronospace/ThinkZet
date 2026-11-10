@@ -614,6 +614,8 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .price li:before{content:"";position:absolute;left:2px;top:14px;width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.7}
 .price .btn,.price .btn.ghost{width:100%;justify-content:center;display:block;text-align:center}
 .price .chip{align-self:center;margin-top:auto}
+.plan-grid-compact .price{display:flex;flex-direction:column}
+.plan-grid-compact .price .btn,.plan-grid-compact .price .chip{margin-top:auto}
 .faq details{border-bottom:1px solid var(--line);padding:var(--sp-4) 0}
 .faq summary{cursor:pointer;font-size:var(--text-md);font-weight:600;color:var(--ink);list-style:none;display:flex;justify-content:space-between;gap:16px;letter-spacing:var(--tracking-tight)}
 .faq summary::-webkit-details-marker{display:none}
@@ -696,7 +698,7 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .plan-grid-compact .price h3{font-size:var(--text-sm);margin-bottom:2px}
 .plan-grid-compact .price-alt{font-size:11px}
 .plan-grid-compact .price-v{font-size:var(--text-xl)}
-.plan-grid-compact .price ul{min-height:0;margin:10px 0 12px}
+.plan-grid-compact .price ul{min-height:0;margin:10px 0 12px;flex:1 1 auto}
 .plan-grid-compact .price li{font-size:11px;padding:4px 0 4px 14px}
 .plan-grid-compact .price .btn{padding:7px 10px;font-size:11px}
 .plan-chip{align-self:center;margin-top:auto}
@@ -712,6 +714,9 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 @media(max-width:760px){.market-snapshot{gap:12px;padding:12px}.market-snapshot .ds-grid{gap:14px}}
 .price-tagline{font-size:var(--text-sm);font-weight:600;color:var(--ink2);margin:2px 0 8px}
 .plan-grid-compact .price-tagline{font-size:12px;margin:1px 0 6px}
+.plan-grid-compact .price.is-current{border-color:color-mix(in srgb,var(--good) 55%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--good) 28%,transparent)}
+html[data-theme="light"] .plan-grid-compact .price.is-current{border-color:#9FD9BC;box-shadow:0 0 0 1px rgba(14,157,99,.14)}
+.plan-grid-compact .price.is-current .chip.have{border-color:color-mix(in srgb,var(--good) 55%,var(--line));background:color-mix(in srgb,var(--good) 12%,var(--panel))}
 </style>
 </head>
 <body>
