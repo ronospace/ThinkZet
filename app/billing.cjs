@@ -27,7 +27,7 @@ const PLANS = {
   },
   pro: {
     key: 'pro', label: 'Pro', price: 19, period: 'month', annual: 149,
-    features: ['Unlimited scored opportunities', 'Career Twin + all six scores', 'Full Radar with filters and facets', 'Saved searches and the morning brief', 'Negotiation and trajectory', 'Cover letters and interview prep', 'Unlimited tracker and outcomes'],
+    features: ['Unlimited scored opportunities', 'Career Twin + all six scores', 'Full Radar with filters and facets', 'Saved searches and the morning brief', 'Negotiation and interview prep', 'Unlimited tracker and outcomes'],
   },
 };
 
