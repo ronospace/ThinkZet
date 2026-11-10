@@ -179,6 +179,7 @@ Last updated: 9 November 2026.
 | UI-08 | UI | Sign-in card centred; sidebar and top bar stay | measured at 1440, 1920, 393 |
 | UI-09 | UI | Landing sections snap on desktop, off on phones and reduced motion | measured |
 | UI-10 | UI | Top bar: title, live pill, icons pinned right, no sideways scroll | measured 360 and 393 |
+| UI-63 | UI | Nav scroll indicator: a thin drawn bar inside the nav box that tracks its scroll position, because macOS overlay scrollbars take no space and fade out, which made an internal scroll look like a moving rail | Us | DONE | bar 262px tall, top 71 to 233 while the nav scrolls 0 to 300; rail unchanged |
 | UI-62 | UI | The rail is locked: overflow hidden and full height, the logo fixed at the top, the nav scrolling in its own box, and the company footer pinned at the bottom with the nav running underneath it | Us | DONE | rail scroll 0 and logo 16 and footer 556 unchanged across two navigations while nav scrolls 0 to 407 to 55 |
 | UI-61 | UI | The left rail no longer moves when a screen changes: the active nav button is scrolled inside the nav list only, instead of scrollIntoView walking every scrollable ancestor | Us | DONE | rail top 0 and logo top 16 unchanged after navigating; nav scrolls internally 0 to 407 |
 | UI-11 | UI | Score rings as arcs, footer in three columns, Skill Gaps fits phone | `487efe6` |
