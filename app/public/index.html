@@ -736,6 +736,11 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .ad-slot{display:none;margin:18px 0 4px;padding:10px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
 .ad-slot.show{display:block}
 .ad-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ad-consent{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:60;display:none;gap:12px;align-items:center;max-width:560px;width:calc(100% - 32px);padding:12px 14px;border:1px solid var(--line2);border-radius:var(--radius);background:var(--panel);box-shadow:var(--shadow)}
+.ad-consent.show{display:flex}
+.ad-consent p{margin:0;font-size:var(--text-xs);color:var(--ink2);line-height:1.5;flex:1}
+.ad-consent .row{gap:8px;flex:none}
+@media(max-width:560px){.ad-consent{flex-direction:column;align-items:stretch;bottom:88px}.ad-consent .row{justify-content:flex-end}}
 </style>
 </head>
 <body>
@@ -1072,12 +1077,23 @@ function titleCase(input) {
 // Funnel: only the seven events the register names, so the table stays readable.
 // Ads load only when the server says so, which already excludes paid plans, and only after the
 // reader has consented to cookies. Nothing is requested before that.
+function askAdConsent(onAccept) {
+  if (localStorage.getItem('tz-ads-consent')) return;
+  const el = document.createElement('div');
+  el.className = 'ad-consent show';
+  el.innerHTML = '<p>Ads keep the free tier free. They never appear on Pro, and never inside your rate result. Allow cookies for ads?</p>' +
+    '<div class="row"><button class="btn ghost sm" id="ad-no">No thanks</button><button class="btn sm" id="ad-yes">Allow</button></div>';
+  document.body.appendChild(el);
+  el.querySelector('#ad-yes').onclick = () => { localStorage.setItem('tz-ads-consent', 'yes'); el.remove(); onAccept(); };
+  el.querySelector('#ad-no').onclick = () => { localStorage.setItem('tz-ads-consent', 'no'); el.remove(); };
+}
+
 async function mountAds(target) {
   const box = typeof target === 'string' ? document.querySelector(target) : target;
   if (!box) return;
   const cfg = await api('/api/ads').catch(() => null);
   if (!cfg || !cfg.enabled) return;
-  if (localStorage.getItem('tz-ads-consent') !== 'yes') return;
+  if (localStorage.getItem('tz-ads-consent') !== 'yes') { askAdConsent(() => mountAds(target)); return; }
   box.classList.add('show');
   box.innerHTML = '<div class="ad-label">Advertisement</div><ins class="adsbygoogle" style="display:block" data-ad-client="' + cfg.client + '"' + (cfg.slot ? ' data-ad-slot="' + cfg.slot + '"' : '') + ' data-ad-format="auto" data-full-width-responsive="true"></ins>';
   if (!document.querySelector('script[data-adsense]')) {
