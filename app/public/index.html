@@ -718,7 +718,6 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 html[data-theme="light"] .plan-grid-compact .price.is-current{border-color:#9FD9BC;box-shadow:0 0 0 1px rgba(14,157,99,.14)}
 .plan-grid-compact .price.is-current .chip.have{border-color:color-mix(in srgb,var(--good) 55%,var(--line));background:color-mix(in srgb,var(--good) 12%,var(--panel))}
 .plan-grid-compact .price .chip.have{background:color-mix(in srgb,var(--good) 12%,var(--panel));color:var(--good);border:1px solid color-mix(in srgb,var(--good) 45%,var(--line));border-radius:var(--radius-sm)}
-.plan-state{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-2xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--good);background:color-mix(in srgb,var(--good) 12%,var(--panel));border:1px solid color-mix(in srgb,var(--good) 40%,var(--line));border-radius:999px;padding:2px 8px;margin-top:auto;margin-bottom:6px;align-self:flex-start}
 .plan-grid-compact .price .btn[disabled]{opacity:.55;cursor:default}
 </style>
 </head>
@@ -2670,7 +2669,7 @@ async function renderPlan() {
       ${cell('featured', 'Most Chosen', 'Pro', 'Make Better Moves', '€19.99<span> /month</span>', 'or €149.99/year',
         p.plans.pro.features,
         p.plan === 'pro'
-          ? '<div class="plan-state">Active Plan</div><button class="btn" id="up-month" disabled>Unlock Pro</button>'
+          ? '<button class="btn" id="up-month" disabled>Unlock Pro</button>'
           : '<button class="btn" id="up-month">Unlock Pro</button>')}
       ${cell('', '', 'Pro+', 'For Bigger Decisions', '€49<span> /month</span>', '',
         ['Compare relocation offers side by side', 'Compare countries before you move', 'Compare contract & permanent paths', 'Compare salary, tax & living costs', 'See what each move is really worth', 'Offer negotiation briefs'],
