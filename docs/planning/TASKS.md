@@ -30,6 +30,7 @@ Last updated: 9 November 2026.
 | UI-26 | UI | The salutation mark uses a three-stop gradient (violet, rose, blue) in both themes instead of a two-stop ramp | Us | DONE | computed background-image in light and dark |
 | COPY-27 | COPY | Title case for every h3 heading across the app: 58 headings including Skill Gap Detection, How to Close Them and the table headers | Us | DONE | rendered Skill Gaps screen, 59/59 API, 10/10 browser |
 | UI-25i | UI | A running demo labels the account state "Demo Mode" instead of "Signed Out" | Us | DONE | measured: state Demo Mode, signin flex, demo none |
+| UI-33 | UI | Landing pricing restored to the exact 487efe6 design: three equal cells, pill tag on Pro, Start free and Choose yearly as ghost actions, Unlock Pro solid | Us | DONE | 1440px light render, 59/59 API, 10/10 browser |
 | UI-32 | UI | Landing pricing matches the reference: grid centred at 1000px, equal-height cells, actions pinned to the bottom with a 10px radius | Us | DONE | 1440px light render, 59/59 API, 10/10 browser |
 | UI-31 | UI | Section headings title-cased, and the system-health group carries a small tinted icon before the title: pulse for Live Ingestion, a health ring for Listing Health, a stack for Corpus | Us | DONE | 393px render of Engine, 59/59 API, 10/10 browser |
 | UI-30 | UI | Plan cells carry coloured surrounds: green for the current plan, violet for Pro, blue for the yearly cell, in both themes | Us | DONE | dark and light renders, 59/59 API, 10/10 browser |
