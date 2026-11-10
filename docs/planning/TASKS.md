@@ -107,7 +107,7 @@ Last updated: 9 November 2026.
 
 | AUTH-01 | AUTH | Google credentials set in Railway and live on production; the client JSON confirms redirect `https://thinkzet.com/api/auth/google/callback` | none |
 
-| PAY-01a | PAY | Diagnose the failed €2 attempt: Stripe answered `payment_intent_authentication_failure` on a card PaymentIntent, no charge created, no application error. Account DE, charges and payouts enabled, card_payments active, price valid, session in subscription mode with card and link | Us | DONE | payment intent `pi_3Ua5AG41m9e00I4D0KVNtD1o` read back from Stripe |
+| PAY-01a | PAY | Diagnosed: Stripe answers `payment_intent_authentication_failure` on a card intent, no charge created. The session is 200 **eur** but Stripe presents **30,313 KES** because Adaptive Pricing converted for a Kenyan device, and the page then says "charge you in KES". Account is DE with EUR settlement, so a KES presentment is what the issuer refuses. Also found: the checkout statement descriptor is `FLOW AI`, not ThinkZet | Us | DONE | session `cs_live_b1tTuVsfb1zlF2sAMbx4y0bAXIESTRz9lYT5rw8Bqa8OmrSoAaQq8fBOod` |
 | PAY-01 | PAY | Real €19.99 payment, confirm Pro unlocks, refund yourself | thinkzet.com → Upgrade |
 | PAY-05 | PAY | Live proof of cancellation against a real Stripe subscription (steps in `docs/planning/PAYMENTS.md`) | After PAY-01: subscribe, cancel in the app, confirm Stripe shows "cancels at period end" |
 | SEC-01 | SEC | Roll the Stripe live key, webhook secret and Resend key (all pasted in chat) | Roll in each dashboard, update Railway |
