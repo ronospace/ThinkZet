@@ -97,9 +97,12 @@ async function signIn(base, tag) {
   ok('catalogue has no plus tier', !cat.json?.plans?.plus, JSON.stringify(Object.keys(cat.json?.plans || {})));
   const interest = await call(SAFE, 'POST', '/api/plus/interest', {});
   ok('interest endpoint records without selling', interest.status === 200 && /will not be charged before/i.test(interest.json?.note || ''), JSON.stringify(interest.json));
+  // Pro+ is displayed again, but it must never reach a checkout: its action records interest only.
   const land = await call(SAFE, 'GET', '/');
-  ok('landing page has no Pro+ card', !/Pro\+/.test(land.text), 'found "Pro+" in the landing page');
-  ok('landing page has no Pro+ button', !/price-plus/.test(land.text), 'found price-plus');
+  ok('landing page shows Pro+ as a plan', /Pro\+/.test(land.text), 'Pro+ missing from the landing page');
+  ok('Pro+ action is the waitlist, not a checkout', /plus\/interest/.test(land.text), 'no interest handler on the landing page');
+  const plusCheckout = await call(SAFE, 'POST', '/api/billing/checkout', { cycle: 'monthly', plan: 'plus' }, s.cookie);
+  ok('a plus checkout cannot be bought', plusCheckout.status !== 200 || !plusCheckout.json?.url, JSON.stringify(plusCheckout.json).slice(0, 90));
 
   console.log(`\npayment checks: ${pass} passed, ${fail} failed`);
   if (fail) { for (const f of failures) console.log('  FAIL ' + f); process.exitCode = 1; }

@@ -137,6 +137,9 @@ async function createCheckout({ userId, email, cycle, plan = 'pro' }) {
     'subscription_data[metadata][user_id]': userId,
     'metadata[user_id]': userId,
     'metadata[plan]': plan,
+    // Adaptive Pricing converts to the device's local currency, which a EUR-settling account then
+    // presents as a foreign-currency charge and the issuer refuses. Pin presentment to the price currency.
+    'payment_method_options[card][request_three_d_secure]': 'automatic',
   });
   return { mode: m, fallback: false, url: session.url, id: session.id };
 }
