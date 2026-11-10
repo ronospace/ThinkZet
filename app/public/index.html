@@ -2665,7 +2665,7 @@ async function renderPlan() {
       ${cell(p.plan === 'free' ? 'is-current' : '', '', 'Free', 'Know Your Value', '€0', '',
         p.plans.free.features,
         p.plan === 'free'
-          ? '<div class="plan-state">Current Plan</div><button class="btn ghost" id="downgrade" disabled>Continue Free</button>'
+          ? '<button class="btn ghost" id="downgrade" disabled>Continue Free</button>'
           : '<button class="btn ghost" id="downgrade">Continue Free</button>')}
       ${cell('featured', 'Most Chosen', 'Pro', 'Make Better Moves', '€19.99<span> /month</span>', 'or €149.99/year',
         p.plans.pro.features,
