@@ -9,8 +9,8 @@ const crypto = require('node:crypto');
 const { db } = require('./db.cjs');
 
 const DEFAULT_PROGRAMS = [
-  { name: 'Mercor', slug: 'mercor', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 150, template: 'https://mercor.com/?ref={code}', notes: 'AI talent marketplace – hourly contracts' },
-  { name: 'micro1', slug: 'micro1', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 120, template: 'https://www.micro1.ai/?ref={code}', notes: 'AI screening + talent marketplace' },
+  { name: 'Mercor', slug: 'mercor', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 150, template: 'https://t.mercor.com/jHGSI', notes: 'AI talent marketplace – hourly contracts' },
+  { name: 'micro1', slug: 'micro1', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 120, template: 'https://refer.micro1.ai/referral/jobs?referralCode=899c8653-93c8-450d-a7da-d54426b36cfc', notes: 'AI screening + talent marketplace' },
   { name: 'Turing', slug: 'turing', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 100, template: 'https://www.turing.com/?ref={code}', notes: 'Remote developer staffing' },
   { name: 'Arc.dev', slug: 'arc', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 90, template: 'https://arc.dev/?ref={code}', notes: 'Curated remote developer marketplace' },
   { name: 'Upwork', slug: 'upwork', category: 'freelance', payout_model: 'revshare', payout_amount: 0, template: 'https://www.upwork.com/?ref={code}', notes: 'Freelance liquidity' },
@@ -20,13 +20,17 @@ const DEFAULT_PROGRAMS = [
   { name: 'Google Cloud Skills', slug: 'gcp', category: 'learning', payout_model: 'revshare', payout_amount: 0, template: 'https://cloud.google.com/training/?ref={code}', notes: 'Certification partner' },
   { name: 'Immigration partner', slug: 'immigration', category: 'immigration', payout_model: 'cpa', payout_amount: 200, template: 'https://example-immigration.com/?ref={code}', notes: 'Consultation referral' },
   { name: 'Relocation partner', slug: 'relocation', category: 'relocation', payout_model: 'cpa', payout_amount: 250, template: 'https://example-relocation.com/?ref={code}', notes: 'Relocation package referral' },
+  { name: 'Brilliant', slug: 'brilliant', category: 'learning', payout_model: 'revshare', payout_amount: 0, template: 'https://whybrilliant.com/r/M9HRR8B2', notes: 'Referral supplied by the founder' },
+  { name: 'Rust Labs (engineering)', slug: 'rustlabs-eng', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 0, template: 'https://experts.rustlabs.ai/apply?ref=wht75utc&program=talent-sourcer-swe&role=senior-engineer&track=engineering', notes: 'Referral supplied by the founder' },
+  { name: 'Rust Labs (business analyst)', slug: 'rustlabs-ba', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 0, template: 'https://experts.rustlabs.ai/screens/business-analyst-rater/apply?ref=wht75utc&program=talent-sourcer-business-analyst', notes: 'Referral supplied by the founder' },
+  { name: 'Rust Labs (scientific coding)', slug: 'rustlabs-sci', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 0, template: 'https://experts.rustlabs.ai/apply?ref=wht75utc&program=talent-sourcer-scientific-coding&role=scientific-coding', notes: 'Referral supplied by the founder' },
+  { name: 'Ethos', slug: 'ethos', category: 'ai_marketplace', payout_model: 'cpa', payout_amount: 0, template: 'https://agent.askethos.com/refer/pifuwuc8xbgg', notes: 'Referral supplied by the founder' },
 ];
 
 function seedPrograms() {
-  const n = db.prepare('SELECT COUNT(*) n FROM referral_programs').get().n;
-  if (n > 0) return;
-  const ins = db.prepare(`INSERT OR IGNORE INTO referral_programs (name,slug,category,payout_model,payout_amount,template,notes)
-    VALUES (?,?,?,?,?,?,?)`);
+  const ins = db.prepare(`INSERT INTO referral_programs (name,slug,category,payout_model,payout_amount,template,notes)
+    VALUES (?,?,?,?,?,?,?)
+    ON CONFLICT(slug) DO UPDATE SET template=excluded.template, notes=excluded.notes, name=excluded.name`);
   for (const p of DEFAULT_PROGRAMS) {
     ins.run(p.name, p.slug, p.category, p.payout_model, p.payout_amount, p.template, p.notes);
   }
@@ -35,7 +39,7 @@ function seedPrograms() {
 function programForSource(sourceKey) {
   const map = {
     mercor: 'mercor', micro1: 'micro1', turing: 'turing', arc: 'arc', upwork: 'upwork',
-    braintrust: 'upwork', coursera: 'coursera', datacamp: 'datacamp',
+    braintrust: 'upwork', coursera: 'coursera', datacamp: 'datacamp', brilliant: 'brilliant', ethos: 'ethos',
   };
   const slug = map[sourceKey];
   if (!slug) return null;
