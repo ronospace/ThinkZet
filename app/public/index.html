@@ -1734,7 +1734,10 @@ async function renderRadar() {
   const hour = now.getHours();
   const greeting = hour < 5 ? 'Still up' : hour < 12 ? 'Good morning' : hour < 18 ? 'Good afternoon' : hour < 23 ? 'Good evening' : 'Still up';
   const rawName = (STATE.user?.name || '').trim();
-  const firstName = rawName && !/@/.test(rawName) ? rawName.split(/\s+/)[0].replace(/^./, (c) => c.toUpperCase()) : '';
+  // Greet with the surname when there is one: "Ronno Jeff" greets as Jeff, "Geoffrey" as Geoffrey.
+  const parts = rawName && !/@/.test(rawName) ? rawName.split(/\s+/).filter(Boolean) : [];
+  const pick = parts.length > 1 ? parts[parts.length - 1] : (parts[0] || '');
+  const firstName = pick ? pick.replace(/^./, (c) => c.toUpperCase()) : '';
   const salutation = firstName ? `${greeting}, ${firstName}` : greeting;
 
   let planBanner = '';
