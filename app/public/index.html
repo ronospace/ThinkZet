@@ -742,6 +742,12 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .ad-consent p{margin:0;font-size:var(--text-xs);color:var(--ink2);line-height:1.5;flex:1}
 .ad-consent .row{gap:8px;flex:none}
 @media(max-width:560px){.ad-consent{flex-direction:column;align-items:stretch;bottom:88px}.ad-consent .row{justify-content:flex-end}}
+.msg-intro{display:block}
+.mi-lead{font-weight:650;color:var(--ink);margin-bottom:8px}
+.mi-list{margin:0;padding-left:18px;display:grid;gap:4px}
+.mi-list li{font-size:var(--text-sm);color:var(--ink2);line-height:1.5}
+.mi-list b{color:var(--ink);font-weight:650}
+.mi-foot{margin-top:10px;font-size:var(--text-xs);color:var(--muted)}
 </style>
 </head>
 <body>
@@ -1106,6 +1112,17 @@ async function mountAds(target) {
     document.head.appendChild(sc);
   }
   try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { /* blocked or offline */ }
+}
+
+// Answers arrive as plain text. Give the first sentence weight, keep the rest readable, and use a colon
+// where a label introduces its value instead of a dash.
+function formatReply(text) {
+  const raw = String(text || '').trim();
+  if (!raw) return '';
+  const parts = raw.split(/\n{2,}/).filter(Boolean);
+  const lead = parts.shift() || raw;
+  const rest = parts.map((p) => `<p>${esc(p).replace(/\s+[–-]\s+/g, ': ')}</p>`).join('');
+  return `<div class="mi-lead">${esc(lead).replace(/\s+[–-]\s+/g, ': ')}</div>${rest}`;
 }
 
 const track = (event, props) => { try { post('/api/track', { event, props: props || {}, path: location.pathname + location.search }); } catch (e) { /* never block the UI */ } };
@@ -2590,7 +2607,16 @@ async function renderCopilot() {
         ${['What should I do next?', 'Am I underpaid?', 'Which skills are blocking me?', 'What is realistic for relocating to Germany?', 'How am I doing overall?'].map((q) => `<button data-q="${esc(q)}">${esc(q)}</button>`).join('')}
       </div>
       <div class="msgs" id="msgs">
-        <div class="msg bot">I answer only from your data – your twin, your matches, your rate benchmark, your scores. Ask me something specific.</div>
+        <div class="msg bot msg-intro">
+          <div class="mi-lead">I answer only from your own data.</div>
+          <ul class="mi-list">
+            <li><b>Your twin</b>: skills, seniority, constraints</li>
+            <li><b>Your matches</b>: scored opportunities and odds</li>
+            <li><b>Your rate</b>: benchmark, percentile, gap</li>
+            <li><b>Your scores</b>: eight measures, benchmarked</li>
+          </ul>
+          <div class="mi-foot">Ask something specific and I will cite the sample I used.</div>
+        </div>
       </div>
       <div class="composer">
         <input id="q" placeholder="Ask about your rate, your next move, your gaps…"/>
@@ -2605,7 +2631,7 @@ async function renderCopilot() {
     msgs.scrollTop = msgs.scrollHeight;
     const res = await post('/api/copilot', { message: q });
     const cites = (res.citations || []).map((c) => `${c.label}: ${c.detail}`).join(' · ');
-    msgs.insertAdjacentHTML('beforeend', `<div class="msg bot">${esc(res.reply)}${cites ? `<div class="cite">Grounded in – ${esc(cites)}</div>` : ''}</div>`);
+    msgs.insertAdjacentHTML('beforeend', `<div class="msg bot">${formatReply(res.reply)}${cites ? `<div class="cite">Grounded in: ${esc(cites)}</div>` : ''}</div>`);
     msgs.scrollTop = msgs.scrollHeight;
   };
   $('#send').onclick = () => send();
