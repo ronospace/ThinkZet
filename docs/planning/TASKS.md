@@ -138,6 +138,9 @@ Last updated: 9 November 2026.
 | AUTH-06 | AUTH | Display name: provider name on first sign-in, user override in `users.display_name`, the override wins in every API response and the UI, and a later provider name never overwrites it | Us | DONE | 6 checks on an isolated server |
 | AUTH-03 | AUTH | Both providers live on production: providers reports google and apple true, both start routes return the provider with the thinkzet.com redirect, a forged state is refused and recorded in /api/auth/diagnostic. The consent step itself needs a human browser | You: click Continue with Google and Continue with Apple once | OPEN |
 | DATA-02 | DATA | Offsite backup of the SQLite volume | DEP-01 |
+| FB-01 | FB | In-app feedback: a short rating (1 to 5) plus an optional comment, stored against the account or the lead, surfaced on a Leads screen with an average and a distribution | Us | OPEN | founder request 10 Nov 2026 |
+| FB-02 | FB | Ask for a rating at the right moment only: after the first rate check result, after a recorded outcome, and once at day 7. Never on the paywall, never twice | Us | OPEN | needs FB-01 |
+| FB-03 | FB | Public proof: a review request by email to paying customers after 14 days, and a testimonials block on the landing page that shows only real, attributed quotes | Us | OPEN | needs FB-01 and a first paying cohort |
 | GRO-01 | GRO | Send the link to the first 20 people | PAY-01 |
 | GRO-02 | GRO | Weekly Funnel and Leads report | GRO-01 |
 
