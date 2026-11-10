@@ -122,6 +122,7 @@ Last updated: 9 November 2026.
 | MON-03 | MON | Consent banner for ads: shown only when `/api/ads` reports enabled and no choice is stored, Allow injects the AdSense script and one labelled unit below the radar list, No thanks stores a refusal and loads nothing | Us | DONE | measured: before banner true, slot false, script false; after Allow banner false, slot true, script true, consent yes |
 | MON-02 | MON | Ad placement rules, agreed before any code: never on Pro or Pro+, never inside the rate result, the copilot or the brief, never above the first insight, one unit below the radar list and one on the market pages, labelled, EEA consent first | Us | OPEN | needs MON-01 decision |
 | PAY-05 | PAY | Live proof of cancellation against a real Stripe subscription (steps in `docs/planning/PAYMENTS.md`) | After PAY-01: subscribe, cancel in the app, confirm Stripe shows "cancels at period end" |
+| SEC-03 | SEC | Safe Browsing review: routing fixed and deployed (unknown paths 404), transparency API reports no unsafe content for thinkzet.com, but Chrome still shows the interstitial until Google clears the domain. Only a review request from the verified owner can clear it | You | OPEN | transparency API sb.ssr 3,false,false,true vs a known-bad control 3,true,true,true |
 | SEC-01 | SEC | Roll the Stripe live key, webhook secret and Resend key (all pasted in chat) | Roll in each dashboard, update Railway |
 | DEP-01 | DEP | Confirm the volume keeps data across a redeploy | Sign up, redeploy, reload |
 
