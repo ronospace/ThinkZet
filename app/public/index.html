@@ -733,6 +733,9 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .sub-v.is-good{color:var(--good)}
 .sub-v.is-warn{color:var(--warn)}
 @media(max-width:560px){.sub-grid{grid-template-columns:1fr 1fr}.sub-grid>div:last-child{grid-column:1/-1}}
+.ad-slot{display:none;margin:18px 0 4px;padding:10px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
+.ad-slot.show{display:block}
+.ad-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 </style>
 </head>
 <body>
@@ -1067,6 +1070,25 @@ function titleCase(input) {
 }
 
 // Funnel: only the seven events the register names, so the table stays readable.
+// Ads load only when the server says so, which already excludes paid plans, and only after the
+// reader has consented to cookies. Nothing is requested before that.
+async function mountAds(target) {
+  const box = typeof target === 'string' ? document.querySelector(target) : target;
+  if (!box) return;
+  const cfg = await api('/api/ads').catch(() => null);
+  if (!cfg || !cfg.enabled) return;
+  if (localStorage.getItem('tz-ads-consent') !== 'yes') return;
+  box.classList.add('show');
+  box.innerHTML = '<div class="ad-label">Advertisement</div><ins class="adsbygoogle" style="display:block" data-ad-client="' + cfg.client + '"' + (cfg.slot ? ' data-ad-slot="' + cfg.slot + '"' : '') + ' data-ad-format="auto" data-full-width-responsive="true"></ins>';
+  if (!document.querySelector('script[data-adsense]')) {
+    const sc = document.createElement('script');
+    sc.async = true; sc.crossOrigin = 'anonymous'; sc.dataset.adsense = '1';
+    sc.src = 'https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=' + encodeURIComponent(cfg.client);
+    document.head.appendChild(sc);
+  }
+  try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) { /* blocked or offline */ }
+}
+
 const track = (event, props) => { try { post('/api/track', { event, props: props || {}, path: location.pathname + location.search }); } catch (e) { /* never block the UI */ } };
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
@@ -1776,6 +1798,7 @@ async function renderRadar() {
     <div id="teach" style="margin-bottom:12px"></div>
     <div class="feed-wrap">
       <div id="opps"></div>
+      <div id="ad-radar" class="ad-slot" aria-label="Advertisement"></div>
       <div class="facets">
         <div class="card">
           <h3>Your Market Right Now</h3>
@@ -1881,6 +1904,7 @@ async function renderRadar() {
       if (sortKey === 'fresh') return new Date(b.posted_at) - new Date(a.posted_at);
       return b.match_score - a.match_score;
     });
+    mountAds('#ad-radar');
     $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="card tone-violet" style="text-align:center;border-color:var(--ai-border)"><div class="dim" style="font-size:13px">${rows.length - capped.length} more scored opportunities are hidden on the Free plan.</div><div style="margin-top:10px"><button class="btn sm" onclick="go('plan')">See what Pro unlocks</button></div></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
     $('#f-count').textContent = `${rows.length} of ${feed.opportunities.length} shown`;
     bindOppActions();

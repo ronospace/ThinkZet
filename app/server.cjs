@@ -372,6 +372,23 @@ route('POST', /^\/api\/track$/, async (req, res) => {
   json(res, 200, { ok: true });
 });
 
+// Ad configuration. Off unless ADSENSE_CLIENT is set, so nothing loads by accident and the
+// placement rules in MON-02 are enforced in one place.
+const ADSENSE_CLIENT = (process.env.ADSENSE_CLIENT || '').trim();
+const ADSENSE_SLOT = (process.env.ADSENSE_SLOT || '').trim();
+route('GET', /^\/api\/ads$/, async (req, res) => {
+  const u = AUTH.currentUser(req);
+  const plan = u ? BILLING.planFor(u.id) : 'free';
+  const paid = plan === 'pro' || plan === 'plus';
+  json(res, 200, {
+    enabled: !!ADSENSE_CLIENT && !paid,
+    client: ADSENSE_CLIENT || null,
+    slot: ADSENSE_SLOT || null,
+    reason: !ADSENSE_CLIENT ? 'no publisher id configured' : paid ? 'paid plan, ads never shown' : 'free plan',
+    consentRequired: true,
+  });
+});
+
 route('GET', /^\/api\/data-sources$/, async (req, res) => {
   const LIVE = ['arbeitnow', 'jobicy', 'remoteok', 'hackernews'];
   const ph = LIVE.map(() => '?').join(',');
