@@ -151,6 +151,7 @@ Last updated: 9 November 2026.
 
 | ID | Cat | Task | Evidence |
 |---|---|---|---|
+| AUTH-15 | AUTH | The Soon badge shows only when the server explicitly reports a provider as not configured. A failed providers lookup no longer turns a live provider into Soon, because the last good answer is remembered and an unknown provider renders as a live link | verified 11 Nov 2026 |
 | DEP-10 | DEP | Production live on Railway at thinkzet.com | health 200, launch ready |
 | DEP-11 | DEP | Root `railway.json` with Dockerfile builder | `4f5f365` |
 | DEP-12 | DEP | Entrypoint fixes volume ownership, drops to `node` | `381a3b0`, `1b96d63` |
