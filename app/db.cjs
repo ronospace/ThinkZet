@@ -221,6 +221,15 @@ CREATE TABLE IF NOT EXISTS email_prefs (
   updated_at TEXT DEFAULT (datetime('now'))
 );
 
+CREATE TABLE IF NOT EXISTS feedback (
+  id TEXT PRIMARY KEY,
+  user_id TEXT,
+  rating INTEGER NOT NULL,
+  comment TEXT,
+  surface TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
 CREATE TABLE IF NOT EXISTS leads (
   id TEXT PRIMARY KEY,
   email TEXT,

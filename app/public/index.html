@@ -766,6 +766,16 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .cap-ico[data-ico="neg"]:before{border-radius:50%;box-shadow:inset 0 0 0 2px var(--accent2),inset 0 -4px 0 0 transparent}
 .cap-ico[data-ico="cop"]:before{border-radius:50%;background:radial-gradient(circle at 50% 35%,var(--accent2) 0 3px,transparent 3px),linear-gradient(180deg,transparent 55%,var(--accent2) 55% 100%)}
 .apply-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fb-card{margin-top:14px}
+.fb-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.fb-q{font-size:var(--text-sm);font-weight:650}
+.fb-sub{font-size:var(--text-xs);color:var(--muted);margin-top:2px}
+.fb-stars{display:flex;gap:6px;margin-left:auto}
+.fb-star{width:32px;height:32px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:var(--ink2);font-size:var(--text-sm);font-weight:650}
+.fb-star:hover{border-color:var(--accent2);color:var(--ink)}
+.fb-star.on{background:color-mix(in srgb,var(--accent2) 18%,var(--panel));border-color:var(--accent2);color:var(--accent)}
+.fb-thanks{font-size:var(--text-sm);color:var(--good);margin-top:8px}
+@media(max-width:560px){.fb-stars{margin-left:0}.fb-star{width:30px;height:30px}}
 </style>
 </head>
 <body>
@@ -1109,6 +1119,36 @@ function titleCase(input) {
 // Funnel: only the seven events the register names, so the table stays readable.
 // Ads load only when the server says so, which already excludes paid plans, and only after the
 // reader has consented to cookies. Nothing is requested before that.
+// One rating per surface, asked once, never on the paywall. Stored and summarised for the Leads screen.
+async function mountFeedback() {
+  const box = document.getElementById('feedback');
+  if (!box) return;
+  if (localStorage.getItem('tz-feedback-radar')) return;
+  box.hidden = false;
+  box.querySelectorAll('.fb-star').forEach((b) => {
+    b.onclick = async () => {
+      box.querySelectorAll('.fb-star').forEach((x) => x.classList.toggle('on', Number(x.dataset.n) <= Number(b.dataset.n)));
+      const r = await post('/api/feedback', { rating: Number(b.dataset.n), surface: 'radar' });
+      if (r.error) return toast(r.error);
+      localStorage.setItem('tz-feedback-radar', '1');
+      box.querySelector('.fb-row').hidden = true;
+      box.querySelector('.fb-thanks').hidden = false;
+    };
+  });
+  const share = box.querySelector('#fb-share');
+  if (share) share.onclick = () => shareApp();
+}
+
+async function shareApp() {
+  const url = location.origin + '/';
+  const text = 'I checked what my profile is actually worth from live postings. It takes a minute.';
+  try {
+    if (navigator.share) { await navigator.share({ title: 'ThinkZet', text, url }); return; }
+    await navigator.clipboard.writeText(url);
+    toast('Link copied');
+  } catch (e) { toast('Could not share'); }
+}
+
 function askAdConsent(onAccept) {
   if (localStorage.getItem('tz-ads-consent')) return;
   const el = document.createElement('div');
@@ -1864,6 +1904,19 @@ async function renderRadar() {
     <div class="feed-wrap">
       <div id="opps"></div>
       <div id="ad-radar" class="ad-slot" aria-label="Advertisement"></div>
+    <div id="feedback" class="card fb-card" hidden>
+      <div class="fb-row">
+        <div>
+          <div class="fb-q">Is this useful so far?</div>
+          <div class="fb-sub">One tap. It decides what we build next.</div>
+        </div>
+        <div class="fb-stars" role="group" aria-label="Rate from 1 to 5">
+          ${[1,2,3,4,5].map((n) => `<button class="fb-star" data-n="${n}" aria-label="${n} of 5">${n}</button>`).join('')}
+        </div>
+        <button class="btn sm ghost" id="fb-share">Share</button>
+      </div>
+      <div class="fb-thanks" hidden>Thank you. That is recorded.</div>
+    </div>
       <div class="facets">
         <div class="card">
           <h3>Your Market Right Now</h3>
@@ -1970,6 +2023,7 @@ async function renderRadar() {
       return b.match_score - a.match_score;
     });
     mountAds('#ad-radar');
+    mountFeedback();
     $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="card tone-violet" style="text-align:center;border-color:var(--ai-border)"><div class="dim" style="font-size:13px">${rows.length - capped.length} more scored opportunities are hidden on the Free plan.</div><div style="margin-top:10px"><button class="btn sm" onclick="go('plan')">See what Pro unlocks</button></div></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
     $('#f-count').textContent = `${rows.length} of ${feed.opportunities.length} shown`;
     bindOppActions();

@@ -376,6 +376,29 @@ route('POST', /^\/api\/track$/, async (req, res) => {
 // placement rules in MON-02 are enforced in one place.
 const ADSENSE_CLIENT = (process.env.ADSENSE_CLIENT || '').trim();
 const ADSENSE_SLOT = (process.env.ADSENSE_SLOT || '').trim();
+// Feedback: one rating per person per surface, a comment optional, plus a summary for the Leads screen.
+route('POST', /^\/api\/feedback$/, async (req, res) => {
+  const body = await readBody(req);
+  const rating = Number(body.rating);
+  if (!Number.isInteger(rating) || rating < 1 || rating > 5) return json(res, 400, { error: 'rating must be 1 to 5' });
+  const u = AUTH.currentUser(req);
+  const surface = String(body.surface || 'app').slice(0, 40);
+  const comment = body.comment ? String(body.comment).replace(/\s+/g, ' ').trim().slice(0, 600) : null;
+  const id = crypto.randomUUID();
+  db.prepare('INSERT INTO feedback (id,user_id,rating,comment,surface) VALUES (?,?,?,?,?)')
+    .run(id, u ? u.id : null, rating, comment, surface);
+  AN.track(u ? u.id : resolveUser(req), 'feedback.rated', { rating, surface });
+  json(res, 200, { ok: true, id });
+});
+
+route('GET', /^\/api\/feedback$/, async (req, res) => {
+  const rows = db.prepare('SELECT rating, COUNT(*) n FROM feedback GROUP BY rating').all();
+  const total = rows.reduce((a, r) => a + r.n, 0);
+  const avg = total ? rows.reduce((a, r) => a + r.rating * r.n, 0) / total : null;
+  const recent = db.prepare('SELECT rating, comment, surface, created_at FROM feedback ORDER BY created_at DESC LIMIT 20').all();
+  json(res, 200, { total, average: avg == null ? null : Math.round(avg * 10) / 10, distribution: rows, recent });
+});
+
 route('GET', /^\/api\/ads$/, async (req, res) => {
   const u = AUTH.currentUser(req);
   const plan = u ? BILLING.planFor(u.id) : 'free';
