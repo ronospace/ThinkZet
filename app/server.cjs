@@ -2037,12 +2037,11 @@ route('POST', /^\/api\/referrals\/link$/, async (req, res) => {
 // so the tier is hidden from the catalogue, the landing page and the plan screen until they do.
 // Keep the intended scope here as a note for whoever builds it.
 const PLUS_FEATURES_PLANNED = [
-  'Everything in Pro',
-  'Priority alerts on 90+ matches',
-  'Automated negotiation briefs',
-  'Advanced trajectory modelling',
-  'Multi-profile: hire, contract, freelance',
-  'Premium copilot with deeper context',
+  'Alerts the moment a 90+ match appears',
+  'Negotiation briefs written for each offer',
+  'Trajectory models across 12, 24 and 60 months',
+  'Three profiles: hire, contract, freelance',
+  'Copilot that holds your whole history',
 ];
 
 route('GET', /^\/api\/plan$/, async (req, res) => {

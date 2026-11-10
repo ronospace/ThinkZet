@@ -705,6 +705,8 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .plan-grid-compact .price .btn{padding:7px 10px;font-size:11px}
 .plan-chip{align-self:center;margin-top:auto}
 @media(max-width:900px){.plan-grid-compact{max-width:100%}}
+.plan-plus-cta{background:linear-gradient(100deg,var(--accent2),var(--rose));color:#fff;border:1px solid transparent}
+.plan-plus-cta:hover{filter:brightness(1.06)}
 </style>
 </head>
 <body>
@@ -849,16 +851,15 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
         <div class="price">
           <h3>Pro+</h3>
           <div class="price-v">&euro;49<span> /month</span></div>
-          <div class="price-alt">Automation, not consulting</div>
+          <div class="price-alt">For people running several moves at once</div>
           <ul>
-            <li>Everything in Pro</li>
-            <li>Priority alerts on 90+ matches</li>
-            <li>Automated negotiation briefs</li>
-            <li>Advanced trajectory modelling</li>
-            <li>Multi-profile: hire, contract, freelance</li>
-            <li>Premium copilot with deeper context</li>
+            <li>Alerts the moment a 90+ match appears</li>
+            <li>Negotiation briefs written for each offer</li>
+            <li>Trajectory models across 12, 24 and 60 months</li>
+            <li>Three profiles: hire, contract, freelance</li>
+            <li>Copilot that holds your whole history</li>
           </ul>
-          <button class="btn ghost" id="price-plus">Talk to Us</button>
+          <button class="btn plan-plus-cta" id="price-plus">Go Pro+</button>
         </div>
       </div>
     </section>
@@ -2663,9 +2664,9 @@ async function renderPlan() {
         p.plan === 'pro'
           ? '<div class="chip have plan-chip">Active</div>'
           : '<button class="btn" id="up-month">Unlock Pro</button>')}
-      ${cell('', '', 'Pro+', '€49<span> /month</span>', 'Automation, not consulting',
-        ['Everything in Pro', 'Priority alerts on 90+ matches', 'Automated negotiation briefs', 'Advanced trajectory modelling', 'Multi-profile: hire, contract, freelance', 'Premium copilot with deeper context'],
-        '<button class="btn ghost" id="up-plus">Talk to Us</button>')}
+      ${cell('', '', 'Pro+', '€49<span> /month</span>', 'For people running several moves at once',
+        ['Alerts the moment a 90+ match appears', 'Negotiation briefs written for each offer', 'Trajectory models across 12, 24 and 60 months', 'Three profiles: hire, contract, freelance', 'Copilot that holds your whole history'],
+        '<button class="btn plan-plus-cta" id="up-plus">Go Pro+</button>')}
     </div>
     <div class="card" style="margin-top:14px">
       <h3>Why the Paywall Sits Where It Does</h3>
