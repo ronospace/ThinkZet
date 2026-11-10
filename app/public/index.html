@@ -726,6 +726,13 @@ html[data-theme="light"] .plan-grid-compact .price.is-current{border-color:#9FD9
 html[data-theme="light"] .plan-grid-compact .price.is-plus{border-color:#E3C67F;box-shadow:0 0 0 1px rgba(199,154,58,.16)}
 .plan-done{background:color-mix(in srgb,var(--good) 14%,var(--panel));color:var(--good);border:1px solid color-mix(in srgb,var(--good) 45%,var(--line));opacity:1}
 html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;color:#0a7a45}
+.sub-panel{margin-bottom:14px}
+.sub-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.sub-k{font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.sub-v{font-size:var(--text-md);font-weight:700;margin-top:3px}
+.sub-v.is-good{color:var(--good)}
+.sub-v.is-warn{color:var(--warn)}
+@media(max-width:560px){.sub-grid{grid-template-columns:1fr 1fr}.sub-grid>div:last-child{grid-column:1/-1}}
 </style>
 </head>
 <body>
@@ -2667,16 +2674,24 @@ async function renderPlan() {
           ${cta}
         </div>`;
   $('#view').innerHTML = `
+    ${p.subscription && p.subscription.plan !== 'free' ? `
+    <div class="card sub-panel">
+      <div class="sub-grid">
+        <div><div class="sub-k">Plan</div><div class="sub-v">${esc(titleCase(p.subscription.plan))}</div></div>
+        <div><div class="sub-k">Status</div><div class="sub-v ${p.subscription.cancelsAtPeriodEnd ? 'is-warn' : 'is-good'}">${p.subscription.cancelsAtPeriodEnd ? 'Cancels at period end' : 'Active'}</div></div>
+        <div><div class="sub-k">${p.subscription.cancelsAtPeriodEnd ? 'Access until' : 'Renews'}</div><div class="sub-v">${p.subscription.periodEnd ? new Date(p.subscription.periodEnd).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' }) : '–'}</div></div>
+      </div>
+    </div>` : ''}
     <div class="price-grid plan-grid-compact">
       ${cell(p.plan === 'free' ? 'is-current' : '', '', 'Free', 'Know Your Value', '€0', '',
         p.plans.free.features,
         p.plan === 'free'
-          ? '<button class="btn ghost plan-done" disabled>Free Plan Active</button>'
+          ? '<button class="btn ghost plan-done" disabled>Continue Free</button>'
           : '<button class="btn ghost" id="downgrade">Continue Free</button>')}
       ${cell('featured', 'Most Chosen', 'Pro', 'Make Better Moves', '€19.99<span> /month</span>', 'or €149.99/year',
         p.plans.pro.features,
         p.plan === 'pro'
-          ? '<button class="btn plan-done" disabled>Pro Unlocked</button>'
+          ? '<button class="btn plan-done" disabled>Unlock Pro</button>'
           : '<button class="btn" id="up-month">Unlock Pro</button>')}
       ${cell('is-plus', '', 'Pro+', 'For Bigger Decisions', '€49<span> /month</span>', '',
         ['Compare relocation offers side by side', 'Compare countries before you move', 'Compare contract & permanent paths', 'Compare salary, tax & living costs', 'See what each move is really worth', 'Offer negotiation briefs'],

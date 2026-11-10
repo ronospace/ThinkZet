@@ -2052,10 +2052,25 @@ route('GET', /^\/api\/plan$/, async (req, res) => {
     matchScores: db.prepare('SELECT COUNT(*) n FROM matches WHERE user_id=?').get(uid).n,
     tracked: db.prepare('SELECT COUNT(*) n FROM applications WHERE user_id=?').get(uid).n,
   };
+  // Subscription visibility: what the person holds, whether it is live, when it renews or ends.
+  // Stripe is the source of truth for the period; the link row holds the subscription id.
+  const link = db.prepare(`SELECT external_id, status, period_end FROM billing_events
+    WHERE user_id=? AND kind='link' AND external_id LIKE 'sub_%' ORDER BY id DESC LIMIT 1`).get(uid);
+  const latest = db.prepare(`SELECT status, period_end FROM billing_events
+    WHERE user_id=? AND kind='entitlement' ORDER BY id DESC LIMIT 1`).get(uid);
+  const periodEnd = (latest && latest.period_end) || (link && link.period_end) || null;
+  let status = plan === 'free' ? 'none' : 'active';
+  if (plan !== 'free' && latest && /cancel/i.test(String(latest.status || ''))) status = 'cancels_at_period_end';
   json(res, 200, {
     plan,
-    // Pro+ is hidden until the coach session, relocation pack and multi-profile twins exist.
-    // The catalogue is the single source for what is on sale, so it is not listed here at all.
+    subscription: {
+      plan, status, cycle: row ? row.cycle : null,
+      since: row ? row.since : null,
+      periodEnd,
+      cancelsAtPeriodEnd: status === 'cancels_at_period_end',
+      stripeStatus: link ? link.status : null,
+      subscriptionId: link ? link.external_id : null,
+    },
     plans: { ...BILLING.PLANS },
     usage,
     limits: plan === 'pro' ? null : { matches: 10, tracked: 5 },
