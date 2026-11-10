@@ -30,6 +30,10 @@ Last updated: 9 November 2026.
 | UI-26 | UI | The salutation mark uses a three-stop gradient (violet, rose, blue) in both themes instead of a two-stop ramp | Us | DONE | computed background-image in light and dark |
 | COPY-27 | COPY | Title case for every h3 heading across the app: 58 headings including Skill Gap Detection, How to Close Them and the table headers | Us | DONE | rendered Skill Gaps screen, 59/59 API, 10/10 browser |
 | UI-25i | UI | A running demo labels the account state "Demo Mode" instead of "Signed Out" | Us | DONE | measured: state Demo Mode, signin flex, demo none |
+| UI-54 | UI | Plan subtitles moved below the price as the list heading, italic | Us | DONE | computed font-style italic |
+| UI-56 | UI | Status badges removed from plan cards; the disabled action marks the active plan | Us | DONE | no plan-state in markup |
+| UI-58 | UI | Pro+ carries a gold surround and gold action, completing green, violet, gold | Us | DONE | both themes rendered |
+| UI-59 | UI | Continue Free keeps its green treatment when it is the current plan | Us | DONE | computed colours green in both themes |
 | UI-53 | UI | Status and action separated (badge above a disabled Continue Free or Unlock Pro), one subtitle per card, cards 10% shorter, stronger subtitles, page titled Choose Your Plan | Us | DONE | heights 411 each, one baseline, ctaWidths 285 at 1440 light |
 | UI-52 | UI | Plan copy set to the approved wording, cards lighter: 20px padding, 7px action padding, no list floor; subtitle italic under the title, then price, then bullets | Us | DONE | heights 425 each, one baseline, ctaWidths 281, ctaHeights 33 to 35 at 1440 light |
 | UI-51 | UI | Plan cards restored to the reference proportions: 1000px grid, 24px padding, text-3xl prices, 14px bullets, 212px list floor, slimmer actions; subtitles italic directly under the plan name | Us | DONE | heights 449 each, one baseline, ctaWidths 273 each at 1440 light |
