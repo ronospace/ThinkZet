@@ -266,7 +266,14 @@ function handleEvent(event) {
       // The invoice is the source of truth for money actually received. If a checkout event
       // is missed or delayed, this still grants access.
       const subId = typeof obj.subscription === 'string' ? obj.subscription : obj.subscription?.id;
-      const uid = userId || (subId ? resolveUserId({ object: 'subscription', id: subId }) : null);
+      // A renewal invoice carries no metadata, so resolve through the subscription id we stored at
+      // checkout, then through the customer id, then through the invoice's own subscription line.
+      const lineSub = (obj.lines && obj.lines.data && obj.lines.data[0] && (obj.lines.data[0].subscription || (obj.lines.data[0].parent && obj.lines.data[0].parent.subscription_item_details && obj.lines.data[0].parent.subscription_item_details.subscription))) || null;
+      const custId = typeof obj.customer === 'string' ? obj.customer : obj.customer?.id;
+      const uid = userId
+        || (subId ? resolveUserId({ object: 'subscription', id: subId }) : null)
+        || (lineSub ? resolveUserId({ object: 'subscription', id: lineSub }) : null)
+        || (custId ? resolveUserId({ customer: custId }) : null);
       if (!uid) return { handled: false, reason: 'no user id on paid invoice' };
       setPlan(uid, 'pro', { cycle: 'monthly', source: 'stripe', externalId: obj.id, status: 'paid', periodEnd });
       return { handled: true, effect: 'pro granted on paid invoice' };
