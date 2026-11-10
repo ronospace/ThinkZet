@@ -692,16 +692,16 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 @media(max-width:340px){.ob-actions .btn{flex:1 1 100%}}
 .btn.danger{background:transparent;border:1px solid color-mix(in srgb,var(--bad) 55%,var(--line));color:var(--bad)}
 .btn.danger:hover{background:color-mix(in srgb,var(--bad) 12%,var(--panel));border-color:var(--bad)}
-.plan-grid-compact{max-width:660px;margin:0 auto;gap:10px}
+.plan-grid-compact{max-width:1000px;margin:0 auto;gap:var(--sp-4)}
 @media(max-width:900px){.plan-grid-compact{grid-template-columns:1fr!important;gap:14px}.plan-grid-compact .price{padding:20px}.plan-grid-compact .price-v{font-size:var(--text-2xl)}.plan-grid-compact .price li{font-size:var(--text-sm);padding:7px 0 7px 20px}.plan-grid-compact .price .btn{padding:11px 14px;font-size:var(--text-sm)}}
-.plan-grid-compact .price{padding:14px}
-.plan-grid-compact .price h3{font-size:var(--text-sm);margin-bottom:2px}
-.plan-grid-compact .price-alt{font-size:11px}
-.plan-grid-compact .price-v{font-size:var(--text-xl)}
-.plan-grid-compact .price ul{min-height:0;margin:10px 0 12px;flex:1 1 auto}
-.plan-grid-compact .price li{font-size:11px;padding:4px 0 4px 14px}
-.plan-grid-compact .price .btn{padding:11px 14px;font-size:var(--text-sm);width:100%;justify-content:center;display:block;text-align:center}
-.plan-chip{margin-top:auto;width:100%;text-align:center;justify-content:center;display:block;padding:11px 14px;font-size:var(--text-sm)}
+.plan-grid-compact .price{padding:var(--sp-6)}
+.plan-grid-compact .price h3{font-size:var(--text-base);margin:0 0 4px}
+.plan-grid-compact .price-alt{font-size:var(--text-xs)}
+.plan-grid-compact .price-v{font-size:var(--text-3xl)}
+.plan-grid-compact .price ul{min-height:212px;margin:var(--sp-4) 0 var(--sp-5);flex:1 1 auto}
+.plan-grid-compact .price li{font-size:var(--text-sm);padding:7px 0 7px 20px}
+.plan-grid-compact .price .btn{padding:9px 14px;font-size:var(--text-sm);width:100%;justify-content:center;display:block;text-align:center}
+.plan-chip{margin-top:auto;width:100%;text-align:center;justify-content:center;display:block;padding:9px 14px;font-size:var(--text-sm)}
 @media(max-width:900px){.plan-grid-compact{max-width:100%}}
 .plan-plus-cta{background:linear-gradient(100deg,var(--accent2),var(--rose));color:#fff;border:1px solid transparent}
 .plan-plus-cta:hover{filter:brightness(1.06)}
@@ -712,8 +712,8 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .market-snapshot .ds-cell .k{font-size:11px;color:var(--muted);white-space:nowrap}
 .market-snapshot .ds-cell .v{font-size:var(--text-sm);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
 @media(max-width:760px){.market-snapshot{gap:12px;padding:12px}.market-snapshot .ds-grid{gap:14px}}
-.price-tagline{font-size:var(--text-sm);font-weight:600;color:var(--ink2);margin:2px 0 8px}
-.plan-grid-compact .price-tagline{font-size:12px;margin:1px 0 6px}
+.price-tagline{font-size:var(--text-sm);font-weight:500;font-style:italic;color:var(--muted);margin:0 0 10px}
+.plan-grid-compact .price-tagline{font-size:var(--text-sm);margin:0 0 10px}
 .plan-grid-compact .price.is-current{border-color:color-mix(in srgb,var(--good) 55%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--good) 28%,transparent)}
 html[data-theme="light"] .plan-grid-compact .price.is-current{border-color:#9FD9BC;box-shadow:0 0 0 1px rgba(14,157,99,.14)}
 .plan-grid-compact .price.is-current .chip.have{border-color:color-mix(in srgb,var(--good) 55%,var(--line));background:color-mix(in srgb,var(--good) 12%,var(--panel))}
