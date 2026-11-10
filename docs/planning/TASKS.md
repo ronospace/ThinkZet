@@ -26,6 +26,7 @@ Last updated: 9 November 2026.
 | COPY-26 | COPY | Hero pill reads "Free Intelligent Career Value Check" | Us | DONE | rendered HTML |
 | UI-19 | UI | Onboarding step indicator centred with its heading | Us | DONE | markup |
 | COPY-25 | COPY | Payoff card no longer claims live postings while labelled sample data | Us | DONE | rendered copy |
+| SEO-03 | SEO | Canonical link, og:url and Organization JSON-LD injected into the served HTML for every page, including the salary and skill pages, so crawlers see one address per page without running the client bundle | Us | DONE | canonical and ld+json present on /, /salary/software-engineer and /skills/llmops |
 | SEO-02 | SEO | robots.txt added: allows the site, keeps `/?app=1` and `/api/` out of the index, and advertises the sitemap at the public origin | Us | DONE | served as text/plain with the Sitemap line |
 | UI-26 | UI | The salutation mark uses a three-stop gradient (violet, rose, blue) in both themes instead of a two-stop ramp | Us | DONE | computed background-image in light and dark |
 | COPY-27 | COPY | Title case for every h3 heading across the app: 58 headings including Skill Gap Detection, How to Close Them and the table headers | Us | DONE | rendered Skill Gaps screen, 59/59 API, 10/10 browser |

@@ -2224,7 +2224,25 @@ function applySecurityHeaders(res) {
   res.setHeader('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
 }
 
-function serveStatic(req, res, pathname) {
+// Injects a canonical link and Organization JSON-LD into the served HTML, so a crawler sees one
+// address per page and a machine-readable identity, without running the client bundle.
+function withSeo(html, origin, pathname) {
+  const clean = pathname === '/' ? '/' : pathname.replace(/\/$/, '');
+  const canonical = `${origin}${clean}`;
+  const head = [
+    `<link rel="canonical" href="${canonical}"/>`,
+    `<meta property="og:url" content="${canonical}"/>`,
+    `<script type="application/ld+json">${JSON.stringify({
+      '@context': 'https://schema.org', '@type': 'Organization',
+      name: 'ThinkZet', url: origin, description: 'AI intelligence platform for career decisions.',
+      parentOrganization: { '@type': 'Organization', name: 'ZyraFlow GmbH' },
+      contactPoint: [{ '@type': 'ContactPoint', email: 'support@thinkzet.com', contactType: 'customer support' }],
+    })}</script>`,
+  ].join('');
+  return html.includes('rel="canonical"') ? html : html.replace('</head>', head + '</head>');
+}
+
+function serveStatic(req, res, pathname, origin) {
   let p = pathname === '/' ? '/index.html' : pathname;
   const file = path.join(PUBLIC, p);
   if (!file.startsWith(PUBLIC)) { res.writeHead(403); return res.end('forbidden'); }
@@ -2233,12 +2251,13 @@ function serveStatic(req, res, pathname) {
       fs.readFile(path.join(PUBLIC, 'index.html'), (e2, d2) => {
         if (e2) { res.writeHead(404); return res.end('not found'); }
         res.writeHead(200, { 'Content-Type': MIME['.html'] });
-        res.end(d2);
+        res.end(origin ? withSeo(d2.toString('utf8'), origin, pathname) : d2);
       });
       return;
     }
+    const isHtml = (MIME[path.extname(file)] || '').includes('text/html');
     res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
-    res.end(data);
+    res.end(isHtml && origin ? withSeo(data.toString('utf8'), origin, pathname) : data);
   });
 }
 
@@ -2247,9 +2266,9 @@ const server = http.createServer(async (req, res) => {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const pathname = url.pathname;
   // Shared cards live at /s/<id>; the client renders them from the API.
-  if (/^\/s\/[a-f0-9]+$/.test(pathname)) return serveStatic(req, res, '/index.html');
+  if (/^\/s\/[a-f0-9]+$/.test(pathname)) return serveStatic(req, res, '/index.html', publicOrigin(req));
   // Public SEO surfaces render client-side from the same rate engine.
-  if (/^\/(salary|skills)\/[^/]+(\/[A-Za-z]{2})?$/.test(pathname)) return serveStatic(req, res, '/index.html');
+  if (/^\/(salary|skills)\/[^/]+(\/[A-Za-z]{2})?$/.test(pathname)) return serveStatic(req, res, '/index.html', publicOrigin(req));
 
   // robots.txt: the sitemap must be advertised here, and the app screens kept out of the index.
   if (pathname === '/robots.txt') {
@@ -2291,7 +2310,7 @@ const server = http.createServer(async (req, res) => {
     return res.end(xml);
   }
 
-  if (!pathname.startsWith('/api/') && !pathname.startsWith('/go/')) return serveStatic(req, res, pathname);
+  if (!pathname.startsWith('/api/') && !pathname.startsWith('/go/')) return serveStatic(req, res, pathname, publicOrigin(req));
 
   // Stripe webhook needs the raw body for signature verification, so it bypasses the
   // normal JSON route pipeline entirely.
