@@ -30,6 +30,7 @@ Last updated: 9 November 2026.
 | UI-26 | UI | The salutation mark uses a three-stop gradient (violet, rose, blue) in both themes instead of a two-stop ramp | Us | DONE | computed background-image in light and dark |
 | COPY-27 | COPY | Title case for every h3 heading across the app: 58 headings including Skill Gap Detection, How to Close Them and the table headers | Us | DONE | rendered Skill Gaps screen, 59/59 API, 10/10 browser |
 | UI-25i | UI | A running demo labels the account state "Demo Mode" instead of "Signed Out" | Us | DONE | measured: state Demo Mode, signin flex, demo none |
+| UI-39 | UI | Plan cards denser at 660px with 14px padding, price format switched to €19.99/month, €49/month and €149.99/year, CTAs Continue Free, Unlock Pro and Talk to Us | Us | DONE | 1440px dark render, 59/59 API, 10/10 browser |
 | UI-38 | UI | Plan cards tightened to 720px with 16px padding, smaller price, bullets and actions; Pro+ shows €49 a month and its four real features, no placeholder | Us | DONE | 1440px dark render, 59/59 API, 10/10 browser |
 | UI-37 | UI | Footer measured at five widths: four cells on one row at 1024 and above, two by two below 900 | Us | DONE | per row 4, 4, 1+2+2, 1+2+2, 1+2+2 |
 | UI-36 | UI | Plan page keeps the compact card component with the real plan data: 840px centred grid, 20px padding, smaller prices, bullets and actions; Pro+ shows €49 and Talk to us, no Coming soon | Us | DONE | 1440px dark render, 59/59 API, 10/10 browser |

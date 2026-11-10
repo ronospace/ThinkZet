@@ -688,12 +688,14 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 @media(max-width:340px){.ob-actions .btn{flex:1 1 100%}}
 .btn.danger{background:transparent;border:1px solid color-mix(in srgb,var(--bad) 55%,var(--line));color:var(--bad)}
 .btn.danger:hover{background:color-mix(in srgb,var(--bad) 12%,var(--panel));border-color:var(--bad)}
-.plan-grid-compact{max-width:840px;margin:0 auto;gap:14px}
-.plan-grid-compact .price{padding:20px}
-.plan-grid-compact .price-v{font-size:var(--text-2xl)}
-.plan-grid-compact .price ul{min-height:0;margin:14px 0 16px}
-.plan-grid-compact .price li{font-size:var(--text-xs);padding:6px 0 6px 18px}
-.plan-grid-compact .price .btn{padding:9px 12px;font-size:var(--text-xs)}
+.plan-grid-compact{max-width:660px;margin:0 auto;gap:10px}
+.plan-grid-compact .price{padding:14px}
+.plan-grid-compact .price h3{font-size:var(--text-sm);margin-bottom:2px}
+.plan-grid-compact .price-alt{font-size:11px}
+.plan-grid-compact .price-v{font-size:var(--text-xl)}
+.plan-grid-compact .price ul{min-height:0;margin:10px 0 12px}
+.plan-grid-compact .price li{font-size:11px;padding:4px 0 4px 14px}
+.plan-grid-compact .price .btn{padding:7px 10px;font-size:11px}
 .plan-chip{align-self:center;margin-top:auto}
 @media(max-width:900px){.plan-grid-compact{max-width:100%}}
 </style>
@@ -821,13 +823,13 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
             <li>Top 10 scored opportunities</li>
             <li>Tracker, up to 5 items</li>
           </ul>
-          <a class="btn ghost" href="#check">Start free</a>
+          <a class="btn ghost" href="#check">Continue Free</a>
         </div>
         <div class="price featured">
           <div class="price-tag">Most chosen</div>
           <h3>Pro</h3>
-          <div class="price-v">&euro;19.99<span> a month</span></div>
-          <div class="price-alt">or &euro;149.99 a year</div>
+          <div class="price-v">&euro;19.99<span>/month</span></div>
+          <div class="price-alt">or &euro;149.99/year</div>
           <ul>
             <li>Unlimited scored opportunities</li>
             <li>Career Twin and all eight scores</li>
@@ -839,7 +841,7 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
         </div>
         <div class="price">
           <h3>Pro+</h3>
-          <div class="price-v">&euro;49<span> a month</span></div>
+          <div class="price-v">&euro;49<span>/month</span></div>
           <div class="price-alt">For people moving this quarter</div>
           <ul>
             <li>Everything in Pro</li>
@@ -847,7 +849,7 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
             <li>Relocation readiness pack</li>
             <li>Quarterly trajectory review</li>
           </ul>
-          <button class="btn ghost" id="price-plus">Join the Waitlist</button>
+          <button class="btn ghost" id="price-plus">Talk to Us</button>
         </div>
       </div>
     </section>
@@ -2648,14 +2650,14 @@ async function renderPlan() {
         p.plan === 'free'
           ? '<div class="chip have plan-chip">Current Plan</div>'
           : '<button class="btn ghost" id="downgrade">Continue Free</button>')}
-      ${cell('featured', 'Most Chosen', 'Pro', '€19.99<span> a month</span>', 'or €149.99 a year',
+      ${cell('featured', 'Most Chosen', 'Pro', '€19.99<span>/month</span>', 'or €149.99/year',
         p.plans.pro.features,
         p.plan === 'pro'
           ? '<div class="chip have plan-chip">Active</div>'
           : '<button class="btn" id="up-month">Unlock Pro</button>')}
-      ${cell('', '', 'Pro+', '€49<span> a month</span>', 'For people moving this quarter',
+      ${cell('', '', 'Pro+', '€49<span>/month</span>', 'For people moving this quarter',
         ['Everything in Pro', 'One 1:1 session with a vetted coach', 'Relocation readiness pack', 'Quarterly trajectory review'],
-        '<button class="btn ghost" id="up-plus">Talk to us</button>')}
+        '<button class="btn ghost" id="up-plus">Talk to Us</button>')}
     </div>
     <div class="card" style="margin-top:14px">
       <h3>Why the Paywall Sits Where It Does</h3>
