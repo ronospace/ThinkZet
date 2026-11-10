@@ -107,6 +107,7 @@ Last updated: 9 November 2026.
 
 | AUTH-01 | AUTH | Google credentials set in Railway and live on production; the client JSON confirms redirect `https://thinkzet.com/api/auth/google/callback` | none |
 
+| PAY-01a | PAY | Diagnose the failed €2 attempt: Stripe answered `payment_intent_authentication_failure` on a card PaymentIntent, no charge created, no application error. Account DE, charges and payouts enabled, card_payments active, price valid, session in subscription mode with card and link | Us | DONE | payment intent `pi_3Ua5AG41m9e00I4D0KVNtD1o` read back from Stripe |
 | PAY-01 | PAY | Real €19.99 payment, confirm Pro unlocks, refund yourself | thinkzet.com → Upgrade |
 | PAY-05 | PAY | Live proof of cancellation against a real Stripe subscription (steps in `docs/planning/PAYMENTS.md`) | After PAY-01: subscribe, cancel in the app, confirm Stripe shows "cancels at period end" |
 | SEC-01 | SEC | Roll the Stripe live key, webhook secret and Resend key (all pasted in chat) | Roll in each dashboard, update Railway |
