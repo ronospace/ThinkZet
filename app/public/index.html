@@ -123,11 +123,10 @@ a{color:var(--accent);text-decoration:none}
 .shell.rail-collapsed .nav .ico{opacity:.85}
 .shell.rail-collapsed .nav button:hover .ico{opacity:1}
 .shell.rail-collapsed .nav button.active{box-shadow:inset 3px 0 0 var(--accent);border-radius:0 9px 9px 0}
-.rail-toggle{position:absolute;right:-11px;top:22px;width:22px;height:22px;border-radius:50%;background:var(--panel2);border:1px solid var(--line);color:var(--muted);display:grid;place-items:center;font-size:11px;z-index:20;transition:color .14s,background .14s}
 .rail-toggle:hover{color:var(--ink);background:var(--panel3)}
-.rail{position:relative;background:var(--rail-bg)}
 /* ---------- rail ---------- */
-.rail{background:var(--panel);border-right:1px solid var(--line);display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:16px 12px;overflow:hidden;height:100%;min-height:0}
+.rail{position:relative;background:var(--panel);border-right:1px solid var(--line);display:grid;grid-template-rows:auto minmax(0,1fr) auto;padding:16px 12px;overflow:hidden;height:100%;min-height:0}
+.rail-toggle{position:absolute;top:14px;right:-11px;z-index:5;width:22px;height:22px;border-radius:50%;background:var(--panel2);border:1px solid var(--line2);color:var(--muted);display:grid;place-items:center;font-size:12px;line-height:1}
 .logo{display:flex;align-items:center;gap:9px;padding:4px 8px 18px}
 .logo .mark{width:30px;height:30px}
 .logo b{font-size:14px;letter-spacing:.02em}
@@ -3310,7 +3309,16 @@ async function go(view) {
     ${'<div class="sk-row"><div class="sk sk-circle"></div><div><div class="sk sk-line mid"></div><div class="sk sk-line short" style="margin-top:8px"></div></div><div class="sk sk-line" style="width:80px"></div></div>'.repeat(4)}`;
   if (changed) { const m = document.querySelector('main'); if (m) m.scrollTop = 0; window.scrollTo(0, 0); }
   try { await fn(); } catch (e) { $('#view').innerHTML = '<div class="empty">Error: ' + esc(e.message) + '</div>'; }
-  // The rail never scrolls, so there is nothing to keep in view.
+  // Place the menu so the active item's group label sits at the top of the scroll box. The label is
+  // sticky, so the section stays named while the items under it scroll.
+  const navEl = document.getElementById('nav');
+  if (act && navEl && navEl.scrollHeight > navEl.clientHeight + 2) {
+    const group = act.closest('.nav-group');
+    const label = group && group.querySelector('.nav-label');
+    const target = label || act;
+    const offset = target.getBoundingClientRect().top - navEl.getBoundingClientRect().top + navEl.scrollTop;
+    navEl.scrollTop = Math.max(0, Math.min(offset - 2, navEl.scrollHeight - navEl.clientHeight));
+  }
 }
 
 async function boot() {
@@ -3471,7 +3479,7 @@ $('#palette').addEventListener('click', (e) => { if (e.target.id === 'palette') 
 
 window.go = go;
 window.showLanding = showLanding;
-document.querySelectorAll('#nav button').forEach((b) => { b.onclick = () => go(b.dataset.view); });
+document.querySelectorAll('#nav button').forEach((b) => { b.onclick = () => { go(b.dataset.view); b.blur(); }; });
 
 /* ---------------- keep scrolling to move to the next or previous screen ---------------- */
 /* Consent-first: this never moves the page on its own. It only reacts when a deliberate wheel
