@@ -703,7 +703,8 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .plan-grid-compact .price .btn{padding:7px 14px;font-size:var(--text-sm);width:100%;justify-content:center;display:block;text-align:center}
 .plan-chip{margin-top:auto;width:100%;text-align:center;justify-content:center;display:block;padding:7px 14px;font-size:var(--text-sm)}
 @media(max-width:900px){.plan-grid-compact{max-width:100%}}
-.plan-plus-cta{background:linear-gradient(100deg,var(--accent2),var(--rose));color:#fff;border:1px solid transparent}
+.plan-plus-cta{background:linear-gradient(100deg,#C79A3A,#E8C77A);color:#2A2113;border:1px solid transparent}
+.plan-plus-cta:hover{filter:brightness(1.05)}
 .plan-plus-cta:hover{filter:brightness(1.06)}
 .market-snapshot{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:var(--sp-4);padding:12px 16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
 .ms-h{font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;white-space:nowrap}
@@ -719,6 +720,8 @@ html[data-theme="light"] .plan-grid-compact .price.is-current{border-color:#9FD9
 .plan-grid-compact .price.is-current .chip.have{border-color:color-mix(in srgb,var(--good) 55%,var(--line));background:color-mix(in srgb,var(--good) 12%,var(--panel))}
 .plan-grid-compact .price .chip.have{background:color-mix(in srgb,var(--good) 12%,var(--panel));color:var(--good);border:1px solid color-mix(in srgb,var(--good) 45%,var(--line));border-radius:var(--radius-sm)}
 .plan-grid-compact .price .btn[disabled]{opacity:.55;cursor:default}
+.plan-grid-compact .price.is-plus{border-color:color-mix(in srgb,#E8C77A 60%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,#E8C77A 30%,transparent)}
+html[data-theme="light"] .plan-grid-compact .price.is-plus{border-color:#E3C67F;box-shadow:0 0 0 1px rgba(199,154,58,.16)}
 </style>
 </head>
 <body>
@@ -2671,7 +2674,7 @@ async function renderPlan() {
         p.plan === 'pro'
           ? '<button class="btn" id="up-month" disabled>Unlock Pro</button>'
           : '<button class="btn" id="up-month">Unlock Pro</button>')}
-      ${cell('', '', 'Pro+', 'For Bigger Decisions', '€49<span> /month</span>', '',
+      ${cell('is-plus', '', 'Pro+', 'For Bigger Decisions', '€49<span> /month</span>', '',
         ['Compare relocation offers side by side', 'Compare countries before you move', 'Compare contract & permanent paths', 'Compare salary, tax & living costs', 'See what each move is really worth', 'Offer negotiation briefs'],
         '<button class="btn plan-plus-cta" id="up-plus">Unlock Pro+</button>')}
     </div>
