@@ -613,6 +613,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .price li:last-child{border-bottom:none}
 .price li:before{content:"";position:absolute;left:2px;top:14px;width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.7}
 .price .btn,.price .btn.ghost{width:100%;justify-content:center;display:block;text-align:center}
+.price .chip{align-self:center;margin-top:auto}
 .faq details{border-bottom:1px solid var(--line);padding:var(--sp-4) 0}
 .faq summary{cursor:pointer;font-size:var(--text-md);font-weight:600;color:var(--ink);list-style:none;display:flex;justify-content:space-between;gap:16px;letter-spacing:var(--tracking-tight)}
 .faq summary::-webkit-details-marker{display:none}
@@ -687,15 +688,6 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 @media(max-width:340px){.ob-actions .btn{flex:1 1 100%}}
 .btn.danger{background:transparent;border:1px solid color-mix(in srgb,var(--bad) 55%,var(--line));color:var(--bad)}
 .btn.danger:hover{background:color-mix(in srgb,var(--bad) 12%,var(--panel));border-color:var(--bad)}
-.plan-cell{border-width:1px;border-style:solid}
-.plan-cell.is-featured{border-color:var(--accent2);box-shadow:0 0 0 1px color-mix(in srgb,var(--accent2) 45%,transparent)}
-.plan-cell.is-yearly{border-color:color-mix(in srgb,var(--blue) 55%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--blue) 25%,transparent)}
-.plan-cell.is-current{border-color:color-mix(in srgb,var(--good) 60%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--good) 25%,transparent)}
-html[data-theme="light"] .plan-cell.is-featured{border-color:var(--accent2)}
-html[data-theme="light"] .plan-cell.is-yearly{border-color:#BBD2F0;box-shadow:0 0 0 1px rgba(86,139,214,.16)}
-html[data-theme="light"] .plan-cell.is-current{border-color:#9FD9BC;box-shadow:0 0 0 1px rgba(14,157,99,.14)}
-.plan-grid{max-width:1080px;margin:0 auto}
-@media(max-width:900px){.plan-grid{max-width:100%}}
 </style>
 </head>
 <body>
@@ -2631,32 +2623,31 @@ async function renderSearches() {
 /* ---------------- plan ---------------- */
 async function renderPlan() {
   const p = await api('/api/plan');
+  // Reuses the landing pricing component verbatim: same cards, spacing, hierarchy and CTA wording.
+  const cell = (cls, tag, title, price, alt, features, cta, id) => `
+        <div class="price ${cls}">
+          ${tag ? `<div class="price-tag">${tag}</div>` : ''}
+          <h3>${title}</h3>
+          <div class="price-v">${price}</div>
+          ${alt ? `<div class="price-alt">${alt}</div>` : ''}
+          <ul>${features.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
+          ${cta}
+        </div>`;
   $('#view').innerHTML = `
-    <div class="grid plan-grid" style="grid-template-columns:repeat(3,minmax(0,1fr))">
-      <div class="card tone-violet plan-cell${p.plan === 'free' ? ' is-current' : ''}">
-        <h3>Free</h3>
-        <div class="big mono" style="margin:8px 0">€0</div>
-        <div style="margin-top:12px">${p.plans.free.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span class="muted">–</span></div>`).join('')}</div>
-        ${p.plan === 'free' ? '<div class="chip have" style="margin-top:14px;display:inline-block">current plan</div>' : `<div style="margin-top:14px"><button class="btn ghost sm" id="downgrade">Switch to Free</button></div>`}
-      </div>
-      <div class="card tone-violet plan-cell is-featured">
-        <h3>Pro</h3>
-        <div class="big mono" style="margin:8px 0">€19.99<span style="font-size:14px;color:var(--muted)">/month</span></div>
-        <div class="dim" style="font-size:12.5px">or €149.99/year – two months free</div>
-        <div style="margin-top:12px">${p.plans.pro.features.map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--good)">✓</span></div>`).join('')}</div>
-        ${p.plan === 'pro'
-          ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
-          : `<div style="margin-top:14px"><button class="btn sm" id="up-month">€19.99 monthly</button></div>`}
-      </div>
-      <div class="card tone-violet plan-cell is-yearly">
-        <h3>Pro, Yearly</h3>
-        <div class="big mono" style="margin:8px 0">€149.99<span style="font-size:14px;color:var(--muted)">/year</span></div>
-        <div class="dim" style="font-size:12.5px">€12.50 a month, billed once</div>
-        <div style="margin-top:12px">${p.plans.pro.features.slice(0, 5).map((f) => `<div class="kv"><span>${esc(f)}</span><span style="color:var(--good)">✓</span></div>`).join('')}<div class="kv"><span>Two months free against monthly</span><span style="color:var(--good)">✓</span></div></div>
-        ${p.plan === 'pro'
-          ? '<div class="chip have" style="margin-top:14px;display:inline-block">active</div>'
-          : `<div style="margin-top:14px"><button class="btn sm ghost" id="up-year">€149.99 yearly</button></div>`}
-      </div>
+    <div class="price-grid">
+      ${cell(p.plan === 'free' ? 'is-current' : '', '', 'Free', '€0', '',
+        p.plans.free.features,
+        p.plan === 'free'
+          ? '<div class="chip have" style="align-self:center">Current Plan</div>'
+          : '<button class="btn ghost" id="downgrade">Continue Free</button>')}
+      ${cell('featured', 'Most Chosen', 'Pro', '€19.99<span> a month</span>', 'or €149.99 a year',
+        p.plans.pro.features,
+        p.plan === 'pro'
+          ? '<div class="chip have" style="align-self:center">Active</div>'
+          : '<button class="btn" id="up-month">Unlock Pro</button>')}
+      ${cell('', '', 'Pro+', 'Coming soon', 'For people moving this quarter',
+        ['Everything in Pro', 'One 1:1 session with a vetted coach', 'Relocation readiness pack', 'Quarterly trajectory review'],
+        '<button class="btn ghost" id="up-plus">Talk to us</button>')}
     </div>
     <div class="card" style="margin-top:14px">
       <h3>Why the Paywall Sits Where It Does</h3>
@@ -2666,7 +2657,6 @@ async function renderPlan() {
       <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:12px">
         <div class="row" style="justify-content:space-between"><span style="font-size:12.5px">Billing mode</span><span class="mono" style="color:${p.billing.ready ? 'var(--good)' : 'var(--warn)'}">${esc(p.billing.mode)}</span></div>
         <div class="dim" style="font-size:12px;margin-top:6px">${esc(p.billing.note)}</div>
-        ${p.billing.missing && p.billing.missing.length ? `<div class="muted" style="font-size:11px;margin-top:8px">Missing: <span class="mono">${p.billing.missing.map(esc).join(', ')}</span></div>` : ''}
       </div>
     </div>`;
   const checkout = async (cycle) => {
@@ -2678,7 +2668,7 @@ async function renderPlan() {
     go('plan');
   };
   if ($('#up-month')) $('#up-month').onclick = () => checkout('monthly');
-  if ($('#up-year')) $('#up-year').onclick = () => checkout('annual');
+  if ($('#up-plus')) $('#up-plus').onclick = async () => { const r = await post('/api/plus/interest', {}); toast(r.note || 'You are on the Pro+ list'); };
   if ($('#downgrade')) $('#downgrade').onclick = async () => { track('cancel.started'); const cr = await post('/api/billing/cancel', {}); toast(cr.note || cr.error || 'Cancellation requested'); go('plan'); };
 }
 
