@@ -710,6 +710,8 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .market-snapshot .ds-cell .k{font-size:11px;color:var(--muted);white-space:nowrap}
 .market-snapshot .ds-cell .v{font-size:var(--text-sm);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
 @media(max-width:760px){.market-snapshot{gap:12px;padding:12px}.market-snapshot .ds-grid{gap:14px}}
+.price-tagline{font-size:var(--text-sm);font-weight:600;color:var(--ink2);margin:2px 0 8px}
+.plan-grid-compact .price-tagline{font-size:12px;margin:1px 0 6px}
 </style>
 </head>
 <body>
@@ -2639,11 +2641,12 @@ async function renderSearches() {
 /* ---------------- plan ---------------- */
 async function renderPlan() {
   const p = await api('/api/plan');
-  // Same compact card component as the landing pricing, carrying the real plan data from the API.
-  const cell = (cls, tag, title, price, alt, features, cta) => `
+  // Same compact card component as the landing pricing. Wording is plain English and decision-led.
+  const cell = (cls, tag, title, tagline, price, alt, features, cta) => `
         <div class="price ${cls}">
           ${tag ? `<div class="price-tag">${tag}</div>` : ''}
           <h3>${title}</h3>
+          ${tagline ? `<div class="price-tagline">${tagline}</div>` : ''}
           <div class="price-v">${price}</div>
           ${alt ? `<div class="price-alt">${alt}</div>` : ''}
           <ul>${features.map((f) => `<li>${esc(f)}</li>`).join('')}</ul>
@@ -2651,19 +2654,19 @@ async function renderPlan() {
         </div>`;
   $('#view').innerHTML = `
     <div class="price-grid plan-grid-compact">
-      ${cell(p.plan === 'free' ? 'is-current' : '', '', 'Free', '€0', '',
+      ${cell(p.plan === 'free' ? 'is-current' : '', '', 'Free', 'Know your value', '€0', '',
         p.plans.free.features,
         p.plan === 'free'
           ? '<div class="chip have plan-chip">Current Plan</div>'
           : '<button class="btn ghost" id="downgrade">Continue Free</button>')}
-      ${cell('featured', 'Most Chosen', 'Pro', '€19.99<span> /month</span>', 'or €149.99/year',
+      ${cell('featured', 'Most Chosen', 'Pro', 'Make better moves', '€19.99<span> /month</span>', 'or €149.99/year',
         p.plans.pro.features,
         p.plan === 'pro'
           ? '<div class="chip have plan-chip">Active</div>'
           : '<button class="btn" id="up-month">Unlock Pro</button>')}
-      ${cell('', '', 'Pro+', '€49<span> /month</span>', 'For people running several moves at once',
-        ['Alerts the moment a 90+ match appears', 'Negotiation briefs written for each offer', 'Trajectory models across 12, 24 and 60 months', 'Three profiles: hire, contract, freelance', 'Copilot that holds your whole history'],
-        '<button class="btn plan-plus-cta" id="up-plus">Go Pro+</button>')}
+      ${cell('', '', 'Pro+', 'For bigger decisions', '€49<span> /month</span>', 'Should I move, and which offer wins?',
+        ['Compare relocation offers side by side', 'Compare countries before you move', 'Compare contract and permanent paths', 'See which move pays off over time', 'Offer-specific negotiation briefs', 'Instant alerts for top matches'],
+        '<button class="btn plan-plus-cta" id="up-plus">Unlock Pro+</button>')}
     </div>
     <div class="card" style="margin-top:14px">
       <h3>Why the Paywall Sits Where It Does</h3>
