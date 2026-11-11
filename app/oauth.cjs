@@ -167,6 +167,16 @@ function readiness() {
       APPLE_KEY_ID: has('APPLE_KEY_ID'),
       APPLE_PRIVATE_KEY: has('APPLE_PRIVATE_KEY'),
       keyParses,
+      // Mint the client secret and verify it against the key's own public half. That proves the key id,
+      // team id and client id agree without contacting Apple and without revealing any of them.
+      clientSecretOk: keyParses ? (() => {
+        try {
+          const jwt = appleClientSecret();
+          const [h, b, sig] = jwt.split('.');
+          const pub = crypto.createPublicKey(crypto.createPrivateKey(normalisePem(env('APPLE_PRIVATE_KEY'))));
+          return crypto.verify('sha256', Buffer.from(`${h}.${b}`), { key: pub, dsaEncoding: 'ieee-p1363' }, Buffer.from(sig, 'base64url'));
+        } catch { return false; }
+      })() : false,
       ready: !!(has('APPLE_CLIENT_ID') && has('APPLE_TEAM_ID') && has('APPLE_KEY_ID') && keyParses),
     },
   };
