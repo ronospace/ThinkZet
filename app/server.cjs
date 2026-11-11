@@ -224,10 +224,16 @@ route('GET', /^\/api\/auth\/(google|apple)\/start$/, async (req, res, url, m) =>
 
 // The last few OAuth outcomes, so a failure in production can be read without Railway logs.
 const OAUTH_LOG = [];
-function noteOauth(provider, outcome, detail) {
-  OAUTH_LOG.unshift({ at: new Date().toISOString(), provider, outcome, detail: String(detail || '').slice(0, 200) });
+function noteOauth(provider, outcome, detail, raw) {
+  // `detail` is what a person may read. `raw` is the provider's own words, kept for diagnosis only and
+  // never sent to the browser, so a failure can be explained without leaking a secret.
+  OAUTH_LOG.unshift({
+    at: new Date().toISOString(), provider, outcome,
+    detail: String(detail || '').slice(0, 200),
+    raw: raw ? String(raw).slice(0, 400) : undefined,
+  });
   if (OAUTH_LOG.length > 10) OAUTH_LOG.pop();
-  console.log(`  oauth ${provider}: ${outcome} ${detail ? '- ' + String(detail).slice(0, 160) : ''}`);
+  console.log(`  oauth ${provider}: ${outcome} ${detail ? '- ' + String(detail).slice(0, 160) : ''}${raw ? ' | ' + String(raw).slice(0, 300) : ''}`);
 }
 route('GET', /^\/api\/auth\/diagnostic$/, async (req, res) => json(res, 200, { recent: OAUTH_LOG }));
 
@@ -252,7 +258,7 @@ async function oauthCallback(req, res, provider, params) {
     const msg = String(e.message || e);
     // A key or token problem is our fault, not the person's. Say so, and keep the detail in the log.
     if (/DECODER|PEM|private key|invalid_client|invalid_client_secret/i.test(msg)) {
-      console.log(`  ! oauth ${provider} configuration error: ${msg}`);
+      noteOauth(provider, 'config error', msg, msg);
       return fail('Sign-in with ' + provider + ' is misconfigured on our side. We have been alerted.');
     }
     fail(msg);

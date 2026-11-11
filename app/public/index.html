@@ -171,6 +171,18 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 .tb-title{min-width:0;flex:0 1 auto}
 .tb-ico{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);color:var(--accent);flex:0 0 auto}
 .tb-ico svg{width:15px;height:15px}
+.tb-line{min-width:0}
+.tb-line h1{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:560px){.tb-line h1{font-size:var(--text-md)}}
+/* On a phone the summary must not eat the screen: compact tiles, no sparkline, so the radar is reachable. */
+@media(max-width:700px){
+  .kpi{padding:10px 12px}
+  .kpi .big{font-size:17px}
+  .kpi-k{font-size:10px}
+  .kpi-spark{display:none}
+  .kpi-delta{margin-top:4px;gap:5px}
+  .kpi-grid{gap:8px}
+}
 .tb-line{display:flex;align-items:center;gap:10px;min-width:0}
 .tb-line h1{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .topbar .pill{flex:none}
@@ -251,7 +263,13 @@ html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accen
 .arow-t{flex:1;min-width:0;font-size:var(--text-sm);line-height:var(--leading-normal);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .arow .prio{margin:0;flex:0 0 auto;white-space:nowrap}
 .arow-c{flex:0 0 auto;color:var(--muted);opacity:.5;font-size:12px}
-@media(max-width:560px){.arow{flex-wrap:wrap}.arow-t{white-space:normal;flex:1 1 100%;order:2}.arow .prio{order:3;margin-top:6px}}
+@media(max-width:560px){
+  .arow{flex-wrap:wrap;align-items:flex-start;row-gap:6px}
+  .arow-n{order:1}
+  .arow-t{white-space:normal;order:2;flex:1 1 calc(100% - 28px)}
+  .arow .prio{order:3;margin:0 0 0 28px}
+  .arow-c{display:none}
+}
 .prio{display:inline-block;margin-top:5px;font-size:var(--text-2xs);font-weight:650;letter-spacing:.01em;padding:2px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--muted);background:var(--panel2)}
 .prio.p1{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,var(--line2));background:color-mix(in srgb,var(--accent) 10%,var(--panel2))}
 .prio.p2{color:var(--ink2)}
@@ -260,7 +278,7 @@ html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accen
 .kbd-h{font-size:var(--text-2xs);font-weight:700;color:var(--ink2);margin-bottom:6px}
 .kbd-row{display:flex;align-items:center;gap:5px;font-size:var(--text-xs);color:var(--muted);padding:2px 0;min-width:0}
 .kbd-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-@media(max-width:420px){.kbd-grid{grid-template-columns:1fr}}
+@media(max-width:320px){.kbd-grid{grid-template-columns:1fr}}
 .prio.p4{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,var(--line2));background:color-mix(in srgb,var(--good) 12%,var(--panel2))}
 .done-tick{color:var(--good);opacity:1}
 .hello-mission{margin-top:10px;font-size:var(--text-md);line-height:var(--leading-snug);color:var(--ink2);max-width:64ch}
