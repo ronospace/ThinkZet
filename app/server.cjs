@@ -1292,17 +1292,14 @@ async function briefFor(uid) {
   // Headline: one sentence that earns the open
   let headline;
   const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
-  // The headline is one line on a desktop. Detail that would wrap moves to `mission` below it.
+  // Copy is fixed. The line is kept whole and fitted by type size, never split or rewritten.
   let mission = '';
   if (newHighMatch.length) {
-    headline = `${plural(newHighMatch.length, 'new opportunity', 'new opportunities')} at 80+ overnight.`;
-    mission = `Best of them: ${newHighMatch[0].title} at ${newHighMatch[0].company}, ${newHighMatch[0].match_score}/100. Apply today.`;
+    headline = `${plural(newHighMatch.length, 'new opportunity', 'new opportunities')} at 80+ match overnight. Best: ${newHighMatch[0].title} at ${newHighMatch[0].company} (${newHighMatch[0].match_score}/100).`;
   } else if (newSinceYesterday.length) {
-    headline = `${plural(newSinceYesterday.length, 'new opportunity', 'new opportunities')} since yesterday.`;
-    mission = top[0] ? `Highest match in your set is ${top[0].title} at ${top[0].match_score}/100.` : '';
+    headline = `${plural(newSinceYesterday.length, 'new opportunity', 'new opportunities')} since yesterday. Highest match: ${top[0]?.match_score ?? 0}/100.`;
   } else {
-    headline = 'Nothing new at your bar overnight.';
-    mission = top[0] ? `Your best live option is still ${top[0].title} at ${top[0].match_score}/100. Apply today.` : 'Nothing scored yet. Build your twin to start.';
+    headline = `Nothing new at your bar overnight. Your best live option is still ${top[0]?.title || '–'} (${top[0]?.match_score || 0}/100).`;
   }
 
   const actions = [];

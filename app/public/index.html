@@ -235,6 +235,12 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .btn .ext{display:inline-block;margin-left:5px;font-size:11px;opacity:.85;transform:translateY(-.5px)}
 .btn.act-apply{font-weight:650}
 .btn.act-apply:hover .ext{opacity:1}
+.arow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.arow-n{color:var(--muted);font-size:12px;width:16px;flex:0 0 auto}
+.arow-t{flex:1;min-width:0;font-size:var(--text-sm);line-height:var(--leading-normal);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.arow .prio{margin:0;flex:0 0 auto;white-space:nowrap}
+.arow-c{flex:0 0 auto;color:var(--muted);opacity:.5;font-size:12px}
+@media(max-width:560px){.arow{flex-wrap:wrap}.arow-t{white-space:normal;flex:1 1 100%;order:2}.arow .prio{order:3;margin-top:6px}}
 .prio{display:inline-block;margin-top:5px;font-size:var(--text-2xs);font-weight:650;letter-spacing:.01em;padding:2px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--muted);background:var(--panel2)}
 .prio.p1{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,var(--line2));background:color-mix(in srgb,var(--accent) 10%,var(--panel2))}
 .prio.p2{color:var(--ink2)}
@@ -248,6 +254,9 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .done-tick{color:var(--good);opacity:1}
 .hello-mission{margin-top:10px;font-size:var(--text-md);line-height:var(--leading-snug);color:var(--ink2);max-width:64ch}
 .hello-mission b{color:var(--ink);font-weight:650}
+/* The brief line is fitted by type size so the whole sentence holds one desktop line. */
+.brief-hl{font-size:clamp(14px,1.16vw,17px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+@media(max-width:900px){.brief-hl{font-size:var(--text-md);white-space:normal;overflow:visible}}
 .chip{font-size:11px;padding:2px 7px;border-radius:5px;background:var(--panel3);color:var(--ink2);border:1px solid var(--line2);white-space:nowrap}
 .chip.miss{background:color-mix(in srgb,var(--bad) 13%,var(--panel));border-color:var(--bad);color:var(--bad)}
 .chip.have{background:color-mix(in srgb,var(--good) 13%,var(--panel));border-color:var(--good);color:var(--good)}
@@ -1893,16 +1902,13 @@ async function renderRadar() {
           <div class="muted brief-meta">Today's brief · ${brief.counts.newSinceYesterday} new · ${brief.counts.closingSoon} closing soon</div>
           <span class="muted brief-ack">auto-acknowledged</span>
         </div>
-        <div class="brief-hl" style="font-size:var(--text-lg);font-weight:600;margin-top:8px;letter-spacing:var(--tracking-tight);line-height:var(--leading-snug)">${esc(brief.headline)}</div>
-        ${brief.mission ? `<div class="hello-mission">${esc(brief.mission)}</div>` : ''}
+        <div class="brief-hl" style="font-weight:600;margin-top:8px;letter-spacing:var(--tracking-tight);line-height:var(--leading-snug)">${esc(brief.headline)}</div>
         <div style="margin-top:14px">
-          ${brief.actions.map((a, i) => `<div class="action" data-opp="${a.opportunityId || ''}" style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line);cursor:pointer">
-            <div class="mono" style="color:var(--muted);font-size:12px;width:16px;padding-top:2px;flex-shrink:0">${i + 1}</div>
-            <div style="flex:1;min-width:0">
-              <div style="font-size:var(--text-sm);line-height:var(--leading-normal)">${esc(a.text)}</div>
-              <span class="prio p${a.done ? 4 : a.priority}">${actionLabel(a)}</span>
-            </div>
-            <div class="muted" style="opacity:.45;font-size:12px;padding-top:1px">›</div>
+          ${brief.actions.map((a, i) => `<div class="action arow" data-opp="${a.opportunityId || ''}" data-go="${a.go || ''}" style="border-top:1px solid var(--line);border-bottom:none">
+            <div class="mono arow-n">${i + 1}</div>
+            <div class="arow-t">${esc(a.text)}</div>
+            <span class="prio p${a.done ? 4 : a.priority}">${actionLabel(a)}</span>
+            <div class="${a.done ? 'done-tick arow-c' : 'arow-c'}">${a.done ? '✓' : '›'}</div>
           </div>`).join('')}
         </div>
       </div>`;
@@ -1935,7 +1941,7 @@ async function renderRadar() {
           <span class="hello-dot">·</span>
           <span class="hello-count">${int(s.detected)} opportunities across ${Object.keys(s.counts).length} types</span>
         </div>
-        ${brief && brief.mission ? `<div class="hello-mission">${esc(brief.mission)}</div>` : ''}
+
       </div>
       <div class="hello-score" style="text-align:right">
         <div class="muted" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase">Highest Opportunity Score</div>
@@ -3637,7 +3643,7 @@ async function renderBrief() {
       <div>
         <div class="card tone-violet" style="border-color:var(--line);">
           <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Brief · ${new Date(b.generatedAt).toLocaleString('en-GB', { weekday: 'long', hour: '2-digit', minute: '2-digit' })}</div>
-          <div style="font-size:20px;font-weight:650;margin-top:8px;letter-spacing:-.02em;line-height:1.35">${esc(b.headline)}</div>
+          <div class="brief-hl" style="font-weight:650;margin-top:8px;letter-spacing:-.02em;line-height:1.35">${esc(b.headline)}</div>
           <div class="row" style="margin-top:16px;gap:20px;flex-wrap:wrap">
             <div><div class="big mono" style="font-size:22px">${b.counts.newSinceYesterday}</div><div class="muted" style="font-size:11px">new since yesterday</div></div>
             <div><div class="big mono" style="font-size:22px">${b.counts.newHighMatch}</div><div class="muted" style="font-size:11px">at 80+ match</div></div>
@@ -3648,10 +3654,11 @@ async function renderBrief() {
 
         <h2 class="section">Do These, in This Order</h2>
         <div class="card">
-          ${b.actions.map((a, i) => `<div class="action" data-opp="${a.opportunityId || ''}" data-go="${a.go || ''}" style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer">
-            <div class="mono" style="color:var(--muted);font-size:12px;width:18px;padding-top:2px">${i + 1}</div>
-            <div style="flex:1"><div style="font-size:13.5px">${esc(a.text)}</div><span class="prio p${a.done ? 4 : a.priority}">${actionLabel(a)}</span></div>
-            <div class="${a.done ? 'done-tick' : ''}" style="opacity:.5">${a.done ? '✓' : '>'}</div>
+          ${b.actions.map((a, i) => `<div class="action arow" data-opp="${a.opportunityId || ''}" data-go="${a.go || ''}">
+            <div class="mono arow-n">${i + 1}</div>
+            <div class="arow-t">${esc(a.text)}</div>
+            <span class="prio p${a.done ? 4 : a.priority}">${actionLabel(a)}</span>
+            <div class="${a.done ? 'done-tick arow-c' : 'arow-c'}">${a.done ? '✓' : '›'}</div>
           </div>`).join('')}
         </div>
 
