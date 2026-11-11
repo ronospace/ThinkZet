@@ -161,6 +161,8 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 .topbar .sub{font-size:12px;color:var(--muted)}
 .topbar .spacer{flex:1}
 .tb-title{min-width:0;flex:0 1 auto}
+.tb-ico{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);color:var(--accent);flex:0 0 auto}
+.tb-ico svg{width:15px;height:15px}
 .tb-line{display:flex;align-items:center;gap:10px;min-width:0}
 .tb-line h1{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .topbar .pill{flex:none}
@@ -230,6 +232,12 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .btn.ghost{background:transparent;border:1px solid var(--line2);color:var(--ink2);box-shadow:none}
 .btn.ghost:hover{color:var(--ink);border-color:var(--accent2)}
 .btn.sm{padding:5px 10px;font-size:12px;border-radius:7px}
+.btn .ext{display:inline-block;margin-left:5px;font-size:11px;opacity:.85;transform:translateY(-.5px)}
+.btn.act-apply{font-weight:650}
+.btn.act-apply:hover .ext{opacity:1}
+.prio{display:inline-block;margin-top:5px;font-size:var(--text-2xs);font-weight:650;letter-spacing:.01em;padding:2px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--muted);background:var(--panel2)}
+.prio.p1{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,var(--line2));background:color-mix(in srgb,var(--accent) 10%,var(--panel2))}
+.prio.p2{color:var(--ink2)}
 .chip{font-size:11px;padding:2px 7px;border-radius:5px;background:var(--panel3);color:var(--ink2);border:1px solid var(--line2);white-space:nowrap}
 .chip.miss{background:color-mix(in srgb,var(--bad) 13%,var(--panel));border-color:var(--bad);color:var(--bad)}
 .chip.have{background:color-mix(in srgb,var(--good) 13%,var(--panel));border-color:var(--good);color:var(--good)}
@@ -322,7 +330,7 @@ html[data-theme="light"] .rate-gap{border-color:#DCC6EE;box-shadow:0 0 0 1px rgb
 .types button{font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2)}
 .types button.on{background:var(--nav-active);border-color:var(--accent2);color:var(--tone-ink, var(--tone-ink))}
 .brief-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
-.brief-meta{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;line-height:1.5}
+.brief-meta{font-size:var(--text-2xs);letter-spacing:.01em;line-height:1.5}
 .brief-ack{font-size:11px;white-space:nowrap}
 @media(max-width:560px){.brief-head{flex-direction:column;align-items:flex-start;gap:3px}.brief-ack{display:none}}
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3)}
@@ -356,7 +364,7 @@ html[data-theme="light"] .msg.user{background:var(--accent-soft);border-color:va
 html[data-theme="light"] .msg.bot{background:#fff;border-color:var(--line)}
 html[data-theme="light"] .delta.flat{background:var(--panel2)}
 .kpi:hover{border-color:var(--line2);box-shadow:var(--shadow);transform:translateY(-1px)}
-.kpi-k{font-size:var(--text-2xs);letter-spacing:.11em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.kpi-k{font-size:var(--text-2xs);letter-spacing:.01em;color:var(--muted);font-weight:600}
 .kpi-v{font-size:var(--text-2xl);font-weight:720;letter-spacing:var(--tracking-tighter);line-height:1.15;margin-top:6px}
 .kpi-s{font-size:var(--text-2xs);color:var(--muted)}
 @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
@@ -1038,7 +1046,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
   <main>
     <div class="topbar">
       <div class="tb-title">
-        <div class="tb-line"><h1 id="view-title">Opportunity Radar</h1><span class="pill live" id="live-pill"><i></i>live</span></div>
+        <div class="tb-line"><span class="tb-ico" id="view-ico" aria-hidden="true"></span><h1 id="view-title">Opportunity Radar</h1><span class="pill live" id="live-pill"><i></i>live</span></div>
         <div class="sub" id="view-sub">Live</div>
       </div>
       <div class="spacer"></div>
@@ -1857,7 +1865,7 @@ async function renderRadar() {
             <div class="mono" style="color:var(--muted);font-size:12px;width:16px;padding-top:2px;flex-shrink:0">${i + 1}</div>
             <div style="flex:1;min-width:0">
               <div style="font-size:var(--text-sm);line-height:var(--leading-normal)">${esc(a.text)}</div>
-              <div class="muted" style="font-size:var(--text-2xs);margin-top:2px;letter-spacing:.06em;text-transform:uppercase">${a.priority === 1 ? 'do now' : a.priority === 2 ? 'this week' : 'keep warm'}</div>
+              <div class="prio p${a.priority}">${a.priority === 1 ? 'Do now' : a.priority === 2 ? 'This week' : 'Keep warm'}</div>
             </div>
             <div class="muted" style="opacity:.45;font-size:12px;padding-top:1px">›</div>
           </div>`).join('')}
@@ -2230,7 +2238,7 @@ function oppCard(o, idx = 0) {
         <div><b>${o.offer_probability}%</b>offer</div>
       </div>
       <div class="row" style="gap:6px">
-        <a class="btn sm act-apply" data-id="${o.id}" href="${esc(o.apply_url || '#')}" target="_blank" rel="noopener">Apply</a>
+        <a class="btn sm primary act-apply" data-id="${o.id}" href="${esc(o.apply_url || '#')}" target="_blank" rel="noopener" title="Open the employer page in a new tab">Apply<span class="ext" aria-hidden="true">↗</span></a>
         <button class="btn sm ghost act-track" data-id="${o.id}">${o.tracked ? 'Tracked ✓' : 'Track'}</button>
         <button class="btn sm ghost act-open" data-id="${o.id}">Why?</button>
       </div>
@@ -3469,6 +3477,13 @@ async function go(view) {
   document.querySelectorAll('#nav button').forEach((b) => b.classList.toggle('active', b.dataset.view === view));
   const [fn, title, sub] = VIEWS[view];
   $('#view-title').textContent = title;
+  // Copy the icon from the matching menu item so the header and the menu can never drift apart.
+  const ico = document.getElementById('view-ico');
+  if (ico) {
+    const src = document.querySelector(`#nav button[data-view="${view}"] .ico svg`);
+    ico.innerHTML = src ? src.outerHTML : '';
+    ico.style.display = src ? '' : 'none';
+  }
   $('#view-sub').textContent = sub;
   $('#view').innerHTML = `<div class="sk-kpis">${'<div class="sk sk-kpi"></div>'.repeat(4)}</div>
     <div class="sk sk-band"></div>
@@ -3566,7 +3581,7 @@ async function renderBrief() {
         <div class="card">
           ${b.actions.map((a, i) => `<div class="action" data-opp="${a.opportunityId || ''}" data-go="${a.go || ''}" style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer">
             <div class="mono" style="color:var(--muted);font-size:12px;width:18px;padding-top:2px">${i + 1}</div>
-            <div style="flex:1"><div style="font-size:13.5px">${esc(a.text)}</div><div class="muted" style="font-size:11px;margin-top:2px">${a.priority === 1 ? 'do now' : a.priority === 2 ? 'this week' : 'keep warm'}</div></div>
+            <div style="flex:1"><div style="font-size:13.5px">${esc(a.text)}</div><div class="prio p${a.priority}">${a.priority === 1 ? 'Do now' : a.priority === 2 ? 'This week' : 'Keep warm'}</div></div>
             <div style="opacity:.5">&gt;</div>
           </div>`).join('')}
         </div>
