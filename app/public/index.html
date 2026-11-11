@@ -775,6 +775,9 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .fb-star:hover{border-color:var(--accent2);color:var(--ink)}
 .fb-star.on{background:color-mix(in srgb,var(--accent2) 18%,var(--panel));border-color:var(--accent2);color:var(--accent)}
 .fb-thanks{font-size:var(--text-sm);color:var(--good);margin-top:8px}
+.fb-follow{margin-top:10px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
+.fb-why{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:var(--radius);color:var(--ink);padding:9px 11px;font:inherit;font-size:var(--text-sm);resize:vertical}
+.fb-why:focus{outline:none;border-color:var(--accent2)}
 @media(max-width:560px){.fb-stars{margin-left:0}.fb-star{width:30px;height:30px}}
 </style>
 </head>
@@ -1128,11 +1131,27 @@ async function mountFeedback() {
   box.querySelectorAll('.fb-star').forEach((b) => {
     b.onclick = async () => {
       box.querySelectorAll('.fb-star').forEach((x) => x.classList.toggle('on', Number(x.dataset.n) <= Number(b.dataset.n)));
-      const r = await post('/api/feedback', { rating: Number(b.dataset.n), surface: 'radar' });
+      const rating = Number(b.dataset.n);
+      const done = (comment) => {
+        localStorage.setItem('tz-feedback-radar', '1');
+        box.querySelector('.fb-row').hidden = true;
+        box.querySelector('.fb-follow').hidden = true;
+        box.querySelector('.fb-thanks').hidden = false;
+      };
+      if (rating <= 3) {
+        // A low rating is only useful with the reason, so ask once before recording it.
+        box.querySelector('.fb-follow').hidden = false;
+        const send = box.querySelector('#fb-send');
+        send.onclick = async () => {
+          const r = await post('/api/feedback', { rating, surface: 'radar', comment: box.querySelector('#fb-why').value });
+          if (r.error) return toast(r.error);
+          done();
+        };
+        return;
+      }
+      const r = await post('/api/feedback', { rating, surface: 'radar' });
       if (r.error) return toast(r.error);
-      localStorage.setItem('tz-feedback-radar', '1');
-      box.querySelector('.fb-row').hidden = true;
-      box.querySelector('.fb-thanks').hidden = false;
+      done();
     };
   });
   const share = box.querySelector('#fb-share');
@@ -1926,13 +1945,18 @@ async function renderRadar() {
     <div id="feedback" class="card fb-card" hidden>
       <div class="fb-row">
         <div>
-          <div class="fb-q">Is this useful so far?</div>
+          <div class="fb-q">How useful is this radar?</div>
           <div class="fb-sub">One tap. It decides what we build next.</div>
         </div>
         <div class="fb-stars" role="group" aria-label="Rate from 1 to 5">
           ${[1,2,3,4,5].map((n) => `<button class="fb-star" data-n="${n}" aria-label="${n} of 5">${n}</button>`).join('')}
         </div>
         <button class="btn sm ghost" id="fb-share">Share</button>
+      </div>
+      <div class="fb-follow" hidden>
+        <label class="fb-sub" for="fb-why">What is missing or unclear?</label>
+        <textarea id="fb-why" class="fb-why" rows="2" maxlength="600" placeholder="One line is enough"></textarea>
+        <button class="btn sm" id="fb-send">Send</button>
       </div>
       <div class="fb-thanks" hidden>Thank you. That is recorded.</div>
     </div>
@@ -2196,8 +2220,9 @@ function oppCard(o, idx = 0) {
         <div><b>${o.offer_probability}%</b>offer</div>
       </div>
       <div class="row" style="gap:6px">
+        <a class="btn sm act-apply" data-id="${o.id}" href="${esc(o.apply_url || '#')}" target="_blank" rel="noopener">Apply</a>
         <button class="btn sm ghost act-track" data-id="${o.id}">${o.tracked ? 'Tracked ✓' : 'Track'}</button>
-        <button class="btn sm act-open" data-id="${o.id}">Why?</button>
+        <button class="btn sm ghost act-open" data-id="${o.id}">Why?</button>
       </div>
     </div>
   </div>`;
@@ -2210,6 +2235,12 @@ function bindOppActions() {
       await post('/api/applications', { opportunityId: b.dataset.id, status: 'saved' });
       b.textContent = 'Tracked ✓';
       toast('Added to tracker');
+    };
+  });
+  document.querySelectorAll('.act-apply').forEach((b) => {
+    b.onclick = async () => {
+      track('opportunity.opened', { opportunityId: b.dataset.id });
+      await post('/api/applications', { opportunityId: b.dataset.id, status: 'saved' });
     };
   });
   document.querySelectorAll('.act-open').forEach((b) => {
@@ -3023,6 +3054,7 @@ async function renderEmail() {
 /* ---------------- leads ---------------- */
 async function renderLeads() {
   const d = await api('/api/leads');
+  const fb = await api('/api/feedback').catch(() => ({ total: 0, average: null, distribution: [], recent: [] }));
   const st = d.stats;
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
@@ -3036,7 +3068,14 @@ async function renderLeads() {
       <table class="t" style="margin-top:8px">
         <thead><tr><th>Email</th><th>Role</th><th>Yrs</th><th>Country</th><th>Paid</th><th>Gap</th><th>Median</th><th>State</th><th>When</th></tr></thead>
         <tbody>
-        ${d.leads.length ? d.leads.map((l) => `<tr>
+        ${fb.total ? `<div class="card" style="margin-bottom:14px">
+      <div class="row" style="justify-content:space-between;align-items:baseline">
+        <div><b>Feedback</b> <span class="muted">${fb.total} rating${fb.total === 1 ? '' : 's'} · average ${fb.average}</span></div>
+        <div class="muted" style="font-size:var(--text-xs)">${fb.distribution.map((x) => x.rating + '★ ' + x.n).join(' · ')}</div>
+      </div>
+      ${fb.recent.filter((r) => r.comment).slice(0, 5).map((r) => `<div style="margin-top:8px;font-size:var(--text-sm)"><b>${r.rating}★</b> <span class="muted">${esc(r.surface)} · ${esc(r.created_at)}</span><div>${esc(r.comment)}</div></div>`).join('')}
+    </div>` : ''}
+    ${d.leads.length ? d.leads.map((l) => `<tr>
           <td>${esc(l.email)}</td>
           <td>${esc(l.role || '–')}</td>
           <td class="mono">${l.years ?? '–'}</td>
