@@ -138,7 +138,7 @@ a{color:var(--accent);text-decoration:none}
 .logo{display:flex;align-items:center;gap:11px;padding:7px 8px 24px}
 .logo .mark{width:32px;height:32px}
 
-.logo-text > span:not(.wm){font-size:10.5px;color:var(--muted);display:block;letter-spacing:.02em;text-transform:none;margin-top:2px}
+.logo-text > span:not(.wm){font-size:var(--text-2xs);color:var(--muted);display:block;letter-spacing:.02em;text-transform:none;margin-top:2px}
 .nav{display:flex;flex-direction:column;gap:2px;overflow-y:auto;overflow-x:hidden;flex:1 1 auto;min-height:0;padding-bottom:6px;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:var(--line2) transparent}
 .nav::-webkit-scrollbar{width:6px}
 .nav::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px}
@@ -151,10 +151,10 @@ a{color:var(--accent);text-decoration:none}
 .nav .ico{width:16px;height:16px;display:grid;place-items:center;opacity:.72;flex-shrink:0}
 .nav .ico svg{width:15px;height:15px}
 .nav button.active .ico{opacity:1;color:var(--accent)}
-.rail-foot{flex:none;margin-top:0;padding:12px 10px 4px;border-top:1px solid var(--line);font-size:11.5px;color:var(--muted);line-height:1.7;background:var(--panel);position:relative;z-index:2}
+.rail-foot{flex:none;margin-top:0;padding:12px 10px 4px;border-top:1px solid var(--line);font-size:var(--text-xs);color:var(--muted);line-height:1.7;background:var(--panel);position:relative;z-index:2}
 .rail-foot a{color:var(--ink2)}
 .rf-status{display:flex;align-items:center;gap:6px;font-weight:600;color:var(--ink)}
-.rf-counts{margin-top:3px;font-size:10.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.rf-counts{margin-top:3px;font-size:var(--text-2xs);color:var(--muted);font-variant-numeric:tabular-nums}
 .rf-sep{height:1px;background:var(--line2);margin:9px 0 8px}
 html[data-theme="light"] .rf-sep{background:var(--line2)}
 .rf-legal{line-height:1.7}
@@ -165,7 +165,7 @@ html[data-theme="light"] .rf-sep{background:var(--line2)}
 html,body{max-width:100%;overflow-x:hidden}
 main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .topbar{position:sticky;top:0;z-index:5;background:var(--topbar-bg);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:14px 28px;display:flex;align-items:center;gap:16px}
-.topbar h1{font-size:20px;margin:0;font-weight:700;letter-spacing:-.01em}
+.topbar h1{font-size:var(--text-xl);margin:0;font-weight:700;letter-spacing:-.01em}
 .topbar .sub{font-size:12px;color:var(--muted)}
 .topbar .spacer{flex:1}
 .tb-title{min-width:0;flex:0 1 auto}
@@ -177,7 +177,7 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 /* On a phone the summary must not eat the screen: compact tiles, no sparkline, so the radar is reachable. */
 @media(max-width:700px){
   .kpi{padding:10px 12px}
-  .kpi .big{font-size:17px}
+  .kpi .big{font-size:var(--text-lg)}
   .kpi-k{font-size:10px}
   .kpi-spark{display:none}
   .kpi-delta{margin-top:4px;gap:5px}
@@ -246,6 +246,7 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .mono{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
 .muted{color:var(--muted)}
 .dim{color:var(--ink2)}
+.big.sm{font-size:var(--text-xl)}
 .big{font-size:var(--text-2xl);font-weight:700;letter-spacing:var(--tracking-tighter);line-height:var(--leading-tight)}
 .btn{background:var(--accent2);color:var(--on-accent);padding:9px 15px;border-radius:var(--radius-sm);font-size:var(--text-sm);font-weight:600;letter-spacing:-.005em;transition:background .14s ease,transform .08s ease,box-shadow .14s ease;box-shadow:0 1px 2px rgba(0,0,0,.25)}
 .btn:hover{filter:brightness(1.08);box-shadow:0 2px 10px -2px color-mix(in srgb,var(--accent2) 55%,transparent)}
@@ -308,7 +309,7 @@ html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accen
 .pct-dot{position:absolute;top:-3px;width:14px;height:14px;border-radius:50%;transform:translateX(-50%);box-shadow:0 0 0 3px var(--panel)}
 .bar > i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent2),var(--rose))}
 .empty{padding:60px 20px;text-align:center;color:var(--muted)}
-h2.section{font-size:15px;margin:26px 0 12px;font-weight:650;letter-spacing:-.01em}
+h2.section{font-size:var(--text-md);margin:26px 0 12px;font-weight:650;letter-spacing:-.01em}
 /* Section headings that describe system health carry a small tinted icon, so the group reads at a glance. */
 h2.section-ico{display:flex;align-items:center;gap:8px}
 h2.section-ico:before{content:"";width:18px;height:18px;border-radius:6px;flex:none;background:color-mix(in srgb,var(--accent2) 16%,var(--panel));border:1px solid color-mix(in srgb,var(--accent2) 40%,var(--line));background-image:radial-gradient(circle at 50% 50%,var(--accent2) 0 2.2px,transparent 2.4px);background-repeat:no-repeat;background-position:center}
@@ -368,8 +369,8 @@ html[data-theme="light"] .hello-mark{background-image:linear-gradient(100deg,var
 .hello-dot{opacity:.45}
 .hello-count{opacity:.8}
 @media(max-width:560px){.hello h2{font-size:var(--text-md)}.hello-meta{font-size:var(--text-xs);gap:6px}}
-.hello .date{color:var(--muted);font-size:12.5px;line-height:1.4}
-.hello .date-sub{color:var(--muted);font-size:12.5px;opacity:.75;line-height:1.4}
+.hello .date{color:var(--muted);font-size:var(--text-sm);line-height:1.4}
+.hello .date-sub{color:var(--muted);font-size:var(--text-sm);opacity:.75;line-height:1.4}
 html[data-theme="light"] .rate-gap{border-color:#DCC6EE;box-shadow:0 0 0 1px rgba(139,92,246,.10),var(--shadow)}
 .rate-gap{--tone-ink:var(--ink);--tone-kicker:var(--tone-kicker);background:var(--hero-grad);border:1px solid var(--ai-border);border-radius:var(--radius-lg);padding:26px 28px;margin-bottom:var(--sp-4);position:relative;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.4),0 22px 50px -34px rgba(90,60,180,.7)}
 .rate-gap::after{content:"";position:absolute;right:-40px;top:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(139,92,246,.22),transparent 70%)}
@@ -384,8 +385,8 @@ html[data-theme="light"] .rate-gap{border-color:#DCC6EE;box-shadow:0 0 0 1px rgb
 .types button{font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2)}
 .types button.on{background:var(--nav-active);border-color:var(--accent2);color:var(--tone-ink, var(--tone-ink))}
 .brief-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
-.brief-meta{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;line-height:1.5}
-.brief-ack{font-size:10.5px;white-space:nowrap;letter-spacing:.14em;text-transform:uppercase}
+.brief-meta{font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase;line-height:1.5}
+.brief-ack{font-size:var(--text-2xs);white-space:nowrap;letter-spacing:.14em;text-transform:uppercase}
 @media(max-width:560px){.brief-head{flex-direction:column;align-items:flex-start;gap:3px}.brief-ack{display:none}}
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3)}
 .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-3) var(--sp-4) 0;box-shadow:none;overflow:hidden;transition:border-color .16s,box-shadow .16s,transform .16s;display:flex;flex-direction:column}
@@ -419,7 +420,7 @@ html[data-theme="light"] .msg.bot{background:#fff;border-color:var(--line)}
 html[data-theme="light"] .delta.flat{background:var(--panel2)}
 .kpi:hover{border-color:var(--line2);box-shadow:var(--shadow);transform:translateY(-1px)}
 .kpi-k{font-size:var(--text-2xs);letter-spacing:.01em;color:var(--muted);font-weight:600}
-.kpi .big{font-size:20px}
+.kpi .big{font-size:var(--text-xl)}
 .kpi{background:color-mix(in srgb,var(--panel) 88%,var(--panel2))}
 .kpi-v{font-size:var(--text-2xl);font-weight:720;letter-spacing:var(--tracking-tighter);line-height:1.15;margin-top:6px}
 .kpi-s{font-size:var(--text-2xs);color:var(--muted)}
@@ -431,14 +432,14 @@ html[data-theme="light"] .delta.flat{background:var(--panel2)}
   .land-wrap{padding:0 16px 60px}
   .hero-sec{padding:var(--sp-5) 0 var(--sp-6)}
   .land-h1{font-size:clamp(26px,8vw,34px)}
-  .land-sub{font-size:15px}
+  .land-sub{font-size:var(--text-md)}
   .check{padding:18px 16px}
   .check .row3,.check .row2{grid-template-columns:1fr!important}
   .proof{grid-template-columns:1fr;gap:var(--sp-4)}
   .cap-grid,.how-grid{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
   .foot-col{padding:12px 10px}
-  .foot-grid a{font-size:12.5px;padding:4px 0}
+  .foot-grid a{font-size:var(--text-sm);padding:4px 0}
 }
 .feed-wrap{display:grid;grid-template-columns:minmax(0,1fr) 288px;gap:18px;align-items:start}
 .facets{position:sticky;top:74px}
@@ -465,10 +466,10 @@ html[data-theme="light"] .delta.flat{background:var(--panel2)}
 .seg:hover{color:var(--ink);background:var(--panel3)}
 .seg.on{background:var(--accent-soft);color:var(--accent);font-weight:600}
 .filters{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.filters input,.filters select{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:12.5px;outline:none}
+.filters input,.filters select{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:7px 10px;font-size:var(--text-sm);outline:none}
 .filters input{flex:1;min-width:200px}
 .filters input:focus,.filters select:focus{border-color:var(--accent2)}
-.filters .chk{display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink2);white-space:nowrap}
+.filters .chk{display:flex;align-items:center;gap:6px;font-size:var(--text-sm);color:var(--ink2);white-space:nowrap}
 .reveal{animation:rise .32s cubic-bezier(.2,.7,.3,1) both}
 .sk{background:linear-gradient(90deg,var(--panel2) 25%,var(--panel3) 37%,var(--panel2) 63%);background-size:400% 100%;animation:shimmer 1.3s ease-in-out infinite;border-radius:8px}
 @keyframes shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
@@ -496,11 +497,11 @@ html[data-theme="light"] .delta.flat{background:var(--panel2)}
 .opp h4{margin:0 0 4px;font-size:15.5px;font-weight:680;letter-spacing:-.012em;line-height:1.3}
 .opp h4 .muted{font-weight:450}
 .opp .meta{font-size:12px;color:var(--ink2);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.opp .why{font-size:11.5px;color:var(--muted);margin-top:6px}
+.opp .why{font-size:var(--text-xs);color:var(--muted);margin-top:6px}
 .opp-comp{font-weight:600;color:var(--ink)}
 .opp .right{text-align:right;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
 .probs{display:flex;gap:10px;font-size:11px;color:var(--ink2)}
-.probs b{display:block;font-size:14px;color:var(--ink);font-weight:650}
+.probs b{display:block;font-size:var(--text-base);color:var(--ink);font-weight:650}
 
 /* ---------- scores ---------- */
 .scores-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
@@ -540,7 +541,7 @@ table.t tr:hover td{background:var(--panel2)}
 .palette{position:fixed;inset:0;background:rgba(5,7,10,.72);backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding-top:12vh;z-index:100}
 .palette.open{display:flex}
 .palette-box{width:min(640px,92vw);background:var(--panel);border:1px solid var(--line2);border-radius:14px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.55)}
-.palette-box input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--line);padding:16px 18px;font-size:15px;outline:none;color:var(--ink)}
+.palette-box input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--line);padding:16px 18px;font-size:var(--text-md);outline:none;color:var(--ink)}
 .palette-list{max-height:46vh;overflow:auto;padding:6px}
 .palette-item{display:flex;gap:12px;align-items:center;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:13.5px}
 .palette-item .k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;border:1px solid var(--line2);padding:1px 5px;border-radius:4px;flex-shrink:0}
@@ -592,12 +593,12 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
   .kpi{padding:12px 12px 0}
   .kpi-spark{margin:10px -12px 0}
   .kpi-spark svg{height:36px}
-  .hello .date,.hello .date-sub{font-size:11.5px}
+  .hello .date,.hello .date-sub{font-size:var(--text-xs)}
   .rate-gap{padding:18px 16px}
   .rate-gap .amount{font-size:clamp(24px,7vw,32px);line-height:1.12}
   .refine-bar{flex-wrap:wrap}
   .refine-summary{display:none}
-  .topbar h1{font-size:17px}
+  .topbar h1{font-size:var(--text-lg)}
   .themebar,.theme-btn{width:28px;height:28px}
   .scores-grid{grid-template-columns:1fr 1fr!important}
   .overall{flex-direction:column;text-align:center;gap:14px}
@@ -617,28 +618,28 @@ html[data-theme="light"] .landing{background:radial-gradient(1100px 560px at 50%
 
 .land-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;letter-spacing:.02em}
 .land-brand .mark{width:30px;height:30px}
-.land-kicker{display:inline-flex;align-items:center;gap:7px;font-size:11.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border:1px solid var(--ai-border);background:var(--accent-soft);padding:5px 11px;border-radius:999px}
+.land-kicker{display:inline-flex;align-items:center;gap:7px;font-size:var(--text-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border:1px solid var(--ai-border);background:var(--accent-soft);padding:5px 11px;border-radius:999px}
 html[data-theme="light"] .land-kicker{color:var(--accent2)}
 .land-h1{font-size:clamp(32px,5.2vw,52px);line-height:1;letter-spacing:-.04em;margin:20px 0 0;font-weight:800}
 .land-h1 .accent{color:var(--accent2)}
 html[data-theme="light"] .land-h1 .accent{color:var(--accent2)}
 @media(prefers-reduced-motion:reduce){*{animation-duration:.001ms!important;transition-duration:.001ms!important}}
-.land-sub{font-size:17px;line-height:1.55;color:var(--ink2);margin:18px 0 0;max-width:560px}
+.land-sub{font-size:var(--text-lg);line-height:1.55;color:var(--ink2);margin:18px 0 0;max-width:560px}
 .land-slogan{display:block;color:var(--ink);font-size:1.18em;font-weight:650;letter-spacing:-.015em;margin-bottom:4px}
 .land-sub-2{display:block}
 .land-cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap;align-items:center}
-.land-cta .btn{font-size:14px;padding:12px 20px;border-radius:10px}
+.land-cta .btn{font-size:var(--text-base);padding:12px 20px;border-radius:10px}
 .land-cta .tiny{font-size:12px;color:var(--muted)}
 .check{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px;margin-top:44px;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
-.check h2{margin:0;font-size:17px;font-weight:650;letter-spacing:-.01em}
-.check p.sub{color:var(--muted);font-size:12.5px;margin:5px 0 18px}
+.check h2{margin:0;font-size:var(--text-lg);font-weight:650;letter-spacing:-.01em}
+.check p.sub{color:var(--muted);font-size:var(--text-sm);margin:5px 0 18px}
 .check .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
 .check .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-.check label{display:block;font-size:11.5px;color:var(--ink2);margin-bottom:5px}
-.check input,.check select{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 12px;font-size:14px;outline:none;color:var(--ink)}
+.check label{display:block;font-size:var(--text-xs);color:var(--ink2);margin-bottom:5px}
+.check input,.check select{width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:11px 12px;font-size:var(--text-base);outline:none;color:var(--ink)}
 .check input:focus,.check select:focus{border-color:var(--accent2)}
-.check .go{margin-top:16px;width:100%;padding:13px;font-size:14px;border-radius:10px}
+.check .go{margin-top:16px;width:100%;padding:13px;font-size:var(--text-base);border-radius:10px}
 .result{margin-top:22px;border-radius:14px;padding:22px;border:1px solid var(--ai-border);display:none}
 .result.show{display:block;animation:rise .35s cubic-bezier(.2,.7,.3,1) both}
 .result .big-gap{font-size:clamp(26px,4.4vw,38px);font-weight:780;letter-spacing:-.03em;line-height:1.12;margin:6px 0 4px}
@@ -711,7 +712,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 @media(max-width:900px){.price{padding:var(--sp-5)}.price-tag{left:var(--sp-4);font-size:10px;padding:3px 8px}.how-grid,.cap-grid,.price-grid{grid-template-columns:1fr}.foot-grid{grid-template-columns:1fr 1fr!important;gap:10px}.foot-grid>div:first-child{grid-column:1/-1;text-align:center;margin-bottom:6px}.foot-grid>div:first-child .land-brand{justify-content:center}.foot-grid>div:first-child .foot-note{margin:0 auto}.land-nav-links{display:none}.hero-sec{padding-top:var(--sp-10)}
   .land-tag{display:none}
   .land-nav{padding:10px 16px;gap:8px}
-  .land-brand{font-size:14px}
+  .land-brand{font-size:var(--text-base)}
   .land-nav .btn{white-space:nowrap;padding:7px 12px;font-size:12px}
   .proof{grid-template-columns:1fr;gap:var(--sp-3)}
   .proof > div{gap:8px}
@@ -745,13 +746,13 @@ html.is-landing .hero-sec,html.is-landing .land-footer{scroll-margin-top:76px}
 sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin-left:1px;letter-spacing:0}
 .chip.sample{background:color-mix(in srgb,var(--warn) 14%,var(--panel));border-color:color-mix(in srgb,var(--warn) 45%,var(--line));color:var(--warn);font-weight:600}
 .sample-line{margin-top:10px;font-size:var(--text-xs);line-height:1.5;color:var(--warn);opacity:.95}
-.ds-inline .ds-cell .v{font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums}
+.ds-inline .ds-cell .v{font-size:var(--text-xs);font-weight:700;font-variant-numeric:tabular-nums}
 .ds-h{font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);font-weight:700;margin-bottom:10px}
 .ds-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
 .ds-cell .k{font-size:var(--text-2xs);color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
 .ds-cell .v{font-size:var(--text-md);font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
 .ds-note{margin-top:10px;font-size:11px;color:var(--warn);line-height:1.5;max-width:760px}
-@media(max-width:760px){.ds-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.foot-grid{grid-template-columns:1fr 1fr}.foot-col{padding:12px 10px}.foot-grid a{font-size:11.5px}}
+@media(max-width:760px){.ds-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.foot-grid{grid-template-columns:1fr 1fr}.foot-col{padding:12px 10px}.foot-grid a{font-size:var(--text-xs)}}
 .outcome-card{margin-top:var(--sp-4)}
 .outcome-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px}
 .outcome-row{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) auto;gap:12px;align-items:center;padding:11px 0;border-bottom:1px solid var(--line)}
@@ -1405,18 +1406,18 @@ async function renderSeo() {
             <div><div class="muted" style="font-size:11px">p75</div><div class="mono" style="font-size:18px">${fmt(b.p75)}</div></div>
             <div><div class="muted" style="font-size:11px">p90</div><div class="mono" style="font-size:18px">${fmt(b.p90)}</div></div>
           </div>
-          <div style="margin-top:16px;font-size:12.5px;color:var(--muted)">${esc(b.segment)} · ${b.exactComparables} exact-profile comparables · ${esc(b.confidence)} confidence</div>
+          <div style="margin-top:16px;font-size:var(--text-sm);color:var(--muted)">${esc(b.segment)} · ${b.exactComparables} exact-profile comparables · ${esc(b.confidence)} confidence</div>
         </div>
-        <h2 style="font-size:17px;margin:32px 0 10px">Where the money is</h2>
+        <h2 style="font-size:var(--text-lg);margin:32px 0 10px">Where the money is</h2>
         <div class="card">${(b.byChannel || []).filter((c) => c.n >= 5).map((c) => `<div class="kv"><span style="text-transform:capitalize">${esc(c.channel)} <span class="muted">· ${c.n} postings</span></span><span class="mono">${fmt(c.median)}</span></div>`).join('')}</div>
-        <h2 style="font-size:17px;margin:32px 0 10px">Skills that pay more</h2>
+        <h2 style="font-size:var(--text-lg);margin:32px 0 10px">Skills that pay more</h2>
         <div class="card">${r.levers.slice(0, 6).map((l) => `<div class="kv"><span>${esc(l.skill)}</span><span class="mono" style="color:var(--good)">+${l.premium}%</span></div>`).join('')}</div>
         <div class="card" style="margin-top:26px;text-align:center;">
-          <div style="font-size:15px;font-weight:600">Where do you sit against this?</div>
-          <div class="dim" style="font-size:12.5px;margin-top:6px">Free and takes a minute.</div>
+          <div style="font-size:var(--text-md);font-weight:600">Where do you sit against this?</div>
+          <div class="dim" style="font-size:var(--text-sm);margin-top:6px">Free and takes a minute.</div>
           <a class="btn" href="/" style="margin-top:14px;display:inline-block">Check my market value</a>
         </div>
-        <div class="muted" style="font-size:11.5px;margin-top:22px">Source: ${b.sampleSize} live postings disclosing pay, annualised to EUR. Discipline-level segments with fewer than eight postings are omitted rather than shown with false precision.</div>
+        <div class="muted" style="font-size:var(--text-xs);margin-top:22px">Source: ${b.sampleSize} live postings disclosing pay, annualised to EUR. Discipline-level segments with fewer than eight postings are omitted rather than shown with false precision.</div>
       </div>`;
     return;
   }
@@ -1440,8 +1441,8 @@ async function renderSeo() {
           <div class="kv"><span>Emerging</span><span class="mono">${s1.is_emerging ? 'yes' : 'no'}</span></div>
         </div>
         <div class="card" style="margin-top:22px;text-align:center">
-          <div style="font-size:14px;font-weight:600">Do you have ${esc(s1.canonical)}?</div>
-          <div class="dim" style="font-size:12.5px;margin-top:6px">See what it's worth on your profile, and what it's costing you to not have it.</div>
+          <div style="font-size:var(--text-base);font-weight:600">Do you have ${esc(s1.canonical)}?</div>
+          <div class="dim" style="font-size:var(--text-sm);margin-top:6px">See what it's worth on your profile, and what it's costing you to not have it.</div>
           <a class="btn" href="/" style="margin-top:14px;display:inline-block">Check my market value</a>
         </div>
       </div>`;
@@ -1466,18 +1467,18 @@ async function renderSharedCard(id) {
     <div class="land-wrap" style="max-width:620px">
       <div class="land-nav"><div class="land-brand"><svg class="mark" viewBox="0 0 192 192" aria-hidden="true" focusable="false"><use href="#tz-mark"/></svg> <span class="wm">Think<i>Zet</i></span></div></div>
       <div class="card tone-violet" style="padding:34px;border-color:var(--ai-border)">
-        <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">Market value report</div>
+        <div style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">Market value report</div>
         <div style="font-size:clamp(26px,4.6vw,36px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:12px 0 8px;color:${under ? 'var(--bad)' : 'var(--good)'}">
           ${p.gapPct != null ? (under ? `${p.gapPct}% below market` : `${Math.abs(p.gapPct)}% above market`) : 'Market value'}
         </div>
-        <div style="font-size:14px;color:var(--ink2)">
+        <div style="font-size:var(--text-base);color:var(--ink2)">
           ${esc(p.role || 'This profile')}${p.country ? ' · ' + esc(p.country) : ''} – median <b style="color:var(--ink)">${fmt(p.median)}${per}</b>
           ${p.gapAbs && under ? ` · about <b style="color:var(--bad)">${fmt(Math.abs(p.gapAbs))} a year</b> left on the table` : ''}
         </div>
       </div>
       <div style="text-align:center;margin-top:26px">
-        <a class="btn" href="/" style="font-size:14px;padding:12px 20px">Find out what you're worth</a>
-        <div class="muted" style="font-size:11.5px;margin-top:10px">${r.views} view${r.views === 1 ? '' : 's'}</div>
+        <a class="btn" href="/" style="font-size:var(--text-base);padding:12px 20px">Find out what you're worth</a>
+        <div class="muted" style="font-size:var(--text-xs);margin-top:10px">${r.views} view${r.views === 1 ? '' : 's'}</div>
       </div>
     </div>`;
 }
@@ -1537,7 +1538,7 @@ async function runRateCheck() {
       return `You are ahead of the median. That is leverage, and it expires if you sit still.`;
     })();
     box.innerHTML = `
-      <div style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
+      <div style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
       <div class="big-gap" style="color:${tone}">${esc(line)}</div>
       <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b> ${sampleChip()}${v.gapAbs != null ? ` · you report ${fmt(r.input.current)}${per}` : ''}</div>
       <div class="scale">
@@ -1558,13 +1559,13 @@ async function runRateCheck() {
         <button class="btn ghost sm" id="c-copyline">Copy the one-liner</button>
       </div>
       <div style="margin-top:20px;border-top:1px solid rgba(255,255,255,.12);padding-top:16px">
-        <div style="font-size:14px;font-weight:600;margin-bottom:6px">${esc(r.next.headline)}</div>
-        <div style="font-size:12.5px;color:var(--muted);margin-bottom:14px">${esc(r.next.detail)}</div>
+        <div style="font-size:var(--text-base);font-weight:600;margin-bottom:6px">${esc(r.next.headline)}</div>
+        <div style="font-size:var(--text-sm);color:var(--muted);margin-bottom:14px">${esc(r.next.detail)}</div>
         <div class="row" style="gap:8px;flex-wrap:wrap">
           <input id="c-email" type="email" placeholder="you@example.com" style="flex:1;min-width:200px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:9px;padding:11px 13px;color:var(--ink);outline:none;font-size:13.5px"/>
           <button class="btn" id="c-signup">Send me the full breakdown</button>
         </div>
-        <div class="muted" id="c-lead-msg" style="font-size:11.5px;margin-top:8px"></div>
+        <div class="muted" id="c-lead-msg" style="font-size:var(--text-xs);margin-top:8px"></div>
       </div>`;
     STATE.lastCheck = { input: r.input, benchmark: b, verdict: v };
 
@@ -1725,7 +1726,7 @@ async function renderAuth() {
     $('#auth-step1').style.display = 'none';
     $('#auth-step2').style.display = 'block';
     $('#auth-hint').innerHTML = r.devCode
-      ? `Code for <b>${esc(r.sentTo)}</b> – <span class="mono" style="color:var(--accent);font-size:15px;letter-spacing:.2em">${esc(r.devCode)}</span> <span class="muted">(local mode – no mail provider)</span>`
+      ? `Code for <b>${esc(r.sentTo)}</b> – <span class="mono" style="color:var(--accent);font-size:var(--text-md);letter-spacing:.2em">${esc(r.devCode)}</span> <span class="muted">(local mode – no mail provider)</span>`
       : `We sent a code to <b>${esc(r.sentTo)}</b>. It can take a minute – check spam if it does not arrive.`;
     $('#auth-code').focus();
   };
@@ -1815,7 +1816,7 @@ function renderOnboarding() {
 
   $('#view').innerHTML = `
   <div class="onboard">
-    <div class="row" style="gap:8px;margin-bottom:24px;justify-content:center">${stepDots}<span class="muted" style="font-size:11.5px;margin-left:8px">Step ${D.step} of 3</span></div>
+    <div class="row" style="gap:8px;margin-bottom:24px;justify-content:center">${stepDots}<span class="muted" style="font-size:var(--text-xs);margin-left:8px">Step ${D.step} of 3</span></div>
     ${D.cvMode ? cvMode : D.step === 1 ? stepOne : D.step === 2 ? stepTwo : stepThree}
   </div>`;
 
@@ -1892,7 +1893,7 @@ function renderOnboarding() {
       const tone = v.gapPct > 15 ? 'var(--bad)' : v.gapPct > 5 ? 'var(--warn)' : 'var(--good)';
       box.innerHTML = `
         <div class="card tone-violet" style="border-color:var(--ai-border);">
-          <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
+          <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
           <div style="font-size:clamp(24px,4.4vw,34px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:10px 0 6px;color:${tone}">${esc(v.headline)}</div>
           <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b> ${sampleChip()}</div>
         ${sampleLine()}
@@ -1950,7 +1951,7 @@ async function renderRadar() {
         <div class="row" style="justify-content:space-between;gap:16px;flex-wrap:wrap">
           <div style="flex:1;min-width:260px">
             <div style="font-size:13.5px;font-weight:600">You are on Free – showing your top ${plan.limits.matches} scored opportunities</div>
-            <div class="dim" style="font-size:12.5px;margin-top:3px">Pro unlocks the full radar, saved searches, the daily brief and the copilot. €19.99 a month, or €149.99 a year.</div>
+            <div class="dim" style="font-size:var(--text-sm);margin-top:3px">Pro unlocks the full radar, saved searches, the daily brief and the copilot. €19.99 a month, or €149.99 a year.</div>
           </div>
           <button class="btn sm" id="upgrade">Unlock Pro</button>
         </div>
@@ -1995,7 +1996,7 @@ async function renderRadar() {
         <div class="you" style="left:${pos(rates.current)}%"></div>
       </div>
       <div class="legend"><span>p25 ${money(rates.p25)}</span><span>p50 ${money(rates.p50)}</span><span>p75 ${money(rates.p75)}</span><span>p90 ${money(rates.p90)}</span></div>
-      <div style="margin-top:14px;font-size:12.5px" class="dim">Highest-paying channel: <b>${rates.byChannel[0] ? rates.byChannel[0].channel + ' · ' + money(rates.byChannel[0].median) : '–'}</b> · biggest lever: <b>${rates.topPayingSkills[0] ? rates.topPayingSkills[0].skill + ' (+' + rates.topPayingSkills[0].premium + '%)' : '–'}</b></div>
+      <div style="margin-top:14px;font-size:var(--text-sm)" class="dim">Highest-paying channel: <b>${rates.byChannel[0] ? rates.byChannel[0].channel + ' · ' + money(rates.byChannel[0].median) : '–'}</b> · biggest lever: <b>${rates.topPayingSkills[0] ? rates.topPayingSkills[0].skill + ' (+' + rates.topPayingSkills[0].premium + '%)' : '–'}</b></div>
     </div>`;
   })() : '';
 
@@ -2012,7 +2013,7 @@ async function renderRadar() {
       </div>
       <div class="hello-score" style="text-align:right">
         <div class="muted" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase">Highest Opportunity Score</div>
-        <div style="font-size:28px;font-weight:750;letter-spacing:-.02em;color:var(--ink)">${s.topScore}<span style="font-size:14px;color:var(--muted)">/100</span></div>
+        <div style="font-size:28px;font-weight:750;letter-spacing:-.02em;color:var(--ink)">${s.topScore}<span style="font-size:var(--text-base);color:var(--muted)">/100</span></div>
       </div>
     </div>
     <div id="kpis" style="margin-bottom:14px"></div>
@@ -2171,14 +2172,14 @@ async function renderRadar() {
       if (box) box.innerHTML = `<div class="card" style="padding:12px 16px">
         <div class="row" style="justify-content:space-between;gap:14px;flex-wrap:wrap">
           <div class="row" style="gap:20px;flex-wrap:wrap">
-            <div><span class="mono" style="font-size:17px;font-weight:700">${h.streak}</span> <span class="muted" style="font-size:12px">day streak</span></div>
-            <div><span class="mono" style="font-size:17px;font-weight:700">${h.fresh}</span> <span class="muted" style="font-size:12px">new at 70+</span></div>
-            ${h.rateGapPct != null ? `<div><span class="mono" style="font-size:17px;font-weight:700;color:${h.rateGapPct > 10 ? 'var(--bad)' : 'var(--good)'}">${h.rateGapPct}%</span> <span class="muted" style="font-size:12px">below market</span></div>` : ''}
-            ${h.scoreDelta ? `<div><span class="mono" style="font-size:17px;font-weight:700;color:${h.scoreDelta > 0 ? 'var(--good)' : 'var(--bad)'}">${h.scoreDelta > 0 ? '+' : ''}${h.scoreDelta}</span> <span class="muted" style="font-size:12px">career score</span></div>` : ''}
+            <div><span class="mono" style="font-size:var(--text-lg);font-weight:700">${h.streak}</span> <span class="muted" style="font-size:12px">day streak</span></div>
+            <div><span class="mono" style="font-size:var(--text-lg);font-weight:700">${h.fresh}</span> <span class="muted" style="font-size:12px">new at 70+</span></div>
+            ${h.rateGapPct != null ? `<div><span class="mono" style="font-size:var(--text-lg);font-weight:700;color:${h.rateGapPct > 10 ? 'var(--bad)' : 'var(--good)'}">${h.rateGapPct}%</span> <span class="muted" style="font-size:12px">below market</span></div>` : ''}
+            ${h.scoreDelta ? `<div><span class="mono" style="font-size:var(--text-lg);font-weight:700;color:${h.scoreDelta > 0 ? 'var(--good)' : 'var(--bad)'}">${h.scoreDelta > 0 ? '+' : ''}${h.scoreDelta}</span> <span class="muted" style="font-size:12px">career score</span></div>` : ''}
           </div>
           <div class="row" style="gap:10px">
             <div class="bar" style="width:80px"><i style="width:${Math.min(100, (h.appliedThisWeek / h.weeklyTarget) * 100)}%"></i></div>
-            <span class="muted" style="font-size:11.5px">${h.appliedThisWeek}/${h.weeklyTarget} this week</span>
+            <span class="muted" style="font-size:var(--text-xs)">${h.appliedThisWeek}/${h.weeklyTarget} this week</span>
           </div>
         </div>
       </div>`;
@@ -2192,7 +2193,7 @@ async function renderRadar() {
       <div class="row" style="justify-content:space-between;gap:16px;flex-wrap:wrap">
         <div style="flex:1;min-width:280px">
           <div style="font-size:13.5px;font-weight:600">Every card here is scored against your twin.</div>
-          <div class="dim" style="font-size:12.5px;margin-top:4px">The big number is <b>match</b>. The two small numbers are <b>interview</b> and <b>offer</b> probability – calibrated from real outcomes, not guesses. Start with the highest interview odds, not the highest match.</div>
+          <div class="dim" style="font-size:var(--text-sm);margin-top:4px">The big number is <b>match</b>. The two small numbers are <b>interview</b> and <b>offer</b> probability – calibrated from real outcomes, not guesses. Start with the highest interview odds, not the highest match.</div>
         </div>
         <button class="btn sm" id="teach-ok">Got it</button>
       </div>
@@ -2342,9 +2343,9 @@ function renderFacets(rows) {
     <div class="facet-row"><span class="muted">Best match</span><span class="mono">${top.match_score}/100</span></div>
     <div class="facet-row"><span class="muted">≥40% interview odds</span><span class="mono">${strong} of ${rows.length}</span></div>
     <div class="facet-row"><span class="muted">Remote</span><span class="mono">${Math.round((remote / rows.length) * 100)}%</span></div>
-    <div style="margin-top:12px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Top locations</div>
+    <div style="margin-top:12px;font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Top locations</div>
     ${countries.map(([c, n]) => `<div style="margin-top:6px"><div class="facet-row" style="border:none;padding:0"><span>${esc(c)}</span><span class="mono muted">${n}</span></div><div class="facet-mini"><i style="width:${Math.round((n / maxC) * 100)}%"></i></div></div>`).join('')}
-    <div style="margin-top:12px;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Disciplines</div>
+    <div style="margin-top:12px;font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Disciplines</div>
     ${families.map(([f, n]) => `<div style="margin-top:6px"><div class="facet-row" style="border:none;padding:0"><span>${esc(titleCase(f))}</span><span class="mono muted">${n}</span></div><div class="facet-mini"><i style="width:${Math.round((n / maxF) * 100)}%"></i></div></div>`).join('')}
   `;
 }
@@ -2451,7 +2452,7 @@ function openDetail(id) {
       <div class="row" style="align-items:flex-start;gap:18px">
         <div class="score-wrap"><div class="score lg" style="--c:${c};--p:${o.match_score}" role="img" aria-label="Match ${o.match_score} out of 100"><b>${o.match_score}</b></div><span class="score-cap">match</span></div>
         <div style="flex:1">
-          <h2 style="margin:0 0 4px;font-size:20px">${esc(o.title)}</h2>
+          <h2 style="margin:0 0 4px;font-size:var(--text-xl)">${esc(o.title)}</h2>
           <div class="dim">${esc(o.company)} · ${esc(o.city)}${o.country ? ', ' + esc(o.country) : ''} · ${esc(o.remote_type)} · ${TYPE_LABEL[o.type] || o.type}</div>
           <div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap">
             <span class="chip">${comp}</span>
@@ -2474,9 +2475,9 @@ function openDetail(id) {
         <p class="sub">What earned the match, factor by factor.</p>
         ${(o.reasons || []).map((r) => `
           <div style="margin:10px 0">
-            <div class="row" style="justify-content:space-between;font-size:12.5px"><span>${esc(r.factor)}</span><span class="muted mono">weight ${Math.round(r.weight * 100)}%</span></div>
+            <div class="row" style="justify-content:space-between;font-size:var(--text-sm)"><span>${esc(r.factor)}</span><span class="muted mono">weight ${Math.round(r.weight * 100)}%</span></div>
             <div class="bar" style="margin-top:5px"><i style="width:${Math.round(r.weight * 100 * 2.6)}%"></i></div>
-            <div class="muted" style="font-size:11.5px;margin-top:3px">${esc(r.detail)}</div>
+            <div class="muted" style="font-size:var(--text-xs);margin-top:3px">${esc(r.detail)}</div>
           </div>`).join('')}
       </div>
       <div class="card">
@@ -2485,10 +2486,10 @@ function openDetail(id) {
           ${(o.skills || []).map((s) => `<span class="chip ${(o.missing_skills || []).includes(s) ? 'miss' : 'have'}">${esc(s)}</span>`).join('')}
         </div>
         <h3 style="margin-top:18px">What would move you up</h3>
-        <div style="font-size:12.5px" class="dim">${(o.missing_skills || []).length ? 'Close: <b>' + o.missing_skills.map(esc).join(', ') + '</b> – each one raises both match and interview probability.' : 'You cover every listed skill. Your edge here is speed of application.'}</div>
+        <div style="font-size:var(--text-sm)" class="dim">${(o.missing_skills || []).length ? 'Close: <b>' + o.missing_skills.map(esc).join(', ') + '</b> – each one raises both match and interview probability.' : 'You cover every listed skill. Your edge here is speed of application.'}</div>
         ${o.confidence ? `<div style="margin-top:16px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)">
           <div class="row" style="justify-content:space-between"><span style="font-size:12px">Evidence quality</span><span class="mono" style="color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'}">${o.confidence.score}/100 · ${o.confidence.level}</span></div>
-          <div style="margin-top:8px;font-size:11.5px;color:var(--muted);line-height:1.7">${o.confidence.factors.map((f) => `${esc(f.k)} <span class="mono">${esc(f.d)}</span>${f.note ? ' <span style="opacity:.7">– ' + esc(f.note) + '</span>' : ''}`).join('<br/>')}</div>
+          <div style="margin-top:8px;font-size:var(--text-xs);color:var(--muted);line-height:1.7">${o.confidence.factors.map((f) => `${esc(f.k)} <span class="mono">${esc(f.d)}</span>${f.note ? ' <span style="opacity:.7">– ' + esc(f.note) + '</span>' : ''}`).join('<br/>')}</div>
         </div>` : ''}
         <div class="kv" style="margin-top:16px"><span>Income potential</span><span class="mono">${o.income_potential}/100</span></div>
         <div class="kv"><span>Skill fit</span><span class="mono">${o.skill_fit}/100</span></div>
@@ -2554,8 +2555,8 @@ function openDetail(id) {
       <div style="margin-top:4px">
         ${r.questions.map((q, i) => `<div style="padding:11px 0;border-bottom:1px solid var(--line)">
           <div style="font-size:13px;color:var(--ink)"><span class="mono muted" style="margin-right:8px">${i + 1}</span>${esc(q.q)}</div>
-          <div class="muted" style="font-size:11.5px;margin-top:4px;padding-left:22px">${esc(q.probe)}</div>
-          <div style="margin-top:7px;padding-left:22px;display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:11.5px;color:var(--ink2)">
+          <div class="muted" style="font-size:var(--text-xs);margin-top:4px;padding-left:22px">${esc(q.probe)}</div>
+          <div style="margin-top:7px;padding-left:22px;display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:var(--text-xs);color:var(--ink2)">
             <span class="muted">S</span><span>${esc(q.structure.situation)}</span>
             <span class="muted">T</span><span>${esc(q.structure.task)}</span>
             <span class="muted">A</span><span>${esc(q.structure.action)}</span>
@@ -2596,7 +2597,7 @@ function openDetail(id) {
       if (r.referral) {
         $('#ref-card').className = 'card';
         $('#ref-card').innerHTML = `<h3>Route Through ${esc(r.referral.program)}</h3>
-          <div class="dim" style="font-size:12.5px;margin-top:6px">This listing comes from a partner with a referral programme (${esc(r.referral.payoutModel)}${r.referral.payoutAmount ? ', €' + r.referral.payoutAmount : ''}).</div>
+          <div class="dim" style="font-size:var(--text-sm);margin-top:6px">This listing comes from a partner with a referral programme (${esc(r.referral.payoutModel)}${r.referral.payoutAmount ? ', €' + r.referral.payoutAmount : ''}).</div>
           <div style="margin-top:10px"><a class="btn sm" href="${r.referral.url}" target="_blank" rel="noopener">Open with tracking</a></div>
           <div class="muted" style="font-size:11px;margin-top:10px">${esc(r.referral.disclosure)}</div>`;
       } else {
@@ -2626,13 +2627,13 @@ function openDetail(id) {
     form.className = 'card';
     form.style.marginTop = '14px';
     form.innerHTML = `<h3>Report What Actually Happened</h3>
-      <div class="dim" style="font-size:12.5px;margin-top:6px">This is the only data no competitor has: person &gt; opportunity &gt; action &gt; result. It recalibrates your model and, with your consent, the market benchmark.</div>
+      <div class="dim" style="font-size:var(--text-sm);margin-top:6px">This is the only data no competitor has: person &gt; opportunity &gt; action &gt; result. It recalibrates your model and, with your consent, the market benchmark.</div>
       <div class="row" style="margin-top:14px;gap:8px;flex-wrap:wrap">
         ${['interview', 'offer', 'rejection', 'no_response', 'rate_increase'].map((t) => `<button class="chip oc" data-t="${t}" style="cursor:pointer;padding:6px 12px">${t.replace(/_/g, ' ')}</button>`).join('')}
       </div>
       <div class="row" style="margin-top:12px;gap:8px;flex-wrap:wrap">
-        <input id="oc-amount" type="number" placeholder="Offer amount (EUR, optional)" style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;outline:none;font-size:12.5px;width:220px"/>
-        <input id="oc-notes" placeholder="Anything worth remembering?" style="flex:1;min-width:220px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;outline:none;font-size:12.5px"/>
+        <input id="oc-amount" type="number" placeholder="Offer amount (EUR, optional)" style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;outline:none;font-size:var(--text-sm);width:220px"/>
+        <input id="oc-notes" placeholder="Anything worth remembering?" style="flex:1;min-width:220px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;outline:none;font-size:var(--text-sm)"/>
       </div>`;
     document.querySelector('#view').appendChild(form);
     form.querySelectorAll('.oc').forEach((b) => {
@@ -2745,7 +2746,7 @@ async function renderRates() {
         </div>
         ${r.gapPct != null ? `<div class="card tone-violet" style="margin-top:20px;background:var(--panel2);border-color:var(--ai-border)">
           <div class="k" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">Verdict</div>
-          <div style="font-size:17px;font-weight:650;margin-top:6px">${r.verdict === 'underpaid' ? 'The market disagrees with your payslip – by ' + r.gapPct + '%' : r.verdict === 'slightly_under' ? 'Just under the line (' + r.gapPct + '%) – and it compounds' : r.verdict === 'at_market' ? 'Priced correctly. Not the same as paid well.' : 'Ahead of the market. Now use it.'}</div>
+          <div style="font-size:var(--text-lg);font-weight:650;margin-top:6px">${r.verdict === 'underpaid' ? 'The market disagrees with your payslip – by ' + r.gapPct + '%' : r.verdict === 'slightly_under' ? 'Just under the line (' + r.gapPct + '%) – and it compounds' : r.verdict === 'at_market' ? 'Priced correctly. Not the same as paid well.' : 'Ahead of the market. Now use it.'}</div>
           <div class="dim" style="margin-top:4px">${r.gapAbs > 0 ? money(r.gapAbs) + ' per year of headroom at the median – ' + money(r.gapAbs * 2) + ' over two years.' : 'Your rate is defensible. The lever now is growth, not price.'}</div>
         </div>` : ''}
       </div>
@@ -2761,7 +2762,7 @@ async function renderRates() {
         ${r.confidenceDetail ? `<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px">
           <div class="row" style="justify-content:space-between"><span style="font-size:var(--text-sm);font-weight:600">Benchmark confidence</span><span class="chip ${r.confidenceDetail.level === 'high' ? 'have' : r.confidenceDetail.level === 'low' ? 'miss' : ''}">${esc(r.confidenceDetail.level)}</span></div>
           <div style="margin-top:6px">${factorRows(r.confidenceDetail.factors)}</div>
-          ${r.confidenceDetail.caveat ? `<div style="margin-top:8px;font-size:11.5px;color:var(--warn)">${esc(r.confidenceDetail.caveat)}</div>` : ''}
+          ${r.confidenceDetail.caveat ? `<div style="margin-top:8px;font-size:var(--text-xs);color:var(--warn)">${esc(r.confidenceDetail.caveat)}</div>` : ''}
         </div>` : ''}
         </div>
         <div class="card" style="margin-top:14px">
@@ -2786,8 +2787,8 @@ async function renderGaps() {
       <div class="dim" style="margin-top:6px;font-size:var(--text-sm);line-height:1.55">Computed by comparing your skills against the required skills of your top ${sampleOf} realistic opportunities – weighted by how many roles each gap blocks, its salary premium and its growth rate.</div>
     </div>
     <div class="card tone-violet" style="margin-bottom:14px;border-color:var(--line);">
-      <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">The shortest path</div>
-      <div style="font-size:15px;font-weight:600;margin-top:8px;line-height:1.5">${esc(plan.insight)}</div>
+      <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">The shortest path</div>
+      <div style="font-size:var(--text-md);font-weight:600;margin-top:8px;line-height:1.5">${esc(plan.insight)}</div>
       <div style="margin-top:16px">
         ${plan.sequence.map((g) => `<div style="display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)">
           <div class="mono" style="width:20px;color:var(--muted)">${g.order}</div>
@@ -2802,7 +2803,7 @@ async function renderGaps() {
     </div>
     ${partnerRecs.length ? `<div class="card" style="margin-bottom:14px">
       <h3>How to Close Them</h3>
-      <div class="dim" style="font-size:12.5px;margin-top:6px">Each gap below has a route. Partners are attached to gaps the engine already found – they never change what you see or how it is ranked.</div>
+      <div class="dim" style="font-size:var(--text-sm);margin-top:6px">Each gap below has a route. Partners are attached to gaps the engine already found – they never change what you see or how it is ranked.</div>
       <div style="margin-top:12px">
         ${partnerRecs.slice(0, 5).map((r) => `<div style="display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)">
           <div style="flex:1">
@@ -2848,7 +2849,7 @@ async function renderTracker() {
           <div class="row" style="justify-content:space-between"><h3 style="margin:0">${label[c]}</h3><span class="chip">${items.length}</span></div>
           <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
             ${items.map((a) => `<div style="border:1px solid var(--line);border-radius:9px;padding:9px 10px;background:var(--panel2)">
-              <div style="font-size:12.5px;font-weight:550">${esc(a.title)}</div>
+              <div style="font-size:var(--text-sm);font-weight:550">${esc(a.title)}</div>
               <div class="muted" style="font-size:11px">${esc(a.company)} · match ${a.match_score ?? '–'}</div>
               <div class="row" style="gap:5px;margin-top:7px;flex-wrap:wrap">
                 ${cols.filter((x) => x !== c).map((x) => `<button class="chip mv" data-id="${a.opportunity_id}" data-to="${x}" style="cursor:pointer">${label[x]}</button>`).join('')}
@@ -2925,7 +2926,7 @@ async function renderTwin() {
         <h3 style="margin-top:18px">Display Name</h3>
         <div class="dim" style="font-size:var(--text-sm);margin-top:4px">How your name appears across ThinkZet. Google and Apple supply one; you can change it here.</div>
         <div class="row" style="gap:8px;margin-top:10px;flex-wrap:wrap">
-          <input id="dn-input" type="text" maxlength="80" placeholder="Your name" style="flex:1;min-width:200px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;color:var(--ink);font-size:14px"/>
+          <input id="dn-input" type="text" maxlength="80" placeholder="Your name" style="flex:1;min-width:200px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:10px 12px;color:var(--ink);font-size:var(--text-base)"/>
           <button class="btn sm" id="dn-save">Save Name</button>
         </div>
         <h3 style="margin-top:18px">Your Data</h3>
@@ -3016,7 +3017,7 @@ async function renderLearning() {
     </div>
     <div class="card" style="margin-top:14px">
       <h3>Market Benchmark</h3>
-      <div class="dim" style="font-size:12.5px;margin-top:8px">${esc(intel.market.note)}</div>
+      <div class="dim" style="font-size:var(--text-sm);margin-top:8px">${esc(intel.market.note)}</div>
       <div class="kv" style="margin-top:12px"><span>Consented outcomes reported</span><span class="mono">${intel.market.reportedOutcomes}</span></div>
       <div class="kv"><span>Offers with compensation</span><span class="mono">${intel.market.offers}</span></div>
     </div>
@@ -3039,7 +3040,7 @@ async function renderSearches() {
   $('#view').innerHTML = `
     <div class="card" style="margin-bottom:14px">
       <h3>Saved Searches</h3>
-      <div class="dim" style="margin-top:6px;font-size:12.5px">A search you save becomes a standing question the engine keeps answering. This is the difference between a job board (you ask) and an operating system (it watches).</div>
+      <div class="dim" style="margin-top:6px;font-size:var(--text-sm)">A search you save becomes a standing question the engine keeps answering. This is the difference between a job board (you ask) and an operating system (it watches).</div>
       <div class="row" style="margin-top:14px;gap:8px;flex-wrap:wrap">
         <input id="s-name" placeholder="Name this search – e.g. 'Senior AI roles, DE/NL, visa'" style="flex:1;min-width:260px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:9px 12px;outline:none"/>
         <button class="btn" id="s-add">Save current filters</button>
@@ -3115,7 +3116,7 @@ async function renderPlan() {
       <div class="kv" style="margin-top:14px"><span>Match scores computed</span><span class="mono">${int(p.usage.matchScores)}</span></div>
       <div class="kv"><span>Opportunities tracked</span><span class="mono">${int(p.usage.tracked)}</span></div>
       <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:12px">
-        <div class="row" style="justify-content:space-between"><span style="font-size:12.5px">Billing mode</span><span class="mono" style="color:${p.billing.ready ? 'var(--good)' : 'var(--warn)'}">${esc(p.billing.mode)}</span></div>
+        <div class="row" style="justify-content:space-between"><span style="font-size:var(--text-sm)">Billing mode</span><span class="mono" style="color:${p.billing.ready ? 'var(--good)' : 'var(--warn)'}">${esc(p.billing.mode)}</span></div>
         <div class="dim" style="font-size:12px;margin-top:6px">${esc(p.billing.note)}</div>
       </div>
     </div>`;
@@ -3139,12 +3140,12 @@ async function renderNegotiation() {
   const copy = (t) => { navigator.clipboard.writeText(t); toast('Copied – go say it'); };
   $('#view').innerHTML = `
     <div class="card tone-violet" style="border-color:var(--line);">
-      <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Negotiation brief · ${esc(n.confidence)} confidence · ${n.exactComparables} exact comparables</div>
+      <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Negotiation brief · ${esc(n.confidence)} confidence · ${n.exactComparables} exact comparables</div>
       <div class="row" style="gap:26px;margin-top:14px;flex-wrap:wrap">
-        <div><div class="muted" style="font-size:11px">Floor (p50)</div><div class="big mono" style="font-size:24px">${money(n.floor)}</div></div>
-        <div><div class="muted" style="font-size:11px">Your target (p75)</div><div class="big mono" style="font-size:24px;color:var(--good)">${money(n.target)}</div></div>
-        <div><div class="muted" style="font-size:11px">Stretch (p90)</div><div class="big mono" style="font-size:24px">${money(n.stretch)}</div></div>
-        ${n.current ? `<div><div class="muted" style="font-size:11px">You today</div><div class="big mono" style="font-size:24px;color:var(--bad)">${money(n.current)}</div></div>` : ''}
+        <div><div class="muted" style="font-size:11px">Floor (p50)</div><div class="big sm mono">${money(n.floor)}</div></div>
+        <div><div class="muted" style="font-size:11px">Your target (p75)</div><div class="big sm mono" style="color:var(--good)">${money(n.target)}</div></div>
+        <div><div class="muted" style="font-size:11px">Stretch (p90)</div><div class="big sm mono">${money(n.stretch)}</div></div>
+        ${n.current ? `<div><div class="muted" style="font-size:11px">You today</div><div class="big sm mono" style="color:var(--bad)">${money(n.current)}</div></div>` : ''}
       </div>
     </div>
 
@@ -3168,11 +3169,11 @@ async function renderNegotiation() {
       </div>
       <div class="card">
         <h3>The Five Rules</h3>
-        <div style="margin-top:10px">${n.rules.map((r, i) => `<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:12.5px"><span class="mono muted">${i + 1}</span><span>${esc(r)}</span></div>`).join('')}</div>
+        <div style="margin-top:10px">${n.rules.map((r, i) => `<div style="display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--line);font-size:var(--text-sm)"><span class="mono muted">${i + 1}</span><span>${esc(r)}</span></div>`).join('')}</div>
       </div>
     </div>
     ${n.anchorOpportunity ? `<div class="card" style="margin-top:14px"><h3>Anchor This to a Live Opportunity</h3>
-      <div class="dim" style="font-size:12.5px;margin-top:6px">${esc(n.anchorOpportunity.title)} at ${esc(n.anchorOpportunity.company)} – listed at ${n.anchorOpportunity.compMin ? money(n.anchorOpportunity.compMin) + '–' + money(n.anchorOpportunity.compMax) + ' ' + esc(n.anchorOpportunity.currency) : 'compensation not disclosed'}.</div>
+      <div class="dim" style="font-size:var(--text-sm);margin-top:6px">${esc(n.anchorOpportunity.title)} at ${esc(n.anchorOpportunity.company)} – listed at ${n.anchorOpportunity.compMin ? money(n.anchorOpportunity.compMin) + '–' + money(n.anchorOpportunity.compMax) + ' ' + esc(n.anchorOpportunity.currency) : 'compensation not disclosed'}.</div>
       <div style="margin-top:10px"><button class="btn sm ghost" onclick="go('radar')">Back to The Radar</button></div>
     </div>` : ''}`;
   document.querySelectorAll('.cp').forEach((b) => { b.onclick = () => copy(b.dataset.t); });
@@ -3186,7 +3187,7 @@ async function renderEmail() {
   $('#view').innerHTML = `
     <div class="card" style="margin-bottom:14px">
       <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
-        <div><h3 style="margin:0">Delivery</h3><div class="dim" style="font-size:12.5px;margin-top:4px">${esc(st.status.note)}</div></div>
+        <div><h3 style="margin:0">Delivery</h3><div class="dim" style="font-size:var(--text-sm);margin-top:4px">${esc(st.status.note)}</div></div>
         <span class="chip ${st.status.live ? 'have' : ''}">${esc(st.status.provider)}</span>
       </div>
       <div class="row" style="margin-top:14px;gap:8px;flex-wrap:wrap">
@@ -3225,7 +3226,7 @@ async function renderEmail() {
         <h3>Outbox (${outbox.messages.length})</h3>
         <div style="margin-top:10px;max-height:420px;overflow:auto">
           ${outbox.messages.length ? outbox.messages.map((m) => `<div style="padding:10px 0;border-bottom:1px solid var(--line)">
-            <div class="row" style="justify-content:space-between"><span style="font-size:12.5px;font-weight:550">${esc(m.subject)}</span><span class="chip ${m.status === 'sent' ? 'have' : ''}">${esc(m.status)}</span></div>
+            <div class="row" style="justify-content:space-between"><span style="font-size:var(--text-sm);font-weight:550">${esc(m.subject)}</span><span class="chip ${m.status === 'sent' ? 'have' : ''}">${esc(m.status)}</span></div>
             <div class="muted" style="font-size:11px;margin-top:2px">${esc(m.to_email)} · ${esc(m.kind)} · ${m.sent_at ? new Date(m.sent_at).toLocaleString('en-GB') : 'queued'}</div>
           </div>`).join('') : '<div class="muted">Nothing composed yet.</div>'}
         </div>
@@ -3314,7 +3315,7 @@ async function renderLeads() {
     </div>
     <div class="card" style="margin-top:14px">
       <h3>What to Do With This</h3>
-      <div class="dim" style="font-size:12.5px;margin-top:8px">A lead with a gap above 10% is the highest-intent person in the system: they have seen a number, they believe it, and they have not yet acted. That is the list to email first – not the whole database.</div>
+      <div class="dim" style="font-size:var(--text-sm);margin-top:8px">A lead with a gap above 10% is the highest-intent person in the system: they have seen a number, they believe it, and they have not yet acted. That is the list to email first – not the whole database.</div>
     </div>`;
   const mailBtn = document.getElementById('lead-mail');
   if (mailBtn && nextLead) {
@@ -3329,21 +3330,21 @@ async function renderLaunch() {
   const envFile = 'app/' + '.env';
   $('#view').innerHTML = `
     <div class="card" style="border-color:${l.ready ? 'var(--good)' : 'var(--bad)'};background:${l.ready ? 'linear-gradient(135deg,color-mix(in srgb,var(--good) 10%,var(--panel)),var(--panel))' : 'linear-gradient(135deg,color-mix(in srgb,var(--bad) 10%,var(--panel)),var(--panel))'}">
-      <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Launch readiness</div>
+      <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Launch readiness</div>
       <div style="font-size:clamp(18px,3vw,26px);font-weight:720;letter-spacing:-.02em;margin-top:10px;color:${l.ready ? 'var(--good)' : 'var(--bad)'}">${esc(l.verdict)}</div>
     </div>
     <div class="card" style="margin-top:14px">
       ${l.checks.map((c) => `<div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)">
         <div style="width:16px;text-align:center;font-size:13px;color:${c.ok ? 'var(--good)' : c.blocking ? 'var(--bad)' : 'var(--warn)'}">${c.ok ? '✓' : c.blocking ? '✕' : '!'}</div>
         <div style="flex:1">
-          <div style="font-size:13px;font-weight:550">${esc(c.label)}${c.blocking ? '' : ' <span class="muted" style="font-size:10.5px;font-weight:400">(not blocking)</span>'}</div>
+          <div style="font-size:13px;font-weight:550">${esc(c.label)}${c.blocking ? '' : ' <span class="muted" style="font-size:var(--text-2xs);font-weight:400">(not blocking)</span>'}</div>
           <div class="muted" style="font-size:12px;margin-top:2px">${esc(c.detail)}</div>
         </div>
       </div>`).join('')}
     </div>
     ${blocking.length ? `<div class="card" style="margin-top:14px">
       <h3>To Get to Zero Blockers</h3>
-      <div style="margin-top:10px;font-size:12.5px;line-height:1.9">
+      <div style="margin-top:10px;font-size:var(--text-sm);line-height:1.9">
         ${blocking.map((b) => {
           if (b.key === 'email') return '<div><b>Email:</b> add <span class="mono">RESEND_API_KEY</span> to <span class="mono">' + envFile + '</span> and restart.</div>';
           if (b.key === 'app_url') return '<div><b>Public URL:</b> deploy (see <span class="mono">app/DEPLOY.md</span>), then set <span class="mono">APP_URL</span> to the real domain.</div>';
@@ -3353,10 +3354,10 @@ async function renderLaunch() {
         }).join('')}
       </div>
     </div>` : `<div class="card" style="margin-top:14px"><h3>Send It to Twenty People</h3>
-      <div class="dim" style="font-size:12.5px;margin-top:6px">Not to get customers. To find out whether the rate gap lands the way we think it does. Watch the Funnel screen for the first twenty; the biggest leak it names is what to fix next.</div></div>`}
+      <div class="dim" style="font-size:var(--text-sm);margin-top:6px">Not to get customers. To find out whether the rate gap lands the way we think it does. Watch the Funnel screen for the first twenty; the biggest leak it names is what to fix next.</div></div>`}
     <div class="card" style="margin-top:14px">
       <h3>What to Watch in the First Week</h3>
-      <div class="dim" style="font-size:12.5px;margin-top:8px;line-height:1.9">
+      <div class="dim" style="font-size:var(--text-sm);margin-top:8px;line-height:1.9">
         <div>· <b>Rate checks completed</b> – the landing funnel working at all.</div>
         <div>· <b>Lead capture rate</b> – of people who saw a number, how many gave an email.</div>
         <div>· <b>First opportunity opened</b> – the moment the product becomes a tool rather than a report.</div>
@@ -3374,11 +3375,11 @@ async function renderAnalytics() {
   const maxDay = Math.max(...daily.map((d) => d.n), 1);
   $('#view').innerHTML = `
     <div class="card tone-violet" style="border-color:var(--line);">
-      <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Funnel · last ${f.windowDays} days · measured from real events</div>
-      <div style="font-size:15px;font-weight:600;margin-top:8px;line-height:1.5">${esc(f.verdict)}</div>
+      <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Funnel · last ${f.windowDays} days · measured from real events</div>
+      <div style="font-size:var(--text-md);font-weight:600;margin-top:8px;line-height:1.5">${esc(f.verdict)}</div>
       <div class="row" style="margin-top:14px;gap:24px">
-        <div><div class="big mono" style="font-size:22px">${f.overallConversion}%</div><div class="muted" style="font-size:11px">visit &gt; paid</div></div>
-        <div><div class="big mono" style="font-size:22px">${a.summary.total}</div><div class="muted" style="font-size:11px">events recorded</div></div>
+        <div><div class="big sm mono">${f.overallConversion}%</div><div class="muted" style="font-size:11px">visit &gt; paid</div></div>
+        <div><div class="big sm mono">${a.summary.total}</div><div class="muted" style="font-size:11px">events recorded</div></div>
       </div>
     </div>
 
@@ -3386,7 +3387,7 @@ async function renderAnalytics() {
     <div class="card">
       ${f.steps.map((s, i) => `<div style="padding:10px 0;border-bottom:1px solid var(--line)">
         <div class="row" style="justify-content:space-between">
-          <div><span class="mono muted" style="margin-right:10px">${i + 1}</span><b style="font-size:13px">${esc(s.label)}</b><span class="muted" style="font-size:11.5px;margin-left:8px">${esc(s.meaning)}</span></div>
+          <div><span class="mono muted" style="margin-right:10px">${i + 1}</span><b style="font-size:13px">${esc(s.label)}</b><span class="muted" style="font-size:var(--text-xs);margin-left:8px">${esc(s.meaning)}</span></div>
           <div class="row" style="gap:14px">
             <span class="mono">${s.events}</span>
             ${s.conversionFromPrevious != null ? `<span class="mono" style="font-size:11px;color:${s.conversionFromPrevious < 30 ? 'var(--bad)' : s.conversionFromPrevious < 60 ? 'var(--warn)' : 'var(--good)'}">${s.conversionFromPrevious}%</span>` : '<span class="muted" style="font-size:11px">–</span>'}
@@ -3414,7 +3415,7 @@ async function renderAnalytics() {
 
     <div class="card" style="margin-top:14px">
       <h3>Why This Screen Exists</h3>
-      <div class="dim" style="font-size:12.5px;margin-top:8px">Every number here is recorded by the product as it is used – the same events that drive the UI. The point is to find the single biggest leak and fix that, rather than adding features and hoping. Today the answer is above, in one sentence.</div>
+      <div class="dim" style="font-size:var(--text-sm);margin-top:8px">Every number here is recorded by the product as it is used – the same events that drive the UI. The point is to find the single biggest leak and fix that, rather than adding features and hoping. Today the answer is above, in one sentence.</div>
     </div>`;
 }
 
@@ -3436,7 +3437,7 @@ async function renderPulse() {
         <h3>Median pay by discipline (EUR, annualised)</h3>
         <div style="margin-top:12px">
           ${p.families.map((f) => `<div style="margin:9px 0">
-            <div class="row" style="justify-content:space-between;font-size:12.5px"><span>${esc(famLabel(f.family))}</span><span class="mono">${money(f.median)} <span class="muted" style="font-size:10.5px">(${f.n})</span></span></div>
+            <div class="row" style="justify-content:space-between;font-size:var(--text-sm)"><span>${esc(famLabel(f.family))}</span><span class="mono">${money(f.median)} <span class="muted" style="font-size:var(--text-2xs)">(${f.n})</span></span></div>
             <div class="bar" style="margin-top:4px"><i style="width:${bar(f.median, maxFam)}%"></i></div>
           </div>`).join('')}
         </div>
@@ -3445,7 +3446,7 @@ async function renderPulse() {
         <h3>Median Pay by Country</h3>
         <div style="margin-top:12px">
           ${p.countries.map((c) => `<div style="margin:9px 0">
-            <div class="row" style="justify-content:space-between;font-size:12.5px"><span>${esc(c.country)}</span><span class="mono">${money(c.median)} <span class="muted" style="font-size:10.5px">(${c.n})</span></span></div>
+            <div class="row" style="justify-content:space-between;font-size:var(--text-sm)"><span>${esc(c.country)}</span><span class="mono">${money(c.median)} <span class="muted" style="font-size:var(--text-2xs)">(${c.n})</span></span></div>
             <div class="bar" style="margin-top:4px"><i style="width:${bar(c.median, maxCty)}%"></i></div>
           </div>`).join('')}
         </div>
@@ -3467,7 +3468,7 @@ async function renderPulse() {
     </div>
     <div class="card" style="margin-top:14px">
       <h3>How to Read This</h3>
-      <div class="dim" style="font-size:12.5px;margin-top:8px">Every number here is computed from the ${p.sample} live postings that disclose pay, annualised to EUR. It is not a survey and not self-reported – it is what employers are publishing right now. Where a discipline has fewer than eight disclosed postings it is omitted rather than shown with false precision.</div>
+      <div class="dim" style="font-size:var(--text-sm);margin-top:8px">Every number here is computed from the ${p.sample} live postings that disclose pay, annualised to EUR. It is not a survey and not self-reported – it is what employers are publishing right now. Where a discipline has fewer than eight disclosed postings it is omitted rather than shown with false precision.</div>
     </div>`;
 }
 
@@ -3481,7 +3482,7 @@ async function renderTrajectory(months) {
   const bar = (v) => Math.max(4, Math.round((v / max) * 100));
   $('#view').innerHTML = `
     <div class="card tone-violet" style="border-color:var(--line);">
-      <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Trajectory · ${months} months · transparent model, not a forecast</div>
+      <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Trajectory · ${months} months · transparent model, not a forecast</div>
       <div style="font-size:16px;font-weight:600;margin-top:8px;line-height:1.5">${esc(t.insight)}</div>
       <div class="row" style="margin-top:16px;gap:8px">
         ${[12, 24, 36, 60].map((m) => `<button class="tm" data-m="${m}" style="font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid ${m === months ? 'var(--accent2)' : 'var(--line2)'};background:${m === months ? 'var(--nav-active)' : 'transparent'};color:${m === months ? 'var(--tone-ink)' : 'var(--ink2)'}">${m} months</button>`).join('')}
@@ -3492,7 +3493,7 @@ async function renderTrajectory(months) {
     <div class="card">
       ${t.paths.map((p) => `<div style="padding:12px 0;border-bottom:1px solid var(--line)">
         <div class="row" style="justify-content:space-between;align-items:baseline">
-          <div><b style="font-size:13.5px">${esc(p.label)}</b><div class="muted" style="font-size:11.5px;margin-top:2px">${esc(p.note)}</div></div>
+          <div><b style="font-size:13.5px">${esc(p.label)}</b><div class="muted" style="font-size:var(--text-xs);margin-top:2px">${esc(p.note)}</div></div>
           <div style="text-align:right"><div class="mono" style="font-size:16px;font-weight:650">${money(p.endSalary)}</div><div class="mono" style="font-size:11px;color:${p.deltaPct > 0 ? 'var(--good)' : 'var(--bad)'}">${p.deltaPct > 0 ? '+' : ''}${p.deltaPct}%</div></div>
         </div>
         <div class="bar" style="margin-top:9px"><i style="width:${bar(p.endSalary)}%"></i></div>
@@ -3529,9 +3530,9 @@ async function renderReferrals() {
       <h3>Partner Routing</h3>
       <div class="dim" style="font-size:13px;margin-top:6px">${esc(r.note)}</div>
       <div class="row" style="margin-top:14px;gap:8px;flex-wrap:wrap">
-        <input id="p-name" placeholder="Partner name" style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:12.5px"/>
-        <input id="p-template" placeholder="Your referral URL – use {code} for the tracking token" style="flex:1;min-width:280px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:12.5px"/>
-        <input id="p-amount" placeholder="€ payout" style="width:100px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:12.5px"/>
+        <input id="p-name" placeholder="Partner name" style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:var(--text-sm)"/>
+        <input id="p-template" placeholder="Your referral URL – use {code} for the tracking token" style="flex:1;min-width:280px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:var(--text-sm)"/>
+        <input id="p-amount" placeholder="€ payout" style="width:100px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:var(--text-sm)"/>
         <button class="btn sm" id="p-add">Add partner</button>
       </div>
       <div class="note" style="margin-top:10px">Paste your own affiliate link here when you have it. The engine appends a tracking token and routes through <span class="mono">/go/&lt;code&gt;</span> so clicks and conversions are attributed – without ever touching what gets recommended.</div>
@@ -3539,7 +3540,7 @@ async function renderReferrals() {
     <div class="grid" style="grid-template-columns:repeat(2,1fr)">
       ${r.programs.map((p) => `<div class="card">
         <div class="row" style="justify-content:space-between">
-          <div><b style="font-size:14px">${esc(p.name)}</b><div class="muted" style="font-size:11px">${esc(catLabel[p.category] || p.category)}</div></div>
+          <div><b style="font-size:var(--text-base)">${esc(p.name)}</b><div class="muted" style="font-size:11px">${esc(catLabel[p.category] || p.category)}</div></div>
           <span class="chip ${p.active ? 'have' : ''}">${p.active ? 'active' : 'paused'}</span>
         </div>
         <div class="kv" style="margin-top:10px"><span>Model</span><span class="mono">${esc(p.payout_model)}</span></div>
@@ -3600,7 +3601,7 @@ async function renderOps() {
       <div class="card"><h3>Ghost Listings Filtered</h3><div class="big mono">${int(lc.ghost)}</div><div class="muted" style="font-size:11px">no comp + thin description</div></div>
       <div class="card"><h3>Stale (&gt;60 days)</h3><div class="big mono">${int(lc.stale)}</div><div class="muted" style="font-size:11px">deprioritised in ranking</div></div>
     </div>
-    <div class="card" style="margin-top:14px"><div class="dim" style="font-size:12.5px">${esc(lc.note)}</div></div>
+    <div class="card" style="margin-top:14px"><div class="dim" style="font-size:var(--text-sm)">${esc(lc.note)}</div></div>
     <h2 class="section section-ico" data-ico="stack">Corpus</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="card"><h3>Raw Listings Ingested</h3><div class="big mono">${int(o.ingest.raw)}</div></div>
@@ -3760,7 +3761,7 @@ function showHelp() {
   const el = document.createElement('div');
   el.className = 'palette open';
   el.innerHTML = `<div class="palette-box" style="padding:22px">
-    <div style="font-size:15px;font-weight:650;margin-bottom:12px">Keyboard</div>
+    <div style="font-size:var(--text-md);font-weight:650;margin-bottom:12px">Keyboard</div>
     <div style="display:grid;grid-template-columns:auto 1fr;gap:9px 18px;font-size:13px">
       <span><kbd>⌘</kbd><kbd>K</kbd></span><span>Command palette – search everything, jump anywhere</span>
       <span><kbd>J</kbd> <kbd>K</kbd> or <kbd>↑</kbd><kbd>↓</kbd></span><span>Move through the feed</span>
@@ -3784,13 +3785,13 @@ async function renderBrief() {
     <div class="grid" style="grid-template-columns:1fr 300px">
       <div>
         <div class="card tone-violet" style="border-color:var(--line);">
-          <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Brief · ${new Date(b.generatedAt).toLocaleString('en-GB', { weekday: 'long', hour: '2-digit', minute: '2-digit' })}</div>
+          <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Brief · ${new Date(b.generatedAt).toLocaleString('en-GB', { weekday: 'long', hour: '2-digit', minute: '2-digit' })}</div>
           <div class="brief-hl" style="font-weight:650;margin-top:8px;letter-spacing:-.02em;line-height:1.35">${esc(b.headline)}</div>
           <div class="row" style="margin-top:16px;gap:20px;flex-wrap:wrap">
-            <div><div class="big mono" style="font-size:22px;color:${b.counts.closingSoon ? 'var(--warn)' : 'var(--ink)'}">${b.counts.closingSoon}</div><div class="muted" style="font-size:11px">closing within 72h</div></div>
-            <div><div class="big mono" style="font-size:22px">${b.counts.newSinceYesterday}</div><div class="muted" style="font-size:11px">new since yesterday</div></div>
-            <div><div class="big mono" style="font-size:22px">${b.counts.newHighMatch}</div><div class="muted" style="font-size:11px">at 80+ match</div></div>
-            <div><div class="big mono" style="font-size:22px">${b.counts.totalScored}</div><div class="muted" style="font-size:11px">in your scored set</div></div>
+            <div><div class="big sm mono" style="color:${b.counts.closingSoon ? 'var(--warn)' : 'var(--ink)'}">${b.counts.closingSoon}</div><div class="muted" style="font-size:11px">closing within 72h</div></div>
+            <div><div class="big sm mono">${b.counts.newSinceYesterday}</div><div class="muted" style="font-size:11px">new since yesterday</div></div>
+            <div><div class="big sm mono">${b.counts.newHighMatch}</div><div class="muted" style="font-size:11px">at 80+ match</div></div>
+            <div><div class="big sm mono">${b.counts.totalScored}</div><div class="muted" style="font-size:11px">in your scored set</div></div>
           </div>
         </div>
 
