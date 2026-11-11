@@ -130,7 +130,16 @@ async function finish(provider, origin, code, state, appleUser) {
     body: form, signal: AbortSignal.timeout(15000),
   });
   const j = await res.json().catch(() => ({}));
-  if (!res.ok || !j.id_token) throw new Error(j.error_description || j.error || `${provider} sign-in failed`);
+  if (!res.ok || !j.id_token) {
+    // Keep the provider's exact answer: status, error code and description. This is what tells an
+    // invalid_client apart from an invalid_grant, a bad redirect or a rejected client secret.
+    const detail = `${provider} token exchange ${res.status}: ${j.error || 'no error code'}${j.error_description ? ' - ' + j.error_description : ''}`;
+    const err = new Error(detail);
+    err.step = 'token_exchange';
+    err.providerStatus = res.status;
+    err.providerBody = j;
+    throw err;
+  }
 
   const c = decodeJwt(j.id_token);
   const issOk = provider === 'google'

@@ -9,7 +9,7 @@ const GETS = [
   '/api/outcomes/intel', '/api/plan', '/api/referrals', '/api/ops', '/api/pulse', '/api/ingest',
   '/api/saved-searches', '/api/negotiation', '/api/trajectory', '/api/analytics',
   '/api/billing/status', '/api/leads', '/api/email/status', '/api/email/prefs', '/api/email/outbox',
-  '/api/onboarding/draft', '/api/launch', '/api/opportunities/lifecycle', '/api/email/sequence',
+  '/api/onboarding/draft', '/api/opportunities/lifecycle', '/api/email/sequence',
   '/api/habit', '/api/scores/v2', '/api/referrals/recommendations',
   '/api/data-sources',
 ];
@@ -96,10 +96,17 @@ async function call(method, path, body) {
   const composedOk = (outbox.json?.messages || []).some((m) => m.kind === 'daily_brief' && m.subject);
   if (composedOk) pass++; else { fail++; failures.push('invariant failed: daily brief composed into the outbox'); }
 
-  const launch = await call('GET', '/api/launch');
-  const launchOk = launch.json && Array.isArray(launch.json.checks) && launch.json.checks.length >= 8
-    && typeof launch.json.ready === 'boolean' && launch.json.verdict;
-  if (launchOk) pass++; else { fail++; failures.push('invariant failed: launch readiness reports checks and a verdict'); }
+  // Launch is founder-only: an anonymous caller must be refused, and the payload must still be complete
+  // when the founder asks for it.
+  const launchAnon = await call('GET', '/api/launch');
+  const flagsAnon = await call('GET', '/api/me/flags');
+  const launchOk = launchAnon.status === 403
+    && flagsAnon.json && flagsAnon.json.founder === false;
+  if (launchOk) pass++; else { fail++; failures.push('invariant failed: launch is founder-only and refuses anonymous callers'); }
+
+  const launchBody = launchAnon.json || {};
+  const founderOk = launchAnon.status === 403 && /founder only/i.test(String(launchBody.error || ''));
+  if (founderOk) pass++; else { fail++; failures.push('invariant failed: launch refusal names the reason'); }
 
   const legal = await call('GET', '/legal/privacy.html');
   if (legal.status === 200 && /Privacy/.test(legal.text || '')) pass++; else { fail++; failures.push('invariant failed: privacy page served'); }

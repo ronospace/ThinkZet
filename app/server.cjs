@@ -258,6 +258,7 @@ route('GET', /^\/diagnostic$/, async (req, res) => {
 });
 
 async function oauthCallback(req, res, provider, params) {
+  noteOauth(provider, 'callback reached', params.error ? 'provider returned ' + params.error : 'code ' + (params.code ? 'present' : 'missing'));
   const fail = (msg) => {
     noteOauth(provider, 'failed', msg);
     res.writeHead(303, { Location: '/?app=1&auth_error=' + encodeURIComponent(msg), 'Cache-Control': 'no-store' });
@@ -276,8 +277,13 @@ async function oauthCallback(req, res, provider, params) {
     res.end();
   } catch (e) {
     const msg = String(e.message || e);
+    // Record which step failed and the provider's own words, so the diagnostic page can name the cause.
+    const step = e.step || 'unknown';
+    if (e.providerStatus || e.providerBody) {
+      noteOauth(provider, `failed at ${step}`, msg, JSON.stringify({ status: e.providerStatus, body: e.providerBody }).slice(0, 400));
+    }
     // A key or token problem is our fault, not the person's. Say so, and keep the detail in the log.
-    if (/DECODER|PEM|private key|invalid_client|invalid_client_secret/i.test(msg)) {
+    if (/DECODER|PEM|private key|invalid_client|invalid_client_secret|token exchange/i.test(msg)) {
       noteOauth(provider, 'config error', msg, msg);
       return fail('Sign-in with ' + provider + ' is misconfigured on our side. We have been alerted.');
     }
@@ -1764,7 +1770,18 @@ route('DELETE', /^\/api\/me$/, async (req, res) => {
 });
 
 // ---- launch readiness: one screen that says whether it is safe to send people here ----
+// Operations surfaces are founder-only. The allowlist is FOUNDER_EMAILS, comma separated; when it is empty
+// nobody sees them, which is the safe default for a public deployment.
+function isFounder(req) {
+  const u = AUTH.currentUser(req);
+  if (!u || !u.email) return false;
+  const list = String(process.env.FOUNDER_EMAILS || '').split(',').map((x) => x.trim().toLowerCase()).filter(Boolean);
+  return list.includes(String(u.email).toLowerCase());
+}
+route('GET', /^\/api\/me\/flags$/, async (req, res) => json(res, 200, { founder: isFounder(req) }));
+
 route('GET', /^\/api\/launch$/, async (req, res) => {
+  if (!isFounder(req)) return json(res, 403, { error: 'founder only' });
   const checks = [];
   const add = (key, label, ok, detail, blocking = true) => checks.push({ key, label, ok, detail, blocking });
 
