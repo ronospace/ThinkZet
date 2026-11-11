@@ -237,6 +237,26 @@ function noteOauth(provider, outcome, detail, raw) {
 }
 route('GET', /^\/api\/auth\/diagnostic$/, async (req, res) => json(res, 200, { recent: OAUTH_LOG, readiness: OAUTH.readiness() }));
 
+// The same report as a page, so nobody needs a terminal to read it.
+route('GET', /^\/diagnostic$/, async (req, res) => {
+  const r = OAUTH.readiness();
+  const ok = (v) => (v ? '<span style="color:#2f9e6b">yes</span>' : '<span style="color:#c0392b">no</span>');
+  const row = (k, v) => `<tr><td style="padding:4px 12px 4px 0;color:#667">${k}</td><td>${ok(v)}</td></tr>`;
+  const provider = (name, o) => `<h2 style="font:600 15px -apple-system,sans-serif;margin:22px 0 6px">${name}</h2>
+    <table style="border-collapse:collapse;font:13px ui-monospace,monospace">${Object.entries(o).map(([k, v]) => row(k, v)).join('')}</table>`;
+  const events = OAUTH_LOG.length
+    ? `<table style="border-collapse:collapse;font:13px -apple-system,sans-serif;margin-top:8px">${OAUTH_LOG.map((e) => `<tr><td style="padding:5px 14px 5px 0;color:#667;white-space:nowrap">${esc(e.at)}</td><td style="padding:5px 14px 5px 0">${esc(e.provider)}</td><td style="padding:5px 14px 5px 0">${esc(e.outcome)}</td><td style="padding:5px 0;color:#334">${esc(e.detail)}${e.raw ? ` <span style="color:#889">· ${esc(e.raw)}</span>` : ''}</td></tr>`).join('')}</table>`
+    : '<p style="color:#667;font:13px -apple-system,sans-serif">No sign-in attempts since the last restart.</p>';
+  res.writeHead(200, { 'Content-Type': 'text/html; charset=utf-8', 'Cache-Control': 'no-store' });
+  res.end(`<!doctype html><meta name="viewport" content="width=device-width,initial-scale=1"><title>ThinkZet diagnostic</title>
+    <body style="margin:0;padding:28px;background:#fbfafc;color:#1d1b26;font-family:-apple-system,sans-serif">
+    <h1 style="font-size:19px;margin:0 0 4px">Sign-in diagnostic</h1>
+    <p style="color:#667;font-size:13px;margin:0">Booleans only. No key, secret or identifier is shown.</p>
+    ${provider('Google', r.google)}${provider('Apple', r.apple)}
+    <h2 style="font-size:15px;margin:26px 0 6px">Recent attempts</h2>${events}
+    <p style="color:#889;font-size:12px;margin-top:26px">JSON: <a href="/api/auth/diagnostic">/api/auth/diagnostic</a></p>`);
+});
+
 async function oauthCallback(req, res, provider, params) {
   const fail = (msg) => {
     noteOauth(provider, 'failed', msg);

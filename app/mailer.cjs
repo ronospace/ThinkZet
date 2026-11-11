@@ -137,9 +137,20 @@ async function flush(limit = 25) {
 // ---- composition ----
 const money = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
 
+const ACTION_LABEL = { apply: 'Apply Today', closing: 'Closing Soon', blocker: 'Biggest Blocker', week: 'Priority This Week', warm: 'Keep Warm', done: 'Done' };
+function actionLabel(a) {
+  if (a.done) return ACTION_LABEL.done;
+  if (a.kind) return ACTION_LABEL[a.kind] || ACTION_LABEL.week;
+  return a.priority === 1 ? ACTION_LABEL.apply : a.priority === 2 ? ACTION_LABEL.week : ACTION_LABEL.warm;
+}
+
 function briefEmail({ user, brief, rates, scores, prefs }) {
   const unsub = `${CONFIG.appUrl}/unsubscribe/${user.id}/${unsubscribeToken(user.id)}`;
-  const name = (user.name || '').trim().split(' ')[0] || 'there';
+  // Same rule as the app: greet with the surname when the name has one. The display-name override wins.
+  const rawName = String(user.display_name || user.name || '').replace(/\s+/g, ' ').trim();
+  const parts = rawName ? rawName.split(' ') : [];
+  const picked = parts.length > 1 ? parts[parts.length - 1] : (parts[0] || '');
+  const name = picked ? picked.charAt(0).toUpperCase() + picked.slice(1) : 'there';
   const lines = [];
   lines.push(`${brief.headline}`);
   lines.push('');
@@ -161,7 +172,7 @@ function briefEmail({ user, brief, rates, scores, prefs }) {
     lines.push(`Career Score: ${scores.overall}/100 (${ordSup(Number(scores.benchmark_percentile))} percentile). Weakest: ${lowestScore(scores)}.`);
     lines.push('');
   }
-  lines.push(`Open your radar: ${CONFIG.appUrl}/?app=1`);
+  lines.push(`Review opportunities: ${CONFIG.appUrl}/?app=1`);
   lines.push('');
   lines.push(`– ThinkZet, a product of ZyraFlow GmbH™
 You get this because you asked for the daily brief. Unsubscribe: ${unsub}`);
@@ -204,8 +215,12 @@ function renderHtml({ name, brief, rates, scores, unsub, hello = 'Hello' }) {
         <div style="font-size:12.5px;color:#9aa7b8;margin-top:4px">Median ${money(rates.p50)}${rates.period === 'hour' ? '/hr' : '/yr'}${rates.gapAbs > 0 ? ` · ${money(rates.gapAbs)}/yr on the table` : ''}</div>
       </div>` : ''}
       ${brief.actions && brief.actions.length ? `<div style="margin-bottom:18px">
-        <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6b7683;margin-bottom:8px">Do these, in this order</div>
-        ${brief.actions.map((a, i) => `<div style="padding:9px 0;border-bottom:1px solid #222a35;font-size:13.5px"><span style="color:#6b7683;margin-right:8px">${i + 1}</span>${escHtml(a.text)}</div>`).join('')}
+        <div style="font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#c2cbd8;font-weight:700;margin-bottom:10px">Do these, in this order</div>
+        ${brief.actions.map((a, i) => `<table role="presentation" width="100%" style="border-collapse:collapse;border-bottom:1px solid #222a35"><tr>
+          <td width="26" valign="top" style="padding:11px 0 11px 0"><span style="display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;border-radius:6px;background:${i === 0 ? '#1f6feb' : '#1b2130'};color:${i === 0 ? '#fff' : '#8b97a8'};font-size:11px;font-weight:700">${i + 1}</span></td>
+          <td valign="top" style="padding:11px 0;font-size:13.5px;color:${i === 0 ? '#e8edf4' : '#c2cbd8'};font-weight:${i === 0 ? 600 : 400}">${escHtml(a.text)}
+            <div style="font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:#6b7683;margin-top:4px">${escHtml(actionLabel(a))}</div>
+          </td></tr></table>`).join('')}
       </div>` : ''}
       ${brief.newHighMatch && brief.newHighMatch.length ? `<div style="margin-bottom:18px">
         <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#6b7683;margin-bottom:8px">New at your bar</div>
@@ -215,7 +230,7 @@ function renderHtml({ name, brief, rates, scores, unsub, hello = 'Hello' }) {
         </div>`).join('')}
       </div>` : ''}
       ${scores ? `<table style="width:100%;border-collapse:collapse;margin-bottom:18px">${row('Career Score', scores.overall + '/100')}${row('Percentile', 'p' + scores.benchmark_percentile)}${row('Weakest', escHtml(lowestScore(scores)))}</table>` : ''}
-      <a href="${CONFIG.appUrl}/?app=1" style="display:block;text-align:center;background:#1f6feb;color:#fff;text-decoration:none;padding:13px;border-radius:10px;font-size:14px;font-weight:600">Open your radar</a>
+      <a href="${CONFIG.appUrl}/?app=1" style="display:block;text-align:center;background:#1f6feb;color:#fff;text-decoration:none;padding:13px;border-radius:10px;font-size:14px;font-weight:600">Review Opportunities</a>
     </div>
     <div style="padding:16px 24px;border-top:1px solid #222a35;font-size:11px;color:#6b7683">
       You get this because you turned on the daily brief.
