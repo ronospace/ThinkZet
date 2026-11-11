@@ -27,7 +27,12 @@ function parseCookies(req) {
 
 function setCookie(res, name, value, maxAgeSec) {
   const prev = res.getHeader('Set-Cookie');
-  const cookie = `${name}=${encodeURIComponent(value)}; Path=/; HttpOnly; SameSite=Lax; Max-Age=${maxAgeSec}`;
+  // SameSite=None with Secure is required for the cross-site POST Apple returns by: with Lax the
+  // browser drops the new session cookie on that response, so sign-in completes and the person
+  // still lands signed out. None is only valid over HTTPS, so a local http run keeps Lax.
+  const secure = process.env.COOKIE_SECURE !== 'false' && (process.env.APP_URL || '').startsWith('https://');
+  const sameSite = secure ? 'None' : 'Lax';
+  const cookie = `${name}=${encodeURIComponent(value)}; Path=/; HttpOnly; SameSite=${sameSite}; Max-Age=${maxAgeSec}${secure ? '; Secure' : ''}`;
   res.setHeader('Set-Cookie', prev ? [].concat(prev, cookie) : [cookie]);
 }
 
