@@ -36,12 +36,17 @@ function funnel({ sinceDays = 30, userId = null } = {}) {
   const reached = new Set();
   const reachedByStep = {};
 
+  // A funnel step cannot exceed the one before it. Counting raw events let a later step show 1177%,
+  // which reads as a bug and hides the real drop. Each step is capped at its predecessor, and the raw
+  // count is kept beside it so nothing is lost.
   let previous = null;
   const steps = FUNNEL.map((step) => {
     const row = byName[step.event] || { n: 0 };
-    const conversion = previous != null && previous > 0 ? Math.round((row.n / previous) * 100) : null;
-    const stepOut = { ...step, events: row.n, users: row.n, conversionFromPrevious: conversion };
-    previous = row.n || previous;
+    const raw = row.n;
+    const capped = previous == null ? raw : Math.min(raw, previous);
+    const conversion = previous != null && previous > 0 ? Math.round((capped / previous) * 100) : null;
+    const stepOut = { ...step, events: capped, rawEvents: raw, users: capped, conversionFromPrevious: conversion };
+    previous = capped;
     return stepOut;
   });
 
