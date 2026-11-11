@@ -235,7 +235,7 @@ function noteOauth(provider, outcome, detail, raw) {
   if (OAUTH_LOG.length > 10) OAUTH_LOG.pop();
   console.log(`  oauth ${provider}: ${outcome} ${detail ? '- ' + String(detail).slice(0, 160) : ''}${raw ? ' | ' + String(raw).slice(0, 300) : ''}`);
 }
-route('GET', /^\/api\/auth\/diagnostic$/, async (req, res) => json(res, 200, { recent: OAUTH_LOG }));
+route('GET', /^\/api\/auth\/diagnostic$/, async (req, res) => json(res, 200, { recent: OAUTH_LOG, readiness: OAUTH.readiness() }));
 
 async function oauthCallback(req, res, provider, params) {
   const fail = (msg) => {

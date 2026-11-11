@@ -150,4 +150,26 @@ async function finish(provider, origin, code, state, appleUser) {
   return AUTH.sessionForEmail(String(c.email).toLowerCase(), name);
 }
 
-module.exports = { providers, startUrl, finish };
+// Which variables a provider still needs, and whether the key parses. Names and booleans only, never a value.
+function readiness() {
+  const has = (k) => !!env(k);
+  let keyParses = false;
+  try { crypto.createPrivateKey(normalisePem(env('APPLE_PRIVATE_KEY'))); keyParses = true; } catch { keyParses = false; }
+  return {
+    google: {
+      GOOGLE_CLIENT_ID: has('GOOGLE_CLIENT_ID'),
+      GOOGLE_CLIENT_SECRET: has('GOOGLE_CLIENT_SECRET'),
+      ready: !!(has('GOOGLE_CLIENT_ID') && has('GOOGLE_CLIENT_SECRET')),
+    },
+    apple: {
+      APPLE_CLIENT_ID: has('APPLE_CLIENT_ID'),
+      APPLE_TEAM_ID: has('APPLE_TEAM_ID'),
+      APPLE_KEY_ID: has('APPLE_KEY_ID'),
+      APPLE_PRIVATE_KEY: has('APPLE_PRIVATE_KEY'),
+      keyParses,
+      ready: !!(has('APPLE_CLIENT_ID') && has('APPLE_TEAM_ID') && has('APPLE_KEY_ID') && keyParses),
+    },
+  };
+}
+
+module.exports = { providers, startUrl, finish, readiness };
