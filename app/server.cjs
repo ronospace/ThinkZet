@@ -1333,9 +1333,10 @@ async function briefFor(uid) {
   // Copy is fixed. The line is kept whole and fitted by type size, never split or rewritten.
   let mission = '';
   if (newHighMatch.length) {
-    headline = `${plural(newHighMatch.length, 'new opportunity', 'new opportunities')} at 80+ match overnight. Best: ${newHighMatch[0].title} at ${newHighMatch[0].company} (${newHighMatch[0].match_score}/100).`;
+    headline = `New at 80+ match overnight. Best: ${newHighMatch[0].title} at ${newHighMatch[0].company} (${newHighMatch[0].match_score}/100).`;
   } else if (newSinceYesterday.length) {
-    headline = `${plural(newSinceYesterday.length, 'new opportunity', 'new opportunities')} since yesterday. Highest match: ${top[0]?.match_score ?? 0}/100.`;
+    const best = [...newSinceYesterday].sort((a, b) => b.match_score - a.match_score)[0] || top[0];
+    headline = `New opportunities since yesterday. Highest match: ${best?.title || '–'} (${best?.match_score ?? 0}/100).`;
   } else {
     headline = `Nothing new at your bar overnight. Your best live option is still ${top[0]?.title || '–'} (${top[0]?.match_score || 0}/100).`;
   }
@@ -1345,7 +1346,7 @@ async function briefFor(uid) {
   if (topGap) actions.push({ kind: 'blocker', priority: 2, text: `Close ${topGap[0]} – it blocks ${topGap[1]} of your opportunities`, skill: topGap[0] });
   if (rates && rates.gapPct > 5) actions.push({ kind: 'week', priority: 2, text: `You are ${rates.gapPct}% below market – open Rate Intelligence and take the number into your next conversation` });
   if (scores && scores.career_momentum < 30) actions.push({ kind: 'warm', priority: 3, text: `Momentum is ${scores.career_momentum}/100 – three applications this week moves it more than any CV edit` });
-  if (closingSoon[0]) actions.push({ kind: 'closing', priority: 1, text: `${closingSoon[0].title} ${(() => { const d = Math.max(0, Math.ceil((new Date(closingSoon[0].closes_at) - Date.now()) / 86400000)); return d === 0 ? 'closes today' : d === 1 ? 'closes tomorrow' : `closes in ${d} days`; })()}` });
+  if (closingSoon[0]) actions.push({ kind: 'closing', priority: 1, opportunityId: closingSoon[0].id, text: `${closingSoon[0].title} (${closingSoon[0].match_score}/100) ${(() => { const d = Math.max(0, Math.ceil((new Date(closingSoon[0].closes_at) - Date.now()) / 86400000)); return d === 0 ? 'closes today' : d === 1 ? 'closes tomorrow' : `closes in ${d} days`; })()}` });
 
   // An action is done when its opportunity is already applied to, so the list reacts to what the person
   // actually did instead of looking identical before and after. Completed work sorts to the bottom.
