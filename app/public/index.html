@@ -803,16 +803,19 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .cap-ico[data-ico="cop"]:before{border-radius:50%;background:radial-gradient(circle at 50% 35%,var(--accent2) 0 3px,transparent 3px),linear-gradient(180deg,transparent 55%,var(--accent2) 55% 100%)}
 .apply-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .fb-card{margin-top:14px}
-.fb-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.fb-row{display:flex;flex-direction:column;gap:10px}
+.fb-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%}
+.fb-follow .fb-sub{margin:0}
 .fb-q{font-size:var(--text-sm);font-weight:650}
 .fb-sub{font-size:var(--text-xs);color:var(--muted);margin-top:2px}
-.fb-stars{display:flex;gap:6px;margin-left:auto}
+.fb-stars{display:flex;gap:6px}
 .fb-star{width:32px;height:32px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:var(--ink2);font-size:var(--text-sm);font-weight:650}
 .fb-star:hover{border-color:var(--accent2);color:var(--ink)}
 .fb-star.on{background:color-mix(in srgb,var(--accent2) 18%,var(--panel));border-color:var(--accent2);color:var(--accent)}
 .fb-collapsed{padding:12px var(--sp-5)}
 .fb-collapsed .fb-done{margin-top:0}
-.fb-done{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:var(--text-sm);color:var(--good);font-weight:600}
+.fb-done{display:flex;align-items:center;gap:8px;margin-top:0;font-size:var(--text-sm);color:var(--good);font-weight:600}
+.fb-done-share{margin-left:auto;color:var(--ink2)}
 .fb-done-tick{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--good) 22%,transparent);border:1px solid color-mix(in srgb,var(--good) 55%,transparent);font-size:11px}
 .fb-star[disabled]{opacity:.55;cursor:default}
 .fb-star.on[disabled]{opacity:1}
@@ -1198,9 +1201,7 @@ async function mountFeedback() {
         // The form has done its job. Replace it with one line: the rating, and Share if they want it.
         setTimeout(() => {
           const row = box.querySelector('.fb-row');
-          if (row) {
-            row.querySelectorAll('.fb-star, .fb-stars, #fb-send, .fb-q').forEach((x) => x.remove());
-          }
+          if (row) row.remove();
           const follow = box.querySelector('.fb-follow');
           if (follow) follow.remove();
           const done = box.querySelector('.fb-done');
@@ -1212,7 +1213,18 @@ async function mountFeedback() {
       };
       if (rating <= 3) {
         // A low rating is only useful with the reason, so ask once before recording it.
-        box.querySelector('.fb-follow').hidden = false;
+        const follow = box.querySelector('.fb-follow');
+        follow.hidden = false;
+        // Share belongs to the answered state too, so it never disappears with the form.
+        const shareRow = box.querySelector('.fb-actions');
+        if (shareRow && !shareRow.querySelector('#fb-share')) {
+          const sb = document.createElement('button');
+          sb.className = 'btn sm ghost';
+          sb.id = 'fb-share';
+          sb.textContent = 'Share';
+          sb.onclick = () => shareApp();
+          shareRow.prepend(sb);
+        }
         const send = box.querySelector('#fb-send');
         send.onclick = async () => {
           const r = await post('/api/feedback', { rating, surface: 'radar', comment: box.querySelector('#fb-why').value });
@@ -1226,8 +1238,7 @@ async function mountFeedback() {
       done(rating);
     };
   });
-  const share = box.querySelector('#fb-share');
-  if (share) share.onclick = () => shareApp();
+  box.querySelectorAll('#fb-share, #fb-share2').forEach((b) => { b.onclick = () => shareApp(); });
 }
 
 async function shareApp() {
@@ -2022,16 +2033,19 @@ async function renderRadar() {
         <div class="fb-stars" role="group" aria-label="Rate from 1 to 5">
           ${[1,2,3,4,5].map((n) => `<button class="fb-star" data-n="${n}" aria-label="${n} of 5">${n}</button>`).join('')}
         </div>
-        <button class="btn sm ghost" id="fb-share">Share</button>
       </div>
       <div class="fb-follow" hidden>
         <label class="fb-sub" for="fb-why">What is missing or unclear?</label>
         <textarea id="fb-why" class="fb-why" rows="2" maxlength="600" placeholder="One line is enough"></textarea>
-        <button class="btn sm" id="fb-send">Send</button>
+        <div class="fb-actions">
+          <button class="btn sm ghost" id="fb-share">Share</button>
+          <button class="btn sm" id="fb-send">Send</button>
+        </div>
       </div>
       <div class="fb-done" hidden>
-        <span class="fb-done-txt">Thank you. Feedback received</span>
         <span class="fb-done-tick" aria-hidden="true">✓</span>
+        <span class="fb-done-txt">Feedback received</span>
+        <button class="btn sm ghost fb-done-share" id="fb-share2">Share</button>
       </div>
     </div>
       <div class="facets">
