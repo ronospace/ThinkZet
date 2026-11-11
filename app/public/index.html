@@ -351,7 +351,7 @@ html[data-theme="light"] .rate-gap{border-color:#DCC6EE;box-shadow:0 0 0 1px rgb
 .types button.on{background:var(--nav-active);border-color:var(--accent2);color:var(--tone-ink, var(--tone-ink))}
 .brief-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 .brief-meta{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;line-height:1.5}
-.brief-ack{font-size:11px;white-space:nowrap}
+.brief-ack{font-size:10.5px;white-space:nowrap;letter-spacing:.14em;text-transform:uppercase}
 @media(max-width:560px){.brief-head{flex-direction:column;align-items:flex-start;gap:3px}.brief-ack{display:none}}
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3)}
 .kpi{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-3) var(--sp-4) 0;box-shadow:none;overflow:hidden;transition:border-color .16s,box-shadow .16s,transform .16s;display:flex;flex-direction:column}
@@ -1912,7 +1912,7 @@ async function renderRadar() {
       <div class="card tone-blue" style="margin-bottom:14px">
         <div class="brief-head">
           <div class="muted brief-meta">Today's brief · ${brief.counts.newSinceYesterday} new · ${brief.counts.closingSoon} closing soon</div>
-          <span class="muted brief-ack">auto-acknowledged</span>
+          <span class="muted brief-ack">Auto-Acknowledged</span>
         </div>
         <div class="brief-hl" style="font-weight:600;margin-top:8px;letter-spacing:var(--tracking-tight);line-height:var(--leading-snug)">${esc(brief.headline)}</div>
         <div style="margin-top:14px">
