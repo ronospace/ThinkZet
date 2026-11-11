@@ -279,6 +279,7 @@ html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accen
 .kbd-row{display:flex;align-items:center;gap:5px;font-size:var(--text-xs);color:var(--muted);padding:2px 0;min-width:0}
 .kbd-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:320px){.kbd-grid{grid-template-columns:1fr}}
+.empty-line{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border:1px dashed var(--line2);border-radius:var(--radius);font-size:var(--text-sm)}
 .prio.p4{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,var(--line2));background:color-mix(in srgb,var(--good) 12%,var(--panel2))}
 .done-tick{color:var(--good);opacity:1}
 .hello-mission{margin-top:10px;font-size:var(--text-md);line-height:var(--leading-snug);color:var(--ink2);max-width:64ch}
@@ -3762,9 +3763,9 @@ async function renderBrief() {
           <div class="muted" style="font-size:10.5px;letter-spacing:.14em;text-transform:uppercase">Brief · ${new Date(b.generatedAt).toLocaleString('en-GB', { weekday: 'long', hour: '2-digit', minute: '2-digit' })}</div>
           <div class="brief-hl" style="font-weight:650;margin-top:8px;letter-spacing:-.02em;line-height:1.35">${esc(b.headline)}</div>
           <div class="row" style="margin-top:16px;gap:20px;flex-wrap:wrap">
+            <div><div class="big mono" style="font-size:22px;color:${b.counts.closingSoon ? 'var(--warn)' : 'var(--ink)'}">${b.counts.closingSoon}</div><div class="muted" style="font-size:11px">closing within 72h</div></div>
             <div><div class="big mono" style="font-size:22px">${b.counts.newSinceYesterday}</div><div class="muted" style="font-size:11px">new since yesterday</div></div>
             <div><div class="big mono" style="font-size:22px">${b.counts.newHighMatch}</div><div class="muted" style="font-size:11px">at 80+ match</div></div>
-            <div><div class="big mono" style="font-size:22px">${b.counts.closingSoon}</div><div class="muted" style="font-size:11px">closing within 72h</div></div>
             <div><div class="big mono" style="font-size:22px">${b.counts.totalScored}</div><div class="muted" style="font-size:11px">in your scored set</div></div>
           </div>
         </div>
@@ -3780,7 +3781,7 @@ async function renderBrief() {
         </div>
 
         <h2 class="section">New at Your Bar</h2>
-        <div>${(b.newHighMatch || []).map(oppCard).join('') || `<div class="card"><div class="muted">Nothing new at 80+ since your last visit.</div><div class="row" style="margin-top:10px;gap:8px"><button class="btn sm" onclick="go('radar')">Open the radar</button><button class="btn sm ghost" onclick="go('saved')">See saved searches</button></div></div>`}</div>
+        <div>${(b.newHighMatch || []).map(oppCard).join('') || `<div class="empty-line"><span class="muted">Nothing new at 80+ since your last visit.</span><button class="btn sm ghost" onclick="go('radar')">Open the radar</button></div>`}</div>
 
         ${b.searchHits && b.searchHits.length ? `<h2 class="section">Your Saved Searches Found</h2>
         ${b.searchHits.map((s) => `<div class="card" style="margin-bottom:10px"><h3>${esc(s.name)}</h3><div class="dim" style="font-size:12px;margin-top:6px">${s.hits.map((h) => esc(h.title) + ' · ' + esc(h.company) + ' <span class="muted">(' + h.match_score + ')</span>').join('<br/>')}</div></div>`).join('')}` : ''}
