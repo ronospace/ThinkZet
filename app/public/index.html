@@ -285,6 +285,7 @@ html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accen
 .signal-lead{margin:10px 0 6px;padding:12px 14px;border-radius:var(--radius);background:color-mix(in srgb,var(--accent) 7%,var(--panel));border:1px solid color-mix(in srgb,var(--accent) 28%,var(--line));cursor:pointer}
 .signal-lead:hover{border-color:var(--accent2)}
 .signal-v{font-size:var(--text-lg);font-weight:680;letter-spacing:var(--tracking-tight);margin:3px 0 2px;color:var(--ink)}
+.pool-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:var(--text-xs)}
 .empty-line{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border:1px dashed var(--line2);border-radius:var(--radius);font-size:var(--text-sm)}
 .prio.p4{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,var(--line2));background:color-mix(in srgb,var(--good) 12%,var(--panel2))}
 .done-tick{color:var(--good);opacity:1}
@@ -2737,6 +2738,13 @@ async function renderRates() {
         <h3>Your market rate – ${r.period === 'hour' ? 'per hour' : 'per year'}, EUR</h3>
         <div class="big mono" style="margin:10px 0 2px">${money(r.p50)}</div>
         <div class="dim">median across ${r.sampleSize} comparable postings (${r.confidence} confidence)</div>
+        ${r.market ? `<div class="pool-line">${(() => {
+          // Say which market the number came from, and why, so a global fallback is never mistaken for a local figure.
+          const m = r.market;
+          if (m.mode === 'country') return `<span class="chip have">${esc(m.country)} market</span><span class="muted">${m.countryDepth} comparable postings in ${esc(m.country)}</span>`;
+          if (m.mode === 'currency') return `<span class="chip">${esc(m.currency)} area</span><span class="muted">${m.country ? esc(m.country) + ' has ' + m.countryDepth + ' comparable postings, fewer than 30, so the ' + esc(m.currency) + ' area is used' : ''}</span>`;
+          return `<span class="chip">Global</span><span class="muted">${m.country ? esc(m.country) + ' has ' + m.countryDepth + ' comparable postings, fewer than 30, so the global pool is used' : 'No country set, so the global pool is used'}</span>`;
+        })()}</div>` : ''}
         <div class="scale" style="margin-top:22px;height:10px;border-radius:6px;background:var(--track);position:relative">
           <div style="position:absolute;height:100%;border-radius:6px;background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 35%,var(--track)),var(--accent));left:${pos(r.p25)}%;width:${pos(r.p75) - pos(r.p25)}%"></div>
           <div style="position:absolute;top:-6px;width:3px;height:22px;background:var(--ink);border-radius:2px;left:${pos(r.current || r.p50)}%"></div>

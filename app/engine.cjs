@@ -530,7 +530,8 @@ function rateIntelligence(userId) {
     if (r.remote === 1 && !r.country) return 'remote';
     return r.country || 'unknown';
   };
-  const poolDepth = (pred) => recs.filter(pred).length;
+  const comparable = recs.filter((r) => TIERS.some((t) => t.test(r)));
+  const poolDepth = (pred) => comparable.filter(pred).length;
   const inCountry = MARKET ? (r) => marketOf(r) === MARKET : () => false;
   const countryDepth = MARKET ? poolDepth(inCountry) : 0;
   const currencyOf = (r) => r.currency || 'EUR';
