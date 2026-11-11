@@ -1998,8 +1998,32 @@ route('GET', /^\/api\/habit$/, async (req, res) => {
     AND updated_at > datetime('now','-7 days')`).get(uid).n;
   const weeklyTarget = 3;
 
+  // Real daily series for the four KPI lines: the last 12 days, oldest first, null where nothing was
+  // recorded. Each comes from the table that owns the fact, never from a formula.
+  const DAYS = 12;
+  const dayKeys = Array.from({ length: DAYS }, (_, i) => new Date(Date.now() - (DAYS - 1 - i) * 86400000).toISOString().slice(0, 10));
+  const fill = (rows) => { const m = new Map(rows.map((r) => [r.d, r.v])); return dayKeys.map((d) => (m.has(d) ? m.get(d) : null)); };
+  if (rates && rates.gapPct != null) {
+    db.prepare('INSERT OR REPLACE INTO rate_gap_history (user_id, day, gap_pct) VALUES (?, ?, ?)').run(uid, dayKeys[DAYS - 1], rates.gapPct);
+  }
+  const trend = {
+    days: dayKeys,
+    rateGap: fill(db.prepare(`SELECT day d, gap_pct v FROM rate_gap_history WHERE user_id=? AND day >= ?`).all(uid, dayKeys[0])),
+    fresh: fill(db.prepare(`SELECT date(o.posted_at) d, COUNT(*) v FROM matches m JOIN opportunities o ON o.id=m.opportunity_id
+      WHERE m.user_id=? AND m.match_score>=70 AND date(o.posted_at) >= ? GROUP BY date(o.posted_at)`).all(uid, dayKeys[0])),
+    score: fill(db.prepare(`SELECT date(computed_at) d, overall v FROM career_scores WHERE user_id=? AND date(computed_at) >= ?
+      AND id IN (SELECT MAX(id) FROM career_scores WHERE user_id=? GROUP BY date(computed_at))`).all(uid, dayKeys[0], uid)),
+    applied: fill(db.prepare(`SELECT date(COALESCE(applied_at, updated_at)) d, COUNT(*) v FROM applications
+      WHERE user_id=? AND status IN ('applied','interviewing','offer') AND date(COALESCE(applied_at, updated_at)) >= ?
+      GROUP BY date(COALESCE(applied_at, updated_at))`).all(uid, dayKeys[0])),
+  };
+  // Counts are zero on a quiet day, not missing. Scores and gaps stay null until a value exists.
+  trend.fresh = trend.fresh.map((v) => v ?? 0);
+  trend.applied = trend.applied.map((v) => v ?? 0);
+
   json(res, 200, {
     needsOnboarding: false,
+    trend,
     streak,
     fresh,
     rateGapPct: rates ? rates.gapPct : null,

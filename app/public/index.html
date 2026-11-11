@@ -279,6 +279,8 @@ html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accen
 .kbd-row{display:flex;align-items:center;gap:5px;font-size:var(--text-xs);color:var(--muted);padding:2px 0;min-width:0}
 .kbd-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 @media(max-width:320px){.kbd-grid{grid-template-columns:1fr}}
+.kpi-nohist{position:relative}
+.kpi-nohist span{position:absolute;left:0;right:0;top:4px;text-align:center;font-size:var(--text-2xs);color:var(--muted)}
 .empty-line{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border:1px dashed var(--line2);border-radius:var(--radius);font-size:var(--text-sm)}
 .prio.p4{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,var(--line2));background:color-mix(in srgb,var(--good) 12%,var(--panel2))}
 .done-tick{color:var(--good);opacity:1}
@@ -2121,24 +2123,33 @@ async function renderRadar() {
     const h = await api('/api/habit');
     const kbox = $('#kpis');
     if (kbox && h && !h.needsOnboarding) {
+      // Lines are drawn from /api/habit trend: real values per day, null where nothing was recorded.
+      // Missing days are skipped, never invented. With fewer than two real points the card says so.
       const spark = (vals, tone) => {
-        const max = Math.max(...vals, 1), min = Math.min(...vals, 0);
-        const pts = vals.map((v, i) => {
-          const x = (i / Math.max(1, vals.length - 1)) * 100;
-          const y = 26 - ((v - min) / Math.max(1, max - min)) * 22;
-          return `${x.toFixed(1)},${y.toFixed(1)}`;
-        }).join(' ');
-        return `<svg viewBox="0 0 100 28" preserveAspectRatio="none" style="width:100%;height:44px;display:block">
-          <polyline points="${pts}" fill="none" stroke="${tone}" stroke-width="1.5" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round" opacity=".95"/>
-          <polygon points="0,28 ${pts} 100,28" fill="${tone}" opacity=".13"/>
+        const pts = vals.map((v, i) => (v == null ? null : [i, Number(v)])).filter(Boolean);
+        if (pts.length < 2) {
+          return `<div class="kpi-nohist"><svg viewBox="0 0 100 28" preserveAspectRatio="none" style="width:100%;height:44px;display:block">
+            <line x1="0" y1="20" x2="100" y2="20" stroke="var(--line2)" stroke-width="1" stroke-dasharray="3 3" vector-effect="non-scaling-stroke"/>
+          </svg><span>Not enough history yet</span></div>`;
+        }
+        const ys = pts.map((p) => p[1]);
+        const max = Math.max(...ys), min = Math.min(...ys);
+        const span = max - min;
+        const last = vals.length - 1 || 1;
+        const yOf = (v) => (span === 0 ? (max === 0 ? 26 : 15) : 26 - ((v - min) / span) * 22);
+        const xy = pts.map(([i, v]) => `${((i / last) * 100).toFixed(1)},${yOf(v).toFixed(1)}`).join(' ');
+        const x0 = ((pts[0][0] / last) * 100).toFixed(1), x1 = ((pts[pts.length - 1][0] / last) * 100).toFixed(1);
+        return `<svg viewBox="0 0 100 28" preserveAspectRatio="none" style="width:100%;height:44px;display:block" data-points="${pts.length}">
+          <polyline points="${xy}" fill="none" stroke="${tone}" stroke-width="1.5" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round" opacity=".95"/>
+          <polygon points="${x0},28 ${xy} ${x1},28" fill="${tone}" opacity=".13"/>
         </svg>`;
       };
-      const series = (seed, n) => Array.from({ length: n }, (_, i) => Math.max(1, Math.round(seed * (0.55 + Math.sin(i * 1.1 + seed) * 0.22 + i * 0.05))));
+      const T = h.trend || {};
       const cards = [
-        { k: 'Rate gap', v: h.rateGapPct != null ? h.rateGapPct + '%' : '–', delta: h.rateGapPct != null ? h.rateGapPct + ' pts' : 'No Data', dir: h.rateGapPct > 5 ? -1 : h.rateGapPct < -5 ? 1 : 0, sub: 'vs sample median', tone: 'var(--accent)', s: series(14, 12) },
-        { k: 'New at 70+', v: h.fresh, delta: h.fresh + ' new', dir: h.fresh > 0 ? 1 : 0, sub: 'last 24h', tone: 'var(--accent)', s: series(h.fresh || 6, 12) },
-        { k: 'Career score', v: h.overall != null ? h.overall : '–', delta: (h.scoreDelta > 0 ? '+' : '') + (h.scoreDelta || 0), dir: h.scoreDelta || 0, sub: 'this week', tone: 'var(--accent)', s: series(h.overall || 60, 12) },
-        { k: 'Applications', v: h.appliedThisWeek + '/' + h.weeklyTarget, delta: h.appliedThisWeek + ' sent', dir: h.appliedThisWeek > 0 ? 1 : 0, sub: 'this week', tone: 'var(--accent)', s: series(Math.max(2, h.appliedThisWeek * 3), 12) },
+        { k: 'Rate gap', v: h.rateGapPct != null ? h.rateGapPct + '%' : '–', delta: h.rateGapPct != null ? h.rateGapPct + ' pts' : 'No Data', dir: h.rateGapPct > 5 ? -1 : h.rateGapPct < -5 ? 1 : 0, sub: 'vs sample median', tone: 'var(--accent)', s: T.rateGap || [] },
+        { k: 'New at 70+', v: h.fresh, delta: h.fresh + ' new', dir: h.fresh > 0 ? 1 : 0, sub: 'since last visit', tone: 'var(--accent)', s: T.fresh || [] },
+        { k: 'Career score', v: h.overall != null ? h.overall : '–', delta: (h.scoreDelta > 0 ? '+' : '') + (h.scoreDelta || 0), dir: h.scoreDelta || 0, sub: 'this week', tone: 'var(--accent)', s: T.score || [] },
+        { k: 'Applications', v: h.appliedThisWeek + '/' + h.weeklyTarget, delta: h.appliedThisWeek + ' sent', dir: h.appliedThisWeek > 0 ? 1 : 0, sub: 'this week', tone: 'var(--accent)', s: T.applied || [] },
       ];
       kbox.innerHTML = `<div class="kpi-grid">${cards.map((c) => `<div class="kpi">
         <div class="kpi-k">${esc(c.k)}</div>
