@@ -259,10 +259,11 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .btn.act-apply:hover{background:color-mix(in srgb,var(--accent2) 16%,var(--panel));border-color:color-mix(in srgb,var(--accent2) 60%,transparent);filter:none;box-shadow:none}
 html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accent2) 10%,#fff);color:var(--accent)}
 .btn.act-apply:hover .ext{opacity:1}
-.arow{display:flex;align-items:center;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.arow{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
 .arow-n{color:var(--muted);font-size:12px;width:16px;flex:0 0 auto}
-.arow-t{flex:1;min-width:0;font-size:var(--text-sm);line-height:var(--leading-normal);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.arow .prio{margin:0;flex:0 0 auto;white-space:nowrap}
+.arow-t{flex:1;min-width:0;font-size:var(--text-sm);line-height:var(--leading-normal);overflow-wrap:anywhere}
+.arow .prio{margin:0;flex:0 0 auto;white-space:nowrap;align-self:flex-start}
+.arow-n,.arow-c{padding-top:1px}
 .arow-c{flex:0 0 auto;color:var(--muted);opacity:.5;font-size:12px}
 @media(max-width:560px){
   .arow{flex-wrap:wrap;align-items:flex-start;row-gap:6px}
