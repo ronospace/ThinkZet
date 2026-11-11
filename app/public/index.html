@@ -1205,64 +1205,75 @@ function titleCase(input) {
 async function mountFeedback() {
   const box = document.getElementById('feedback');
   if (!box) return;
-  const prior = localStorage.getItem('tz-feedback-radar-rating');
-  if (localStorage.getItem('tz-feedback-radar')) {
-    // Already rated: show the rating back, keep Share, and never ask again.
-    box.hidden = false;
-    box.querySelector('.fb-row').hidden = true;
-    const d = box.querySelector('.fb-done');
-    if (d) {
-      d.hidden = false;
-      d.querySelector('.fb-done-txt').textContent = prior ? `Thank you. Rated ${prior}/5` : 'Thank you. Rated';
-    }
-    return;
-  }
-  box.hidden = false;
-  box.querySelectorAll('.fb-star').forEach((b) => {
-    b.onclick = async () => {
-      box.querySelectorAll('.fb-star').forEach((x) => x.classList.toggle('on', Number(x.dataset.n) <= Number(b.dataset.n)));
-      const rating = Number(b.dataset.n);
-      const done = (rating) => {
-        localStorage.setItem('tz-feedback-radar', '1');
-        localStorage.setItem('tz-feedback-radar-rating', String(rating));
-        // Lock the control so a second tap cannot submit twice, and confirm in colour.
-        box.querySelectorAll('.fb-star').forEach((x) => { x.disabled = true; });
-        const why = box.querySelector('#fb-why');
-        if (why) { why.readOnly = true; }
-        const send = box.querySelector('#fb-send');
-        if (send) { send.classList.add('sent'); send.textContent = 'Sent'; send.disabled = true; }
-        // The form has done its job. Replace it with one line: the rating, and Share if they want it.
-        setTimeout(() => {
-          const row = box.querySelector('.fb-row');
-          if (row) row.remove();
-          const follow = box.querySelector('.fb-follow');
-          if (follow) follow.remove();
-          const done = box.querySelector('.fb-done');
-          if (done) done.hidden = false;
-          const t = box.querySelector('.fb-done-txt');
-          if (t) t.textContent = `Thank you. Rated ${rating}/5`;
-          box.classList.add('fb-collapsed');
-        }, 700);
-      };
-      if (rating <= 3) {
-        // A low rating is only useful with the reason, so ask once before recording it.
-        const follow = box.querySelector('.fb-follow');
-        follow.hidden = false;
-        const send = box.querySelector('#fb-send');
-        send.onclick = async () => {
-          const r = await post('/api/feedback', { rating, surface: 'radar', comment: box.querySelector('#fb-why').value });
-          if (r.error) return toast(r.error);
-          done(rating);
-        };
-        return;
-      }
-      const r = await post('/api/feedback', { rating, surface: 'radar' });
-      if (r.error) return toast(r.error);
-      done(rating);
+  const row = box.querySelector('.fb-row');
+  const follow = box.querySelector('.fb-follow');
+  const doneEl = box.querySelector('.fb-done');
+  const doneTxt = box.querySelector('.fb-done-txt');
+  const why = box.querySelector('#fb-why');
+  const send = box.querySelector('#fb-send');
+  const stars = [...box.querySelectorAll('.fb-star')];
+  const K = { done: 'tz-feedback-radar', rating: 'tz-feedback-radar-rating', id: 'tz-feedback-radar-id', comment: 'tz-feedback-radar-comment' };
+  let rating = Number(localStorage.getItem(K.rating)) || 0;
+
+  const paint = (n) => stars.forEach((x) => x.classList.toggle('on', Number(x.dataset.n) <= n));
+  // Answered: one line and Edit. Nothing is removed from the page, so Edit can bring it all back.
+  const showDone = () => {
+    row.hidden = true;
+    follow.hidden = true;
+    doneEl.hidden = false;
+    doneTxt.textContent = `Thank you. You rated ${rating}/5`;
+    box.classList.add('fb-collapsed');
+  };
+  // Editing: the previous rating and comment are filled in, every control unlocked.
+  const showEdit = () => {
+    box.classList.remove('fb-collapsed');
+    doneEl.hidden = true;
+    row.hidden = false;
+    stars.forEach((x) => { x.disabled = false; });
+    paint(rating);
+    why.readOnly = false;
+    why.value = localStorage.getItem(K.comment) || '';
+    send.disabled = false;
+    send.classList.remove('sent');
+    send.textContent = 'Send';
+    follow.hidden = !(rating && rating <= 3);
+  };
+  const submit = async (n, comment) => {
+    const body = { rating: n, surface: 'radar' };
+    if (comment) body.comment = comment;
+    const prevId = localStorage.getItem(K.id);
+    if (prevId) body.id = prevId;
+    const r = await post('/api/feedback', body);
+    if (r.error) { toast(r.error); return; }
+    if (r.id) localStorage.setItem(K.id, r.id);
+    localStorage.setItem(K.done, '1');
+    localStorage.setItem(K.rating, String(n));
+    if (comment) localStorage.setItem(K.comment, comment);
+    rating = n;
+    // Lock for a beat so Sent is seen, then collapse to the answered line.
+    stars.forEach((x) => { x.disabled = true; });
+    why.readOnly = true;
+    send.disabled = true;
+    send.classList.add('sent');
+    send.textContent = 'Sent';
+    setTimeout(showDone, 700);
+  };
+
+  stars.forEach((b) => {
+    b.onclick = () => {
+      const n = Number(b.dataset.n);
+      rating = n;
+      paint(n);
+      // A low rating is only useful with the reason, so it waits for Send.
+      if (n <= 3) { follow.hidden = false; why.focus(); return; }
+      follow.hidden = true;
+      submit(n, '');
     };
   });
-  const shareBtn = box.querySelector('#fb-share');
-  if (shareBtn) shareBtn.onclick = () => shareApp();
+  send.onclick = () => submit(rating, why.value.trim());
+  box.querySelector('#fb-edit').onclick = showEdit;
+  box.hidden = false;
+  if (localStorage.getItem(K.done) && rating) showDone();
 }
 
 async function shareApp() {
@@ -2068,8 +2079,8 @@ async function renderRadar() {
       </div>
       <div class="fb-done" hidden>
         <span class="fb-done-tick" aria-hidden="true">✓</span>
-        <span class="fb-done-txt">Thank you. Rated</span>
-        <button class="btn sm ghost fb-done-share" id="fb-share">Share</button>
+        <span class="fb-done-txt">Thank you. You rated</span>
+        <button class="btn sm ghost fb-done-share" id="fb-edit">Edit</button>
       </div>
     </div>
       <div class="facets">

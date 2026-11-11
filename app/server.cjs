@@ -416,6 +416,16 @@ route('POST', /^\/api\/feedback$/, async (req, res) => {
   const u = AUTH.currentUser(req);
   const surface = String(body.surface || 'app').slice(0, 40);
   const comment = body.comment ? String(body.comment).replace(/\s+/g, ' ').trim().slice(0, 600) : null;
+  // An edit sends back the id it was given, and updates that row, so one person is one rating.
+  // The id is only honoured for the same surface, and for the same account when there is one.
+  const prevId = body.id ? String(body.id).slice(0, 64) : null;
+  const prev = prevId ? db.prepare('SELECT id, user_id, surface FROM feedback WHERE id=?').get(prevId) : null;
+  const owns = prev && prev.surface === surface && (!prev.user_id || (u && prev.user_id === u.id));
+  if (owns) {
+    db.prepare("UPDATE feedback SET rating=?, comment=COALESCE(?, comment), created_at=datetime('now') WHERE id=?").run(rating, comment, prev.id);
+    AN.track(u ? u.id : resolveUser(req), 'feedback.edited', { rating, surface });
+    return json(res, 200, { ok: true, id: prev.id, edited: true });
+  }
   const id = crypto.randomUUID();
   db.prepare('INSERT INTO feedback (id,user_id,rating,comment,surface) VALUES (?,?,?,?,?)')
     .run(id, u ? u.id : null, rating, comment, surface);
