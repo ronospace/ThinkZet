@@ -1119,7 +1119,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
     <div class="topbar">
       <div class="tb-title">
         <div class="tb-line"><span class="tb-ico" id="view-ico" aria-hidden="true"></span><h1 id="view-title">Opportunity Radar</h1><span class="pill live" id="live-pill"><i></i>live</span></div>
-        <div class="sub" id="view-sub">Live</div>
+        <div class="sub" id="view-sub" hidden></div>
       </div>
       <div class="spacer"></div>
       <button class="tb-icon" id="cmdk" title="Search everything (Cmd K)" aria-label="Search everything">
@@ -1748,7 +1748,7 @@ function renderOnboarding() {
   const draft = STATE.draft || { step: 1 };
   const D = draft;
   $('#view-title').textContent = 'Build your Career Twin';
-  $('#view-sub').textContent = 'Ninety seconds to your first real number.';
+  $('#view-sub').textContent = '';
   $('#profile-pill').textContent = 'Setting Up';
 
   const stepDots = [1, 2, 3].map((n) => `<span style="width:${n === D.step ? 26 : 8}px;height:8px;border-radius:4px;background:${n <= D.step ? 'var(--accent)' : 'var(--line2)'};transition:.25s"></span>`).join('');
@@ -3723,7 +3723,7 @@ async function go(view) {
     ico.innerHTML = src ? src.outerHTML : '';
     ico.style.display = src ? '' : 'none';
   }
-  $('#view-sub').textContent = sub;
+  $('#view-sub').textContent = '';
   $('#view').innerHTML = `<div class="sk-kpis">${'<div class="sk sk-kpi"></div>'.repeat(4)}</div>
     <div class="sk sk-band"></div>
     ${'<div class="sk-row"><div class="sk sk-circle"></div><div><div class="sk sk-line mid"></div><div class="sk sk-line short" style="margin-top:8px"></div></div><div class="sk sk-line" style="width:80px"></div></div>'.repeat(4)}`;
