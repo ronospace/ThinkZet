@@ -745,6 +745,12 @@ route('POST', /^\/api\/applications$/, async (req, res) => {
   const body = await readBody(req);
   const { opportunityId, status = 'saved' } = body;
   if (!opportunityId) return json(res, 400, { error: 'opportunityId required' });
+  if (status === 'removed') {
+    db.prepare('DELETE FROM applications WHERE user_id=? AND opportunity_id=?').run(resolveUser(req), opportunityId);
+    log(resolveUser(req), 'application.removed', 'opportunity', opportunityId);
+    E.computeCareerScore(resolveUser(req));
+    return json(res, 200, { ok: true, status: 'removed' });
+  }
   const id = crypto.randomUUID();
   const appliedAt = status === 'applied' ? new Date().toISOString() : null;
   db.prepare(`INSERT INTO applications (id,user_id,opportunity_id,status,applied_at,updated_at)
