@@ -350,7 +350,7 @@ html[data-theme="light"] .rate-gap{border-color:#DCC6EE;box-shadow:0 0 0 1px rgb
 .types button{font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2)}
 .types button.on{background:var(--nav-active);border-color:var(--accent2);color:var(--tone-ink, var(--tone-ink))}
 .brief-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
-.brief-meta{font-size:var(--text-2xs);letter-spacing:.01em;line-height:1.5}
+.brief-meta{font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;line-height:1.5}
 .brief-ack{font-size:11px;white-space:nowrap}
 @media(max-width:560px){.brief-head{flex-direction:column;align-items:flex-start;gap:3px}.brief-ack{display:none}}
 .kpi-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--sp-3)}
@@ -385,6 +385,8 @@ html[data-theme="light"] .msg.bot{background:#fff;border-color:var(--line)}
 html[data-theme="light"] .delta.flat{background:var(--panel2)}
 .kpi:hover{border-color:var(--line2);box-shadow:var(--shadow);transform:translateY(-1px)}
 .kpi-k{font-size:var(--text-2xs);letter-spacing:.01em;color:var(--muted);font-weight:600}
+.kpi .big{font-size:20px}
+.kpi{background:color-mix(in srgb,var(--panel) 88%,var(--panel2))}
 .kpi-v{font-size:var(--text-2xl);font-weight:720;letter-spacing:var(--tracking-tighter);line-height:1.15;margin-top:6px}
 .kpi-s{font-size:var(--text-2xs);color:var(--muted)}
 @media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(2,1fr)}}
@@ -1200,6 +1202,8 @@ async function mountFeedback() {
         setTimeout(() => {
           box.querySelector('.fb-row').hidden = true;
           box.classList.add('fb-collapsed');
+          const t = box.querySelector('.fb-done-txt');
+          if (t) t.textContent = `You rated this radar ${rating}/5`;
         }, 2600);
       };
       if (rating <= 3) {
@@ -2010,7 +2014,6 @@ async function renderRadar() {
       <div class="fb-row">
         <div>
           <div class="fb-q">How useful is this radar?</div>
-          <div class="fb-sub">One tap. It decides what we build next.</div>
         </div>
         <div class="fb-stars" role="group" aria-label="Rate from 1 to 5">
           ${[1,2,3,4,5].map((n) => `<button class="fb-star" data-n="${n}" aria-label="${n} of 5">${n}</button>`).join('')}
