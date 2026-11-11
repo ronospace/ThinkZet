@@ -3184,7 +3184,16 @@ async function renderEmail() {
       <div class="card" style="margin-top:14px">
         <h3>Signup Sequence</h3>
         <div class="dim" style="font-size:12px;margin-top:6px">Four emails over seven days, scheduled automatically when someone builds their twin. Each one is written from that person's own numbers.</div>
-        <div style="margin-top:10px">${(seq.queued.length ? seq.queued : seq.steps.map((x) => ({ kind: 'sequence_' + x.key, subject: x.subject, scheduled_for: 'day ' + x.day, status: 'template' }))).map((q) => `<div class="kv"><span>${esc(q.subject)}</span><span class="muted mono" style="font-size:11px">${esc(String(q.scheduled_for).slice(0, 10))}</span></div>`).join('')}</div>
+        <div style="margin-top:10px">${(() => {
+          // Scheduled instances of the same email are one row with a count, not the same title four times.
+          const list = seq.queued.length ? seq.queued : seq.steps.map((x) => ({ subject: x.subject, scheduled_for: 'day ' + x.day }));
+          const groups = [];
+          for (const q of list) {
+            const g = groups.find((x) => x.subject === q.subject);
+            if (g) g.count += 1; else groups.push({ subject: q.subject, count: 1, when: String(q.scheduled_for || '').slice(0, 10) });
+          }
+          return groups.map((g) => `<div class="kv"><span>${esc(g.subject)}${g.count > 1 ? ` <span class="chip" style="margin-left:6px">×${g.count}</span>` : ''}</span><span class="muted mono" style="font-size:11px">${esc(g.when)}</span></div>`).join('');
+        })()}</div>
       </div>
       <div class="card">
         <h3>Outbox (${outbox.messages.length})</h3>
@@ -3226,6 +3235,9 @@ async function renderLeads() {
   const d = await api('/api/leads');
   const fb = await api('/api/feedback').catch(() => ({ total: 0, average: null, distribution: [], recent: [] }));
   const st = d.stats;
+  const nextLead = [...(d.leads || [])]
+    .filter((l) => !l.converted)
+    .sort((a, b) => (b.gap_pct || 0) - (a.gap_pct || 0))[0] || null;
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="card"><h3>Leads Captured</h3><div class="big mono">${st.total}</div><div class="muted" style="font-size:11px">from the free check</div></div>
@@ -3233,6 +3245,21 @@ async function renderLeads() {
       <div class="card"><h3>Underpaid &gt;10%</h3><div class="big mono">${st.withGap}</div><div class="muted" style="font-size:11px">highest-intent segment</div></div>
       <div class="card"><h3>Shares Created</h3><div class="big mono">${st.shares}</div><div class="muted" style="font-size:11px">${st.shareViews} views</div></div>
     </div>
+    ${nextLead ? `<div class="card tone-blue" style="margin-top:14px">
+      <div class="kpi-k">Contact next</div>
+      <div class="row" style="justify-content:space-between;align-items:flex-start;gap:16px;margin-top:6px;flex-wrap:wrap">
+        <div style="min-width:240px">
+          <div style="font-size:var(--text-lg);font-weight:680;letter-spacing:var(--tracking-tight)">${esc(nextLead.role || 'Unknown role')}</div>
+          <div class="muted" style="font-size:var(--text-sm);margin-top:3px">${esc(nextLead.email)}${nextLead.country ? ' · ' + esc(nextLead.country) : ''}${nextLead.years ? ' · ' + nextLead.years + ' yrs' : ''}</div>
+        </div>
+        <div class="row" style="gap:22px;align-items:flex-end">
+          <div><div class="kpi-k">Gap</div><div class="big mono" style="color:var(--bad)">+${Math.round(nextLead.gap_pct)}%</div></div>
+          <div><div class="kpi-k">Median</div><div class="big mono">${money(nextLead.median)}</div></div>
+          <div><div class="kpi-k">State</div><div class="prio p2" style="margin-top:4px">${nextLead.converted ? 'Account' : 'Not converted'}</div></div>
+        </div>
+      </div>
+      <div class="row" style="margin-top:14px;gap:8px"><button class="btn sm" id="lead-mail">Email this lead</button><button class="btn sm ghost" onclick="go('email')">Open Email</button></div>
+    </div>` : ''}
     <div class="card" style="margin-top:14px">
       <h3>Leads</h3>
       <table class="t" style="margin-top:8px">
@@ -3263,6 +3290,10 @@ async function renderLeads() {
       <h3>What to Do With This</h3>
       <div class="dim" style="font-size:12.5px;margin-top:8px">A lead with a gap above 10% is the highest-intent person in the system: they have seen a number, they believe it, and they have not yet acted. That is the list to email first – not the whole database.</div>
     </div>`;
+  const mailBtn = document.getElementById('lead-mail');
+  if (mailBtn && nextLead) {
+    mailBtn.onclick = () => { STATE.leadToMail = nextLead.email; toast('Opening Email for ' + nextLead.email); go('email'); };
+  }
 }
 
 /* ---------------- launch ---------------- */
