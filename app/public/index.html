@@ -238,6 +238,16 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .prio{display:inline-block;margin-top:5px;font-size:var(--text-2xs);font-weight:650;letter-spacing:.01em;padding:2px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--muted);background:var(--panel2)}
 .prio.p1{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,var(--line2));background:color-mix(in srgb,var(--accent) 10%,var(--panel2))}
 .prio.p2{color:var(--ink2)}
+.kbd-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 12px;margin-top:10px}
+.kbd-cell{min-width:0}
+.kbd-h{font-size:var(--text-2xs);font-weight:700;color:var(--ink2);margin-bottom:6px}
+.kbd-row{display:flex;align-items:center;gap:5px;font-size:var(--text-xs);color:var(--muted);padding:2px 0;min-width:0}
+.kbd-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+@media(max-width:420px){.kbd-grid{grid-template-columns:1fr}}
+.prio.p4{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,var(--line2));background:color-mix(in srgb,var(--good) 12%,var(--panel2))}
+.done-tick{color:var(--good);opacity:1}
+.hello-mission{margin-top:10px;font-size:var(--text-md);line-height:var(--leading-snug);color:var(--ink2);max-width:64ch}
+.hello-mission b{color:var(--ink);font-weight:650}
 .chip{font-size:11px;padding:2px 7px;border-radius:5px;background:var(--panel3);color:var(--ink2);border:1px solid var(--line2);white-space:nowrap}
 .chip.miss{background:color-mix(in srgb,var(--bad) 13%,var(--panel));border-color:var(--bad);color:var(--bad)}
 .chip.have{background:color-mix(in srgb,var(--good) 13%,var(--panel));border-color:var(--good);color:var(--good)}
@@ -788,7 +798,12 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .fb-star{width:32px;height:32px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:var(--ink2);font-size:var(--text-sm);font-weight:650}
 .fb-star:hover{border-color:var(--accent2);color:var(--ink)}
 .fb-star.on{background:color-mix(in srgb,var(--accent2) 18%,var(--panel));border-color:var(--accent2);color:var(--accent)}
-.fb-thanks{font-size:var(--text-sm);color:var(--good);margin-top:8px}
+.fb-done{display:flex;align-items:center;gap:8px;margin-top:10px;font-size:var(--text-sm);color:var(--good);font-weight:600}
+.fb-done-tick{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--good) 22%,transparent);border:1px solid color-mix(in srgb,var(--good) 55%,transparent);font-size:11px}
+.fb-star[disabled]{opacity:.55;cursor:default}
+.fb-star.on[disabled]{opacity:1}
+.fb-why[readonly]{opacity:.7}
+#fb-send.sent{background:var(--good);border-color:var(--good);color:#fff}
 .fb-follow{margin-top:10px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
 .fb-why{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:var(--radius);color:var(--ink);padding:9px 11px;font:inherit;font-size:var(--text-sm);resize:vertical}
 .fb-why:focus{outline:none;border-color:var(--accent2)}
@@ -1140,17 +1155,35 @@ function titleCase(input) {
 async function mountFeedback() {
   const box = document.getElementById('feedback');
   if (!box) return;
-  if (localStorage.getItem('tz-feedback-radar')) return;
+  const prior = localStorage.getItem('tz-feedback-radar-rating');
+  if (localStorage.getItem('tz-feedback-radar')) {
+    // Already rated: show the rating back, keep Share, and never ask again.
+    box.hidden = false;
+    box.querySelector('.fb-row').hidden = true;
+    const d = box.querySelector('.fb-done');
+    if (d) {
+      d.hidden = false;
+      d.querySelector('.fb-done-txt').textContent = prior ? `You rated this radar ${prior}/5` : 'Thank you. Feedback received';
+    }
+    return;
+  }
   box.hidden = false;
   box.querySelectorAll('.fb-star').forEach((b) => {
     b.onclick = async () => {
       box.querySelectorAll('.fb-star').forEach((x) => x.classList.toggle('on', Number(x.dataset.n) <= Number(b.dataset.n)));
       const rating = Number(b.dataset.n);
-      const done = (comment) => {
+      const done = (rating) => {
         localStorage.setItem('tz-feedback-radar', '1');
-        box.querySelector('.fb-row').hidden = true;
+        localStorage.setItem('tz-feedback-radar-rating', String(rating));
+        // Lock the control so a second tap cannot submit twice, and confirm in colour.
+        box.querySelectorAll('.fb-star').forEach((x) => { x.disabled = true; });
+        const why = box.querySelector('#fb-why');
+        if (why) { why.readOnly = true; }
+        const send = box.querySelector('#fb-send');
+        if (send) { send.classList.add('sent'); send.textContent = 'Sent'; send.disabled = true; }
         box.querySelector('.fb-follow').hidden = true;
-        box.querySelector('.fb-thanks').hidden = false;
+        const d = box.querySelector('.fb-done');
+        if (d) { d.hidden = false; d.querySelector('.fb-done-txt').textContent = `Thank you. Feedback received`; }
       };
       if (rating <= 3) {
         // A low rating is only useful with the reason, so ask once before recording it.
@@ -1159,13 +1192,13 @@ async function mountFeedback() {
         send.onclick = async () => {
           const r = await post('/api/feedback', { rating, surface: 'radar', comment: box.querySelector('#fb-why').value });
           if (r.error) return toast(r.error);
-          done();
+          done(rating);
         };
         return;
       }
       const r = await post('/api/feedback', { rating, surface: 'radar' });
       if (r.error) return toast(r.error);
-      done();
+      done(rating);
     };
   });
   const share = box.querySelector('#fb-share');
@@ -1849,8 +1882,9 @@ async function renderRadar() {
     }
   } catch (e) {}
   let briefHtml = '';
+  let brief = null;
   try {
-    const brief = await api('/api/brief');
+    brief = await api('/api/brief');
     if (brief && !brief.needsOnboarding) {
       STATE.brief = brief;
       briefHtml = `
@@ -1859,13 +1893,14 @@ async function renderRadar() {
           <div class="muted brief-meta">Today's brief · ${brief.counts.newSinceYesterday} new · ${brief.counts.closingSoon} closing soon</div>
           <span class="muted brief-ack">auto-acknowledged</span>
         </div>
-        <div style="font-size:var(--text-lg);font-weight:600;margin-top:8px;letter-spacing:var(--tracking-tight);line-height:var(--leading-snug)">${esc(brief.headline)}</div>
+        <div class="brief-hl" style="font-size:var(--text-lg);font-weight:600;margin-top:8px;letter-spacing:var(--tracking-tight);line-height:var(--leading-snug)">${esc(brief.headline)}</div>
+        ${brief.mission ? `<div class="hello-mission">${esc(brief.mission)}</div>` : ''}
         <div style="margin-top:14px">
           ${brief.actions.map((a, i) => `<div class="action" data-opp="${a.opportunityId || ''}" style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-top:1px solid var(--line);cursor:pointer">
             <div class="mono" style="color:var(--muted);font-size:12px;width:16px;padding-top:2px;flex-shrink:0">${i + 1}</div>
             <div style="flex:1;min-width:0">
               <div style="font-size:var(--text-sm);line-height:var(--leading-normal)">${esc(a.text)}</div>
-              <div class="prio p${a.priority}">${a.priority === 1 ? 'Do now' : a.priority === 2 ? 'This week' : 'Keep warm'}</div>
+              <span class="prio p${a.done ? 4 : a.priority}">${actionLabel(a)}</span>
             </div>
             <div class="muted" style="opacity:.45;font-size:12px;padding-top:1px">›</div>
           </div>`).join('')}
@@ -1900,6 +1935,7 @@ async function renderRadar() {
           <span class="hello-dot">·</span>
           <span class="hello-count">${int(s.detected)} opportunities across ${Object.keys(s.counts).length} types</span>
         </div>
+        ${brief && brief.mission ? `<div class="hello-mission">${esc(brief.mission)}</div>` : ''}
       </div>
       <div class="hello-score" style="text-align:right">
         <div class="muted" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase">Highest Opportunity Score</div>
@@ -1972,21 +2008,39 @@ async function renderRadar() {
         <textarea id="fb-why" class="fb-why" rows="2" maxlength="600" placeholder="One line is enough"></textarea>
         <button class="btn sm" id="fb-send">Send</button>
       </div>
-      <div class="fb-thanks" hidden>Thank you. That is recorded.</div>
+      <div class="fb-done" hidden>
+        <span class="fb-done-txt">Thank you. Feedback received</span>
+        <span class="fb-done-tick" aria-hidden="true">✓</span>
+      </div>
     </div>
       <div class="facets">
         <div class="card">
-          <h3>Your Market Right Now</h3>
-          <div id="facet-body" style="margin-top:10px"><span class="muted" style="font-size:12px">Loading…</span></div>
+          <h3>Shortcuts</h3>
+          <div class="kbd-grid">
+            <div class="kbd-cell">
+              <div class="kbd-h">Navigation</div>
+              <div class="kbd-row"><kbd>J</kbd><span>Next opportunity</span></div>
+              <div class="kbd-row"><kbd>K</kbd><span>Previous</span></div>
+              <div class="kbd-row"><kbd>↵</kbd><span>Open</span></div>
+            </div>
+            <div class="kbd-cell">
+              <div class="kbd-h">Actions</div>
+              <div class="kbd-row"><kbd>S</kbd><span>Save</span></div>
+              <div class="kbd-row"><kbd>A</kbd><span>Mark applied</span></div>
+            </div>
+            <div class="kbd-cell">
+              <div class="kbd-h">Search</div>
+              <div class="kbd-row"><kbd>⌘</kbd><kbd>K</kbd><span>Search everything</span></div>
+            </div>
+            <div class="kbd-cell">
+              <div class="kbd-h">Help</div>
+              <div class="kbd-row"><kbd>?</kbd><span>All shortcuts</span></div>
+            </div>
+          </div>
         </div>
         <div class="card" style="margin-top:12px">
-          <h3>Shortcuts</h3>
-          <div style="margin-top:8px;font-size:12px;line-height:2">
-            <div><kbd>J</kbd> <kbd>K</kbd> move · <kbd>↵</kbd> open</div>
-            <div><kbd>S</kbd> save · <kbd>A</kbd> applied</div>
-            <div><kbd>⌘</kbd><kbd>K</kbd> search everything</div>
-            <div><kbd>?</kbd> all shortcuts</div>
-          </div>
+          <h3>Your Market Right Now</h3>
+          <div id="facet-body" style="margin-top:10px"><span class="muted" style="font-size:12px">Loading…</span></div>
         </div>
       </div>
     </div>
@@ -2280,6 +2334,21 @@ function paragraphs(text) {
   }
   if (buf) parts.push(buf);
   return parts.map((x) => `<p>${esc(x)}</p>`).join('');
+}
+
+// One place for action labels, so the brief, the radar and the tracker always agree.
+const ACTION_LABEL = {
+  apply: 'Apply Today',
+  closing: 'Closing Soon',
+  blocker: 'Biggest Blocker',
+  week: 'Priority This Week',
+  warm: 'Keep Warm',
+  done: 'Done',
+};
+function actionLabel(a) {
+  if (a.done) return ACTION_LABEL.done;
+  if (a.kind) return ACTION_LABEL[a.kind] || ACTION_LABEL.week;
+  return a.priority === 1 ? ACTION_LABEL.apply : a.priority === 2 ? ACTION_LABEL.week : ACTION_LABEL.warm;
 }
 
 function openDetail(id) {
@@ -3581,8 +3650,8 @@ async function renderBrief() {
         <div class="card">
           ${b.actions.map((a, i) => `<div class="action" data-opp="${a.opportunityId || ''}" data-go="${a.go || ''}" style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer">
             <div class="mono" style="color:var(--muted);font-size:12px;width:18px;padding-top:2px">${i + 1}</div>
-            <div style="flex:1"><div style="font-size:13.5px">${esc(a.text)}</div><div class="prio p${a.priority}">${a.priority === 1 ? 'Do now' : a.priority === 2 ? 'This week' : 'Keep warm'}</div></div>
-            <div style="opacity:.5">&gt;</div>
+            <div style="flex:1"><div style="font-size:13.5px">${esc(a.text)}</div><span class="prio p${a.done ? 4 : a.priority}">${actionLabel(a)}</span></div>
+            <div class="${a.done ? 'done-tick' : ''}" style="opacity:.5">${a.done ? '✓' : '>'}</div>
           </div>`).join('')}
         </div>
 

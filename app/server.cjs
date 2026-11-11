@@ -1292,25 +1292,37 @@ async function briefFor(uid) {
   // Headline: one sentence that earns the open
   let headline;
   const plural = (n, one, many) => `${n} ${n === 1 ? one : many}`;
+  // The headline is one line on a desktop. Detail that would wrap moves to `mission` below it.
+  let mission = '';
   if (newHighMatch.length) {
-    headline = `${plural(newHighMatch.length, 'new opportunity', 'new opportunities')} at 80+ match overnight. Best: ${newHighMatch[0].title} at ${newHighMatch[0].company} (${newHighMatch[0].match_score}/100).`;
+    headline = `${plural(newHighMatch.length, 'new opportunity', 'new opportunities')} at 80+ overnight.`;
+    mission = `Best of them: ${newHighMatch[0].title} at ${newHighMatch[0].company}, ${newHighMatch[0].match_score}/100. Apply today.`;
   } else if (newSinceYesterday.length) {
-    headline = `${plural(newSinceYesterday.length, 'new opportunity', 'new opportunities')} since yesterday. Highest match: ${top[0]?.match_score ?? 0}/100.`;
+    headline = `${plural(newSinceYesterday.length, 'new opportunity', 'new opportunities')} since yesterday.`;
+    mission = top[0] ? `Highest match in your set is ${top[0].title} at ${top[0].match_score}/100.` : '';
   } else {
-    headline = `Nothing new at your bar overnight. Your best live option is still ${top[0]?.title || '–'} (${top[0]?.match_score || 0}/100).`;
+    headline = 'Nothing new at your bar overnight.';
+    mission = top[0] ? `Your best live option is still ${top[0].title} at ${top[0].match_score}/100. Apply today.` : 'Nothing scored yet. Build your twin to start.';
   }
 
   const actions = [];
-  if (newHighMatch[0]) actions.push({ priority: 1, text: `Apply to ${newHighMatch[0].title} at ${newHighMatch[0].company} – ${newHighMatch[0].interview_probability}% interview probability`, opportunityId: newHighMatch[0].id });
-  if (topGap) actions.push({ priority: 2, text: `Close ${topGap[0]} – it blocks ${topGap[1]} of your opportunities`, skill: topGap[0] });
-  if (rates && rates.gapPct > 5) actions.push({ priority: 2, text: `You are ${rates.gapPct}% below market – open Rate Intelligence and take the number into your next conversation` });
-  if (scores && scores.career_momentum < 30) actions.push({ priority: 3, text: `Momentum is ${scores.career_momentum}/100 – three applications this week moves it more than any CV edit` });
-  if (closingSoon[0]) actions.push({ priority: 1, text: `${closingSoon[0].title} ${(() => { const d = Math.max(0, Math.ceil((new Date(closingSoon[0].closes_at) - Date.now()) / 86400000)); return d === 0 ? 'closes today' : d === 1 ? 'closes tomorrow' : `closes in ${d} days`; })()}` });
+  if (newHighMatch[0]) actions.push({ kind: 'apply', priority: 1, text: `Apply to ${newHighMatch[0].title} at ${newHighMatch[0].company} – ${newHighMatch[0].interview_probability}% interview probability`, opportunityId: newHighMatch[0].id });
+  if (topGap) actions.push({ kind: 'blocker', priority: 2, text: `Close ${topGap[0]} – it blocks ${topGap[1]} of your opportunities`, skill: topGap[0] });
+  if (rates && rates.gapPct > 5) actions.push({ kind: 'week', priority: 2, text: `You are ${rates.gapPct}% below market – open Rate Intelligence and take the number into your next conversation` });
+  if (scores && scores.career_momentum < 30) actions.push({ kind: 'warm', priority: 3, text: `Momentum is ${scores.career_momentum}/100 – three applications this week moves it more than any CV edit` });
+  if (closingSoon[0]) actions.push({ kind: 'closing', priority: 1, text: `${closingSoon[0].title} ${(() => { const d = Math.max(0, Math.ceil((new Date(closingSoon[0].closes_at) - Date.now()) / 86400000)); return d === 0 ? 'closes today' : d === 1 ? 'closes tomorrow' : `closes in ${d} days`; })()}` });
+
+  // An action is done when its opportunity is already applied to, so the list reacts to what the person
+  // actually did instead of looking identical before and after. Completed work sorts to the bottom.
+  const appliedIds = new Set(db.prepare("SELECT opportunity_id FROM applications WHERE user_id=? AND status IN ('applied','interviewing','offer')").all(uid).map((r) => r.opportunity_id));
+  for (const a of actions) if (a.opportunityId && appliedIds.has(a.opportunityId)) a.done = true;
+  actions.sort((x, y) => Number(!!x.done) - Number(!!y.done) || x.priority - y.priority);
 
   return {
     needsOnboarding: false,
     generatedAt: new Date().toISOString(),
     headline,
+    mission,
     counts: {
       newSinceYesterday: newSinceYesterday.length,
       newHighMatch: newHighMatch.length,
