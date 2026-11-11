@@ -1380,7 +1380,7 @@ async function briefFor(uid) {
     searchHits,
     actions: actions.sort((a, b) => a.priority - b.priority).slice(0, 4),
     scoreDelta,
-    rates: rates ? { p50: rates.p50, gapPct: rates.gapPct, period: rates.period } : null,
+    rates: rates && rates.p50 > 0 && rates.gapPct != null ? { p50: rates.p50, gapPct: rates.gapPct, period: rates.period } : null,
     topGap: topGap ? { skill: topGap[0], blocking: topGap[1] } : null,
     unread: newSinceYesterday.length,
   };

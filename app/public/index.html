@@ -281,6 +281,9 @@ html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accen
 @media(max-width:320px){.kbd-grid{grid-template-columns:1fr}}
 .kpi-nohist{position:relative}
 .kpi-nohist span{position:absolute;left:0;right:0;top:4px;text-align:center;font-size:var(--text-2xs);color:var(--muted)}
+.signal-lead{margin:10px 0 6px;padding:12px 14px;border-radius:var(--radius);background:color-mix(in srgb,var(--accent) 7%,var(--panel));border:1px solid color-mix(in srgb,var(--accent) 28%,var(--line));cursor:pointer}
+.signal-lead:hover{border-color:var(--accent2)}
+.signal-v{font-size:var(--text-lg);font-weight:680;letter-spacing:var(--tracking-tight);margin:3px 0 2px;color:var(--ink)}
 .empty-line{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border:1px dashed var(--line2);border-radius:var(--radius);font-size:var(--text-sm)}
 .prio.p4{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,var(--line2));background:color-mix(in srgb,var(--good) 12%,var(--panel2))}
 .done-tick{color:var(--good);opacity:1}
@@ -3777,7 +3780,6 @@ function showHelp() {
 async function renderBrief() {
   const b = await api('/api/brief');
   if (!b || b.needsOnboarding) return renderOnboarding();
-  const dates = [0, 1, 2, 3].map((d) => new Date(Date.now() - d * 86400000));
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:1fr 300px">
       <div>
@@ -3811,15 +3813,21 @@ async function renderBrief() {
       <div>
         <div class="card">
           <h3>Signal of the Day</h3>
-          ${b.rates ? `<div class="kv" style="margin-top:10px"><span>Your market median</span><span class="mono">${money(b.rates.p50)}</span></div>
+          ${b.topGap ? `<div class="signal-lead" data-go="gaps">
+            <div class="kpi-k">Biggest blocker</div>
+            <div class="signal-v">${esc(b.topGap.skill)}</div>
+            <div class="muted" style="font-size:var(--text-xs)">Blocks ${b.topGap.blocking} of your opportunities</div>
+          </div>` : ''}
+          ${!b.rates ? `<div class="kv"><span>Market position</span><span class="muted" style="cursor:pointer" onclick="go('twin')">Add your pay to see it</span></div>` : ''}
+          ${b.rates ? `<div class="kv"><span>Your market median</span><span class="mono">${money(b.rates.p50)}</span></div>
           <div class="kv"><span>Your position</span><span class="mono" style="color:${b.rates.gapPct > 5 ? 'var(--bad)' : 'var(--good)'}">${b.rates.gapPct > 0 ? b.rates.gapPct + '% below' : Math.abs(b.rates.gapPct) + '% above'}</span></div>` : ''}
-          ${b.topGap ? `<div class="kv"><span>Biggest blocker</span><span class="mono">${esc(b.topGap.skill)} <span class="muted">(${b.topGap.blocking})</span></span></div>` : ''}
           ${b.scoreDelta != null ? `<div class="kv"><span>Career Score change</span><span class="mono">${b.scoreDelta > 0 ? '+' : ''}${b.scoreDelta}</span></div>` : ''}
         </div>
         <div class="card" style="margin-top:14px">
           <h3>Delivery</h3>
-          <div class="dim" style="font-size:12.5px;margin-top:8px">This brief is generated fresh from your twin every time you open it. On Pro it also arrives by email each morning at 07:30 – that is what turns a tool into a habit.</div>
-          <div style="margin-top:12px">${[0, 1, 2, 3].map((d) => `<div class="kv"><span>${dates[d].toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short' })}</span><span class="muted">${d === 0 ? 'today · live' : 'delivered'}</span></div>`).join('')}</div>
+          <div class="kv" style="margin-top:8px"><span>Today's brief</span><span class="mono" style="color:var(--good)">Live</span></div>
+          <div class="kv"><span>By email</span><span class="mono">${STATE.plan && STATE.plan.plan === 'pro' ? 'Daily at 07:30' : 'On Pro'}</span></div>
+          <div class="kv"><span>Generated</span><span class="mono">${new Date(b.generatedAt).toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}</span></div>
         </div>
       </div>
     </div>`;
@@ -3830,6 +3838,8 @@ async function renderBrief() {
       go(a.dataset.go || 'rates');
     };
   });
+  const lead = document.querySelector('.signal-lead');
+  if (lead) lead.onclick = () => go('gaps');
   bindOppActions();
 }
 
