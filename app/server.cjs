@@ -2448,7 +2448,7 @@ const server = http.createServer(async (req, res) => {
     return res.end(xml);
   }
 
-  if (!pathname.startsWith('/api/') && !pathname.startsWith('/go/')) return serveStatic(req, res, pathname, publicOrigin(req));
+  if (!pathname.startsWith('/api/') && !pathname.startsWith('/go/') && pathname !== '/diagnostic') return serveStatic(req, res, pathname, publicOrigin(req));
 
   // Stripe webhook needs the raw body for signature verification, so it bypasses the
   // normal JSON route pipeline entirely.
