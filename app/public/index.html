@@ -292,8 +292,8 @@ html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accen
 .hello-mission{margin-top:10px;font-size:var(--text-md);line-height:var(--leading-snug);color:var(--ink2);max-width:64ch}
 .hello-mission b{color:var(--ink);font-weight:650}
 /* The brief line is fitted by type size so the whole sentence holds one desktop line. */
-.brief-hl{font-size:clamp(14px,1.16vw,17px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-@media(max-width:900px){.brief-hl{font-size:var(--text-md);white-space:normal;overflow:visible}}
+.brief-hl{font-size:var(--text-lg);font-weight:650;margin-top:8px;letter-spacing:-.015em;line-height:1.35;white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
+.grid>*{min-width:0}
 .chip{font-size:11px;padding:2px 7px;border-radius:5px;background:var(--panel3);color:var(--ink2);border:1px solid var(--line2);white-space:nowrap}
 .chip.miss{background:color-mix(in srgb,var(--bad) 13%,var(--panel));border-color:var(--bad);color:var(--bad)}
 .chip.have{background:color-mix(in srgb,var(--good) 13%,var(--panel));border-color:var(--good);color:var(--good)}
@@ -1971,7 +1971,7 @@ async function renderRadar() {
           <div class="muted brief-meta">Today's brief · ${brief.counts.newSinceYesterday} new · ${brief.counts.closingSoon} closing soon</div>
           <span class="muted brief-ack">Auto-Acknowledged</span>
         </div>
-        <div class="brief-hl" style="font-weight:600;margin-top:8px;letter-spacing:var(--tracking-tight);line-height:var(--leading-snug)">${esc(brief.headline)}</div>
+        <div class="brief-hl">${esc(brief.headline)}</div>
         <div style="margin-top:14px">
           ${brief.actions.map((a, i) => `<div class="action arow" data-opp="${a.opportunityId || ''}" data-go="${a.go || ''}" style="border-top:1px solid var(--line);border-bottom:none">
             <div class="mono arow-n">${i + 1}</div>
@@ -2221,6 +2221,7 @@ async function renderRadar() {
     });
     mountAds('#ad-radar');
     mountFeedback();
+    fitHeadlines();
     $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="card tone-violet" style="text-align:center;border-color:var(--ai-border)"><div class="dim" style="font-size:13px">${rows.length - capped.length} more scored opportunities are hidden on the Free plan.</div><div style="margin-top:10px"><button class="btn sm" onclick="go('plan')">See what Pro unlocks</button></div></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
     $('#f-count').textContent = `${rows.length} of ${feed.opportunities.length} shown`;
     bindOppActions();
@@ -2440,6 +2441,35 @@ function actionLabel(a) {
   if (a.kind) return ACTION_LABEL[a.kind] || ACTION_LABEL.week;
   return a.priority === 1 ? ACTION_LABEL.apply : a.priority === 2 ? ACTION_LABEL.week : ACTION_LABEL.warm;
 }
+
+// Fits a headline to the width it actually has. One line at the largest size that fits, never below
+// a readable floor; if one line would need a smaller size than the floor, it wraps at full size.
+function fitLine(el, { max = 17, min = 14 } = {}) {
+  if (!el || !el.isConnected) return;
+  el.style.whiteSpace = 'nowrap';
+  el.style.fontSize = max + 'px';
+  const avail = el.clientWidth;
+  if (el.scrollWidth <= avail) { el.style.whiteSpace = ''; el.dataset.fit = 'one-line'; return; }
+  let lo = min, hi = max;
+  while (hi - lo > 0.25) {
+    const mid = (lo + hi) / 2;
+    el.style.fontSize = mid + 'px';
+    if (el.scrollWidth <= avail) lo = mid; else hi = mid;
+  }
+  el.style.fontSize = lo + 'px';
+  if (el.scrollWidth <= avail) { el.style.whiteSpace = ''; el.dataset.fit = 'shrunk'; return; }
+  el.style.fontSize = max + 'px';
+  el.style.whiteSpace = '';
+  el.dataset.fit = 'wrapped';
+}
+function fitHeadlines() { document.querySelectorAll('.brief-hl').forEach((el) => fitLine(el)); }
+if (typeof ResizeObserver !== 'undefined') {
+  const ro = new ResizeObserver(() => fitHeadlines());
+  // Observe the view container so a rail collapse or a window resize refits immediately.
+  document.addEventListener('DOMContentLoaded', () => { const v = document.getElementById('view'); if (v) ro.observe(v); });
+  const v0 = document.getElementById('view'); if (v0) ro.observe(v0);
+}
+window.addEventListener('resize', fitHeadlines);
 
 function openDetail(id) {
   const o = (STATE.feed?.opportunities || []).find((x) => x.id === id);
@@ -3794,7 +3824,7 @@ async function renderBrief() {
       <div>
         <div class="card tone-violet" style="border-color:var(--line);">
           <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Brief · ${new Date(b.generatedAt).toLocaleString('en-GB', { weekday: 'long', hour: '2-digit', minute: '2-digit' })}</div>
-          <div class="brief-hl" style="font-weight:650;margin-top:8px;letter-spacing:-.02em;line-height:1.35">${esc(b.headline)}</div>
+          <div class="brief-hl">${esc(b.headline)}</div>
           <div class="row" style="margin-top:16px;gap:20px;flex-wrap:wrap">
             <div><div class="big sm mono" style="color:${b.counts.closingSoon ? 'var(--warn)' : 'var(--ink)'}">${b.counts.closingSoon}</div><div class="muted" style="font-size:11px">closing within 72h</div></div>
             <div><div class="big sm mono">${b.counts.newSinceYesterday}</div><div class="muted" style="font-size:11px">new since yesterday</div></div>
@@ -3850,6 +3880,7 @@ async function renderBrief() {
   const lead = document.querySelector('.signal-lead');
   if (lead) lead.onclick = () => go('gaps');
   bindOppActions();
+  fitHeadlines();
 }
 
 /* ---------------- command palette ---------------- */
