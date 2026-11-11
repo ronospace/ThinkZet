@@ -1,69 +1,70 @@
 # ThinkZet – Mission Plan
 
 One page. What is done, what is left, and the order to do it in.
-Detail: `TASKS.md`. Rules: `ENGINEERING.md`. Payments: `PAYMENTS.md`.
+Detail: `TASKS.md`. Rules: `ENGINEERING.md`. Payments: `PAYMENTS.md`. Snapshot: `STATUS-2026-11-11.md`.
 
-Last updated: 10 November 2026 · `master` at `d1c3495` · tagged `restore-20261110-41` · tree clean.
+Last updated: 11 November 2026 · `master` at `dd644a8` · tagged `restore-20261111-29` · tree clean, nothing unpushed.
 
 ## Where we are
 
-Live on thinkzet.com. A real payment has been taken and Pro granted by webhook. Sign-in works by email code, Google and Apple. Salary numbers are labelled sample data. The plan page is settled. SEO plumbing is in place but Google has not indexed the site yet.
+Live on thinkzet.com. Real money has been taken and Pro granted by webhook. Sign-in works by email code, Google and Apple.
+Benchmarks are built only from live postings that state pay. Ads are wired but stay invisible until AdSense fills a unit.
+Sitemap submitted, homepage indexed. First paying cohort not started: GRO-01 is paused at the founder's instruction.
 
-## 1. Done
+## The one question every task must answer
+
+> Will this get us closer to the first 100 paying users?
+
+If the answer is no, it is not next.
+
+## 1. Done and verified
 
 | Area | State |
 |---|---|
-| Hosting | thinkzet.com, www redirect, volume, entrypoint, service renamed, Agent destroyed, spare project deleted |
-| Payments | Stripe live, real €2 charge succeeded and refunded pending, webhook grants Pro, checkout needs a session, cancel reaches Stripe, test prices archived, production back on €19.99 |
-| Sign-in | Email code, Google, Apple, provider names, display-name override, OAuth state in the database, diagnostic endpoint |
-| Email | Resend verified, support@ sender, production code delivered |
-| Data | CV pay parsing with currency, sample-data labels, measured data-sources endpoint |
-| Funnel | Seven allow-listed events, money recorded server-side |
-| SEO | Sitemap 191 https URLs, robots.txt advertising it, canonical and Organization JSON-LD server-side, Search Console verified |
-| Plan page | Three equal cards, green, violet and gold, italic subtitles, one CTA baseline, active plan stated not re-offered |
-| Footer | Brand row, three equal cards, thin Market Snapshot strip |
-| Repository | Rules, register, payments runbook, this plan, 41 tags |
+| Hosting | thinkzet.com, www redirect, persistent volume, entrypoint drops privileges, service renamed |
+| Persistence | DEP-01 closed: display name and tracker state survived a redeploy |
+| Payments | Stripe live, real charge taken, webhook grants and revokes, checkout needs a session, cancel reaches Stripe |
+| Sign-in | Email code, Google, Apple, provider names, display-name override, OAuth state stored, diagnostic endpoint |
+| Email | Resend verified, dark-only colour scheme, brief and alert templates |
+| Benchmarks | Live-only corpus, market-aware pooling (country, then currency, then global, remote separate), depth gate |
+| Data quality | De-duplicated salary corpus, single sample size and confidence, thin samples report a range |
+| Product | Radar, brief, rate check, tracker, negotiation, trajectory, gaps, cover letters, interview prep, copilot |
+| Feedback | Rating with stored distribution, one per surface, collapses to one line, read on the Leads screen |
+| SEO | 206 URLs, robots, canonical, JSON-LD, Search Console verified |
+| Ads | Free plans only, consent first, slot collapsed until a creative renders |
+| Security | Security headers, rate limiting, 404 for unknown paths, GDPR export and delete |
 
-## 2. Left to do, in order
+## 2. Open – founder
 
-| # | Item | Owner | Why it matters |
-|---|---|---|---|
-| 1 | PAY-01 refund the €2 charge `ch_3UaEyc41m9e00I4D15gSQ2kV` | You | Closes the payment proof |
-| 2 | PAY-05 cancel the live subscription, confirm `cancel_at_period_end` | You, then Us | Proves the cancel path |
-| 3 | SEO-04 get indexed: submit the sitemap, request indexing, publish 2–3 pages that earn links | You, then Us | The site is invisible in Google today |
-| 4 | PAY-06 renewal invoices carry no user id | Us | A renewal would not be attributed |
-| 5 | SEC-01 rotate Stripe, webhook, Resend, Google and Apple keys | You | All appeared in chat |
-| 6 | DEP-01 sign up, redeploy, confirm the account survives | You | Proves the volume |
-| 7 | DATA-08 rebuild the salary corpus on real EUR data (4–6 days) | Us, on your go | Makes the number real |
-| 8 | Build the Pro+ comparison features the card promises | Us | Otherwise the tier sells nothing |
-| 9 | UI-01 radar columns, UI-15 empty states, UI-16 upgrade comparison | Us | Polish with measurable value |
-| 10 | DATA-02 offsite backup | Us, after DEP-01 | Safety |
-| 11 | GRO-01 first 20 users, then GRO-02 weekly funnel report | You, then Us | Validation |
+| ID | Task | Why it blocks |
+|---|---|---|
+| SEC-01 | Apple `.p8` rotation | Last exposed key. Runbook: `SEC-01-APPLE-ROTATION.md` |
+| GRO-01 | First 20 users | Paused by you; the runbook is ready in `GRO-01-FIRST-20.md` |
+| DATA-13 | Adzuna app id and key | One credential opens DE, GB, CH and US salary pools |
+| MON-01 | AdSense site review | Cannot be requested until Google asks |
 
-## 3. Why the site is not in Google yet
+## 3. Open – engineering
 
-Everything a crawler needs is now served: sitemap 200, robots advertising it, canonical on every page, JSON-LD identity, no noindex, Googlebot and Bingbot both get 200. What is missing is not plumbing:
+| ID | Task | Note |
+|---|---|---|
+| DATA-10, DATA-13 | Pool depth | Live corpus is 262 records; every pool needs 30 to diverge |
+| DATA-06 | EUR source expansion | Needs the credentials above, not code |
+| FB-03 | Testimonials | Needs a paying cohort first |
+| Pro+ | Comparison screen | `/api/markets` is built; the screen comes with the rest of Pro+ |
+| COPY-14 | Demo label | Cosmetic, not on the launch path |
 
-- A new domain takes days to weeks to be indexed, even when submitted.
-- The sitemap was only fixed today; before that every URL pointed at `127.0.0.1`.
-- Nothing links to thinkzet.com, and Google needs a reason to crawl a site nobody references.
+## 4. Order of work
 
-## 4. Rejected, do not rebuild
+1. Rotate the Apple key, then confirm both providers still report true.
+2. Get the Adzuna credential and wire DE, GB, CH and US behind the existing gate.
+3. Run the first cohort from the runbook and record the four facts per person.
+4. Only then: Pro+ comparison screen, testimonials, and the demo label.
 
-Centred hero and story strip · full-screen sign-in without the sidebar · logo sheen, echo and halo · the salary-band opener line · the compressed 660px plan cards · status badges on plan cards.
+## 5. What we deliberately do not build
 
-## 5. Verification
-
-```sh
-node scripts/check.cjs           # 59 API assertions
-node scripts/browser-check.cjs   # 10 route and width combinations
-node scripts/billing-unit.cjs    # 9 billing checks, stubbed Stripe
-node scripts/payment-check.cjs   # 20 payment safety checks
-```
-
-## 6. The four that matter
-
-1. Trust in the salary number: sample label live, rebuild is DATA-08.
-2. Payment proof: charge succeeded, refund outstanding.
-3. Both sign-ins: live and confirmed.
-4. First 20 users: GRO-01, after the refund.
+| Not building | Why |
+|---|---|
+| In-app application submission | Needs per-employer integrations and would let us claim applications that were never sent |
+| Employer-side data product | It would compromise the neutrality the whole product rests on |
+| Multi-column radar | Rejected in review; one ranked column reads better at every width |
+| EUR-only benchmarking | Contradicts a worldwide product; pooling is market-aware instead |

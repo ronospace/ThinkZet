@@ -232,4 +232,4 @@ where it earns its keep and gives the brand a calm, repeatable line everywhere e
 **§6 feature count: nine, not five.** The four the brief omitted (Negotiation, Skill Gaps,
 Career Tracker, Career Copilot) are the highest-value screens and were kept.
 
-Implementation completed across 8 files. See `STATUS.md` for verification evidence.
+Implementation completed across 8 files. See `STATUS-2026-11-11.md` for verification evidence.

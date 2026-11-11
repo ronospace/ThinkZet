@@ -66,7 +66,7 @@ The **Launch** screen in the app lists 1–2 live with a green/red status.
 | Question | File |
 |---|---|
 | What are we optimising for? | `docs/planning/MISSIONS.md` |
-| What is built vs left? | `docs/planning/STATUS.md` |
+| What is built vs left? | `docs/planning/STATUS-2026-11-11.md` |
 | Why this brand structure? | `docs/planning/BRAND.md` |
 | What does the rebrand audit say? | `docs/planning/REBRAND-AUDIT.md` |
 | What do I do on launch day? | `docs/planning/LAUNCH-CHECKLIST.md` |

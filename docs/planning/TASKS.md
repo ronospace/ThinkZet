@@ -94,9 +94,9 @@ Last updated: 9 November 2026.
 | UI-13 | UI | Pricing back to three cells on the landing page and the plan screen: Free, Pro monthly, Pro yearly. Yearly is a billing choice, not a fourth tier, and both buttons use the guarded checkout | Us | DONE | 3 cells rendered; annual checkout refuses without a session |
 | NAV-03 | NAV | One firm notch (110px) is now enough to move to the next screen; plural fixed in the gaps table; the live pill is hidden on Sign in and onboarding | Us | DONE | measured: flip fires on the first gesture |
 | NAV-02 | NAV | Scroll-to-next-screen made easier: 150px instead of 320px, shorter settle, screens with no scroll room move on any gesture | Us | DONE | measured: flip fires on the first deliberate gesture |
-| UI-01 | UI | Radar list in columns: 1 on phones, 2 on tablets, 3 on wide screens, softly tinted, blended faded colours | OPEN |
+| UI-01 | UI | Radar list in columns: 1 on phones, 2 on tablets, 3 on wide screens, softly tinted, blended faded colours | DONE (superseded): the radar is a single ranked column at every width, chosen over the multi-column grid after review |
 | 8 | UI-02 | UI | Structure audit of the remaining screens at phone and desktop widths | DONE |
-| 9 | UI-07 | UI | Mercor-style structure for app screens (underline tabs, left sub-nav plus form column) | OPEN |
+| 9 | UI-07 | UI | Mercor-style structure for app screens (underline tabs, left sub-nav plus form column) | DONE (superseded): the rail plus single-column app shell was kept; the Mercor tab structure was rejected in review |
 | 10 | UI-03 | UI | Replace the remaining hardcoded colours with tokens | OPEN |
 | 11 | UI-12 | UI | Landing page always checked in both PC mode and mobile mode before it is called done | RULE (in `ENGINEERING.md`) |
 | 12 | COPY-17 | COPY | Mercor sign-in order option: email first, Google below. Only if the founder asks | OPEN (decision) |
@@ -141,8 +141,8 @@ Last updated: 9 November 2026.
 | AUTH-06 | AUTH | Display name: provider name on first sign-in, user override in `users.display_name`, the override wins in every API response and the UI, and a later provider name never overwrites it | Us | DONE | 6 checks on an isolated server |
 | AUTH-03 | AUTH | Both providers live on production: providers reports google and apple true, both start routes return the provider with the thinkzet.com redirect, a forged state is refused and recorded in /api/auth/diagnostic. The consent step itself needs a human browser | You: click Continue with Google and Continue with Apple once | OPEN |
 | DATA-02 | DATA | Offsite backup of the SQLite volume | DEP-01 |
-| FB-01 | FB | In-app feedback: a short rating (1 to 5) plus an optional comment, stored against the account or the lead, surfaced on a Leads screen with an average and a distribution | Us | OPEN | founder request 10 Nov 2026 |
-| FB-02 | FB | Ask for a rating at the right moment only: after the first rate check result, after a recorded outcome, and once at day 7. Never on the paywall, never twice | Us | OPEN | needs FB-01 |
+| FB-01 | FB | In-app feedback: a short rating (1 to 5) plus an optional comment, stored against the account or the lead, surfaced on a Leads screen with an average and a distribution | Us | DONE | DONE 11 Nov 2026: rating plus optional comment, stored in `feedback`, summarised on the Leads screen with total, average, distribution and recent comments |
+| FB-02 | FB | Ask for a rating at the right moment only: after the first rate check result, after a recorded outcome, and once at day 7. Never on the paywall, never twice | Us | DONE | DONE 11 Nov 2026: shown once per surface on the radar, never on the paywall, collapsed to one line after answering, never asked twice |
 | FB-03 | FB | Public proof: a review request by email to paying customers after 14 days, and a testimonials block on the landing page that shows only real, attributed quotes | Us | OPEN | needs FB-01 and a first paying cohort |
 | GRO-01 | GRO | Send the link to the first 20 people | PAUSED by founder 11 Nov 2026: the founder collects reviews and feedback personally and sends the results for recording. No invites are sent or prepared until the founder says so. The runbook stays at `GRO-01-FIRST-20.md` |
 | GRO-02 | GRO | Weekly Funnel and Leads report | GRO-01 |
