@@ -212,6 +212,12 @@ html[data-theme="light"] .card.tone-violet .muted,html[data-theme="light"] .card
 html[data-theme="light"] .card.tone-violet [style*="var(--tone-kicker)"]{color:#5b45b8 !important}
 html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed8 !important}
 .card h3{margin:0 0 4px;font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--ink2)}
+.card h3{font-size:var(--text-md);font-weight:680;color:var(--ink);letter-spacing:var(--tracking-tight);margin:0 0 6px}
+.card .sub{font-size:var(--text-sm);color:var(--muted);margin:0 0 12px;line-height:1.55}
+.long{font-size:var(--text-sm);line-height:1.72;color:var(--ink2)}
+.long p{margin:0 0 12px}
+.long p:last-child{margin-bottom:0}
+.ref-mini{display:flex;align-items:center;gap:8px;font-size:var(--text-xs);color:var(--muted);padding:2px 0}
 .grid{display:grid;gap:14px}
 .row{display:flex;gap:12px;align-items:center}
 .mono{font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
@@ -2081,7 +2087,11 @@ async function renderRadar() {
   apply();
 
   document.querySelectorAll('.action').forEach((a) => {
-    a.onclick = () => { if (a.dataset.opp) openDetail(a.dataset.opp); else go('rates'); };
+    // Each row goes where it says: an opportunity opens its detail, anything else goes to its named screen.
+    a.onclick = () => {
+      if (a.dataset.opp) return openDetail(a.dataset.opp);
+      go(a.dataset.go || 'rates');
+    };
   });
   const up = $('#upgrade');
   if (up) up.onclick = () => go('plan');
@@ -2248,6 +2258,22 @@ function bindOppActions() {
   });
 }
 
+// Scraped descriptions arrive as one wall of text. Split on sentence runs that read like headings and on
+// double newlines, so a phone shows paragraphs rather than a block.
+function paragraphs(text) {
+  const raw = String(text || '').replace(/\r/g, '').trim();
+  if (!raw) return '<p class="dim">No description was published with this listing.</p>';
+  const chunks = raw.split(/\n{2,}|(?<=[.!?])\s+(?=[A-Z][A-Za-z ,'&-]{3,40}:)/).map((x) => x.trim()).filter(Boolean);
+  const parts = [];
+  let buf = '';
+  for (const c of chunks) {
+    buf += (buf ? ' ' : '') + c;
+    if (buf.length > 320) { parts.push(buf); buf = ''; }
+  }
+  if (buf) parts.push(buf);
+  return parts.map((x) => `<p>${esc(x)}</p>`).join('');
+}
+
 function openDetail(id) {
   const o = (STATE.feed?.opportunities || []).find((x) => x.id === id);
   if (!o) return;
@@ -2280,6 +2306,7 @@ function openDetail(id) {
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
       <div class="card">
         <h3>Why This Score</h3>
+        <p class="sub">What earned the match, factor by factor.</p>
         ${(o.reasons || []).map((r) => `
           <div style="margin:10px 0">
             <div class="row" style="justify-content:space-between;font-size:12.5px"><span>${esc(r.factor)}</span><span class="muted mono">weight ${Math.round(r.weight * 100)}%</span></div>
@@ -2314,6 +2341,7 @@ function openDetail(id) {
     </div>
     <div class="card" style="margin-top:14px">
       <h3>Ask About This Opportunity</h3>
+      <p class="sub">Grounded in this posting and your twin, not a general answer.</p>
       <div class="suggest" style="margin-top:10px">
         ${['Should I apply?', 'How do I negotiate the salary?', "What's blocking me?"].map((q) => `<button class="d-ask" data-q="${esc(q)}">${esc(q)}</button>`).join('')}
       </div>
@@ -2321,7 +2349,7 @@ function openDetail(id) {
     </div>
     <div class="card" style="margin-top:14px">
       <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
-        <h3 style="margin:0">Cover letter</h3>
+        <h3 style="margin:0">Cover Letter</h3>
         <div class="row" style="gap:6px">
           ${['direct', 'warm', 'formal'].map((t) => `<button class="chip cl-tone" data-t="${t}" style="cursor:pointer">${t}</button>`).join('')}
           <button class="chip cl-copy" style="cursor:pointer">copy</button>
@@ -2331,13 +2359,14 @@ function openDetail(id) {
     </div>
     <div class="card" style="margin-top:14px">
       <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
-        <h3 style="margin:0">Interview prep</h3>
+        <h3 style="margin:0">Interview Prep</h3>
         <button class="btn sm ghost" id="ip-load">Build my prep plan</button>
       </div>
-      <div id="ip-body" class="dim" style="font-size:13px;margin-top:10px">Questions derived from this posting's role family and your specific gaps – with STAR scaffolds built from your own experience.</div>
+      <p class="sub" style="margin:6px 0 0">Questions from this role family and your gaps, with STAR scaffolds from your own experience. Best used after you apply.</p>
+      <div id="ip-body" class="dim" style="font-size:13px;margin-top:10px"></div>
     </div>
     <div class="card" style="margin-top:14px" id="ref-card"></div>
-    <div class="card" style="margin-top:14px"><h3>Listing</h3><div class="dim" style="margin-top:8px">${esc(o.description)}</div>
+    <div class="card" style="margin-top:14px"><h3>Listing</h3><p class="sub">As published by the employer.</p><div class="long" style="margin-top:8px">${paragraphs(o.description)}</div>
       <div style="margin-top:12px"><a class="btn sm ghost" href="${esc(o.apply_url)}" target="_blank" rel="noopener">Open original listing</a></div>
     </div>
   `;
@@ -2400,12 +2429,14 @@ function openDetail(id) {
     try {
       const r = await post('/api/referrals/link', { sourceKey: o.source, opportunityId: o.id, surface: 'detail' });
       if (r.referral) {
-        $('#ref-card').innerHTML = `<h3>Route through ${esc(r.referral.program)}</h3>
+        $('#ref-card').className = 'card';
+        $('#ref-card').innerHTML = `<h3>Route Through ${esc(r.referral.program)}</h3>
           <div class="dim" style="font-size:12.5px;margin-top:6px">This listing comes from a partner with a referral programme (${esc(r.referral.payoutModel)}${r.referral.payoutAmount ? ', €' + r.referral.payoutAmount : ''}).</div>
           <div style="margin-top:10px"><a class="btn sm" href="${r.referral.url}" target="_blank" rel="noopener">Open with tracking</a></div>
           <div class="muted" style="font-size:11px;margin-top:10px">${esc(r.referral.disclosure)}</div>`;
       } else {
-        $('#ref-card').innerHTML = `<h3>No Referral Programme</h3><div class="dim" style="font-size:12.5px;margin-top:6px">This source has no affiliate route. It is shown because it is a good match, and nothing else.</div>`;
+        $('#ref-card').className = 'ref-mini';
+        $('#ref-card').innerHTML = '<span>No referral route for this source. It is here on match alone.</span>';
       }
     } catch (e) { $('#ref-card').remove(); }
   })();
@@ -3533,7 +3564,7 @@ async function renderBrief() {
 
         <h2 class="section">Do These, in This Order</h2>
         <div class="card">
-          ${b.actions.map((a, i) => `<div class="action" data-opp="${a.opportunityId || ''}" style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer">
+          ${b.actions.map((a, i) => `<div class="action" data-opp="${a.opportunityId || ''}" data-go="${a.go || ''}" style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer">
             <div class="mono" style="color:var(--muted);font-size:12px;width:18px;padding-top:2px">${i + 1}</div>
             <div style="flex:1"><div style="font-size:13.5px">${esc(a.text)}</div><div class="muted" style="font-size:11px;margin-top:2px">${a.priority === 1 ? 'do now' : a.priority === 2 ? 'this week' : 'keep warm'}</div></div>
             <div style="opacity:.5">&gt;</div>
@@ -3541,7 +3572,7 @@ async function renderBrief() {
         </div>
 
         <h2 class="section">New at Your Bar</h2>
-        <div>${(b.newHighMatch || []).map(oppCard).join('') || '<div class="card muted">Nothing new at 80+ since your last visit.</div>'}</div>
+        <div>${(b.newHighMatch || []).map(oppCard).join('') || `<div class="card"><div class="muted">Nothing new at 80+ since your last visit.</div><div class="row" style="margin-top:10px;gap:8px"><button class="btn sm" onclick="go('radar')">Open the radar</button><button class="btn sm ghost" onclick="go('saved')">See saved searches</button></div></div>`}</div>
 
         ${b.searchHits && b.searchHits.length ? `<h2 class="section">Your Saved Searches Found</h2>
         ${b.searchHits.map((s) => `<div class="card" style="margin-bottom:10px"><h3>${esc(s.name)}</h3><div class="dim" style="font-size:12px;margin-top:6px">${s.hits.map((h) => esc(h.title) + ' · ' + esc(h.company) + ' <span class="muted">(' + h.match_score + ')</span>').join('<br/>')}</div></div>`).join('')}` : ''}
@@ -3562,7 +3593,11 @@ async function renderBrief() {
       </div>
     </div>`;
   document.querySelectorAll('.action').forEach((a) => {
-    a.onclick = () => { if (a.dataset.opp) openDetail(a.dataset.opp); else go('rates'); };
+    // Each row goes where it says: an opportunity opens its detail, anything else goes to its named screen.
+    a.onclick = () => {
+      if (a.dataset.opp) return openDetail(a.dataset.opp);
+      go(a.dataset.go || 'rates');
+    };
   });
   bindOppActions();
 }
