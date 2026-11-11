@@ -1195,16 +1195,20 @@ async function mountFeedback() {
         if (why) { why.readOnly = true; }
         const send = box.querySelector('#fb-send');
         if (send) { send.classList.add('sent'); send.textContent = 'Sent'; send.disabled = true; }
-        box.querySelector('.fb-follow').hidden = true;
-        const d = box.querySelector('.fb-done');
-        if (d) { d.hidden = false; d.querySelector('.fb-done-txt').textContent = 'Thank you. Feedback received'; }
-        // Collapse to a compact confirmation after a beat, keeping Share reachable.
+        // The form has done its job. Replace it with one line: the rating, and Share if they want it.
         setTimeout(() => {
-          box.querySelector('.fb-row').hidden = true;
-          box.classList.add('fb-collapsed');
+          const row = box.querySelector('.fb-row');
+          if (row) {
+            row.querySelectorAll('.fb-star, .fb-stars, #fb-send, .fb-q').forEach((x) => x.remove());
+          }
+          const follow = box.querySelector('.fb-follow');
+          if (follow) follow.remove();
+          const done = box.querySelector('.fb-done');
+          if (done) done.hidden = false;
           const t = box.querySelector('.fb-done-txt');
           if (t) t.textContent = `You rated this radar ${rating}/5`;
-        }, 2600);
+          box.classList.add('fb-collapsed');
+        }, 700);
       };
       if (rating <= 3) {
         // A low rating is only useful with the reason, so ask once before recording it.
