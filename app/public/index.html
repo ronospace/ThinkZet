@@ -3113,8 +3113,7 @@ async function renderSearches() {
         <div class="muted" style="font-size:var(--text-xs);margin-top:10px">created ${new Date(s.created_at).toLocaleDateString('en-GB')}</div>
       </div>`).join('') : '<div class="card muted">No saved searches yet.</div>'}
     </div>
-    <h2 class="section">Why This Matters</h2>
-    <div class="card dim" style="font-size:var(--text-sm)">Saved searches are the foundation of the daily brief: tomorrow the engine re-runs them against fresh inventory and tells you only what is new. That is the habit loop – you do not come back to search, you come back because it found something while you were asleep.</div>`;
+    `;
   $('#s-add').onclick = async () => {
     const name = $('#s-name').value.trim() || 'Untitled search';
     const filters = {};
@@ -3171,8 +3170,7 @@ async function renderPlan() {
           : '<button class="btn plan-plus-cta" id="up-plus">Unlock Pro+</button>')}
     </div>
     <div class="card" style="margin-top:14px">
-      <h3>Why the Paywall Sits Where It Does</h3>
-      <div class="dim" style="font-size:var(--text-sm);margin-top:8px">The rate gap is free, always. That is the moment that earns trust – you should be able to find out you are underpaid without paying. What you pay for is the ongoing system: the full radar, saved searches, the daily brief, and a copilot that remembers your whole situation.</div>
+      <h3>Your Usage</h3>
       <div class="kv" style="margin-top:14px"><span>Match scores computed</span><span class="mono">${int(p.usage.matchScores)}</span></div>
       <div class="kv"><span>Opportunities tracked</span><span class="mono">${int(p.usage.tracked)}</span></div>
       <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:12px">
@@ -3473,10 +3471,7 @@ async function renderAnalytics() {
       </div>
     </div>
 
-    <div class="card" style="margin-top:14px">
-      <h3>Why This Screen Exists</h3>
-      <div class="dim" style="font-size:var(--text-sm);margin-top:8px">Every number here is recorded by the product as it is used – the same events that drive the UI. The point is to find the single biggest leak and fix that, rather than adding features and hoping. Today the answer is above, in one sentence.</div>
-    </div>`;
+    `;
 }
 
 /* ---------------- market pulse ---------------- */
