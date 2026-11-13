@@ -78,6 +78,13 @@ Owner: whoever is building. Reviewer: the founder.
 
 ---
 
+## 10. Focus, hover and state
+
+1. A focus ring appears for keyboard users only. `:focus-visible` carries `--ring`; a pointer tap must not leave a ring behind.
+2. A hover state may change border and text colour, never geometry. Nothing may move when the pointer crosses it.
+3. Measured proof for focus is a real Tab key event through the browser, not a scripted `.focus()` call, because only a real key press sets `:focus-visible`.
+
 ## Changelog
 
 - 2026-11-13 - Created. Rules drawn from UI-107 to UI-111: the title fit, the token pass, the fact line, the panel pass, the shell scroll fix.
+- 2026-11-13 - Section 10 added after UI-03 and the focus-ring check: score tones are theme tokens, and a ring is proved with a real Tab key.

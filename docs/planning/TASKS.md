@@ -2,7 +2,7 @@
 
 Single source of truth for all work. Rules: `docs/ENGINEERING.md` section 1.
 Summary board: `docs/planning/PROGRESS.md`.
-Last updated: 9 November 2026.
+Last updated: 13 November 2026.
 
 **Owner:** `Us` = engineering, `You` = needs the founder.
 **Categories:** `DEP` deployment · `SEC` security · `AUTH` sign-in · `PAY` payments · `EML` email · `UI` interface · `NAV` navigation · `COPY` wording · `DATA` data and engine · `GRO` growth · `REPO` repository and docs.
@@ -97,7 +97,7 @@ Last updated: 9 November 2026.
 | UI-01 | UI | Radar list in columns: 1 on phones, 2 on tablets, 3 on wide screens, softly tinted, blended faded colours | DONE (superseded): the radar is a single ranked column at every width, chosen over the multi-column grid after review |
 | 8 | UI-02 | UI | Structure audit of the remaining screens at phone and desktop widths | DONE |
 | 9 | UI-07 | UI | Mercor-style structure for app screens (underline tabs, left sub-nav plus form column) | DONE (superseded): the rail plus single-column app shell was kept; the Mercor tab structure was rejected in review |
-| 10 | UI-03 | UI | Replace the remaining hardcoded colours with tokens | OPEN |
+| 10 | UI-03 | UI | Replace the remaining hardcoded colours with tokens | DONE | measured: zero rule-level hexes; score tones are theme tokens, meta reads --bg |
 | 11 | UI-12 | UI | Landing page always checked in both PC mode and mobile mode before it is called done | RULE (in `ENGINEERING.md`) |
 | 12 | COPY-17 | COPY | Mercor sign-in order option: email first, Google below. Only if the founder asks | OPEN (decision) |
 
