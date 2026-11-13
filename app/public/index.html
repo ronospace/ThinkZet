@@ -169,6 +169,8 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 .topbar .sub{font-size:var(--text-sm);color:var(--muted)}
 .topbar .spacer{flex:0 1 auto;min-width:0}
 .tb-title{min-width:0;flex:1 1 auto;overflow:hidden}
+.tb-brand{display:none;align-items:center;justify-content:center;width:26px;height:26px;flex:0 0 auto;color:var(--accent)}
+.tb-brand .mark{width:24px;height:24px}
 .tb-ico{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);color:var(--accent);flex:0 0 auto}
 .tb-ico svg{width:15px;height:15px}
 .tb-line{min-width:0}
@@ -559,7 +561,7 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
 
 /* ---------- mobile polish ---------- */
 @media(max-width:900px){
-  .shell{grid-template-columns:minmax(0,1fr);height:auto;min-height:100vh}
+  .shell{grid-template-columns:minmax(0,1fr);grid-template-rows:minmax(0,1fr);height:100vh;height:100dvh;overflow:hidden}
   .rail{position:fixed;left:0;right:0;bottom:0;top:auto;height:auto;border-right:none;border-top:1px solid var(--line);
         padding:6px 8px calc(6px + env(safe-area-inset-bottom));z-index:60;background:var(--panel)}
   .rail .logo,.rail-foot{display:none}
@@ -571,12 +573,14 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
   .nav button .ico{width:18px;height:18px}
   .nav button .ico svg{width:17px;height:17px}
   .nav button.active{box-shadow:none;background:var(--nav-active)}
-  main{overflow:visible;padding-bottom:calc(78px + env(safe-area-inset-bottom))}
+  main{overflow-y:auto;overflow-x:hidden;padding-bottom:calc(78px + env(safe-area-inset-bottom))}
   .topbar{padding:10px 14px;gap:8px;flex-wrap:nowrap}
   .topbar h1{font-size:var(--text-base);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .topbar .sub{display:none}
   /* The title block takes the room the icons leave, so a long title is never cut on a phone. */
   .topbar .spacer{display:none}
+  .tb-brand{display:inline-flex}
+  .tb-ico{display:none}
   .tb-title{flex:1 1 auto;min-width:0}
   .topbar .tb-icon,.topbar .theme-btn,.topbar .tb-menu{flex:0 0 auto}
   .pill{font-size:var(--text-2xs);padding:3px 7px}
@@ -868,7 +872,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .fb-why:focus{outline:none;border-color:var(--accent2)}
 @media(max-width:560px){.fb-stars{margin-left:0}.fb-star{width:30px;height:30px}}
 /* Declared last so it wins over every earlier title size on a very narrow phone. */
-@media(max-width:359px){.topbar h1,.tb-line h1{font-size:var(--text-sm)}}
+@media(max-width:359px){.topbar h1,.tb-line h1{font-size:var(--text-sm)}.topbar #cmdk{display:none}}
 </style>
 </head>
 <body>
@@ -1122,7 +1126,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
   <main>
     <div class="topbar">
       <div class="tb-title">
-        <div class="tb-line"><span class="tb-ico" id="view-ico" aria-hidden="true"></span><h1 id="view-title">Opportunity Radar</h1><span class="pill live" id="live-pill"><i></i>live</span></div>
+        <div class="tb-line"><span class="tb-brand" id="tb-brand" aria-hidden="true"><svg class="mark" viewBox="0 0 192 192" focusable="false"><use href="#tz-mark"/></svg></span><span class="tb-ico" id="view-ico" aria-hidden="true"></span><h1 id="view-title">Opportunity Radar</h1><span class="pill live" id="live-pill"><i></i>live</span></div>
         <div class="sub" id="view-sub" hidden></div>
       </div>
       <div class="spacer"></div>
@@ -2466,7 +2470,21 @@ function fitLine(el, { max = 17, min = 14 } = {}) {
   el.style.whiteSpace = '';
   el.dataset.fit = 'wrapped';
 }
-function fitHeadlines() { document.querySelectorAll('.brief-hl').forEach((el) => fitLine(el)); }
+function fitTitle() {
+  const h1 = document.getElementById('view-title');
+  if (!h1 || !h1.isConnected) return;
+  h1.style.fontSize = '';
+  const max = parseFloat(getComputedStyle(h1).fontSize) || 17;
+  const fits = () => h1.scrollWidth <= h1.clientWidth + 1;
+  if (fits()) { h1.dataset.fit = 'one-line'; return; }
+  let size = max;
+  while (size > 11 && !fits()) { size -= 0.5; h1.style.fontSize = size + 'px'; }
+  h1.dataset.fit = fits() ? 'shrunk' : 'clipped';
+}
+function fitHeadlines() {
+  fitTitle();
+  document.querySelectorAll('.brief-hl').forEach((el) => fitLine(el));
+}
 if (typeof ResizeObserver !== 'undefined') {
   const ro = new ResizeObserver(() => fitHeadlines());
   // Observe the view container so a rail collapse or a window resize refits immediately.
@@ -3720,6 +3738,7 @@ async function go(view) {
   }
   const [fn, title, sub] = VIEWS[view];
   $('#view-title').textContent = title;
+  fitTitle();
   // Copy the icon from the matching menu item so the header and the menu can never drift apart.
   const ico = document.getElementById('view-ico');
   if (ico) {
