@@ -134,7 +134,7 @@ a{color:var(--accent);text-decoration:none}
 .rail-toggle:hover{color:var(--ink);background:var(--panel3)}
 /* ---------- rail ---------- */
 .rail{position:relative;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px;overflow:hidden;height:100%;min-height:0}
-.rail-toggle{position:absolute;top:14px;right:-11px;z-index:5;width:22px;height:22px;border-radius:50%;background:var(--panel2);border:1px solid var(--line2);color:var(--muted);display:grid;place-items:center;font-size:12px;line-height:1}
+.rail-toggle{position:absolute;top:14px;right:-11px;z-index:5;width:22px;height:22px;border-radius:50%;background:var(--panel2);border:1px solid var(--line2);color:var(--muted);display:grid;place-items:center;font-size:var(--text-sm);line-height:1}
 .logo{display:flex;align-items:center;gap:11px;padding:7px 8px 24px}
 .logo .mark{width:32px;height:32px}
 
@@ -143,9 +143,9 @@ a{color:var(--accent);text-decoration:none}
 .nav::-webkit-scrollbar{width:6px}
 .nav::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px}
 .nav-group{display:flex;flex-direction:column;gap:1px;margin-bottom:8px}
-.nav-label{position:sticky;top:0;z-index:2;display:block;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);font-weight:700;padding:7px 10px 4px;opacity:1;background:var(--panel);box-shadow:0 1px 0 var(--line)}
+.nav-label{position:sticky;top:0;z-index:2;display:block;font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);font-weight:700;padding:7px 10px 4px;opacity:1;background:var(--panel);box-shadow:0 1px 0 var(--line)}
 .nav-wrap{position:relative;flex:1 1 auto;min-height:0;display:flex;overflow:hidden}
-.nav button{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:var(--ink2);text-align:left;width:100%;font-size:13.5px}
+.nav button{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:var(--ink2);text-align:left;width:100%;font-size:var(--text-base)}
 .nav button:hover{background:var(--panel2);color:var(--ink)}
 .nav button.active{background:var(--nav-active);color:var(--nav-active-ink);box-shadow:inset 3px 0 0 var(--accent);border-radius:9px}
 .nav .ico{width:16px;height:16px;display:grid;place-items:center;opacity:.72;flex-shrink:0}
@@ -158,7 +158,7 @@ a{color:var(--accent);text-decoration:none}
 .rf-sep{height:1px;background:var(--line2);margin:9px 0 8px}
 html[data-theme="light"] .rf-sep{background:var(--line2)}
 .rf-legal{line-height:1.7}
-.rf-copy{margin-top:6px;font-size:10px;opacity:.7;line-height:1.5}
+.rf-copy{margin-top:6px;font-size:var(--text-2xs);opacity:.7;line-height:1.5}
 .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--good);margin-right:5px;vertical-align:1px}
 
 /* ---------- main ---------- */
@@ -166,7 +166,7 @@ html,body{max-width:100%;overflow-x:hidden}
 main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
 .topbar{position:sticky;top:0;z-index:5;background:var(--topbar-bg);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:14px 28px;display:flex;align-items:center;gap:16px}
 .topbar h1{font-size:var(--text-xl);margin:0;font-weight:700;letter-spacing:-.01em}
-.topbar .sub{font-size:12px;color:var(--muted)}
+.topbar .sub{font-size:var(--text-sm);color:var(--muted)}
 .topbar .spacer{flex:0 1 auto;min-width:0}
 .tb-title{min-width:0;flex:1 1 auto;overflow:hidden}
 .tb-ico{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);color:var(--accent);flex:0 0 auto}
@@ -178,7 +178,7 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 @media(max-width:700px){
   .kpi{padding:10px 12px}
   .kpi .big{font-size:var(--text-lg)}
-  .kpi-k{font-size:10px}
+  .kpi-k{font-size:var(--text-2xs)}
   .kpi-spark{display:none}
   .kpi-delta{margin-top:4px;gap:5px}
   .kpi-grid{gap:8px}
@@ -204,14 +204,14 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 .tb-row button{width:auto!important;flex:0 1 auto;white-space:nowrap;padding:8px 8px}
 .tb-signout{margin-left:auto;color:var(--ink2)}
 .tb-signout:hover{color:var(--bad)}
-@media(max-width:400px){.tb-row button{font-size:13px;padding:8px 6px}.tb-row button svg{width:13px;height:13px}}
+@media(max-width:400px){.tb-row button{font-size:var(--text-sm);padding:8px 6px}.tb-row button svg{width:13px;height:13px}}
 .theme-btn{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
 .theme-btn:hover{color:var(--ink);border-color:var(--line2);background:var(--panel3)}
 .theme-btn svg{width:15px;height:15px;display:none}
 html[data-mode="system"] .theme-btn .ico-auto{display:block}
 html[data-mode="light"] .theme-btn .ico-sun{display:block}
 html[data-mode="dark"] .theme-btn .ico-moon{display:block}
-.pill{font-size:11px;padding:4px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2);white-space:nowrap}
+.pill{font-size:var(--text-xs);padding:4px 9px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2);white-space:nowrap}
 .pill.live{border-color:color-mix(in srgb,var(--good) 40%,var(--line));background:color-mix(in srgb,var(--good) 12%,var(--panel));color:var(--good);display:inline-flex;align-items:center;gap:6px}
 .pill.live i{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 20%,transparent)}
 html[data-theme="light"] .pill.live{background:#eaf7f0;border-color:transparent;color:#0a7a45}
@@ -234,7 +234,7 @@ html[data-theme="light"] .card.tone-blue{background:color-mix(in srgb,var(--acce
 html[data-theme="light"] .card.tone-violet .muted,html[data-theme="light"] .card.tone-blue .muted{color:#6d7c90}
 html[data-theme="light"] .card.tone-violet [style*="var(--tone-kicker)"]{color:#5b45b8 !important}
 html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed8 !important}
-.card h3{margin:0 0 4px;font-size:13px;font-weight:600;letter-spacing:.02em;color:var(--ink2)}
+.card h3{margin:0 0 4px;font-size:var(--text-sm);font-weight:600;letter-spacing:.02em;color:var(--ink2)}
 .card h3{font-size:var(--text-md);font-weight:680;color:var(--ink);letter-spacing:var(--tracking-tight);margin:0 0 6px}
 .card .sub{font-size:var(--text-sm);color:var(--muted);margin:0 0 12px;line-height:1.55}
 .long{font-size:var(--text-sm);line-height:1.72;color:var(--ink2)}
@@ -253,18 +253,18 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .btn:active{transform:translateY(.5px)}
 .btn.ghost{background:transparent;border:1px solid var(--line2);color:var(--ink2);box-shadow:none}
 .btn.ghost:hover{color:var(--ink);border-color:var(--accent2)}
-.btn.sm{padding:5px 10px;font-size:12px;border-radius:7px}
-.btn .ext{display:inline-block;margin-left:5px;font-size:11px;opacity:.85;transform:translateY(-.5px)}
+.btn.sm{padding:5px 10px;font-size:var(--text-sm);border-radius:7px}
+.btn .ext{display:inline-block;margin-left:5px;font-size:var(--text-xs);opacity:.85;transform:translateY(-.5px)}
 .btn.act-apply{font-weight:620;background:color-mix(in srgb,var(--accent2) 8%,var(--panel));color:color-mix(in srgb,var(--accent) 82%,var(--ink2));border:1px solid color-mix(in srgb,var(--accent2) 30%,transparent);box-shadow:none}
 .btn.act-apply:hover{background:color-mix(in srgb,var(--accent2) 16%,var(--panel));border-color:color-mix(in srgb,var(--accent2) 60%,transparent);filter:none;box-shadow:none}
 html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accent2) 10%,#fff);color:var(--accent)}
 .btn.act-apply:hover .ext{opacity:1}
 .arow{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
-.arow-n{color:var(--muted);font-size:12px;width:16px;flex:0 0 auto}
+.arow-n{color:var(--muted);font-size:var(--text-sm);width:16px;flex:0 0 auto}
 .arow-t{flex:1;min-width:0;font-size:var(--text-sm);line-height:var(--leading-normal);overflow-wrap:anywhere}
 .arow .prio{margin:0;flex:0 0 auto;white-space:nowrap;align-self:flex-start}
 .arow-n,.arow-c{padding-top:1px}
-.arow-c{flex:0 0 auto;color:var(--muted);opacity:.5;font-size:12px}
+.arow-c{flex:0 0 auto;color:var(--muted);opacity:.5;font-size:var(--text-sm)}
 @media(max-width:560px){
   .arow{flex-wrap:wrap;align-items:flex-start;row-gap:6px}
   .arow-n{order:1}
@@ -295,7 +295,7 @@ html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accen
 /* The brief line is fitted by type size so the whole sentence holds one desktop line. */
 .brief-hl{font-size:var(--text-lg);font-weight:650;margin-top:8px;letter-spacing:-.015em;line-height:1.35;white-space:normal;overflow-wrap:anywhere;text-wrap:balance}
 .grid>*{min-width:0}
-.chip{font-size:11px;padding:2px 7px;border-radius:5px;background:var(--panel3);color:var(--ink2);border:1px solid var(--line2);white-space:nowrap}
+.chip{font-size:var(--text-xs);padding:2px 7px;border-radius:5px;background:var(--panel3);color:var(--ink2);border:1px solid var(--line2);white-space:nowrap}
 .chip.miss{background:color-mix(in srgb,var(--bad) 13%,var(--panel));border-color:var(--bad);color:var(--bad)}
 .chip.have{background:color-mix(in srgb,var(--good) 13%,var(--panel));border-color:var(--good);color:var(--good)}
 .chip.type{background:color-mix(in srgb,var(--blue) 14%,var(--panel));border-color:color-mix(in srgb,var(--blue) 35%,var(--line));color:var(--blue)}
@@ -323,16 +323,16 @@ h2.section:first-child{margin-top:0}
 /* ---------- onboarding ---------- */
 .onboard{max-width:760px;margin:0 auto;padding:48px 24px 80px;width:100%;box-sizing:border-box}
 @media(max-width:900px){.onboard{padding:28px 18px 56px}}
-.onboard .lead{font-size:22px;font-weight:650;letter-spacing:-.02em;margin:0 0 6px}
+.onboard .lead{font-size:var(--text-xl);font-weight:650;letter-spacing:-.02em;margin:0 0 6px}
 .onboard .sub{color:var(--ink2);margin:0 0 22px}
 textarea.cv{width:100%;height:260px;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px;font:12.5px/1.6 ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink);resize:vertical;outline:none}
 textarea.cv:focus{border-color:var(--accent2)}
 .field{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
-.field label{font-size:12px;color:var(--ink2)}
+.field label{font-size:var(--text-sm);color:var(--ink2)}
 .field input,.field select{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:9px 11px;outline:none}
 .field input:focus,.field select:focus{border-color:var(--accent2)}
 .form-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
-.note{font-size:12px;color:var(--muted);line-height:1.6}
+.note{font-size:var(--text-sm);color:var(--muted);line-height:1.6}
 
 
 /* ---------- sign in ---------- */
@@ -348,12 +348,12 @@ textarea.cv:focus{border-color:var(--accent2)}
 .auth-social{position:relative;width:100%;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:10px;padding:11px 14px;border-radius:var(--radius-sm,10px);border:1px solid var(--line2);background:var(--panel2);color:var(--ink);font-size:var(--text-sm);font-weight:600;text-decoration:none;transition:border-color .14s,background .14s}
 .auth-social:hover{border-color:var(--accent2);background:var(--panel3)}
 .auth-social.is-soon{opacity:.72;padding-right:74px}
-.auth-social em{position:absolute;right:12px;font-style:normal;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:3px 8px}
+.auth-social em{position:absolute;right:12px;font-style:normal;font-size:var(--text-2xs);font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);border-radius:999px;padding:3px 8px}
 .auth-or{display:flex;align-items:center;gap:12px;margin:18px 0 16px;color:var(--muted);font-size:var(--text-xs)}
 .auth-or::before,.auth-or::after{content:"";flex:1;height:1px;background:var(--line)}
 .auth-cta{width:100%;margin-top:4px;padding:11px 15px}
 .auth-note{margin:12px 0 0;color:var(--muted);font-size:var(--text-xs);line-height:1.55;text-align:center}
-.auth-code{letter-spacing:.4em;font-size:18px;text-align:center}
+.auth-code{letter-spacing:.4em;font-size:var(--text-lg);text-align:center}
 .auth-skip{display:block;width:100%;margin-top:18px;padding-top:16px;border-top:1px solid var(--line);color:var(--ink2);font-size:var(--text-sm);text-align:center}
 .auth-skip:hover{color:var(--accent)}
 .auth-legal{margin:16px 0 0;text-align:center;color:var(--muted);font-size:var(--text-xs);line-height:1.6}
@@ -376,15 +376,15 @@ html[data-theme="light"] .hello-mark{background-image:linear-gradient(100deg,var
 html[data-theme="light"] .rate-gap{border-color:#DCC6EE;box-shadow:0 0 0 1px rgba(139,92,246,.10),var(--shadow)}
 .rate-gap{--tone-ink:var(--ink);--tone-kicker:var(--tone-kicker);background:var(--hero-grad);border:1px solid var(--ai-border);border-radius:var(--radius-lg);padding:26px 28px;margin-bottom:var(--sp-4);position:relative;overflow:hidden;box-shadow:0 1px 2px rgba(0,0,0,.4),0 22px 50px -34px rgba(90,60,180,.7)}
 .rate-gap::after{content:"";position:absolute;right:-40px;top:-60px;width:240px;height:240px;background:radial-gradient(circle,rgba(139,92,246,.22),transparent 70%)}
-.rate-gap .k{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker);font-weight:600}
+.rate-gap .k{font-size:var(--text-xs);letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker);font-weight:600}
 .rate-gap .amount{font-size:clamp(30px,4.2vw,44px);font-weight:780;letter-spacing:-.035em;line-height:1.06;margin:8px 0 4px;color:var(--tone-ink)}
 .rate-gap .amount .neg{color:var(--bad)}
 .rate-gap .scale{margin-top:16px;height:8px;border-radius:5px;background:var(--track);position:relative}
 .rate-gap .scale .band{position:absolute;height:100%;border-radius:5px;background:linear-gradient(90deg,color-mix(in srgb,var(--accent2) 55%,var(--track)),var(--accent2))}
 .rate-gap .scale .you{position:absolute;top:-5px;width:3px;height:18px;border-radius:2px;background:var(--ink)}
-.rate-gap .legend{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:8px}
+.rate-gap .legend{display:flex;justify-content:space-between;font-size:var(--text-xs);color:var(--muted);margin-top:8px}
 .types{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
-.types button{font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2)}
+.types button{font-size:var(--text-sm);padding:5px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2)}
 .types button.on{background:var(--nav-active);border-color:var(--accent2);color:var(--tone-ink, var(--tone-ink))}
 .brief-head{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
 .brief-meta{font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase;line-height:1.5}
@@ -446,7 +446,7 @@ html[data-theme="light"] .delta.flat{background:var(--panel2)}
 .feed-wrap{display:grid;grid-template-columns:minmax(0,1fr) 288px;gap:18px;align-items:start}
 .facets{position:sticky;top:74px}
 @media(max-width:1180px){.feed-wrap{grid-template-columns:1fr}.facets{position:static}}
-.facet-row{display:flex;justify-content:space-between;font-size:12px;padding:5px 0;border-bottom:1px solid var(--line)}
+.facet-row{display:flex;justify-content:space-between;font-size:var(--text-sm);padding:5px 0;border-bottom:1px solid var(--line)}
 .facet-row:last-child{border-bottom:none}
 .facet-mini{height:5px;border-radius:3px;background:var(--track);margin-top:4px;overflow:hidden}
 .facet-mini > i{display:block;height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent2),var(--rose))}
@@ -455,7 +455,7 @@ html[data-theme="light"] .delta.flat{background:var(--panel2)}
 .refine-toggle{display:inline-flex;align-items:center;gap:7px;font-size:var(--text-sm);font-weight:550;padding:7px 13px;border-radius:var(--radius-sm);border:1px solid var(--line);background:var(--panel);color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
 .refine-toggle:hover{color:var(--ink);border-color:var(--line2)}
 .refine-toggle[aria-expanded="true"]{color:var(--ink);border-color:var(--line2);background:var(--panel2)}
-.refine-count{display:none;font-size:10px;font-weight:700;min-width:16px;height:16px;border-radius:999px;background:var(--accent);color:var(--on-accent);place-items:center;padding:0 4px}
+.refine-count{display:none;font-size:var(--text-2xs);font-weight:700;min-width:16px;height:16px;border-radius:999px;background:var(--accent);color:var(--on-accent);place-items:center;padding:0 4px}
 .refine-count.on{display:grid}
 .refine-summary{display:flex;gap:6px;flex-wrap:wrap;font-size:var(--text-xs);color:var(--muted)}
 .refine-summary span{background:var(--panel2);border-radius:999px;padding:2px 8px}
@@ -495,49 +495,49 @@ html[data-theme="light"] .delta.flat{background:var(--panel2)}
 .score b{position:relative;font-size:calc(var(--sz) * .34);font-weight:750;letter-spacing:-.03em;line-height:1;color:var(--ink)}
 .score.lg{--sz:78px}
 .score.lg::before{inset:6px}
-.score-cap{font-size:9.5px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);line-height:1}
-.opp h4{margin:0 0 4px;font-size:15.5px;font-weight:680;letter-spacing:-.012em;line-height:1.3}
+.score-cap{font-size:var(--text-2xs);font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);line-height:1}
+.opp h4{margin:0 0 4px;font-size:var(--text-md);font-weight:680;letter-spacing:-.012em;line-height:1.3}
 .opp h4 .muted{font-weight:450}
-.opp .meta{font-size:12px;color:var(--ink2);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.opp .meta{font-size:var(--text-sm);color:var(--ink2);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .opp .why{font-size:var(--text-xs);color:var(--muted);margin-top:6px}
 .opp-comp{font-weight:600;color:var(--ink)}
 .opp .right{text-align:right;display:flex;flex-direction:column;gap:6px;align-items:flex-end}
-.probs{display:flex;gap:10px;font-size:11px;color:var(--ink2)}
+.probs{display:flex;gap:10px;font-size:var(--text-xs);color:var(--ink2)}
 .probs b{display:block;font-size:var(--text-base);color:var(--ink);font-weight:650}
 
 /* ---------- scores ---------- */
 .scores-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
 .score-card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px}
-.score-card .n{font-size:26px;font-weight:700;letter-spacing:-.02em}
-.score-card .lbl{font-size:12px;color:var(--ink2);margin-bottom:8px}
-.score-card .drv{font-size:11px;color:var(--muted);margin-top:8px;line-height:1.5}
+.score-card .n{font-size:var(--text-2xl);font-weight:700;letter-spacing:-.02em}
+.score-card .lbl{font-size:var(--text-sm);color:var(--ink2);margin-bottom:8px}
+.score-card .drv{font-size:var(--text-xs);color:var(--muted);margin-top:8px;line-height:1.5}
 .overall{display:flex;gap:26px;align-items:center;background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:22px;margin-bottom:16px}
 .ring{width:118px;height:118px;border-radius:50%;display:grid;place-items:center;flex-shrink:0}
 .ring div{width:92px;height:92px;border-radius:50%;background:var(--panel);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px}
-.ring .v{font-size:30px;font-weight:750;letter-spacing:-.03em;line-height:1}
-.ring .c{font-size:10px;color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
+.ring .v{font-size:var(--text-3xl);font-weight:750;letter-spacing:-.03em;line-height:1}
+.ring .c{font-size:var(--text-2xs);color:var(--muted);letter-spacing:.1em;text-transform:uppercase}
 
 /* ---------- table ---------- */
-table.t{width:100%;border-collapse:collapse;font-size:13px}
-table.t th{text-align:left;font-weight:600;color:var(--muted);font-size:11px;letter-spacing:.06em;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line)}
+table.t{width:100%;border-collapse:collapse;font-size:var(--text-sm)}
+table.t th{text-align:left;font-weight:600;color:var(--muted);font-size:var(--text-xs);letter-spacing:.06em;text-transform:uppercase;padding:8px 10px;border-bottom:1px solid var(--line)}
 table.t td{padding:10px;border-bottom:1px solid var(--line);vertical-align:middle}
 table.t tr:hover td{background:var(--panel2)}
 
 /* ---------- copilot ---------- */
 .chat{display:flex;flex-direction:column;height:calc(100vh - 130px);max-width:820px}
 .msgs{flex:1;overflow:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:14px}
-.msg{max-width:82%;padding:11px 14px;border-radius:12px;white-space:pre-wrap;line-height:1.6;font-size:13.5px}
+.msg{max-width:82%;padding:11px 14px;border-radius:12px;white-space:pre-wrap;line-height:1.6;font-size:var(--text-base)}
 .msg.user{align-self:flex-end;background:var(--nav-active);border:1px solid var(--line2)}
 .msg.bot{align-self:flex-start;background:var(--panel);border:1px solid var(--line)}
-.msg .cite{margin-top:8px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:7px}
+.msg .cite{margin-top:8px;font-size:var(--text-xs);color:var(--muted);border-top:1px solid var(--line);padding-top:7px}
 .suggest{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.suggest button{font-size:12px;padding:6px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2)}
+.suggest button{font-size:var(--text-sm);padding:6px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2)}
 .suggest button:hover{color:var(--ink);border-color:var(--line2)}
 .composer{display:flex;gap:10px}
 .composer input{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 14px;outline:none}
 .composer input:focus{border-color:var(--accent2)}
 
-.kv{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px}
+.kv{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:var(--text-sm)}
 .kv:last-child{border-bottom:none}
 .kv span:first-child{color:var(--muted)}
 .palette{position:fixed;inset:0;background:rgba(5,7,10,.72);backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding-top:12vh;z-index:100}
@@ -545,13 +545,13 @@ table.t tr:hover td{background:var(--panel2)}
 .palette-box{width:min(640px,92vw);background:var(--panel);border:1px solid var(--line2);border-radius:14px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.55)}
 .palette-box input{width:100%;background:transparent;border:none;border-bottom:1px solid var(--line);padding:16px 18px;font-size:var(--text-md);outline:none;color:var(--ink)}
 .palette-list{max-height:46vh;overflow:auto;padding:6px}
-.palette-item{display:flex;gap:12px;align-items:center;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:13.5px}
-.palette-item .k{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;border:1px solid var(--line2);padding:1px 5px;border-radius:4px;flex-shrink:0}
+.palette-item{display:flex;gap:12px;align-items:center;padding:9px 12px;border-radius:9px;cursor:pointer;font-size:var(--text-base)}
+.palette-item .k{font-size:var(--text-2xs);color:var(--muted);text-transform:uppercase;letter-spacing:.08em;border:1px solid var(--line2);padding:1px 5px;border-radius:4px;flex-shrink:0}
 .palette-item.sel{background:var(--nav-active)}
-.palette-item .s{margin-left:auto;font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums}
-.palette-foot{display:flex;gap:16px;padding:9px 16px;border-top:1px solid var(--line);font-size:11px;color:var(--muted)}
-kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2px;border-radius:4px;padding:0 4px;font-size:10px;font-family:inherit;color:var(--ink2)}
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--nav-active);border:1px solid var(--accent2);color:var(--tone-ink, var(--tone-ink));padding:10px 16px;border-radius:10px;font-size:13px;opacity:0;transition:.25s;pointer-events:none;z-index:50}
+.palette-item .s{margin-left:auto;font-size:var(--text-xs);color:var(--muted);font-variant-numeric:tabular-nums}
+.palette-foot{display:flex;gap:16px;padding:9px 16px;border-top:1px solid var(--line);font-size:var(--text-xs);color:var(--muted)}
+kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2px;border-radius:4px;padding:0 4px;font-size:var(--text-2xs);font-family:inherit;color:var(--ink2)}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--nav-active);border:1px solid var(--accent2);color:var(--tone-ink, var(--tone-ink));padding:10px 16px;border-radius:10px;font-size:var(--text-sm);opacity:0;transition:.25s;pointer-events:none;z-index:50}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 .spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.3);border-top-color:var(--on-accent);border-radius:50%;animation:s .7s linear infinite;vertical-align:-2px;margin-right:6px}
 @keyframes s{to{transform:rotate(360deg)}}
@@ -567,7 +567,7 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
   .nav::-webkit-scrollbar{display:none}
   .nav-group{flex-direction:row;margin:0;gap:2px}
   .nav-label{display:none}
-  .nav button{flex-direction:column;gap:3px;padding:7px 10px;font-size:9.5px;white-space:nowrap;border-radius:9px}
+  .nav button{flex-direction:column;gap:3px;padding:7px 10px;font-size:var(--text-2xs);white-space:nowrap;border-radius:9px}
   .nav button .ico{width:18px;height:18px}
   .nav button .ico svg{width:17px;height:17px}
   .nav button.active{box-shadow:none;background:var(--nav-active)}
@@ -579,21 +579,21 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
   .topbar .spacer{display:none}
   .tb-title{flex:1 1 auto;min-width:0}
   .topbar .tb-icon,.topbar .theme-btn,.topbar .tb-menu{flex:0 0 auto}
-  .pill{font-size:10px;padding:3px 7px}
+  .pill{font-size:var(--text-2xs);padding:3px 7px}
   .view{padding:16px 14px 0}
   .toast{bottom:92px;max-width:calc(100vw - 28px);text-align:center}
   .hello{flex-direction:column;align-items:flex-start;gap:8px}
-  .hello h2{font-size:16px}
+  .hello h2{font-size:var(--text-md)}
   .hello-score{text-align:left!important;display:flex;align-items:baseline;gap:10px}
   .rate-gap{padding:16px}
-  .rate-gap .amount{font-size:24px}
+  .rate-gap .amount{font-size:var(--text-2xl)}
   .opp{grid-template-columns:54px 1fr;gap:12px;padding:13px 14px;align-items:start}
   .opp .right{display:none}
   .score{--sz:52px}
   .score-wrap{margin-top:2px}
-  .opp h4{font-size:13.5px;line-height:1.35}
-  .opp .meta{gap:5px;font-size:11px;line-height:1.7}
-  .opp .why{font-size:11px;line-height:1.5}
+  .opp h4{font-size:var(--text-base);line-height:1.35}
+  .opp .meta{gap:5px;font-size:var(--text-xs);line-height:1.7}
+  .opp .why{font-size:var(--text-xs);line-height:1.5}
   .kpi-v{font-size:var(--text-xl)}
   .kpi{padding:12px 12px 0}
   .kpi-spark{margin:10px -12px 0}
@@ -611,7 +611,7 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
   .form-grid,.row3,.row2{grid-template-columns:1fr!important}
   .chat{height:auto;min-height:60vh}
   .msgs{max-height:55vh}
-  table.t{font-size:12px}
+  table.t{font-size:var(--text-sm)}
   table.t th,table.t td{padding:7px 6px}
   .palette-box{width:96vw;margin-top:6vh}
   .msg{max-width:92%}
@@ -621,7 +621,7 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
 html[data-theme="light"] .landing{background:radial-gradient(1100px 560px at 50% -10%,var(--panel2) 0%,var(--bg) 62%)}
 .land-wrap{max-width:940px;margin:0 auto;padding:38px 24px 90px}
 
-.land-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;letter-spacing:.02em}
+.land-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:var(--text-lg);letter-spacing:.02em}
 .land-brand .mark{width:30px;height:30px}
 .land-kicker{display:inline-flex;align-items:center;gap:7px;font-size:var(--text-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border:1px solid var(--ai-border);background:var(--accent-soft);padding:5px 11px;border-radius:999px}
 html[data-theme="light"] .land-kicker{color:var(--accent2)}
@@ -634,7 +634,7 @@ html[data-theme="light"] .land-h1 .accent{color:var(--accent2)}
 .land-sub-2{display:block}
 .land-cta{display:flex;gap:12px;margin-top:30px;flex-wrap:wrap;align-items:center}
 .land-cta .btn{font-size:var(--text-base);padding:12px 20px;border-radius:10px}
-.land-cta .tiny{font-size:12px;color:var(--muted)}
+.land-cta .tiny{font-size:var(--text-sm);color:var(--muted)}
 .check{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:26px;margin-top:44px;box-shadow:0 24px 70px rgba(0,0,0,.35)}
 html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .check h2{margin:0;font-size:var(--text-lg);font-weight:650;letter-spacing:-.01em}
@@ -651,11 +651,11 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .result .scale{margin-top:20px;height:10px;border-radius:6px;background:var(--track);position:relative}
 .result .scale .band{position:absolute;height:100%;border-radius:6px;background:linear-gradient(90deg,color-mix(in srgb,var(--accent2) 55%,var(--track)),var(--accent2))}
 .result .scale .you{position:absolute;top:-6px;width:3px;height:22px;border-radius:2px;background:var(--ink)}
-.result .legend{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:9px}
+.result .legend{display:flex;justify-content:space-between;font-size:var(--text-xs);color:var(--muted);margin-top:9px}
 .trust{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:44px}
 .trust .card{background:rgba(255,255,255,.02)}
-.trust h3{margin:0 0 6px;font-size:13px;color:var(--ink)}
-.trust p{margin:0;font-size:12px;color:var(--muted);line-height:1.6}
+.trust h3{margin:0 0 6px;font-size:var(--text-sm);color:var(--ink)}
+.trust p{margin:0;font-size:var(--text-sm);color:var(--muted);line-height:1.6}
 .land-nav-wrap{position:sticky;top:0;z-index:40;background:var(--topbar-bg);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .land-nav{max-width:1080px;margin:0 auto!important;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 24px}
 .land-tag{font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-left:10px;padding-left:10px;border-left:1px solid var(--line2)}
@@ -714,11 +714,11 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .foot-legal{margin-top:var(--sp-8);padding-top:var(--sp-4);border-top:1px solid var(--line);font-size:var(--text-2xs);color:var(--muted);text-align:center;line-height:1.7;padding-bottom:8px}
 @media(max-width:900px){.land-footer{padding-bottom:96px}}
 .foot-legal span{display:block}
-@media(max-width:900px){.price{padding:var(--sp-5)}.price-tag{left:var(--sp-4);font-size:10px;padding:3px 8px}.how-grid,.cap-grid,.price-grid{grid-template-columns:1fr}.foot-grid{grid-template-columns:1fr 1fr!important;gap:10px}.foot-grid>div:first-child{grid-column:1/-1;text-align:center;margin-bottom:6px}.foot-grid>div:first-child .land-brand{justify-content:center}.foot-grid>div:first-child .foot-note{margin:0 auto}.land-nav-links{display:none}.hero-sec{padding-top:var(--sp-10)}
+@media(max-width:900px){.price{padding:var(--sp-5)}.price-tag{left:var(--sp-4);font-size:var(--text-2xs);padding:3px 8px}.how-grid,.cap-grid,.price-grid{grid-template-columns:1fr}.foot-grid{grid-template-columns:1fr 1fr!important;gap:10px}.foot-grid>div:first-child{grid-column:1/-1;text-align:center;margin-bottom:6px}.foot-grid>div:first-child .land-brand{justify-content:center}.foot-grid>div:first-child .foot-note{margin:0 auto}.land-nav-links{display:none}.hero-sec{padding-top:var(--sp-10)}
   .land-tag{display:none}
   .land-nav{padding:10px 16px;gap:8px}
   .land-brand{font-size:var(--text-base)}
-  .land-nav .btn{white-space:nowrap;padding:7px 12px;font-size:12px}
+  .land-nav .btn{white-space:nowrap;padding:7px 12px;font-size:var(--text-sm)}
   .proof{grid-template-columns:1fr;gap:var(--sp-3)}
   .proof > div{gap:8px}
   .proof b{font-size:var(--text-md);min-width:64px}}
@@ -735,7 +735,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .wm{font-weight:780;letter-spacing:-.025em}
 .wm i{font-style:normal;background:linear-gradient(100deg,var(--accent2) 0%,var(--rose) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
 html[data-theme="light"] .wm i{background-image:linear-gradient(100deg,var(--accent2) 0%,#C2418F 100%)}
-.logo b{font-size:16px;letter-spacing:.1em;text-transform:uppercase}
+.logo b{font-size:var(--text-md);letter-spacing:.1em;text-transform:uppercase}
 .shell.rail-collapsed .logo-text{display:none}
 @media(min-width:901px){.topbar{padding-left:max(28px,calc((100% - 1120px)/2 + 28px));padding-right:max(28px,calc((100% - 1120px)/2 + 28px))}}
 
@@ -756,7 +756,7 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .ds-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
 .ds-cell .k{font-size:var(--text-2xs);color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
 .ds-cell .v{font-size:var(--text-md);font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
-.ds-note{margin-top:10px;font-size:11px;color:var(--warn);line-height:1.5;max-width:760px}
+.ds-note{margin-top:10px;font-size:var(--text-xs);color:var(--warn);line-height:1.5;max-width:760px}
 @media(max-width:760px){.ds-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.foot-grid{grid-template-columns:1fr 1fr}.foot-col{padding:12px 10px}.foot-grid a{font-size:var(--text-xs)}}
 .outcome-card{margin-top:var(--sp-4)}
 .outcome-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px}
@@ -788,7 +788,7 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .ms-h{font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;white-space:nowrap}
 .market-snapshot .ds-grid{display:flex;flex-wrap:wrap;gap:22px}
 .market-snapshot .ds-cell{display:flex;align-items:baseline;gap:7px}
-.market-snapshot .ds-cell .k{font-size:11px;color:var(--muted);white-space:nowrap}
+.market-snapshot .ds-cell .k{font-size:var(--text-xs);color:var(--muted);white-space:nowrap}
 .market-snapshot .ds-cell .v{font-size:var(--text-sm);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
 @media(max-width:760px){.market-snapshot{gap:12px;padding:12px}.market-snapshot .ds-grid{gap:14px}}
 .price-tagline{font-size:var(--text-sm);font-weight:600;font-style:italic;color:var(--ink2);margin:14px 0 6px;padding-top:12px;border-top:1px solid var(--line)}
@@ -813,7 +813,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 @media(max-width:560px){.sub-grid{grid-template-columns:1fr 1fr}.sub-grid>div:last-child{grid-column:1/-1}}
 .ad-slot{display:none;margin:18px 0 4px;padding:10px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
 .ad-slot.show{display:block}
-.ad-label{font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.ad-label{font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
 .ad-consent{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:60;display:none;gap:12px;align-items:center;max-width:560px;width:calc(100% - 32px);padding:12px 14px;border:1px solid var(--line2);border-radius:var(--radius);background:var(--panel);box-shadow:var(--shadow)}
 .ad-consent.show{display:flex}
 .ad-consent p{margin:0;font-size:var(--text-xs);color:var(--ink2);line-height:1.5;flex:1}
@@ -858,7 +858,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .fb-collapsed .fb-done{margin-top:0}
 .fb-done{display:flex;align-items:center;gap:8px;margin-top:0;font-size:var(--text-sm);color:var(--good);font-weight:600}
 .fb-done-share{margin-left:auto;color:var(--ink2)}
-.fb-done-tick{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--good) 22%,transparent);border:1px solid color-mix(in srgb,var(--good) 55%,transparent);font-size:11px}
+.fb-done-tick{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--good) 22%,transparent);border:1px solid color-mix(in srgb,var(--good) 55%,transparent);font-size:var(--text-xs)}
 .fb-star[disabled]{opacity:.55;cursor:default}
 .fb-star.on[disabled]{opacity:1}
 .fb-why[readonly]{opacity:.7}
@@ -941,7 +941,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
         <div><label for="c-skills">Strongest Skills, Comma Separated</label><input id="c-skills" placeholder="Python, SQL, Machine Learning"/></div>
       </div>
       <button class="btn go" id="c-run">Show me the number</button>
-      <div class="muted" id="c-err" style="font-size:12px;margin-top:10px"></div>
+      <div class="muted" id="c-err" style="font-size:var(--text-sm);margin-top:10px"></div>
       <div class="result" id="c-result"></div>
     </section>
 
@@ -1406,10 +1406,10 @@ async function renderSeo() {
         <p class="land-sub">What employers are actually publishing right now – not a survey, not self-reported.</p>
         <div class="card" style="margin-top:26px">
           <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:16px">
-            <div><div class="muted" style="font-size:11px">Median</div><div class="big mono">${fmt(b.p50)}</div></div>
-            <div><div class="muted" style="font-size:11px">p25</div><div class="mono" style="font-size:18px">${fmt(b.p25)}</div></div>
-            <div><div class="muted" style="font-size:11px">p75</div><div class="mono" style="font-size:18px">${fmt(b.p75)}</div></div>
-            <div><div class="muted" style="font-size:11px">p90</div><div class="mono" style="font-size:18px">${fmt(b.p90)}</div></div>
+            <div><div class="muted" style="font-size:var(--text-xs)">Median</div><div class="big mono">${fmt(b.p50)}</div></div>
+            <div><div class="muted" style="font-size:var(--text-xs)">p25</div><div class="mono" style="font-size:var(--text-lg)">${fmt(b.p25)}</div></div>
+            <div><div class="muted" style="font-size:var(--text-xs)">p75</div><div class="mono" style="font-size:var(--text-lg)">${fmt(b.p75)}</div></div>
+            <div><div class="muted" style="font-size:var(--text-xs)">p90</div><div class="mono" style="font-size:var(--text-lg)">${fmt(b.p90)}</div></div>
           </div>
           <div style="margin-top:16px;font-size:var(--text-sm);color:var(--muted)">${esc(b.segment)} · ${b.exactComparables} exact-profile comparables · ${esc(b.confidence)} confidence</div>
         </div>
@@ -1545,17 +1545,17 @@ async function runRateCheck() {
     box.innerHTML = `
       <div style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
       <div class="big-gap" style="color:${tone}">${esc(line)}</div>
-      <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b> ${sampleChip()}${v.gapAbs != null ? ` · you report ${fmt(r.input.current)}${per}` : ''}</div>
+      <div style="font-size:var(--text-base);color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b> ${sampleChip()}${v.gapAbs != null ? ` · you report ${fmt(r.input.current)}${per}` : ''}</div>
       <div class="scale">
         <div class="band" style="left:${pos(b.p25)}%;width:${pos(b.p75) - pos(b.p25)}%"></div>
         ${r.input.current ? `<div class="you" style="left:${pos(r.input.current)}%"></div>` : ''}
       </div>
       <div class="legend"><span>p25 ${fmt(b.p25)}</span><span>p50 ${fmt(b.p50)}</span><span>p75 ${fmt(b.p75)}</span><span>p90 ${fmt(b.p90)}</span></div>
-      <div style="margin-top:18px;font-size:13px;color:var(--ink2)">
+      <div style="margin-top:18px;font-size:var(--text-sm);color:var(--ink2)">
         <b style="color:var(--ink)">Where the money is:</b>
         ${b.byChannel.filter((c) => c.n >= 5).map((c) => `${esc(c.channel)} ${fmt(c.median)}`).join(' · ') || 'not enough channel data'}
       </div>
-      <div style="margin-top:12px;font-size:13px;color:var(--ink2)">
+      <div style="margin-top:12px;font-size:var(--text-sm);color:var(--ink2)">
         <b style="color:var(--ink)">Skills that pay more than yours:</b>
         ${r.levers.slice(0, 4).map((l) => `${esc(l.skill)} <span style="color:var(--good)">+${l.premium}%</span>`).join(' · ')}
       </div>
@@ -1567,7 +1567,7 @@ async function runRateCheck() {
         <div style="font-size:var(--text-base);font-weight:600;margin-bottom:6px">${esc(r.next.headline)}</div>
         <div style="font-size:var(--text-sm);color:var(--muted);margin-bottom:14px">${esc(r.next.detail)}</div>
         <div class="row" style="gap:8px;flex-wrap:wrap">
-          <input id="c-email" type="email" placeholder="you@example.com" style="flex:1;min-width:200px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:9px;padding:11px 13px;color:var(--ink);outline:none;font-size:13.5px"/>
+          <input id="c-email" type="email" placeholder="you@example.com" style="flex:1;min-width:200px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.16);border-radius:9px;padding:11px 13px;color:var(--ink);outline:none;font-size:var(--text-base)"/>
           <button class="btn" id="c-signup">Send me the full breakdown</button>
         </div>
         <div class="muted" id="c-lead-msg" style="font-size:var(--text-xs);margin-top:8px"></div>
@@ -1900,7 +1900,7 @@ function renderOnboarding() {
         <div class="card tone-violet" style="border-color:var(--ai-border);">
           <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
           <div style="font-size:clamp(24px,4.4vw,34px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:10px 0 6px;color:${tone}">${esc(v.headline)}</div>
-          <div style="font-size:13.5px;color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b> ${sampleChip()}</div>
+          <div style="font-size:var(--text-base);color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b> ${sampleChip()}</div>
         ${sampleLine()}
         </div>
         <div class="ob-actions" style="margin-top:20px">
@@ -1955,7 +1955,7 @@ async function renderRadar() {
       planBanner = `<div class="card tone-violet" style="margin-bottom:14px;border-color:var(--ai-border);">
         <div class="row" style="justify-content:space-between;gap:16px;flex-wrap:wrap">
           <div style="flex:1;min-width:260px">
-            <div style="font-size:13.5px;font-weight:600">You are on Free – showing your top ${plan.limits.matches} scored opportunities</div>
+            <div style="font-size:var(--text-base);font-weight:600">You are on Free – showing your top ${plan.limits.matches} scored opportunities</div>
             <div class="dim" style="font-size:var(--text-sm);margin-top:3px">Pro unlocks the full radar, saved searches, the daily brief and the copilot. €19.99 a month, or €149.99 a year.</div>
           </div>
           <button class="btn sm" id="upgrade">Unlock Pro</button>
@@ -2017,8 +2017,8 @@ async function renderRadar() {
 
       </div>
       <div class="hello-score" style="text-align:right">
-        <div class="muted" style="font-size:11px;letter-spacing:.1em;text-transform:uppercase">Highest Opportunity Score</div>
-        <div style="font-size:28px;font-weight:750;letter-spacing:-.02em;color:var(--ink)">${s.topScore}<span style="font-size:var(--text-base);color:var(--muted)">/100</span></div>
+        <div class="muted" style="font-size:var(--text-xs);letter-spacing:.1em;text-transform:uppercase">Highest Opportunity Score</div>
+        <div style="font-size:var(--text-2xl);font-weight:750;letter-spacing:-.02em;color:var(--ink)">${s.topScore}<span style="font-size:var(--text-base);color:var(--muted)">/100</span></div>
       </div>
     </div>
     <div id="kpis" style="margin-bottom:14px"></div>
@@ -2034,7 +2034,7 @@ async function renderRadar() {
         </button>
         <div class="refine-summary" id="refine-summary"></div>
         <div style="flex:1"></div>
-        <span class="muted" id="f-count" style="font-size:12px"></span>
+        <span class="muted" id="f-count" style="font-size:var(--text-sm)"></span>
       </div>
       <div class="refine-panel" id="refine-panel">
         <div class="refine-row">
@@ -2121,7 +2121,7 @@ async function renderRadar() {
         </div>
         <div class="card" style="margin-top:12px">
           <h3>Your Market Right Now</h3>
-          <div id="facet-body" style="margin-top:10px"><span class="muted" style="font-size:12px">Loading…</span></div>
+          <div id="facet-body" style="margin-top:10px"><span class="muted" style="font-size:var(--text-sm)">Loading…</span></div>
         </div>
       </div>
     </div>
@@ -2177,10 +2177,10 @@ async function renderRadar() {
       if (box) box.innerHTML = `<div class="card" style="padding:12px 16px">
         <div class="row" style="justify-content:space-between;gap:14px;flex-wrap:wrap">
           <div class="row" style="gap:20px;flex-wrap:wrap">
-            <div><span class="mono" style="font-size:var(--text-lg);font-weight:700">${h.streak}</span> <span class="muted" style="font-size:12px">day streak</span></div>
-            <div><span class="mono" style="font-size:var(--text-lg);font-weight:700">${h.fresh}</span> <span class="muted" style="font-size:12px">new at 70+</span></div>
-            ${h.rateGapPct != null ? `<div><span class="mono" style="font-size:var(--text-lg);font-weight:700;color:${h.rateGapPct > 10 ? 'var(--bad)' : 'var(--good)'}">${h.rateGapPct}%</span> <span class="muted" style="font-size:12px">below market</span></div>` : ''}
-            ${h.scoreDelta ? `<div><span class="mono" style="font-size:var(--text-lg);font-weight:700;color:${h.scoreDelta > 0 ? 'var(--good)' : 'var(--bad)'}">${h.scoreDelta > 0 ? '+' : ''}${h.scoreDelta}</span> <span class="muted" style="font-size:12px">career score</span></div>` : ''}
+            <div><span class="mono" style="font-size:var(--text-lg);font-weight:700">${h.streak}</span> <span class="muted" style="font-size:var(--text-sm)">day streak</span></div>
+            <div><span class="mono" style="font-size:var(--text-lg);font-weight:700">${h.fresh}</span> <span class="muted" style="font-size:var(--text-sm)">new at 70+</span></div>
+            ${h.rateGapPct != null ? `<div><span class="mono" style="font-size:var(--text-lg);font-weight:700;color:${h.rateGapPct > 10 ? 'var(--bad)' : 'var(--good)'}">${h.rateGapPct}%</span> <span class="muted" style="font-size:var(--text-sm)">below market</span></div>` : ''}
+            ${h.scoreDelta ? `<div><span class="mono" style="font-size:var(--text-lg);font-weight:700;color:${h.scoreDelta > 0 ? 'var(--good)' : 'var(--bad)'}">${h.scoreDelta > 0 ? '+' : ''}${h.scoreDelta}</span> <span class="muted" style="font-size:var(--text-sm)">career score</span></div>` : ''}
           </div>
           <div class="row" style="gap:10px">
             <div class="bar" style="width:80px"><i style="width:${Math.min(100, (h.appliedThisWeek / h.weeklyTarget) * 100)}%"></i></div>
@@ -2197,7 +2197,7 @@ async function renderRadar() {
     teach.innerHTML = `<div class="card tone-violet" style="border-color:var(--line);background:var(--panel2)">
       <div class="row" style="justify-content:space-between;gap:16px;flex-wrap:wrap">
         <div style="flex:1;min-width:280px">
-          <div style="font-size:13.5px;font-weight:600">Every card here is scored against your twin.</div>
+          <div style="font-size:var(--text-base);font-weight:600">Every card here is scored against your twin.</div>
           <div class="dim" style="font-size:var(--text-sm);margin-top:4px">The big number is <b>match</b>. The two small numbers are <b>interview</b> and <b>offer</b> probability – calibrated from real outcomes, not guesses. Start with the highest interview odds, not the highest match.</div>
         </div>
         <button class="btn sm" id="teach-ok">Got it</button>
@@ -2226,7 +2226,7 @@ async function renderRadar() {
     mountAds('#ad-radar');
     mountFeedback();
     fitHeadlines();
-    $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="card tone-violet" style="text-align:center;border-color:var(--ai-border)"><div class="dim" style="font-size:13px">${rows.length - capped.length} more scored opportunities are hidden on the Free plan.</div><div style="margin-top:10px"><button class="btn sm" onclick="go('plan')">See what Pro unlocks</button></div></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
+    $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="card tone-violet" style="text-align:center;border-color:var(--ai-border)"><div class="dim" style="font-size:var(--text-sm)">${rows.length - capped.length} more scored opportunities are hidden on the Free plan.</div><div style="margin-top:10px"><button class="btn sm" onclick="go('plan')">See what Pro unlocks</button></div></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
     $('#f-count').textContent = `${rows.length} of ${feed.opportunities.length} shown`;
     bindOppActions();
     renderFacets(rows);
@@ -2317,7 +2317,7 @@ async function renderRadar() {
 function renderFacets(rows) {
   const body = $('#facet-body');
   if (!body) return;
-  if (!rows.length) { body.innerHTML = '<span class="muted" style="font-size:12px">No rows match.</span>'; return; }
+  if (!rows.length) { body.innerHTML = '<span class="muted" style="font-size:var(--text-sm)">No rows match.</span>'; return; }
   const CUR = { EUR: 1, USD: 0.92, GBP: 1.17, CHF: 1.05, CAD: 0.68, PLN: 0.23, INR: 0.011 };
   const annual = (o) => {
     if (o.comp_min == null) return null;
@@ -2499,8 +2499,8 @@ function openDetail(id) {
           </div>
         </div>
         <div class="probs" style="gap:18px">
-          <div style="text-align:center"><b style="font-size:22px">${o.interview_probability}%</b><div class="muted" style="font-size:11px">interview</div></div>
-          <div style="text-align:center"><b style="font-size:22px">${o.offer_probability}%</b><div class="muted" style="font-size:11px">offer</div></div>
+          <div style="text-align:center"><b style="font-size:var(--text-xl)">${o.interview_probability}%</b><div class="muted" style="font-size:var(--text-xs)">interview</div></div>
+          <div style="text-align:center"><b style="font-size:var(--text-xl)">${o.offer_probability}%</b><div class="muted" style="font-size:var(--text-xs)">offer</div></div>
         </div>
       </div>
     </div>
@@ -2523,7 +2523,7 @@ function openDetail(id) {
         <h3 style="margin-top:18px">What would move you up</h3>
         <div style="font-size:var(--text-sm)" class="dim">${(o.missing_skills || []).length ? 'Close: <b>' + o.missing_skills.map(esc).join(', ') + '</b> – each one raises both match and interview probability.' : 'You cover every listed skill. Your edge here is speed of application.'}</div>
         ${o.confidence ? `<div style="margin-top:16px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)">
-          <div class="row" style="justify-content:space-between"><span style="font-size:12px">Evidence quality</span><span class="mono" style="color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'}">${o.confidence.score}/100 · ${o.confidence.level}</span></div>
+          <div class="row" style="justify-content:space-between"><span style="font-size:var(--text-sm)">Evidence quality</span><span class="mono" style="color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'}">${o.confidence.score}/100 · ${o.confidence.level}</span></div>
           <div style="margin-top:8px;font-size:var(--text-xs);color:var(--muted);line-height:1.7">${o.confidence.factors.map((f) => `${esc(f.k)} <span class="mono">${esc(f.d)}</span>${f.note ? ' <span style="opacity:.7">– ' + esc(f.note) + '</span>' : ''}`).join('<br/>')}</div>
         </div>` : ''}
         <div class="kv" style="margin-top:16px"><span>Income potential</span><span class="mono">${o.income_potential}/100</span></div>
@@ -2546,7 +2546,7 @@ function openDetail(id) {
       <div class="suggest" style="margin-top:10px">
         ${['Should I apply?', 'How do I negotiate the salary?', "What's blocking me?"].map((q) => `<button class="d-ask" data-q="${esc(q)}">${esc(q)}</button>`).join('')}
       </div>
-      <div id="d-reply" class="dim" style="font-size:13px;margin-top:6px"></div>
+      <div id="d-reply" class="dim" style="font-size:var(--text-sm);margin-top:6px"></div>
     </div>
     <div class="card" style="margin-top:14px">
       <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
@@ -2556,7 +2556,7 @@ function openDetail(id) {
           <button class="chip cl-copy" style="cursor:pointer">copy</button>
         </div>
       </div>
-      <div id="cl-body" class="dim" style="font-size:13px;margin-top:10px">Choose a tone to generate a letter from your profile and this posting.</div>
+      <div id="cl-body" class="dim" style="font-size:var(--text-sm);margin-top:10px">Choose a tone to generate a letter from your profile and this posting.</div>
     </div>
     <div class="card" style="margin-top:14px">
       <div class="row" style="justify-content:space-between;flex-wrap:wrap;gap:8px">
@@ -2564,7 +2564,7 @@ function openDetail(id) {
         <button class="btn sm ghost" id="ip-load">Build my prep plan</button>
       </div>
       <p class="sub" style="margin:6px 0 0">Questions from this role family and your gaps, with STAR scaffolds from your own experience. Best used after you apply.</p>
-      <div id="ip-body" class="dim" style="font-size:13px;margin-top:10px"></div>
+      <div id="ip-body" class="dim" style="font-size:var(--text-sm);margin-top:10px"></div>
     </div>
     <div class="card" style="margin-top:14px" id="ref-card"></div>
     <div class="card" style="margin-top:14px"><h3>Listing</h3><p class="sub">As published by the employer.</p><div class="long" style="margin-top:8px">${paragraphs(o.description)}</div>
@@ -2577,7 +2577,7 @@ function openDetail(id) {
       box.innerHTML = '<span class="spin"></span>Thinking…';
       const r = await post('/api/copilot/opportunity', { opportunityId: o.id, message: b.dataset.q });
       const cites = (r.citations || []).map((c) => `${c.label}: ${c.detail}`).join(' · ');
-      box.innerHTML = `<div style="white-space:pre-wrap;line-height:1.65">${esc(r.reply)}</div>${cites ? `<div class="cite" style="margin-top:8px;font-size:11px;color:var(--muted);border-top:1px solid var(--line);padding-top:7px">Grounded in – ${esc(cites)}</div>` : ''}`;
+      box.innerHTML = `<div style="white-space:pre-wrap;line-height:1.65">${esc(r.reply)}</div>${cites ? `<div class="cite" style="margin-top:8px;font-size:var(--text-xs);color:var(--muted);border-top:1px solid var(--line);padding-top:7px">Grounded in – ${esc(cites)}</div>` : ''}`;
     };
   });
   const ipBtn = $('#ip-load');
@@ -2589,7 +2589,7 @@ function openDetail(id) {
     box.innerHTML = `
       <div style="margin-top:4px">
         ${r.questions.map((q, i) => `<div style="padding:11px 0;border-bottom:1px solid var(--line)">
-          <div style="font-size:13px;color:var(--ink)"><span class="mono muted" style="margin-right:8px">${i + 1}</span>${esc(q.q)}</div>
+          <div style="font-size:var(--text-sm);color:var(--ink)"><span class="mono muted" style="margin-right:8px">${i + 1}</span>${esc(q.q)}</div>
           <div class="muted" style="font-size:var(--text-xs);margin-top:4px;padding-left:22px">${esc(q.probe)}</div>
           <div style="margin-top:7px;padding-left:22px;display:grid;grid-template-columns:auto 1fr;gap:3px 12px;font-size:var(--text-xs);color:var(--ink2)">
             <span class="muted">S</span><span>${esc(q.structure.situation)}</span>
@@ -2597,16 +2597,16 @@ function openDetail(id) {
             <span class="muted">A</span><span>${esc(q.structure.action)}</span>
             <span class="muted">R</span><span>${esc(q.structure.result)}</span>
           </div>
-          <div class="muted" style="font-size:11px;margin-top:6px;padding-left:22px">↳ ${esc(q.evidence)}</div>
+          <div class="muted" style="font-size:var(--text-xs);margin-top:6px;padding-left:22px">↳ ${esc(q.evidence)}</div>
         </div>`).join('')}
       </div>
       <div style="margin-top:16px"><h3>Four-Day Plan</h3>
-        ${r.prepPlan.map((p) => `<div class="kv"><span><b style="color:var(--ink2)">${esc(p.day)}</b> · ${esc(p.focus)}</span><span class="muted" style="font-size:11px;text-align:right;max-width:180px">${esc(p.why)}</span></div>`).join('')}
+        ${r.prepPlan.map((p) => `<div class="kv"><span><b style="color:var(--ink2)">${esc(p.day)}</b> · ${esc(p.focus)}</span><span class="muted" style="font-size:var(--text-xs);text-align:right;max-width:180px">${esc(p.why)}</span></div>`).join('')}
       </div>
       <div style="margin-top:16px"><h3>Ask Them These</h3>
         ${r.questionsToAsk.map((q) => `<div class="kv"><span>${esc(q)}</span><span></span></div>`).join('')}
       </div>
-      <div class="muted" style="font-size:11px;margin-top:12px;border-top:1px solid var(--line);padding-top:8px">${esc(r.note)}</div>`;
+      <div class="muted" style="font-size:var(--text-xs);margin-top:12px;border-top:1px solid var(--line);padding-top:8px">${esc(r.note)}</div>`;
   };
 
   document.querySelectorAll('.cl-tone').forEach((b) => {
@@ -2616,7 +2616,7 @@ function openDetail(id) {
       const r = await post('/api/cover-letter', { opportunityId: o.id, tone: b.dataset.t, name: STATE.userRecord?.name || '' });
       if (r.error) { box.textContent = r.error; return; }
       box.innerHTML = `<div style="white-space:pre-wrap;line-height:1.75;color:var(--ink)">${esc(r.text)}</div>
-        <div class="muted" style="font-size:11px;margin-top:12px;border-top:1px solid var(--line);padding-top:8px">
+        <div class="muted" style="font-size:var(--text-xs);margin-top:12px;border-top:1px solid var(--line);padding-top:8px">
           ${esc(r.factCheck.note)} · matched: ${r.evidence.matchedSkills.map(esc).join(', ') || 'none listed'}${r.evidence.gaps.length ? ' · gaps acknowledged: ' + r.evidence.gaps.map(esc).join(', ') : ''}
         </div>`;
       $('#cl-body').dataset.text = r.text;
@@ -2634,7 +2634,7 @@ function openDetail(id) {
         $('#ref-card').innerHTML = `<h3>Route Through ${esc(r.referral.program)}</h3>
           <div class="dim" style="font-size:var(--text-sm);margin-top:6px">This listing comes from a partner with a referral programme (${esc(r.referral.payoutModel)}${r.referral.payoutAmount ? ', €' + r.referral.payoutAmount : ''}).</div>
           <div style="margin-top:10px"><a class="btn sm" href="${r.referral.url}" target="_blank" rel="noopener">Open with tracking</a></div>
-          <div class="muted" style="font-size:11px;margin-top:10px">${esc(r.referral.disclosure)}</div>`;
+          <div class="muted" style="font-size:var(--text-xs);margin-top:10px">${esc(r.referral.disclosure)}</div>`;
       } else {
         $('#ref-card').className = 'ref-mini';
         $('#ref-card').innerHTML = '<span>No referral route for this source. It is here on match alone.</span>';
@@ -2751,13 +2751,13 @@ async function renderScores() {
     <div class="card">
       ${v2.levers.slice(0, 3).map((l, i) => `<div style="display:flex;gap:12px;padding:11px 0;border-bottom:1px solid var(--line)">
         <div class="mono muted" style="width:18px">${i + 1}</div>
-        <div style="flex:1"><div style="font-size:13.5px;font-weight:550">${esc(l.lever)}</div>
-        <div class="muted" style="font-size:12px;margin-top:3px">${esc(l.why)}</div></div>
-        <div class="mono" style="font-size:12px;color:${l.value < 40 ? 'var(--bad)' : l.value < 70 ? 'var(--warn)' : 'var(--good)'}">${l.value}</div>
+        <div style="flex:1"><div style="font-size:var(--text-base);font-weight:550">${esc(l.lever)}</div>
+        <div class="muted" style="font-size:var(--text-sm);margin-top:3px">${esc(l.why)}</div></div>
+        <div class="mono" style="font-size:var(--text-sm);color:${l.value < 40 ? 'var(--bad)' : l.value < 70 ? 'var(--warn)' : 'var(--good)'}">${l.value}</div>
       </div>`).join('')}
       <div class="note" style="margin-top:12px">Ranked by your weakest score. Fixing the lowest number moves the overall score more than polishing the highest.</div>
     </div>` : `<h2 class="section">What to Attack First</h2>
-    <div class="card dim" style="font-size:13px">Your lowest score is <b>${cards.slice().sort((a, c) => a[1] - c[1])[0][0].toLowerCase()}</b>.</div>`}
+    <div class="card dim" style="font-size:var(--text-sm)">Your lowest score is <b>${cards.slice().sort((a, c) => a[1] - c[1])[0][0].toLowerCase()}</b>.</div>`}
   `;
 }
 
@@ -2783,11 +2783,11 @@ async function renderRates() {
           <div style="position:absolute;height:100%;border-radius:6px;background:linear-gradient(90deg,color-mix(in srgb,var(--accent) 35%,var(--track)),var(--accent));left:${pos(r.p25)}%;width:${pos(r.p75) - pos(r.p25)}%"></div>
           <div style="position:absolute;top:-6px;width:3px;height:22px;background:var(--ink);border-radius:2px;left:${pos(r.current || r.p50)}%"></div>
         </div>
-        <div class="legend" style="display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin-top:10px">
+        <div class="legend" style="display:flex;justify-content:space-between;font-size:var(--text-xs);color:var(--muted);margin-top:10px">
           <span>p25 ${money(r.p25)}</span><span>p50 ${money(r.p50)}</span><span>p75 ${money(r.p75)}</span><span>p90 ${money(r.p90)}</span>
         </div>
         ${r.gapPct != null ? `<div class="card tone-violet" style="margin-top:20px;background:var(--panel2);border-color:var(--ai-border)">
-          <div class="k" style="font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">Verdict</div>
+          <div class="k" style="font-size:var(--text-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">Verdict</div>
           <div style="font-size:var(--text-lg);font-weight:650;margin-top:6px">${r.verdict === 'underpaid' ? 'The market disagrees with your payslip – by ' + r.gapPct + '%' : r.verdict === 'slightly_under' ? 'Just under the line (' + r.gapPct + '%) – and it compounds' : r.verdict === 'at_market' ? 'Priced correctly. Not the same as paid well.' : 'Ahead of the market. Now use it.'}</div>
           <div class="dim" style="margin-top:4px">${r.gapAbs > 0 ? money(r.gapAbs) + ' per year of headroom at the median – ' + money(r.gapAbs * 2) + ' over two years.' : 'Your rate is defensible. The lever now is growth, not price.'}</div>
         </div>` : ''}
@@ -2835,13 +2835,13 @@ async function renderGaps() {
         ${plan.sequence.map((g) => `<div style="display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)">
           <div class="mono" style="width:20px;color:var(--muted)">${g.order}</div>
           <div style="flex:1">
-            <div style="font-size:13px">${esc(g.skill)} ${g.emerging ? '<span class="chip have" style="margin-left:6px">emerging</span>' : ''}</div>
-            <div class="muted" style="font-size:11px;margin-top:2px">unblocks ${g.blocking} · ${g.effortWeeks} weeks · ${g.adjacency === 'direct' ? 'in a category you already work in' : 'a lateral move'} · +${g.salaryPremium}% premium</div>
+            <div style="font-size:var(--text-sm)">${esc(g.skill)} ${g.emerging ? '<span class="chip have" style="margin-left:6px">emerging</span>' : ''}</div>
+            <div class="muted" style="font-size:var(--text-xs);margin-top:2px">unblocks ${g.blocking} · ${g.effortWeeks} weeks · ${g.adjacency === 'direct' ? 'in a category you already work in' : 'a lateral move'} · +${g.salaryPremium}% premium</div>
           </div>
-          <div style="text-align:right"><div class="mono" style="font-size:12px">${g.cumulativeBlocking}</div><div class="muted" style="font-size:10px">cumulative</div></div>
+          <div style="text-align:right"><div class="mono" style="font-size:var(--text-sm)">${g.cumulativeBlocking}</div><div class="muted" style="font-size:var(--text-2xs)">cumulative</div></div>
         </div>`).join('')}
       </div>
-      <div class="muted" style="font-size:11px;margin-top:12px">${esc(plan.rule)}</div>
+      <div class="muted" style="font-size:var(--text-xs);margin-top:12px">${esc(plan.rule)}</div>
     </div>
     ${partnerRecs.length ? `<div class="card" style="margin-bottom:14px">
       <h3>How to Close Them</h3>
@@ -2849,8 +2849,8 @@ async function renderGaps() {
       <div style="margin-top:12px">
         ${partnerRecs.slice(0, 5).map((r) => `<div style="display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)">
           <div style="flex:1">
-            <div style="font-size:13px">${esc(r.skill)}${r.blocking ? ` <span class="muted" style="font-size:11px">· unblocks ${r.blocking}</span>` : ''}</div>
-            <div class="muted" style="font-size:11px;margin-top:2px">${esc(r.reason || r.disclosure)}</div>
+            <div style="font-size:var(--text-sm)">${esc(r.skill)}${r.blocking ? ` <span class="muted" style="font-size:var(--text-xs)">· unblocks ${r.blocking}</span>` : ''}</div>
+            <div class="muted" style="font-size:var(--text-xs);margin-top:2px">${esc(r.reason || r.disclosure)}</div>
           </div>
           <button class="chip pr" data-slug="${esc(r.partner.slug)}" data-skill="${esc(r.skill)}" style="cursor:pointer">${esc(r.partner.name)}</button>
         </div>`).join('')}
@@ -2861,7 +2861,7 @@ async function renderGaps() {
       <tbody>${gaps.map((g) => `<tr>
         <td><b>${esc(g.skill)}</b></td>
         <td class="mono">${g.blocking} role${g.blocking === 1 ? '' : 's'}</td>
-        <td><div class="bar" style="width:90px"><i style="width:${g.share}%"></i></div><span class="muted mono" style="font-size:11px">${g.share}%</span></td>
+        <td><div class="bar" style="width:90px"><i style="width:${g.share}%"></i></div><span class="muted mono" style="font-size:var(--text-xs)">${g.share}%</span></td>
         <td class="mono">${g.demand}</td>
         <td class="mono" style="color:${g.salaryPremium > 10 ? 'var(--good)' : 'inherit'}">+${g.salaryPremium}%</td>
         <td class="mono" style="color:${g.growth > 20 ? 'var(--good)' : 'inherit'}">${g.growth > 0 ? '+' : ''}${g.growth}%</td>
@@ -2892,11 +2892,11 @@ async function renderTracker() {
           <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
             ${items.map((a) => `<div style="border:1px solid var(--line);border-radius:9px;padding:9px 10px;background:var(--panel2)">
               <div style="font-size:var(--text-sm);font-weight:550">${esc(a.title)}</div>
-              <div class="muted" style="font-size:11px">${esc(a.company)} · match ${a.match_score ?? '–'}</div>
+              <div class="muted" style="font-size:var(--text-xs)">${esc(a.company)} · match ${a.match_score ?? '–'}</div>
               <div class="row" style="gap:5px;margin-top:7px;flex-wrap:wrap">
                 ${cols.filter((x) => x !== c).map((x) => `<button class="chip mv" data-id="${a.opportunity_id}" data-to="${x}" style="cursor:pointer">${label[x]}</button>`).join('')}
               </div>
-            </div>`).join('') || '<div class="muted" style="font-size:12px">empty</div>'}
+            </div>`).join('') || '<div class="muted" style="font-size:var(--text-sm)">empty</div>'}
           </div>
         </div>`;
       }).join('')}
@@ -2976,7 +2976,7 @@ async function renderTwin() {
           <button class="btn ghost" id="d-export">Export Everything</button>
           <button class="btn danger" id="d-delete">Delete My Account</button>
         </div>
-        <div class="muted" style="font-size:11px;margin-top:8px">Export gives you a JSON file of every record we hold. Delete removes your profile, CV, applications, outcomes and preferences within 30 days.</div>
+        <div class="muted" style="font-size:var(--text-xs);margin-top:8px">Export gives you a JSON file of every record we hold. Delete removes your profile, CV, applications, outcomes and preferences within 30 days.</div>
         <div class="note" style="margin-top:14px">This is the switching cost: the twin accumulates history. A competitor can copy the UI in a week; it cannot copy your 12 months of behaviour and outcomes.</div>
       </div>
     </div>`;
@@ -3053,9 +3053,9 @@ async function renderLearning() {
     <h2 class="section">Your Measured Funnel</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="card"><h3>Applications</h3><div class="big mono">${intel.mine.funnel.applied}</div></div>
-      <div class="card"><h3>Interview Rate</h3><div class="big mono">${intel.mine.funnel.interviewRate == null ? '–' : intel.mine.funnel.interviewRate + '%'}</div><div class="muted" style="font-size:11px">measured, not modelled</div></div>
-      <div class="card"><h3>Offer Rate</h3><div class="big mono">${intel.mine.funnel.offerRate == null ? '–' : intel.mine.funnel.offerRate + '%'}</div><div class="muted" style="font-size:11px">of interviews</div></div>
-      <div class="card"><h3>End-to-end</h3><div class="big mono">${intel.mine.funnel.conversion == null ? '–' : intel.mine.funnel.conversion + '%'}</div><div class="muted" style="font-size:11px">application &gt; offer</div></div>
+      <div class="card"><h3>Interview Rate</h3><div class="big mono">${intel.mine.funnel.interviewRate == null ? '–' : intel.mine.funnel.interviewRate + '%'}</div><div class="muted" style="font-size:var(--text-xs)">measured, not modelled</div></div>
+      <div class="card"><h3>Offer Rate</h3><div class="big mono">${intel.mine.funnel.offerRate == null ? '–' : intel.mine.funnel.offerRate + '%'}</div><div class="muted" style="font-size:var(--text-xs)">of interviews</div></div>
+      <div class="card"><h3>End-to-end</h3><div class="big mono">${intel.mine.funnel.conversion == null ? '–' : intel.mine.funnel.conversion + '%'}</div><div class="muted" style="font-size:var(--text-xs)">application &gt; offer</div></div>
     </div>
     <div class="card" style="margin-top:14px">
       <h3>Market Benchmark</h3>
@@ -3091,12 +3091,12 @@ async function renderSearches() {
     <div class="grid" style="grid-template-columns:repeat(3,1fr)">
       ${searches.length ? searches.map((s) => `<div class="card">
         <div class="row" style="justify-content:space-between"><h3 style="margin:0">${esc(s.name)}</h3><button class="chip del" data-id="${s.id}" style="cursor:pointer">remove</button></div>
-        <div class="dim" style="font-size:12px;margin-top:8px">${Object.entries(s.filters).filter(([, v]) => v).map(([k, v]) => `<span class="chip" style="margin-right:4px">${esc(k)}: ${esc(v)}</span>`).join('') || '<span class="muted">no filters</span>'}</div>
-        <div class="muted" style="font-size:11px;margin-top:10px">created ${new Date(s.created_at).toLocaleDateString('en-GB')}</div>
+        <div class="dim" style="font-size:var(--text-sm);margin-top:8px">${Object.entries(s.filters).filter(([, v]) => v).map(([k, v]) => `<span class="chip" style="margin-right:4px">${esc(k)}: ${esc(v)}</span>`).join('') || '<span class="muted">no filters</span>'}</div>
+        <div class="muted" style="font-size:var(--text-xs);margin-top:10px">created ${new Date(s.created_at).toLocaleDateString('en-GB')}</div>
       </div>`).join('') : '<div class="card muted">No saved searches yet.</div>'}
     </div>
     <h2 class="section">Why This Matters</h2>
-    <div class="card dim" style="font-size:13px">Saved searches are the foundation of the daily brief: tomorrow the engine re-runs them against fresh inventory and tells you only what is new. That is the habit loop – you do not come back to search, you come back because it found something while you were asleep.</div>`;
+    <div class="card dim" style="font-size:var(--text-sm)">Saved searches are the foundation of the daily brief: tomorrow the engine re-runs them against fresh inventory and tells you only what is new. That is the habit loop – you do not come back to search, you come back because it found something while you were asleep.</div>`;
   $('#s-add').onclick = async () => {
     const name = $('#s-name').value.trim() || 'Untitled search';
     const filters = {};
@@ -3154,12 +3154,12 @@ async function renderPlan() {
     </div>
     <div class="card" style="margin-top:14px">
       <h3>Why the Paywall Sits Where It Does</h3>
-      <div class="dim" style="font-size:13px;margin-top:8px">The rate gap is free, always. That is the moment that earns trust – you should be able to find out you are underpaid without paying. What you pay for is the ongoing system: the full radar, saved searches, the daily brief, and a copilot that remembers your whole situation.</div>
+      <div class="dim" style="font-size:var(--text-sm);margin-top:8px">The rate gap is free, always. That is the moment that earns trust – you should be able to find out you are underpaid without paying. What you pay for is the ongoing system: the full radar, saved searches, the daily brief, and a copilot that remembers your whole situation.</div>
       <div class="kv" style="margin-top:14px"><span>Match scores computed</span><span class="mono">${int(p.usage.matchScores)}</span></div>
       <div class="kv"><span>Opportunities tracked</span><span class="mono">${int(p.usage.tracked)}</span></div>
       <div style="margin-top:16px;border-top:1px solid var(--line);padding-top:12px">
         <div class="row" style="justify-content:space-between"><span style="font-size:var(--text-sm)">Billing mode</span><span class="mono" style="color:${p.billing.ready ? 'var(--good)' : 'var(--warn)'}">${esc(p.billing.mode)}</span></div>
-        <div class="dim" style="font-size:12px;margin-top:6px">${esc(p.billing.note)}</div>
+        <div class="dim" style="font-size:var(--text-sm);margin-top:6px">${esc(p.billing.note)}</div>
       </div>
     </div>`;
   const checkout = async (cycle) => {
@@ -3184,21 +3184,21 @@ async function renderNegotiation() {
     <div class="card tone-violet" style="border-color:var(--line);">
       <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Negotiation brief · ${esc(n.confidence)} confidence · ${n.exactComparables} exact comparables</div>
       <div class="row" style="gap:26px;margin-top:14px;flex-wrap:wrap">
-        <div><div class="muted" style="font-size:11px">Floor (p50)</div><div class="big sm mono">${money(n.floor)}</div></div>
-        <div><div class="muted" style="font-size:11px">Your target (p75)</div><div class="big sm mono" style="color:var(--good)">${money(n.target)}</div></div>
-        <div><div class="muted" style="font-size:11px">Stretch (p90)</div><div class="big sm mono">${money(n.stretch)}</div></div>
-        ${n.current ? `<div><div class="muted" style="font-size:11px">You today</div><div class="big sm mono" style="color:var(--bad)">${money(n.current)}</div></div>` : ''}
+        <div><div class="muted" style="font-size:var(--text-xs)">Floor (p50)</div><div class="big sm mono">${money(n.floor)}</div></div>
+        <div><div class="muted" style="font-size:var(--text-xs)">Your target (p75)</div><div class="big sm mono" style="color:var(--good)">${money(n.target)}</div></div>
+        <div><div class="muted" style="font-size:var(--text-xs)">Stretch (p90)</div><div class="big sm mono">${money(n.stretch)}</div></div>
+        ${n.current ? `<div><div class="muted" style="font-size:var(--text-xs)">You today</div><div class="big sm mono" style="color:var(--bad)">${money(n.current)}</div></div>` : ''}
       </div>
     </div>
 
     <h2 class="section">What to Say When They Name a Number</h2>
     <div class="card">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">The ask</h3><button class="chip cp" data-t="${esc(n.askScript)}" style="cursor:pointer">copy</button></div>
-      <div style="margin-top:10px;font-size:13.5px;line-height:1.75;font-style:italic;color:var(--tone-ink, var(--tone-ink))">${esc(n.askScript)}</div>
+      <div style="margin-top:10px;font-size:var(--text-base);line-height:1.75;font-style:italic;color:var(--tone-ink, var(--tone-ink))">${esc(n.askScript)}</div>
     </div>
     <div class="card" style="margin-top:12px">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">If they come in low</h3><button class="chip cp" data-t="${esc(n.counterScript)}" style="cursor:pointer">copy</button></div>
-      <div style="margin-top:10px;font-size:13.5px;line-height:1.75;font-style:italic;color:var(--tone-ink, var(--tone-ink))">${esc(n.counterScript)}</div>
+      <div style="margin-top:10px;font-size:var(--text-base);line-height:1.75;font-style:italic;color:var(--tone-ink, var(--tone-ink))">${esc(n.counterScript)}</div>
     </div>
 
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
@@ -3224,7 +3224,7 @@ async function renderNegotiation() {
 /* ---------------- email ---------------- */
 async function renderEmail() {
   const [st, prefs, outbox, seq] = await Promise.all([api('/api/email/status'), api('/api/email/prefs'), api('/api/email/outbox'), api('/api/email/sequence')]);
-  const toggle = (key, label, hint) => `<div class="kv"><span>${label}<div class="muted" style="font-size:11px">${hint}</div></span>
+  const toggle = (key, label, hint) => `<div class="kv"><span>${label}<div class="muted" style="font-size:var(--text-xs)">${hint}</div></span>
     <span><button class="chip tg" data-k="${key}" style="cursor:pointer;${prefs[key] ? 'border-color:var(--good);color:var(--good)' : ''}">${prefs[key] ? 'on' : 'off'}</button></span></div>`;
   $('#view').innerHTML = `
     <div class="card" style="margin-bottom:14px">
@@ -3252,7 +3252,7 @@ async function renderEmail() {
       </div>
       <div class="card" style="margin-top:14px">
         <h3>Signup Sequence</h3>
-        <div class="dim" style="font-size:12px;margin-top:6px">Four emails over seven days, scheduled automatically when someone builds their twin. Each one is written from that person's own numbers.</div>
+        <div class="dim" style="font-size:var(--text-sm);margin-top:6px">Four emails over seven days, scheduled automatically when someone builds their twin. Each one is written from that person's own numbers.</div>
         <div style="margin-top:10px">${(() => {
           // Scheduled instances of the same email are one row with a count, not the same title four times.
           const list = seq.queued.length ? seq.queued : seq.steps.map((x) => ({ subject: x.subject, scheduled_for: 'day ' + x.day }));
@@ -3261,7 +3261,7 @@ async function renderEmail() {
             const g = groups.find((x) => x.subject === q.subject);
             if (g) g.count += 1; else groups.push({ subject: q.subject, count: 1, when: String(q.scheduled_for || '').slice(0, 10) });
           }
-          return groups.map((g) => `<div class="kv"><span>${esc(g.subject)}${g.count > 1 ? ` <span class="chip" style="margin-left:6px">×${g.count}</span>` : ''}</span><span class="muted mono" style="font-size:11px">${esc(g.when)}</span></div>`).join('');
+          return groups.map((g) => `<div class="kv"><span>${esc(g.subject)}${g.count > 1 ? ` <span class="chip" style="margin-left:6px">×${g.count}</span>` : ''}</span><span class="muted mono" style="font-size:var(--text-xs)">${esc(g.when)}</span></div>`).join('');
         })()}</div>
       </div>
       <div class="card">
@@ -3269,7 +3269,7 @@ async function renderEmail() {
         <div style="margin-top:10px;max-height:420px;overflow:auto">
           ${outbox.messages.length ? outbox.messages.map((m) => `<div style="padding:10px 0;border-bottom:1px solid var(--line)">
             <div class="row" style="justify-content:space-between"><span style="font-size:var(--text-sm);font-weight:550">${esc(m.subject)}</span><span class="chip ${m.status === 'sent' ? 'have' : ''}">${esc(m.status)}</span></div>
-            <div class="muted" style="font-size:11px;margin-top:2px">${esc(m.to_email)} · ${esc(m.kind)} · ${m.sent_at ? new Date(m.sent_at).toLocaleString('en-GB') : 'queued'}</div>
+            <div class="muted" style="font-size:var(--text-xs);margin-top:2px">${esc(m.to_email)} · ${esc(m.kind)} · ${m.sent_at ? new Date(m.sent_at).toLocaleString('en-GB') : 'queued'}</div>
           </div>`).join('') : '<div class="muted">Nothing composed yet.</div>'}
         </div>
       </div>
@@ -3309,10 +3309,10 @@ async function renderLeads() {
     .sort((a, b) => (b.gap_pct || 0) - (a.gap_pct || 0))[0] || null;
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
-      <div class="card"><h3>Leads Captured</h3><div class="big mono">${st.total}</div><div class="muted" style="font-size:11px">from the free check</div></div>
-      <div class="card"><h3>Converted to Accounts</h3><div class="big mono">${st.converted}</div><div class="muted" style="font-size:11px">${st.conversionRate}% conversion</div></div>
-      <div class="card"><h3>Underpaid &gt;10%</h3><div class="big mono">${st.withGap}</div><div class="muted" style="font-size:11px">highest-intent segment</div></div>
-      <div class="card"><h3>Shares Created</h3><div class="big mono">${st.shares}</div><div class="muted" style="font-size:11px">${st.shareViews} views</div></div>
+      <div class="card"><h3>Leads Captured</h3><div class="big mono">${st.total}</div><div class="muted" style="font-size:var(--text-xs)">from the free check</div></div>
+      <div class="card"><h3>Converted to Accounts</h3><div class="big mono">${st.converted}</div><div class="muted" style="font-size:var(--text-xs)">${st.conversionRate}% conversion</div></div>
+      <div class="card"><h3>Underpaid &gt;10%</h3><div class="big mono">${st.withGap}</div><div class="muted" style="font-size:var(--text-xs)">highest-intent segment</div></div>
+      <div class="card"><h3>Shares Created</h3><div class="big mono">${st.shares}</div><div class="muted" style="font-size:var(--text-xs)">${st.shareViews} views</div></div>
     </div>
     ${nextLead ? `<div class="card tone-blue" style="margin-top:14px">
       <div class="kpi-k">Contact next</div>
@@ -3343,7 +3343,7 @@ async function renderLeads() {
           <td class="mono" style="color:${l.gap_pct > 10 ? 'var(--bad)' : l.gap_pct > 0 ? 'var(--warn)' : 'var(--good)'}">${l.gap_pct != null ? (l.gap_pct > 0 ? '+' : '') + l.gap_pct + '%' : '–'}</td>
           <td class="mono">${l.median ? money(l.median) : '–'}</td>
           <td>${l.converted_user_id ? '<span class="chip have">account</span>' : '<span class="chip">lead</span>'}</td>
-          <td class="muted" style="font-size:11px">${new Date(l.created_at).toLocaleDateString('en-GB')}</td>
+          <td class="muted" style="font-size:var(--text-xs)">${new Date(l.created_at).toLocaleDateString('en-GB')}</td>
         </tr>`).join('') : '<tr><td colspan="9" class="muted">No leads yet. Run the free check on the landing page.</td></tr>'}
         </tbody>
       </table>
@@ -3377,10 +3377,10 @@ async function renderLaunch() {
     </div>
     <div class="card" style="margin-top:14px">
       ${l.checks.map((c) => `<div style="display:flex;gap:12px;align-items:flex-start;padding:11px 0;border-bottom:1px solid var(--line)">
-        <div style="width:16px;text-align:center;font-size:13px;color:${c.ok ? 'var(--good)' : c.blocking ? 'var(--bad)' : 'var(--warn)'}">${c.ok ? '✓' : c.blocking ? '✕' : '!'}</div>
+        <div style="width:16px;text-align:center;font-size:var(--text-sm);color:${c.ok ? 'var(--good)' : c.blocking ? 'var(--bad)' : 'var(--warn)'}">${c.ok ? '✓' : c.blocking ? '✕' : '!'}</div>
         <div style="flex:1">
-          <div style="font-size:13px;font-weight:550">${esc(c.label)}${c.blocking ? '' : ' <span class="muted" style="font-size:var(--text-2xs);font-weight:400">(not blocking)</span>'}</div>
-          <div class="muted" style="font-size:12px;margin-top:2px">${esc(c.detail)}</div>
+          <div style="font-size:var(--text-sm);font-weight:550">${esc(c.label)}${c.blocking ? '' : ' <span class="muted" style="font-size:var(--text-2xs);font-weight:400">(not blocking)</span>'}</div>
+          <div class="muted" style="font-size:var(--text-sm);margin-top:2px">${esc(c.detail)}</div>
         </div>
       </div>`).join('')}
     </div>
@@ -3420,8 +3420,8 @@ async function renderAnalytics() {
       <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Funnel · last ${f.windowDays} days · measured from real events</div>
       <div style="font-size:var(--text-md);font-weight:600;margin-top:8px;line-height:1.5">${esc(f.verdict)}</div>
       <div class="row" style="margin-top:14px;gap:24px">
-        <div><div class="big sm mono">${f.overallConversion}%</div><div class="muted" style="font-size:11px">visit &gt; paid</div></div>
-        <div><div class="big sm mono">${a.summary.total}</div><div class="muted" style="font-size:11px">events recorded</div></div>
+        <div><div class="big sm mono">${f.overallConversion}%</div><div class="muted" style="font-size:var(--text-xs)">visit &gt; paid</div></div>
+        <div><div class="big sm mono">${a.summary.total}</div><div class="muted" style="font-size:var(--text-xs)">events recorded</div></div>
       </div>
     </div>
 
@@ -3429,10 +3429,10 @@ async function renderAnalytics() {
     <div class="card">
       ${f.steps.map((s, i) => `<div style="padding:10px 0;border-bottom:1px solid var(--line)">
         <div class="row" style="justify-content:space-between">
-          <div><span class="mono muted" style="margin-right:10px">${i + 1}</span><b style="font-size:13px">${esc(s.label)}</b><span class="muted" style="font-size:var(--text-xs);margin-left:8px">${esc(s.meaning)}</span></div>
+          <div><span class="mono muted" style="margin-right:10px">${i + 1}</span><b style="font-size:var(--text-sm)">${esc(s.label)}</b><span class="muted" style="font-size:var(--text-xs);margin-left:8px">${esc(s.meaning)}</span></div>
           <div class="row" style="gap:14px">
             <span class="mono">${s.events}</span>
-            ${s.conversionFromPrevious != null ? `<span class="mono" style="font-size:11px;color:${s.conversionFromPrevious < 30 ? 'var(--bad)' : s.conversionFromPrevious < 60 ? 'var(--warn)' : 'var(--good)'}">${s.conversionFromPrevious}%</span>` : '<span class="muted" style="font-size:11px">–</span>'}
+            ${s.conversionFromPrevious != null ? `<span class="mono" style="font-size:var(--text-xs);color:${s.conversionFromPrevious < 30 ? 'var(--bad)' : s.conversionFromPrevious < 60 ? 'var(--warn)' : 'var(--good)'}">${s.conversionFromPrevious}%</span>` : '<span class="muted" style="font-size:var(--text-xs)">–</span>'}
           </div>
         </div>
         <div class="bar" style="margin-top:6px"><i style="width:${Math.round((s.events / maxN) * 100)}%"></i></div>
@@ -3447,7 +3447,7 @@ async function renderAnalytics() {
             <div style="width:100%;background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:3px 3px 0 0;height:${Math.max(3, Math.round((d.n / maxDay) * 100))}%"></div>
           </div>`).join('') : '<div class="muted">no events yet</div>'}
         </div>
-        <div class="muted" style="font-size:11px;margin-top:8px">${daily.length} active day${daily.length === 1 ? '' : 's'} in the last 14</div>
+        <div class="muted" style="font-size:var(--text-xs);margin-top:8px">${daily.length} active day${daily.length === 1 ? '' : 's'} in the last 14</div>
       </div>
       <div class="card">
         <h3>Top Events</h3>
@@ -3470,9 +3470,9 @@ async function renderPulse() {
   const famLabel = (f) => titleCase(f);
   $('#view').innerHTML = `
     <div class="row" style="gap:14px;margin-bottom:16px;flex-wrap:wrap">
-      <div class="card" style="flex:1;min-width:150px"><h3>Corpus</h3><div class="big mono">${p.totals.opportunities}</div><div class="muted" style="font-size:11px">live opportunities</div></div>
-      <div class="card" style="flex:1;min-width:150px"><h3>With Disclosed Pay</h3><div class="big mono">${p.sample}</div><div class="muted" style="font-size:11px">used in these benchmarks</div></div>
-      <div class="card" style="flex:1;min-width:150px"><h3>Remote Share</h3><div class="big mono">${p.remoteShare}%</div><div class="muted" style="font-size:11px">of all live roles</div></div>
+      <div class="card" style="flex:1;min-width:150px"><h3>Corpus</h3><div class="big mono">${p.totals.opportunities}</div><div class="muted" style="font-size:var(--text-xs)">live opportunities</div></div>
+      <div class="card" style="flex:1;min-width:150px"><h3>With Disclosed Pay</h3><div class="big mono">${p.sample}</div><div class="muted" style="font-size:var(--text-xs)">used in these benchmarks</div></div>
+      <div class="card" style="flex:1;min-width:150px"><h3>Remote Share</h3><div class="big mono">${p.remoteShare}%</div><div class="muted" style="font-size:var(--text-xs)">of all live roles</div></div>
     </div>
     <div class="grid" style="grid-template-columns:1fr 1fr">
       <div class="card">
@@ -3525,9 +3525,9 @@ async function renderTrajectory(months) {
   $('#view').innerHTML = `
     <div class="card tone-violet" style="border-color:var(--line);">
       <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Trajectory · ${months} months · transparent model, not a forecast</div>
-      <div style="font-size:16px;font-weight:600;margin-top:8px;line-height:1.5">${esc(t.insight)}</div>
+      <div style="font-size:var(--text-md);font-weight:600;margin-top:8px;line-height:1.5">${esc(t.insight)}</div>
       <div class="row" style="margin-top:16px;gap:8px">
-        ${[12, 24, 36, 60].map((m) => `<button class="tm" data-m="${m}" style="font-size:12px;padding:5px 11px;border-radius:999px;border:1px solid ${m === months ? 'var(--accent2)' : 'var(--line2)'};background:${m === months ? 'var(--nav-active)' : 'transparent'};color:${m === months ? 'var(--tone-ink)' : 'var(--ink2)'}">${m} months</button>`).join('')}
+        ${[12, 24, 36, 60].map((m) => `<button class="tm" data-m="${m}" style="font-size:var(--text-sm);padding:5px 11px;border-radius:999px;border:1px solid ${m === months ? 'var(--accent2)' : 'var(--line2)'};background:${m === months ? 'var(--nav-active)' : 'transparent'};color:${m === months ? 'var(--tone-ink)' : 'var(--ink2)'}">${m} months</button>`).join('')}
       </div>
     </div>
 
@@ -3535,11 +3535,11 @@ async function renderTrajectory(months) {
     <div class="card">
       ${t.paths.map((p) => `<div style="padding:12px 0;border-bottom:1px solid var(--line)">
         <div class="row" style="justify-content:space-between;align-items:baseline">
-          <div><b style="font-size:13.5px">${esc(p.label)}</b><div class="muted" style="font-size:var(--text-xs);margin-top:2px">${esc(p.note)}</div></div>
-          <div style="text-align:right"><div class="mono" style="font-size:16px;font-weight:650">${money(p.endSalary)}</div><div class="mono" style="font-size:11px;color:${p.deltaPct > 0 ? 'var(--good)' : 'var(--bad)'}">${p.deltaPct > 0 ? '+' : ''}${p.deltaPct}%</div></div>
+          <div><b style="font-size:var(--text-base)">${esc(p.label)}</b><div class="muted" style="font-size:var(--text-xs);margin-top:2px">${esc(p.note)}</div></div>
+          <div style="text-align:right"><div class="mono" style="font-size:var(--text-md);font-weight:650">${money(p.endSalary)}</div><div class="mono" style="font-size:var(--text-xs);color:${p.deltaPct > 0 ? 'var(--good)' : 'var(--bad)'}">${p.deltaPct > 0 ? '+' : ''}${p.deltaPct}%</div></div>
         </div>
         <div class="bar" style="margin-top:9px"><i style="width:${bar(p.endSalary)}%"></i></div>
-        <div class="row" style="justify-content:space-between;margin-top:6px;font-size:11px;color:var(--muted)">
+        <div class="row" style="justify-content:space-between;margin-top:6px;font-size:var(--text-xs);color:var(--muted)">
           <span>risk ${Math.round(p.risk * 100)}/100 · ${p.promotions} promotion${p.promotions === 1 ? '' : 's'} · ends at ${esc(p.endLevel)}</span>
           <span>risk-adjusted ${money(p.riskAdjusted)}</span>
         </div>
@@ -3557,7 +3557,7 @@ async function renderTrajectory(months) {
       </div>
       <div class="card">
         <h3>Assumptions (All of Them)</h3>
-        <div style="margin-top:10px">${t.assumptions.map((a) => `<div style="padding:6px 0;border-bottom:1px solid var(--line);font-size:12px;color:var(--ink2)">${esc(a)}</div>`).join('')}</div>
+        <div style="margin-top:10px">${t.assumptions.map((a) => `<div style="padding:6px 0;border-bottom:1px solid var(--line);font-size:var(--text-sm);color:var(--ink2)">${esc(a)}</div>`).join('')}</div>
       </div>
     </div>`;
   document.querySelectorAll('.tm').forEach((b) => { b.onclick = () => renderTrajectory(Number(b.dataset.m)); });
@@ -3570,7 +3570,7 @@ async function renderReferrals() {
   $('#view').innerHTML = `
     <div class="card" style="margin-bottom:14px">
       <h3>Partner Routing</h3>
-      <div class="dim" style="font-size:13px;margin-top:6px">${esc(r.note)}</div>
+      <div class="dim" style="font-size:var(--text-sm);margin-top:6px">${esc(r.note)}</div>
       <div class="row" style="margin-top:14px;gap:8px;flex-wrap:wrap">
         <input id="p-name" placeholder="Partner name" style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:var(--text-sm)"/>
         <input id="p-template" placeholder="Your referral URL – use {code} for the tracking token" style="flex:1;min-width:280px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:var(--text-sm)"/>
@@ -3582,13 +3582,13 @@ async function renderReferrals() {
     <div class="grid" style="grid-template-columns:repeat(2,1fr)">
       ${r.programs.map((p) => `<div class="card">
         <div class="row" style="justify-content:space-between">
-          <div><b style="font-size:var(--text-base)">${esc(p.name)}</b><div class="muted" style="font-size:11px">${esc(catLabel[p.category] || p.category)}</div></div>
+          <div><b style="font-size:var(--text-base)">${esc(p.name)}</b><div class="muted" style="font-size:var(--text-xs)">${esc(catLabel[p.category] || p.category)}</div></div>
           <span class="chip ${p.active ? 'have' : ''}">${p.active ? 'active' : 'paused'}</span>
         </div>
         <div class="kv" style="margin-top:10px"><span>Model</span><span class="mono">${esc(p.payout_model)}</span></div>
         <div class="kv"><span>Payout</span><span class="mono">${p.payout_amount ? money(p.payout_amount) : 'rev share'}</span></div>
         <div class="kv"><span>Clicks routed</span><span class="mono">${p.clicks}</span></div>
-        <div class="muted" style="font-size:11px;margin-top:8px;word-break:break-all">${esc(p.template || '–')}</div>
+        <div class="muted" style="font-size:var(--text-xs);margin-top:8px;word-break:break-all">${esc(p.template || '–')}</div>
       </div>`).join('')}
     </div>`;
   $('#p-add').onclick = async () => {
@@ -3611,16 +3611,16 @@ async function renderOps() {
   $('#view').innerHTML = `
     <h2 class="section section-ico" data-ico="pulse">Live Ingestion</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
-      <div class="card"><h3>Live Opportunities</h3><div class="big mono">${int(live.liveTotal)}</div><div class="muted" style="font-size:11px">from real APIs</div></div>
-      <div class="card"><h3>Last Run Kept</h3><div class="big mono">${last ? int(last.kept) : '–'}</div><div class="muted" style="font-size:11px">${last ? last.droppedNonTech + ' non-tech dropped' : ''}</div></div>
-      <div class="card"><h3>New This Run</h3><div class="big mono">${last ? int(last.inserted) : '–'}</div><div class="muted" style="font-size:11px">${last ? last.merged + ' merged into existing' : ''}</div></div>
-      <div class="card"><h3>Run Time</h3><div class="big mono">${last ? last.ms + 'ms' : '–'}</div><div class="muted" style="font-size:11px">${last ? new Date(last.at).toLocaleString('en-GB') : ''}</div></div>
+      <div class="card"><h3>Live Opportunities</h3><div class="big mono">${int(live.liveTotal)}</div><div class="muted" style="font-size:var(--text-xs)">from real APIs</div></div>
+      <div class="card"><h3>Last Run Kept</h3><div class="big mono">${last ? int(last.kept) : '–'}</div><div class="muted" style="font-size:var(--text-xs)">${last ? last.droppedNonTech + ' non-tech dropped' : ''}</div></div>
+      <div class="card"><h3>New This Run</h3><div class="big mono">${last ? int(last.inserted) : '–'}</div><div class="muted" style="font-size:var(--text-xs)">${last ? last.merged + ' merged into existing' : ''}</div></div>
+      <div class="card"><h3>Run Time</h3><div class="big mono">${last ? last.ms + 'ms' : '–'}</div><div class="muted" style="font-size:var(--text-xs)">${last ? new Date(last.at).toLocaleString('en-GB') : ''}</div></div>
     </div>
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
       <div class="card"><h3>Source Health</h3>
         <table class="t" style="margin-top:8px"><thead><tr><th>Adapter</th><th>Status</th><th>Rows</th><th>Latency</th></tr></thead><tbody>
         ${(last ? last.report : live.adapters.map((a) => ({ key: a.key, ok: null, count: 0, ms: 0 }))).map((r) => `<tr>
-          <td>${esc(r.label || r.key)}<div class="muted" style="font-size:11px">${esc((live.adapters.find((a) => a.key === r.key) || {}).note || '')}</div></td>
+          <td>${esc(r.label || r.key)}<div class="muted" style="font-size:var(--text-xs)">${esc((live.adapters.find((a) => a.key === r.key) || {}).note || '')}</div></td>
           <td>${r.ok === null ? '<span class="muted">not run</span>' : r.ok ? '<span style="color:var(--good)">● ok</span>' : `<span style="color:var(--bad)">● ${esc(r.error || 'fail')}</span>`}</td>
           <td class="mono">${int(r.count)}</td><td class="mono">${r.ms}ms</td></tr>`).join('')}
         </tbody></table>
@@ -3638,17 +3638,17 @@ async function renderOps() {
     </div>
     <h2 class="section section-ico" data-ico="heart">Listing Health</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
-      <div class="card"><h3>Live Opportunities</h3><div class="big mono">${int(lc.total)}</div><div class="muted" style="font-size:11px">${int(lc.fresh7)} posted this week</div></div>
-      <div class="card"><h3>Feed Health</h3><div class="big mono">${lc.health}%</div><div class="muted" style="font-size:11px">after removing ghosts</div></div>
-      <div class="card"><h3>Ghost Listings Filtered</h3><div class="big mono">${int(lc.ghost)}</div><div class="muted" style="font-size:11px">no comp + thin description</div></div>
-      <div class="card"><h3>Stale (&gt;60 days)</h3><div class="big mono">${int(lc.stale)}</div><div class="muted" style="font-size:11px">deprioritised in ranking</div></div>
+      <div class="card"><h3>Live Opportunities</h3><div class="big mono">${int(lc.total)}</div><div class="muted" style="font-size:var(--text-xs)">${int(lc.fresh7)} posted this week</div></div>
+      <div class="card"><h3>Feed Health</h3><div class="big mono">${lc.health}%</div><div class="muted" style="font-size:var(--text-xs)">after removing ghosts</div></div>
+      <div class="card"><h3>Ghost Listings Filtered</h3><div class="big mono">${int(lc.ghost)}</div><div class="muted" style="font-size:var(--text-xs)">no comp + thin description</div></div>
+      <div class="card"><h3>Stale (&gt;60 days)</h3><div class="big mono">${int(lc.stale)}</div><div class="muted" style="font-size:var(--text-xs)">deprioritised in ranking</div></div>
     </div>
     <div class="card" style="margin-top:14px"><div class="dim" style="font-size:var(--text-sm)">${esc(lc.note)}</div></div>
     <h2 class="section section-ico" data-ico="stack">Corpus</h2>
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="card"><h3>Raw Listings Ingested</h3><div class="big mono">${int(o.ingest.raw)}</div></div>
       <div class="card"><h3>Canonical Opportunities</h3><div class="big mono">${int(o.totalOpportunities)}</div></div>
-      <div class="card"><h3>Duplicates Merged</h3><div class="big mono">${int(o.ingest.merged)}</div><div class="muted" style="font-size:11px">${o.ingest.duplicateRate}% of raw</div></div>
+      <div class="card"><h3>Duplicates Merged</h3><div class="big mono">${int(o.ingest.merged)}</div><div class="muted" style="font-size:var(--text-xs)">${o.ingest.duplicateRate}% of raw</div></div>
       <div class="card"><h3>Salary Records</h3><div class="big mono">${int(o.salaryRecords)}</div></div>
     </div>
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
@@ -3804,7 +3804,7 @@ function showHelp() {
   el.className = 'palette open';
   el.innerHTML = `<div class="palette-box" style="padding:22px">
     <div style="font-size:var(--text-md);font-weight:650;margin-bottom:12px">Keyboard</div>
-    <div style="display:grid;grid-template-columns:auto 1fr;gap:9px 18px;font-size:13px">
+    <div style="display:grid;grid-template-columns:auto 1fr;gap:9px 18px;font-size:var(--text-sm)">
       <span><kbd>⌘</kbd><kbd>K</kbd></span><span>Command palette – search everything, jump anywhere</span>
       <span><kbd>J</kbd> <kbd>K</kbd> or <kbd>↑</kbd><kbd>↓</kbd></span><span>Move through the feed</span>
       <span><kbd>↵</kbd></span><span>Open the selected opportunity</span>
@@ -3813,7 +3813,7 @@ function showHelp() {
       <span><kbd>?</kbd></span><span>This panel</span>
       <span><kbd>esc</kbd></span><span>Close anything</span>
     </div>
-    <div class="muted" style="font-size:12px;margin-top:16px">Built to be used with hands on the keyboard – the same way you would use a terminal, not a job board.</div>
+    <div class="muted" style="font-size:var(--text-sm);margin-top:16px">Built to be used with hands on the keyboard – the same way you would use a terminal, not a job board.</div>
   </div>`;
   el.onclick = (e) => { if (e.target === el || e.target.closest('.palette-box') === null) el.remove(); };
   document.body.appendChild(el);
@@ -3830,10 +3830,10 @@ async function renderBrief() {
           <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Brief · ${new Date(b.generatedAt).toLocaleString('en-GB', { weekday: 'long', hour: '2-digit', minute: '2-digit' })}</div>
           <div class="brief-hl">${esc(b.headline)}</div>
           <div class="row" style="margin-top:16px;gap:20px;flex-wrap:wrap">
-            <div><div class="big sm mono" style="color:${b.counts.closingSoon ? 'var(--warn)' : 'var(--ink)'}">${b.counts.closingSoon}</div><div class="muted" style="font-size:11px">closing within 72h</div></div>
-            <div><div class="big sm mono">${b.counts.newSinceYesterday}</div><div class="muted" style="font-size:11px">new since yesterday</div></div>
-            <div><div class="big sm mono">${b.counts.newHighMatch}</div><div class="muted" style="font-size:11px">at 80+ match</div></div>
-            <div><div class="big sm mono">${b.counts.totalScored}</div><div class="muted" style="font-size:11px">in your scored set</div></div>
+            <div><div class="big sm mono" style="color:${b.counts.closingSoon ? 'var(--warn)' : 'var(--ink)'}">${b.counts.closingSoon}</div><div class="muted" style="font-size:var(--text-xs)">closing within 72h</div></div>
+            <div><div class="big sm mono">${b.counts.newSinceYesterday}</div><div class="muted" style="font-size:var(--text-xs)">new since yesterday</div></div>
+            <div><div class="big sm mono">${b.counts.newHighMatch}</div><div class="muted" style="font-size:var(--text-xs)">at 80+ match</div></div>
+            <div><div class="big sm mono">${b.counts.totalScored}</div><div class="muted" style="font-size:var(--text-xs)">in your scored set</div></div>
           </div>
         </div>
 
@@ -3851,7 +3851,7 @@ async function renderBrief() {
         <div>${(b.newHighMatch || []).map(oppCard).join('') || `<div class="empty-line"><span class="muted">Nothing new at 80+ since your last visit.</span><button class="btn sm ghost" onclick="go('radar')">Open the radar</button></div>`}</div>
 
         ${b.searchHits && b.searchHits.length ? `<h2 class="section">Your Saved Searches Found</h2>
-        ${b.searchHits.map((s) => `<div class="card" style="margin-bottom:10px"><h3>${esc(s.name)}</h3><div class="dim" style="font-size:12px;margin-top:6px">${s.hits.map((h) => esc(h.title) + ' · ' + esc(h.company) + ' <span class="muted">(' + h.match_score + ')</span>').join('<br/>')}</div></div>`).join('')}` : ''}
+        ${b.searchHits.map((s) => `<div class="card" style="margin-bottom:10px"><h3>${esc(s.name)}</h3><div class="dim" style="font-size:var(--text-sm);margin-top:6px">${s.hits.map((h) => esc(h.title) + ' · ' + esc(h.company) + ' <span class="muted">(' + h.match_score + ')</span>').join('<br/>')}</div></div>`).join('')}` : ''}
       </div>
       <div>
         <div class="card">
@@ -3920,7 +3920,7 @@ function renderPalette() {
       <span class="k">${it.kind === 'go' ? 'go' : it.kind === 'cmd' ? 'cmd' : 'opp'}</span>
       <span>${esc(it.label)}</span>
       ${it.score != null ? `<span class="s" style="color:${scoreColor(it.score)[0]}">${it.score}</span>` : `<span class="s">${esc(it.hint || '')}</span>`}
-    </div>`).join('') : '<div style="padding:16px;color:var(--muted);font-size:13px">Nothing matches.</div>';
+    </div>`).join('') : '<div style="padding:16px;color:var(--muted);font-size:var(--text-sm)">Nothing matches.</div>';
   document.querySelectorAll('.palette-item').forEach((el) => {
     el.onclick = () => { const it = PAL.items[Number(el.dataset.i)]; closePalette(); it.action(); };
   });
