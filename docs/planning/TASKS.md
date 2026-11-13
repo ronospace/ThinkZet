@@ -10,16 +10,16 @@ Last updated: 13 November 2026.
 
 ---
 
-## A. Us – in progress, in this order
+## A. Us – closed 13 November 2026 (every row measured)
 
 | # | ID | Cat | Task (what the founder asked) | Status |
 |---|---|---|---|---|
-| 1 | NAV-01 | NAV | Scrolling to the end of a screen moves to the next one in the left menu; scrolling up at the top moves to the previous one. The left tab follows | IN PROGRESS |
+| 1 | NAV-01 | NAV | Scrolling to the end of a screen moves to the next one in the left menu; scrolling up at the top moves to the previous one. The left tab follows | DONE | measured: wheel handler at index.html:4188 flips on the first fresh gesture at the edge, `lockedUntil` 420ms settle, `go()` re-renders and the rail follows |
 | 2 | AUTH-06 | AUTH | Display name: provider default, user override, used everywhere | DONE |
-| 3 | AUTH-07 | AUTH | Signed-in users never see demo mode. Menu item removed for them; server refuses `/api/demo` | IN PROGRESS (code written, to verify) |
-| 4 | COPY-14 | COPY | "Explore the demo profile first" becomes "Demo mode" | OPEN |
-| 5 | COPY-15 | COPY | "Morning brief" is time-driven; name it "Daily brief" and make the greeting follow the send hour | IN PROGRESS (mailer done, UI labels to do) |
-| 6 | COPY-16 | COPY | "closes in 1 days" reads "closes tomorrow" or "closes today" | IN PROGRESS (code written, to verify) |
+| 3 | AUTH-07 | AUTH | Signed-in users never see demo mode. Menu item removed for them; server refuses `/api/demo` | DONE | measured: `#load-demo` hidden when `STATE.authed`, and `POST /api/demo` answers 403 `Demo mode is only for signed-out visitors` |
+| 4 | COPY-14 | COPY | "Explore the demo profile first" becomes "Demo mode" | DONE | measured: 0 occurrences of the old string, the control reads Demo Mode in the menu and the profile pill |
+| 5 | COPY-15 | COPY | "Morning brief" is time-driven; name it "Daily brief" and make the greeting follow the send hour | DONE | measured: the last plan bullet read "morning brief" and now reads "daily brief"; greeting is hour-driven in index.html:2066 and mailer.cjs:181 |
+| 6 | COPY-16 | COPY | "closes in 1 days" reads "closes tomorrow" or "closes today" | DONE | measured: server.cjs:1366 returns closes today / closes tomorrow / closes in N days |
 | 7 | AUTH-08 | AUTH | Sign-in rate limit split: 5 codes per address and 40 per network in 15 minutes, so a shared IP no longer locks out new sign-ups | Us | DONE | tested: 5 x 200 then 429 for one address; 8 different addresses from one IP all 200 |
 | NAV-04 | NAV | One gesture at the edge changes screen immediately: no threshold, no progress hint, 420ms settle | Us | DONE | measured: flip on the first wheel event, momentum does not fire, back at the top works |
 | NAV-06 | NAV | Scroll flip keeps the measured rule (a gesture that begins at the edge) with a shorter gap and settle; the push-at-edge variant was tried and reverted because it fired during a normal scroll to the bottom | Us | DONE | momentum does not flip, first deliberate gesture does, back at top works |
