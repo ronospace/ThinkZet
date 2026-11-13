@@ -98,6 +98,7 @@ Last updated: 13 November 2026.
 | 8 | UI-02 | UI | Structure audit of the remaining screens at phone and desktop widths | DONE |
 | 9 | UI-07 | UI | Mercor-style structure for app screens (underline tabs, left sub-nav plus form column) | DONE (superseded): the rail plus single-column app shell was kept; the Mercor tab structure was rejected in review |
 | 10 | UI-03 | UI | Replace the remaining hardcoded colours with tokens | DONE | measured: zero rule-level hexes; score tones are theme tokens, meta reads --bg |
+| 10b | SEO-07 | SEO | Withdrawn strategy page answers 410 with noindex instead of 404, so Google drops it | DONE | measured: 410 on /strategy.html and /strategy, header present, sitemap 0 mentions |
 | 11 | UI-12 | UI | Landing page always checked in both PC mode and mobile mode before it is called done | RULE (in `ENGINEERING.md`) |
 | 12 | COPY-17 | COPY | Mercor sign-in order option: email first, Google below. Only if the founder asks | OPEN (decision) |
 
