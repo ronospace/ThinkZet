@@ -2378,17 +2378,56 @@ route('GET', /^\/api\/ingest$/, async (req, res) => {
   json(res, 200, { last, liveTotal, counts, adapters: Object.entries(SOURCES.ADAPTERS).map(([k, v]) => ({ key: k, label: v.label, note: v.note, quality: v.quality })) });
 });
 
+// A filter set in the words a person used to build it. This is the search's name, so nobody has to
+// type one, and the card can say what it watches without decoding keys.
+const FILTER_WORD = { remote: 'Remote', hybrid: 'Hybrid', onsite: 'On site' };
+function filterLabel(f = {}) {
+  const parts = [];
+  if (f.seniority) parts.push(String(f.seniority).replace(/^./, (c) => c.toUpperCase()));
+  if (f.family) parts.push(String(f.family).replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase()));
+  else if (f.q) parts.push(String(f.q));
+  if (f.country) parts.push(String(f.country).toUpperCase());
+  if (f.visa) parts.push('Visa sponsorship');
+  if (f.types) parts.push(String(f.types).split(',').map((t) => t.replace(/[_-]+/g, ' ').replace(/^./, (c) => c.toUpperCase())).join(', '));
+  if (f.minScore && Number(f.minScore) > 45) parts.push(`${Number(f.minScore)}+ match`);
+  return parts.length ? parts.join(' · ') : 'Everything scored for you';
+}
+
 route('GET', /^\/api\/saved-searches$/, async (req, res) => {
-  const rows = db.prepare('SELECT * FROM saved_searches WHERE user_id=? ORDER BY created_at DESC').all(resolveUser(req));
-  json(res, 200, { searches: rows.map((r) => ({ ...r, filters: JSON.parse(r.filters || '{}') })) });
+  const uid = resolveUser(req);
+  const rows = db.prepare('SELECT * FROM saved_searches WHERE user_id=? ORDER BY created_at DESC').all(uid);
+  // Each search answers with what it found, not just what it watches: a count and the rows themselves,
+  // so the page never asks the person to go and search for the result it already has.
+  const top = opportunitiesWithMatch(uid, { limit: 400, minScore: 45 });
+  const seen = new Set(db.prepare('SELECT opportunity_id FROM brief_seen WHERE user_id=?').all(uid).map((r) => r.opportunity_id));
+  const hit = (o, f) =>
+    (!f.country || o.country === f.country) &&
+    (!f.family || o.role_family === f.family) &&
+    (!f.seniority || o.seniority === f.seniority) &&
+    (!f.visa || o.visa_sponsorship === 'yes') &&
+    (!f.q || `${o.title} ${o.company}`.toLowerCase().includes(String(f.q).toLowerCase())) &&
+    (!f.types || String(f.types).split(',').includes(o.type));
+  const searches = rows.map((r) => {
+    const f = JSON.parse(r.filters || '{}');
+    const matched = top.filter((o) => hit(o, f));
+    const fresh = matched.filter((o) => !seen.has(o.id));
+    return {
+      ...r, filters: f, label: filterLabel(f),
+      newCount: fresh.length,
+      total: matched.length,
+      hits: fresh.slice(0, 3).map((o) => ({ id: o.id, title: o.title, company: o.company, matchScore: o.match_score, country: o.country })),
+    };
+  });
+  json(res, 200, { searches });
 });
 
 route('POST', /^\/api\/saved-searches$/, async (req, res) => {
   const body = await readBody(req);
   const id = crypto.randomUUID();
+  const filters = body.filters || {};
   db.prepare('INSERT INTO saved_searches (id,user_id,name,filters) VALUES (?,?,?,?)')
-    .run(id, resolveUser(req), body.name || 'Untitled search', JSON.stringify(body.filters || {}));
-  json(res, 200, { ok: true, id });
+    .run(id, resolveUser(req), body.name || filterLabel(filters), JSON.stringify(filters));
+  json(res, 200, { ok: true, id, name: body.name || filterLabel(filters) });
 });
 
 route('DELETE', /^\/api\/saved-searches\/([^/]+)$/, async (req, res, url, m) => {

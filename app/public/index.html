@@ -946,6 +946,25 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .fb-why{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:var(--radius);color:var(--ink);padding:9px 11px;font:inherit;font-size:var(--text-sm);resize:vertical}
 .fb-why:focus{outline:none;border-color:var(--accent2)}
 @media(max-width:560px){.fb-stars{margin-left:0}.fb-star{width:30px;height:30px}}
+/* ---------- saved searches ---------- */
+.sh-list{display:grid;grid-template-columns:1fr;gap:12px}
+.sh-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.sh-headmain{min-width:0;flex:1 1 auto}
+.sh-headacts{display:flex;gap:6px;flex:0 0 auto}
+/* A long auto-name needs the full width on a phone, so the badges drop beneath it rather than squeezing it to three lines. */
+@media(max-width:560px){.sh-head{flex-wrap:wrap}.sh-headacts{order:2}}
+.sh-card{padding:16px 18px}
+.sh-hits{margin-top:12px;display:grid;gap:6px}
+.sh-hits .sh{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 10px;cursor:pointer;font:inherit;color:inherit}
+.sh-hits .sh:hover{border-color:var(--line2)}
+.sh-s{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:24px;border-radius:6px;font-size:var(--text-2xs);font-weight:700;font-variant-numeric:tabular-nums}
+.sh-s.g{background:var(--score-hi-bg);color:var(--score-hi)}
+.sh-s.m{background:var(--score-mid-bg);color:var(--score-mid)}
+.sh-s.l{background:var(--score-low-bg);color:var(--score-low)}
+.sh-b{display:block;min-width:0}
+.sh-t{display:block;font-size:var(--text-sm);font-weight:600;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sh-c{display:block;font-size:var(--text-xs);color:var(--muted);margin-top:1px}
+.sh-x{color:var(--muted);font-size:var(--text-md)}
 /* ---------- your data ---------- */
 .data-acts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
 .data-act{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
@@ -3274,38 +3293,66 @@ async function renderLearning() {
 }
 
 /* ---------------- saved searches ---------------- */
+// A saved search is a standing question. The page therefore leads with what it found, never with a
+// form: the filters already chosen on the radar are the search, so saving is one button and no typing.
 async function renderSearches() {
   const { searches } = await api('/api/saved-searches');
+  const active = [];
+  if (FILTERS.seniority) active.push(titleCase(FILTERS.seniority));
+  if (FILTERS.family) active.push(titleCase(FILTERS.family));
+  if (FILTERS.country) active.push(FILTERS.country);
+  if (FILTERS.visa) active.push('Visa sponsorship');
+  if (FILTERS.q) active.push(FILTERS.q);
+  if (STATE.types.length) active.push(STATE.types.map((t) => titleCase(t)).join(', '));
+  const watching = active.length ? active.join(' · ') : 'Everything scored for you';
   $('#view').innerHTML = `
-    <div class="card" style="margin-bottom:14px">
-      <h3>Saved Searches</h3>
-      <div class="dim" style="margin-top:6px;font-size:var(--text-sm)">A search you save becomes a standing question the engine keeps answering. This is the difference between a job board (you ask) and an operating system (it watches).</div>
-      <div class="row" style="margin-top:14px;gap:8px;flex-wrap:wrap">
-        <input id="s-name" placeholder="Name this search – e.g. 'Senior AI roles, DE/NL, visa'" style="flex:1;min-width:260px;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:9px 12px;outline:none"/>
-        <button class="btn" id="s-add">Save current filters</button>
+    <div class="card plain" style="margin-bottom:14px">
+      <h3>Watch a Search</h3>
+      <div class="facts tight">
+        <span class="fk">What it does</span>
+        <span class="fv">It re-runs your filters against every new posting and tells you only what is new, so you do not come back to search.</span>
+        <span class="fk">What it watches</span>
+        <span class="fv">${esc(watching)}</span>
+      </div>
+      <div class="row" style="margin-top:12px;gap:8px;flex-wrap:wrap;align-items:center">
+        <button class="btn" id="s-add">Watch This Search</button>
+        <button class="btn ghost" id="s-edit">Change the Filters</button>
+        <span class="dim" style="font-size:var(--text-xs)">Named for you. You can rename it after.</span>
       </div>
     </div>
-    <div class="grid" style="grid-template-columns:repeat(3,1fr)">
-      ${searches.length ? searches.map((s) => `<div class="card">
-        <div class="row" style="justify-content:space-between"><h3 style="margin:0">${esc(s.name)}</h3><button class="chip del" data-id="${s.id}" style="cursor:pointer">remove</button></div>
-        <div class="dim" style="font-size:var(--text-sm);margin-top:8px">${Object.entries(s.filters).filter(([, v]) => v).map(([k, v]) => `<span class="chip" style="margin-right:4px">${esc(k)}: ${esc(v)}</span>`).join('') || '<span class="muted">no filters</span>'}</div>
-        <div class="muted" style="font-size:var(--text-xs);margin-top:10px">created ${new Date(s.created_at).toLocaleDateString('en-GB')}</div>
-      </div>`).join('') : '<div class="card muted">No saved searches yet.</div>'}
+    <div class="sh-list">
+      ${searches.length ? searches.map((s) => `<div class="card sh-card" data-search="${esc(s.id)}">
+        <div class="sh-head">
+          <div class="sh-headmain">
+            <h3 style="margin:0">${esc(s.name)}</h3>
+            ${s.label && s.label !== s.name ? `<div class="dim" style="font-size:var(--text-sm);margin-top:4px">${esc(s.label)}</div>` : ''}
+          </div>
+          <div class="sh-headacts">
+            <span class="bdg ${s.newCount ? 'act' : 'neu'}">${s.newCount ? int(s.newCount) + (s.newCount >= 400 ? '+' : '') + ' new' : 'Up to date'}</span>
+            <button class="chip del" data-id="${esc(s.id)}" style="cursor:pointer">Remove</button>
+          </div>
+        </div>
+        ${s.hits && s.hits.length ? `<div class="sh-hits">${s.hits.map((h) => `<button class="sh" data-opp="${esc(h.id)}">
+          <span class="sh-s ${h.matchScore >= 80 ? 'g' : h.matchScore >= 65 ? 'm' : 'l'}">${int(h.matchScore)}</span>
+          <span class="sh-b"><span class="sh-t">${esc(h.title)}</span><span class="sh-c">${esc(h.company)}${h.country ? ' · ' + esc(h.country) : ''}</span></span>
+          <span class="sh-x">›</span>
+        </button>`).join('')}</div>` : `<div class="empty-line">Nothing new since you last looked. ${int(s.total)} scored ${s.total === 1 ? 'opportunity matches' : 'opportunities match'} this search.</div>`}
+      </div>`).join('') : '<div class="card"><div class="empty-line">No searches watched yet. Set filters on The Radar, then press Watch This Search.</div></div>'}
     </div>
     `;
   $('#s-add').onclick = async () => {
-    const name = $('#s-name').value.trim() || 'Untitled search';
     const filters = {};
     Object.entries(FILTERS).forEach(([k, v]) => { if (v && v !== 45) filters[k] = v; });
     if (STATE.types.length) filters.types = STATE.types.join(',');
-    filters.horizon = STATE.horizon;
-    await post('/api/saved-searches', { name, filters });
-    toast('Saved – the engine will watch this');
+    const r = await post('/api/saved-searches', { filters });
+    toast(`Watching ${r.name || 'this search'}`);
     renderSearches();
   };
+  $('#s-edit').onclick = () => go('radar');
   document.querySelectorAll('.del').forEach((b) => {
     b.onclick = async () => { await api('/api/saved-searches/' + b.dataset.id, { method: 'DELETE' }); renderSearches(); };
   });
+  document.querySelectorAll('.sh[data-opp]').forEach((b) => { b.onclick = () => openDetail(b.dataset.opp); });
 }
 
 /* ---------------- plan ---------------- */

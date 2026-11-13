@@ -134,6 +134,16 @@ async function call(method, path, body) {
     d.close();
   } catch (e) { fail++; failures.push('invariant failed: replay check could not run - ' + e.message); }
 
+  // A saved search must answer with what it found, and name itself, so the page never asks the person
+  // to type a name or to go and search for a result the server already has.
+  const ssPost = await call('POST', '/api/saved-searches', { filters: { seniority: 'senior', family: 'data_science', country: 'DE', visa: true } });
+  const ssList = await call('GET', '/api/saved-searches');
+  const ssRow = (ssList.json?.searches || []).find((r) => r.id === ssPost.json?.id);
+  const ssOk = ssPost.status === 200 && /Senior/.test(String(ssPost.json?.name || ''))
+    && ssRow && typeof ssRow.newCount === 'number' && typeof ssRow.total === 'number' && Array.isArray(ssRow.hits);
+  if (ssOk) pass++; else { fail++; failures.push('invariant failed: a saved search names itself and returns its hits'); }
+  if (ssPost.json?.id) await call('DELETE', '/api/saved-searches/' + ssPost.json.id);
+
   const legal = await call('GET', '/legal/privacy.html');
   if (legal.status === 200 && /Privacy/.test(legal.text || '')) pass++; else { fail++; failures.push('invariant failed: privacy page served'); }
 
