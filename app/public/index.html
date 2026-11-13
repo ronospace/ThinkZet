@@ -1268,7 +1268,7 @@ async function mountFeedback() {
     send.disabled = false;
     send.classList.remove('sent');
     send.textContent = 'Send';
-    follow.hidden = !(rating && rating <= 3);
+    follow.hidden = false;
   };
   const submit = async (n, comment) => {
     const body = { rating: n, surface: 'radar' };
@@ -1296,10 +1296,12 @@ async function mountFeedback() {
       const n = Number(b.dataset.n);
       rating = n;
       paint(n);
-      // A low rating is only useful with the reason, so it waits for Send.
-      if (n <= 3) { follow.hidden = false; why.focus(); return; }
-      follow.hidden = true;
-      submit(n, '');
+      // Every rating opens the same box, so 5/5 and 1/5 take the same number of taps. Send submits.
+      follow.hidden = false;
+      send.disabled = false;
+      send.classList.remove('sent');
+      send.textContent = 'Send';
+      why.focus();
     };
   });
   send.onclick = () => submit(rating, why.value.trim());
@@ -2092,7 +2094,7 @@ async function renderRadar() {
     <div id="feedback" class="card fb-card" hidden>
       <div class="fb-row">
         <div>
-          <div class="fb-q">How useful is this radar?</div>
+          <div class="fb-q">How useful is The Radar?</div>
         </div>
         <div class="fb-stars" role="group" aria-label="Rate from 1 to 5">
           ${[1,2,3,4,5].map((n) => `<button class="fb-star" data-n="${n}" aria-label="${n} of 5">${n}</button>`).join('')}
