@@ -167,13 +167,13 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 .topbar{position:sticky;top:0;z-index:5;background:var(--topbar-bg);backdrop-filter:blur(14px);border-bottom:1px solid var(--line);padding:14px 28px;display:flex;align-items:center;gap:16px}
 .topbar h1{font-size:var(--text-xl);margin:0;font-weight:700;letter-spacing:-.01em}
 .topbar .sub{font-size:12px;color:var(--muted)}
-.topbar .spacer{flex:1}
-.tb-title{min-width:0;flex:0 1 auto}
+.topbar .spacer{flex:0 1 auto;min-width:0}
+.tb-title{min-width:0;flex:1 1 auto;overflow:hidden}
 .tb-ico{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);color:var(--accent);flex:0 0 auto}
 .tb-ico svg{width:15px;height:15px}
 .tb-line{min-width:0}
 .tb-line h1{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-@media(max-width:560px){.tb-line h1{font-size:var(--text-md)}}
+@media(max-width:560px){.tb-line h1{font-size:var(--text-base);letter-spacing:-.015em}}
 /* On a phone the summary must not eat the screen: compact tiles, no sparkline, so the radar is reachable. */
 @media(max-width:700px){
   .kpi{padding:10px 12px}
@@ -183,7 +183,7 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
   .kpi-delta{margin-top:4px;gap:5px}
   .kpi-grid{gap:8px}
 }
-.tb-line{display:flex;align-items:center;gap:10px;min-width:0}
+.tb-line{display:flex;align-items:center;gap:8px;min-width:0;width:100%}
 .tb-line h1{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .topbar .pill{flex:none}
 .topbar .tb-icon,.topbar .theme-btn,.topbar .tb-menu{flex:none}
@@ -573,9 +573,12 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
   .nav button.active{box-shadow:none;background:var(--nav-active)}
   main{overflow:visible;padding-bottom:calc(78px + env(safe-area-inset-bottom))}
   .topbar{padding:10px 14px;gap:8px;flex-wrap:nowrap}
-  .topbar h1{font-size:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .topbar h1{font-size:var(--text-base);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   .topbar .sub{display:none}
-  .topbar .spacer{display:block;flex:1;min-width:6px}
+  /* The title block takes the room the icons leave, so a long title is never cut on a phone. */
+  .topbar .spacer{display:none}
+  .tb-title{flex:1 1 auto;min-width:0}
+  .topbar .tb-icon,.topbar .theme-btn,.topbar .tb-menu{flex:0 0 auto}
   .pill{font-size:10px;padding:3px 7px}
   .view{padding:16px 14px 0}
   .toast{bottom:92px;max-width:calc(100vw - 28px);text-align:center}
@@ -864,6 +867,8 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .fb-why{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:var(--radius);color:var(--ink);padding:9px 11px;font:inherit;font-size:var(--text-sm);resize:vertical}
 .fb-why:focus{outline:none;border-color:var(--accent2)}
 @media(max-width:560px){.fb-stars{margin-left:0}.fb-star{width:30px;height:30px}}
+/* Declared last so it wins over every earlier title size on a very narrow phone. */
+@media(max-width:359px){.topbar h1,.tb-line h1{font-size:var(--text-sm)}}
 </style>
 </head>
 <body>
