@@ -38,10 +38,11 @@ If the answer is no, it is not next.
 
 | ID | Task | Why it blocks |
 |---|---|---|
-| SEC-01 | Apple `.p8` rotation | Last exposed key. Runbook: `SEC-01-APPLE-ROTATION.md` |
+| SEC-01 | Apple `.p8` rotation | Done: readiness reports key parses and client secret verifies |
 | GRO-01 | First 20 users | Paused by you; the runbook is ready in `GRO-01-FIRST-20.md` |
 | DATA-13 | Adzuna app id and key | One credential opens DE, GB, CH and US salary pools |
 | MON-01 | AdSense site review | Cannot be requested until Google asks |
+| — | Apple sign-in on a phone | One attempt needed to confirm the cookie fix end to end |
 
 ## 3. Open – engineering
 
