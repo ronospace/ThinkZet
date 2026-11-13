@@ -2459,7 +2459,9 @@ const server = http.createServer(async (req, res) => {
   // for the domain returns the product rather than a business plan.
   if (pathname === '/strategy.html' || pathname === '/strategy') {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
-    if (!isFounder(req, res)) { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end('not found'); }
+    // 410, not 404: the document existed and is deliberately withdrawn. Google drops a gone URL from
+    // the index on the next crawl instead of keeping it as "not found for now".
+    if (!isFounder(req, res)) { res.writeHead(410, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end('gone'); }
   }
   // Shared cards live at /s/<id>; the client renders them from the API.
   if (/^\/s\/[a-f0-9]+$/.test(pathname)) return serveStatic(req, res, '/index.html', publicOrigin(req));

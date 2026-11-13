@@ -39,7 +39,9 @@ async function call(method, path, body) {
   const text = await res.text();
   let json = null;
   try { json = JSON.parse(text); } catch { /* non-json is fine for static */ }
-  return { status: res.status, json, text };
+  const hdrs = {};
+  res.headers.forEach((v, k) => { hdrs[k] = v; });
+  return { status: res.status, json, text, headers: hdrs };
 }
 
 (async () => {
@@ -107,6 +109,11 @@ async function call(method, path, body) {
   const launchBody = launchAnon.json || {};
   const founderOk = launchAnon.status === 403 && /founder only/i.test(String(launchBody.error || ''));
   if (founderOk) pass++; else { fail++; failures.push('invariant failed: launch refusal names the reason'); }
+
+  // The strategy document is withdrawn from the public: gone, not merely missing, and never indexed.
+  const strat = await call('GET', '/strategy.html');
+  const stratOk = strat.status === 410 && /noindex/i.test(String(strat.headers?.['x-robots-tag'] || ''));
+  if (stratOk) pass++; else { fail++; failures.push('invariant failed: strategy page answers 410 with noindex'); }
 
   const legal = await call('GET', '/legal/privacy.html');
   if (legal.status === 200 && /Privacy/.test(legal.text || '')) pass++; else { fail++; failures.push('invariant failed: privacy page served'); }
