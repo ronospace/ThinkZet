@@ -34,6 +34,7 @@ Last updated: 13 November 2026.
 | R-20 | Apple sign-in needed two attempts: the second callback found its state already consumed and answered "expired" to someone who had already authorised | Auth | done | `AUTH-25` |
 | R-21 | A duplicate OAuth callback now redirects into the app when a session already exists instead of reporting a failure | Auth | done | `AUTH-25` |
 | R-22 | Pro+ listed six "Compare …" bullets that repeated one idea; now two lines, the comparison and the negotiation brief | Plan | done | `UI-122` |
+| R-23 | Card headings were sentence case in 13 places and title case in the rest; every `h2`/`h3` now uses title case, and the skill count goes through `int()` | Whole app | done | `COPY-40` |
 
 ## How to use this
 

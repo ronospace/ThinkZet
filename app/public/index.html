@@ -1040,7 +1040,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
     </section>
 
     <section class="check" id="check">
-      <h2>What should you be earning?</h2>
+      <h2>What Should You Be Earning?</h2>
       <div class="row3">
         <div><label for="c-role">Your Role</label><input id="c-role" placeholder="Senior Data Scientist"/></div>
         <div><label for="c-years">Years of Experience</label><input id="c-years" type="number" min="0" max="45" placeholder="8"/></div>
@@ -1072,17 +1072,17 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
       <div class="how-grid">
         <div class="how-step">
           <span class="how-n">01</span>
-          <h3>What number would you say out loud?</h3>
+          <h3>What Number Would You Say Out Loud?</h3>
           <p>Most people cannot answer that in a negotiation, so they accept the first number they hear. We give you the median for your exact profile, seniority, skills and country, from postings that disclose pay.</p>
         </div>
         <div class="how-step">
           <span class="how-n">02</span>
-          <h3>What is being posted while you sleep?</h3>
+          <h3>What Is Being Posted While You Sleep?</h3>
           <p>The roles that fit you and are invisible to you, because they live on platforms you do not check and close in 72 hours. We scan them continuously and score each one against your twin.</p>
         </div>
         <div class="how-step">
           <span class="how-n">03</span>
-          <h3>Which move actually pays?</h3>
+          <h3>Which Move Actually Pays?</h3>
           <p>Stay, switch, contract, relocate, pivot. Priced against your real market with the risk attached. Not the trending path. The profitable one.</p>
         </div>
       </div>
@@ -1149,7 +1149,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
     </section>
 
     <section id="faq" class="land-sec">
-      <h2 class="land-h2">Questions worth answering</h2>
+      <h2 class="land-h2">Questions Worth Answering</h2>
       <div class="faq">
         <details><summary>Where do the salary numbers come from?</summary><p>Live postings that state a salary, refreshed continuously, annualised to EUR. Nothing is self-reported and nothing is a survey. Every figure shows its sample size and confidence, and a segment with too few comparables is hidden rather than guessed.</p></details>
         <details><summary>Is this a job board?</summary><p>No. A job board answers what exists. ThinkZet answers what you are worth, what you are missing, and which move pays. Listings are an input, not the product.</p></details>
@@ -1537,9 +1537,9 @@ async function renderSeo() {
           </div>
           <div style="margin-top:16px;font-size:var(--text-sm);color:var(--muted)">${esc(b.segment)} · ${int(b.exactComparables)} exact-profile comparables · ${esc(b.confidence)} confidence</div>
         </div>
-        <h2 style="font-size:var(--text-lg);margin:32px 0 10px">Where the money is</h2>
+        <h2 style="font-size:var(--text-lg);margin:32px 0 10px">Where the Money Is</h2>
         <div class="card">${(b.byChannel || []).filter((c) => c.n >= 5).map((c) => `<div class="kv"><span style="text-transform:capitalize">${esc(c.channel)} <span class="muted">· ${c.n} postings</span></span><span class="mono">${fmt(c.median)}</span></div>`).join('')}</div>
-        <h2 style="font-size:var(--text-lg);margin:32px 0 10px">Skills that pay more</h2>
+        <h2 style="font-size:var(--text-lg);margin:32px 0 10px">Skills That Pay More</h2>
         <div class="card">${r.levers.slice(0, 6).map((l) => `<div class="kv"><span>${esc(l.skill)}</span><span class="mono" style="color:var(--good)">+${l.premium}%</span></div>`).join('')}</div>
         <div class="card" style="margin-top:26px;text-align:center;">
           <div style="font-size:var(--text-md);font-weight:600">Where do you sit against this?</div>
@@ -1676,11 +1676,11 @@ async function runRateCheck() {
       </div>
       <div class="legend"><span>p25 ${fmt(b.p25)}</span><span>p50 ${fmt(b.p50)}</span><span>p75 ${fmt(b.p75)}</span><span>p90 ${fmt(b.p90)}</span></div>
       <div style="margin-top:18px;font-size:var(--text-sm);color:var(--ink2)">
-        <b style="color:var(--ink)">Where the money is:</b>
+        <b style="color:var(--ink)">Where the Money Is:</b>
         ${b.byChannel.filter((c) => c.n >= 5).map((c) => `${esc(c.channel)} ${fmt(c.median)}`).join(' · ') || 'not enough channel data'}
       </div>
       <div style="margin-top:12px;font-size:var(--text-sm);color:var(--ink2)">
-        <b style="color:var(--ink)">Skills that pay more than yours:</b>
+        <b style="color:var(--ink)">Skills That Pay More than yours:</b>
         ${r.levers.slice(0, 4).map((l) => `${esc(l.skill)} <span style="color:var(--good)">+${l.premium}%</span>`).join(' · ')}
       </div>
       <div style="margin-top:18px;display:flex;gap:8px;flex-wrap:wrap">
@@ -2682,7 +2682,7 @@ function openDetail(id) {
         <div style="margin-top:8px;display:flex;gap:6px;flex-wrap:wrap">
           ${(o.skills || []).map((s) => `<span class="chip ${(o.missing_skills || []).includes(s) ? 'miss' : 'have'}">${esc(s)}</span>`).join('')}
         </div>
-        <h3 style="margin-top:18px">What would move you up</h3>
+        <h3 style="margin-top:18px">What Would Move You Up</h3>
         <div style="font-size:var(--text-sm)" class="dim">${(o.missing_skills || []).length ? 'Close: <b>' + o.missing_skills.map(esc).join(', ') + '</b> – each one raises both match and interview probability.' : 'You cover every listed skill. Your edge here is speed of application.'}</div>
         ${o.confidence ? `<div style="margin-top:16px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)">
           <div class="row" style="justify-content:space-between"><span style="font-size:var(--text-sm)">Evidence quality</span><span class="mono" style="color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'}">${o.confidence.score}/100 · ${o.confidence.level}</span></div>
@@ -2936,7 +2936,7 @@ async function renderRates() {
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:1.3fr 1fr">
       <div class="card">
-        <h3>Your market rate – ${r.period === 'hour' ? 'per hour' : 'per year'}, EUR</h3>
+        <h3>Your Market Rate – ${r.period === 'hour' ? 'per hour' : 'per year'}, EUR</h3>
         <div class="big mono" style="margin:10px 0 2px">${money(r.p50)}</div>
         <div class="dim">median across ${int(r.sampleSize)} comparable postings (${r.confidence} confidence)</div>
         ${r.market ? `<div class="pool-line">${(() => {
@@ -3127,11 +3127,11 @@ async function renderTwin() {
         <div class="kv"><span>Current &gt; target</span><span class="mono">${money(t.constraints?.currentRate)} &gt; ${money(t.constraints?.targetRateMin)}</span></div>
       </div>
       <div class="card">
-        <h3>Skills the twin recognises (${skills.length})</h3>
+        <h3>Skills the Twin Recognises (${int(skills.length)})</h3>
         <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
           ${skills.map((s) => `<span class="chip ${s.growth_rate > 20 ? 'have' : ''}" title="demand ${s.demand_index} · premium +${s.salary_premium}% · growth ${s.growth_rate}%">${esc(s.canonical)}</span>`).join('')}
         </div>
-        <h3 style="margin-top:18px">Behaviour signals</h3>
+        <h3 style="margin-top:18px">Behaviour Signals</h3>
         <div class="kv"><span>Applications</span><span class="mono">${(t.behaviour?.applications || []).reduce((a, b) => a + b.n, 0)}</span></div>
         <div class="kv"><span>Outcomes recorded</span><span class="mono">${(t.behaviour?.outcomes || []).reduce((a, b) => a + b.n, 0)}</span></div>
         <div class="kv"><span>Momentum</span><span class="mono">${t.momentum}/100</span></div>
@@ -3397,11 +3397,11 @@ async function renderNegotiation() {
 
     <h2 class="section">What to Say When They Name a Number</h2>
     <div class="card">
-      <div class="row" style="justify-content:space-between"><h3 style="margin:0">The ask</h3><button class="chip cp" data-t="${esc(n.askScript)}" style="cursor:pointer">copy</button></div>
+      <div class="row" style="justify-content:space-between"><h3 style="margin:0">The Ask</h3><button class="chip cp" data-t="${esc(n.askScript)}" style="cursor:pointer">copy</button></div>
       <div style="margin-top:10px;font-size:var(--text-base);line-height:1.75;font-style:italic;color:var(--tone-ink, var(--tone-ink))">${esc(n.askScript)}</div>
     </div>
     <div class="card" style="margin-top:12px">
-      <div class="row" style="justify-content:space-between"><h3 style="margin:0">If they come in low</h3><button class="chip cp" data-t="${esc(n.counterScript)}" style="cursor:pointer">copy</button></div>
+      <div class="row" style="justify-content:space-between"><h3 style="margin:0">If They Come in Low</h3><button class="chip cp" data-t="${esc(n.counterScript)}" style="cursor:pointer">copy</button></div>
       <div style="margin-top:10px;font-size:var(--text-base);line-height:1.75;font-style:italic;color:var(--tone-ink, var(--tone-ink))">${esc(n.counterScript)}</div>
     </div>
 
@@ -3677,7 +3677,7 @@ async function renderPulse() {
     </div>
     <div class="grid" style="grid-template-columns:1fr 1fr">
       <div class="card">
-        <h3>Median pay by discipline (EUR, annualised)</h3>
+        <h3>Median Pay by Discipline (EUR, Annualised)</h3>
         <div style="margin-top:12px">
           ${p.families.map((f) => `<div style="margin:9px 0">
             <div class="row" style="justify-content:space-between;font-size:var(--text-sm)"><span>${esc(famLabel(f.family))}</span><span class="mono">${money(f.median)} <span class="muted" style="font-size:var(--text-2xs)">(${f.n})</span></span></div>
@@ -3705,7 +3705,7 @@ async function renderPulse() {
         <div style="margin-top:10px">${p.skills.premium.map((s) => `<div class="kv"><span>${esc(s.canonical)}</span><span class="mono" style="color:var(--good)">+${s.salary_premium}%</span></div>`).join('')}</div>
       </div>
       <div class="card">
-        <h3>Supply – postings in 14 days</h3>
+        <h3>Supply – Postings in 14 Days</h3>
         <div style="margin-top:10px">${p.supply.slice(0, 8).map((s) => `<div class="kv"><span>${esc(famLabel(s.role_family))}</span><span class="mono">${s.n}</span></div>`).join('')}</div>
       </div>
     </div>
@@ -3923,7 +3923,7 @@ async function go(view) {
     $('#view-title').textContent = 'Not available';
     $('#view-sub').textContent = '';
     $('#view').innerHTML = `<div class="card" style="max-width:480px;margin:32px auto;text-align:center">
-      <h3 style="margin-bottom:6px">This area is for the founder</h3>
+      <h3 style="margin-bottom:6px">This Area Is for the Founder</h3>
       <p class="sub" style="margin-bottom:14px">It holds operational checks rather than anything about your career.</p>
       <button class="btn sm" onclick="go('radar')">Back to The Radar</button>
     </div>`;
