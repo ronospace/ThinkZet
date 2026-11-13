@@ -281,7 +281,8 @@ html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accen
   .arow{flex-wrap:wrap;align-items:flex-start;row-gap:6px}
   .arow-n{order:1}
   .arow-t{white-space:normal;order:2;flex:1 1 calc(100% - 28px)}
-  .arow .prio{order:3;margin:0 0 0 28px}
+  /* The action pill closes the row at its right end, so the eye reads number, action, verdict in one pass. */
+  .arow .prio{order:3;margin:0 0 0 auto}
   .arow-c{display:none}
 }
 .prio{display:inline-block;margin-top:5px;font-size:var(--text-2xs);font-weight:650;letter-spacing:.01em;padding:2px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--muted);background:var(--panel2)}
