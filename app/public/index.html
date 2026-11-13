@@ -225,6 +225,8 @@ html[data-theme="light"] .pill.live{background:#eaf7f0;border-color:transparent;
 /* ---------- shared ---------- */
 .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-5);box-shadow:var(--shadow-sm);transition:border-color .16s ease,box-shadow .16s ease}
 .card.tone-violet{background:var(--hero-grad);border-color:var(--ai-border);--tone-ink:var(--ink);--tone-kicker:var(--rose)}
+/* In-app result blocks are panels, not promotions: same surface as any other card, accent kept on the kicker only. */
+.card.plain{background:var(--panel2);border-color:var(--line);--tone-ink:var(--ink);--tone-kicker:var(--accent2)}
 
 
 .rate-gap .dim,.rate-gap .muted{color:var(--ink2)}
@@ -1908,7 +1910,7 @@ function renderOnboarding() {
       const per = b.period === 'hour' ? '/hr' : '/yr';
       const tone = v.gapPct > 15 ? 'var(--bad)' : v.gapPct > 5 ? 'var(--warn)' : 'var(--good)';
       box.innerHTML = `
-        <div class="card tone-violet" style="border-color:var(--ai-border);">
+        <div class="card plain" style="border-color:var(--ai-border);">
           <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
           <div style="font-size:clamp(24px,4.4vw,34px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:10px 0 6px;color:${tone}">${esc(v.headline)}</div>
           <div style="font-size:var(--text-base);color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b> ${sampleChip()}</div>
@@ -2202,7 +2204,7 @@ async function renderRadar() {
   // First-run teachable moment: explain the one number that matters before showing the feed.
   const teach = $('#teach');
   if (teach && !localStorage.getItem('karyvo-taught')) {
-    teach.innerHTML = `<div class="card tone-violet" style="border-color:var(--line);background:var(--panel2)">
+    teach.innerHTML = `<div class="card plain" style="border-color:var(--line);background:var(--panel2)">
       <div class="row" style="justify-content:space-between;gap:16px;flex-wrap:wrap">
         <div style="flex:1;min-width:280px">
           <div style="font-size:var(--text-base);font-weight:600">Every card here is scored against your twin.</div>
@@ -2234,7 +2236,7 @@ async function renderRadar() {
     mountAds('#ad-radar');
     mountFeedback();
     fitHeadlines();
-    $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="card tone-violet" style="text-align:center;border-color:var(--ai-border)"><div class="dim" style="font-size:var(--text-sm)">${rows.length - capped.length} more scored opportunities are hidden on the Free plan.</div><div style="margin-top:10px"><button class="btn sm" onclick="go('plan')">See what Pro unlocks</button></div></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
+    $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="plan-note"><span class="pn-k">Free</span><span class="pn-v">${rows.length - capped.length} more scored opportunities are hidden</span><button class="pn-link" onclick="go('plan')">See plans</button></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
     $('#f-count').textContent = `${rows.length} of ${feed.opportunities.length} shown`;
     bindOppActions();
     renderFacets(rows);
@@ -2809,7 +2811,7 @@ async function renderRates() {
         <div class="legend" style="display:flex;justify-content:space-between;font-size:var(--text-xs);color:var(--muted);margin-top:10px">
           <span>p25 ${money(r.p25)}</span><span>p50 ${money(r.p50)}</span><span>p75 ${money(r.p75)}</span><span>p90 ${money(r.p90)}</span>
         </div>
-        ${r.gapPct != null ? `<div class="card tone-violet" style="margin-top:20px;background:var(--panel2);border-color:var(--ai-border)">
+        ${r.gapPct != null ? `<div class="card plain" style="margin-top:20px;background:var(--panel2);border-color:var(--ai-border)">
           <div class="k" style="font-size:var(--text-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">Verdict</div>
           <div style="font-size:var(--text-lg);font-weight:650;margin-top:6px">${r.verdict === 'underpaid' ? 'The market disagrees with your payslip – by ' + r.gapPct + '%' : r.verdict === 'slightly_under' ? 'Just under the line (' + r.gapPct + '%) – and it compounds' : r.verdict === 'at_market' ? 'Priced correctly. Not the same as paid well.' : 'Ahead of the market. Now use it.'}</div>
           <div class="dim" style="margin-top:4px">${r.gapAbs > 0 ? money(r.gapAbs) + ' per year of headroom at the median – ' + money(r.gapAbs * 2) + ' over two years.' : 'Your rate is defensible. The lever now is growth, not price.'}</div>
@@ -2851,7 +2853,7 @@ async function renderGaps() {
       <h3>Skill Gap Detection</h3>
       <div class="dim" style="margin-top:6px;font-size:var(--text-sm);line-height:1.55">Computed by comparing your skills against the required skills of your top ${sampleOf} realistic opportunities – weighted by how many roles each gap blocks, its salary premium and its growth rate.</div>
     </div>
-    <div class="card tone-violet" style="margin-bottom:14px;border-color:var(--line);">
+    <div class="card plain" style="margin-bottom:14px;border-color:var(--line);">
       <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">The shortest path</div>
       <div style="font-size:var(--text-md);font-weight:600;margin-top:8px;line-height:1.5">${esc(plan.insight)}</div>
       <div style="margin-top:16px">
@@ -3203,7 +3205,7 @@ async function renderNegotiation() {
   if (!n || n.error) return renderOnboarding();
   const copy = (t) => { navigator.clipboard.writeText(t); toast('Copied – go say it'); };
   $('#view').innerHTML = `
-    <div class="card tone-violet" style="border-color:var(--line);">
+    <div class="card plain" style="border-color:var(--line);">
       <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Negotiation brief · ${esc(n.confidence)} confidence · ${n.exactComparables} exact comparables</div>
       <div class="row" style="gap:26px;margin-top:14px;flex-wrap:wrap">
         <div><div class="muted" style="font-size:var(--text-xs)">Floor (p50)</div><div class="big sm mono">${money(n.floor)}</div></div>
@@ -3438,7 +3440,7 @@ async function renderAnalytics() {
   const daily = a.summary.daily || [];
   const maxDay = Math.max(...daily.map((d) => d.n), 1);
   $('#view').innerHTML = `
-    <div class="card tone-violet" style="border-color:var(--line);">
+    <div class="card plain" style="border-color:var(--line);">
       <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Funnel · last ${f.windowDays} days · measured from real events</div>
       <div style="font-size:var(--text-md);font-weight:600;margin-top:8px;line-height:1.5">${esc(f.verdict)}</div>
       <div class="row" style="margin-top:14px;gap:24px">
@@ -3542,7 +3544,7 @@ async function renderTrajectory(months) {
   const max = Math.max(...t.paths.map((p) => p.endSalary));
   const bar = (v) => Math.max(4, Math.round((v / max) * 100));
   $('#view').innerHTML = `
-    <div class="card tone-violet" style="border-color:var(--line);">
+    <div class="card plain" style="border-color:var(--line);">
       <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Trajectory · ${months} months · transparent model, not a forecast</div>
       <div style="font-size:var(--text-md);font-weight:600;margin-top:8px;line-height:1.5">${esc(t.insight)}</div>
       <div class="row" style="margin-top:16px;gap:8px">
@@ -3846,7 +3848,7 @@ async function renderBrief() {
   $('#view').innerHTML = `
     <div class="grid" style="grid-template-columns:1fr 300px">
       <div>
-        <div class="card tone-violet" style="border-color:var(--line);">
+        <div class="card plain" style="border-color:var(--line);">
           <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Brief · ${new Date(b.generatedAt).toLocaleString('en-GB', { weekday: 'long', hour: '2-digit', minute: '2-digit' })}</div>
           <div class="brief-hl">${esc(b.headline)}</div>
           <div class="row" style="margin-top:16px;gap:20px;flex-wrap:wrap">
