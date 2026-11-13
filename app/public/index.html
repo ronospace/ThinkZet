@@ -38,6 +38,10 @@
   --bad:#f2738a;
   --up:#4fd6a0;
   --down:#f2738a;
+  --score-hi:#38c98a;--score-hi-bg:#0e2119;
+  --score-good:#6b93f7;--score-good-bg:#141b2b;
+  --score-mid:#e2a83a;--score-mid-bg:#241c0f;
+  --score-low:#f05666;--score-low-bg:#241417;
   --hero-grad:linear-gradient(135deg,#25213D 0%,#382541 100%);
   --glow:#A78BFA;
   --grid:#34334B;
@@ -88,6 +92,10 @@ html[data-theme="light"]{
   --bad:#cf3448;
   --up:#0e9d63;
   --down:#cf3448;
+  --score-hi:#0a7a45;--score-hi-bg:var(--accent-soft);
+  --score-good:#1d4ed8;--score-good-bg:#eef3fd;
+  --score-mid:#a86400;--score-mid-bg:#fdf3e3;
+  --score-low:#b02439;--score-low-bg:var(--accent-soft);
   --hero-grad:linear-gradient(135deg,#FFEDF7 0%,#F7ECFF 100%);
   --glow:#FF9AC6;
   --grid:#EDD5E3;
@@ -1376,12 +1384,12 @@ const factorRows = (factors) => factors.map((f) => `<div class="kv"><span>${esc(
 // 83rd, 1st, 12th: the suffix is a real superscript so the number stays the hero.
 const ordSuffix = (n) => { const m = n % 100; if (m >= 11 && m <= 13) return 'th'; return ['th', 'st', 'nd', 'rd'][n % 10] || 'th'; };
 const ordinalHtml = (n) => `${n}<sup class="ord">${ordSuffix(n)}</sup>`;
+// The tones live in the theme, so this function returns tokens and the theme decides the colour.
 function scoreColor(s) {
-  const light = document.documentElement.dataset.theme === 'light';
-  if (s >= 85) return light ? ['#0a7a45', 'var(--accent-soft)'] : ['#38c98a', '#0e2119'];
-  if (s >= 70) return light ? ['#1d4ed8', '#eef3fd'] : ['#6b93f7', '#141b2b'];
-  if (s >= 55) return light ? ['#a86400', '#fdf3e3'] : ['#e2a83a', '#241c0f'];
-  return light ? ['#b02439', 'var(--accent-soft)'] : ['#f05666', '#241417'];
+  if (s >= 85) return ['var(--score-hi)', 'var(--score-hi-bg)'];
+  if (s >= 70) return ['var(--score-good)', 'var(--score-good-bg)'];
+  if (s >= 55) return ['var(--score-mid)', 'var(--score-mid-bg)'];
+  return ['var(--score-low)', 'var(--score-low-bg)'];
 }
 
 
@@ -4022,7 +4030,7 @@ function applyTheme(mode) {
   document.documentElement.dataset.mode = mode;
   document.documentElement.style.colorScheme = resolved;
   const meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', resolved === 'light' ? '#f6f8fb' : '#0a0d13');
+  if (meta) meta.setAttribute('content', getComputedStyle(document.documentElement).getPropertyValue('--bg').trim() || (resolved === 'light' ? '#f6f8fb' : '#0a0d13'));
   const tb = document.getElementById('theme-btn');
   if (tb) { tb.title = 'Appearance: ' + mode; tb.setAttribute('aria-label', 'Appearance: ' + mode); }
 }
