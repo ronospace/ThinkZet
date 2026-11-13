@@ -1209,10 +1209,10 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
       <div class="nav-group"><span class="nav-label">Account</span>
       <button data-view="twin"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5.4" r="2.6"/><path d="M2.8 13.4c0-2.6 2.3-4.2 5.2-4.2s5.2 1.6 5.2 4.2"/></svg></span><span class="lbl">Career Twin</span></button>
       <button data-view="learning"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg></span><span class="lbl">Learning Loop</span></button>
-      <button data-view="referrals"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6.4 9.6a2.6 2.6 0 003.7 0l2.1-2.1a2.6 2.6 0 00-3.7-3.7l-1 1"/><path d="M9.6 6.4a2.6 2.6 0 00-3.7 0L3.8 8.5a2.6 2.6 0 003.7 3.7l1-1"/></svg></span><span class="lbl">Partners</span></button>
       <button data-view="plan"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.8" y="3.6" width="12.4" height="8.8" rx="1.6"/><path d="M1.8 6.6h12.4"/></svg></span><span class="lbl">Plan</span></button>
       </div>
       <div class="nav-group" data-founder="1" hidden><span class="nav-label">Operations</span>
+      <button data-view="partners" data-founder="1" hidden><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6.4 9.6a2.6 2.6 0 003.7 0l2.1-2.1a2.6 2.6 0 00-3.7-3.7l-1 1"/><path d="M9.6 6.4a2.6 2.6 0 00-3.7 0L3.8 8.5a2.6 2.6 0 003.7 3.7l1-1"/></svg></span><span class="lbl">Partners</span></button>
       <button data-view="analytics"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.4 13.2V8.4M6.2 13.2V4.2M10 13.2v-6M13.8 13.2V2.8"/></svg></span><span class="lbl">Funnel</span></button>
       <button data-view="leads"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 4.5h12l-4.6 5v3.6l-2.8 1.2V9.5z"/></svg></span><span class="lbl">Leads</span></button>
       <button data-view="email"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.8" y="3.4" width="12.4" height="9.2" rx="1.6"/><path d="M2.2 4.4L8 8.6l5.8-4.2"/></svg></span><span class="lbl">Email</span></button>
@@ -2883,8 +2883,12 @@ async function renderScores() {
           </div>
         </div>`;
       }).join('')}</div>
-      <div class="note" style="margin-top:12px">The shaded band is the middle of the market for your level. The tick is the median. Your dot is where you actually sit.</div>
-      <div class="note" style="margin-top:8px">Momentum is the only row that measures change rather than standing: it compares this update with your last, so a strong profile that is standing still scores low on it.</div>
+      <div class="facts tight">
+        <span class="fk">Reading the band</span>
+        <span class="fv">The shaded band is the middle of the market for your level. The tick is the median. Your dot is where you actually sit.</span>
+        <span class="fk">Momentum</span>
+        <span class="fv">Momentum is the only row that measures change rather than standing: it compares this update with your last, so a strong profile that is standing still scores low on it.</span>
+      </div>
     </div>
     <div class="scores-grid">
       ${cards.map(([label, v]) => {
@@ -2906,7 +2910,7 @@ async function renderScores() {
         <div class="muted" style="font-size:var(--text-sm);margin-top:3px">${esc(l.why)}</div></div>
         <div class="mono" style="font-size:var(--text-sm);color:${l.value < 40 ? 'var(--bad)' : l.value < 70 ? 'var(--warn)' : 'var(--good)'}">${l.value}</div>
       </div>`).join('')}
-      <div class="note" style="margin-top:12px">Ranked by your weakest score. Fixing the lowest number moves the overall score more than polishing the highest.</div>
+      <div class="facts tight"><span class="fk">How this is ranked</span><span class="fv">Ranked by your weakest score. Fixing the lowest number moves the overall score more than polishing the highest.</span></div>
     </div>` : `<h2 class="section">What to Attack First</h2>
     <div class="card dim" style="font-size:var(--text-sm)">Your lowest score is <b>${cards.slice().sort((a, c) => a[1] - c[1])[0][0].toLowerCase()}</b>.</div>`}
   `;
@@ -2951,7 +2955,7 @@ async function renderRates() {
               <div class="kv"><span>${esc(c.channel)} <span class="muted">(${c.n})</span></span><span class="mono">${money(c.median)}</span></div>
             `).join('') || '<div class="muted">not enough data</div>'}
           </div>
-          <div class="note" style="margin-top:12px">The same profile pays differently as a hire, a contractor and on a marketplace. This is the split.</div>
+          <div class="facts tight"><span class="fk">Why channels differ</span><span class="fv">The same profile pays differently as a hire, a contractor and on a marketplace. This is the split.</span></div>
         ${r.confidenceDetail ? `<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px">
           <div class="row" style="justify-content:space-between"><span style="font-size:var(--text-sm);font-weight:600">Benchmark confidence</span><span class="chip ${r.confidenceDetail.level === 'high' ? 'have' : r.confidenceDetail.level === 'low' ? 'miss' : ''}">${esc(r.confidenceDetail.level)}</span></div>
           <div style="margin-top:6px">${factorRows(r.confidenceDetail.factors)}</div>
@@ -3736,9 +3740,18 @@ async function renderReferrals() {
   const r = await api('/api/referrals');
   const catLabel = { ai_marketplace: 'AI marketplaces', freelance: 'Freelance', learning: 'Learning', immigration: 'Immigration', relocation: 'Relocation' };
   $('#view').innerHTML = `
-    <div class="card" style="margin-bottom:14px">
+    <div class="card plain" style="margin-bottom:14px">
+      <h3>How Partners Work Here</h3>
+      <div class="facts">
+        <span class="fk">The rule</span>
+        <span class="fv">${esc(r.note)}</span>
+        <span class="fk">What you see</span>
+        <span class="fv">A partner appears only next to a skill gap the engine already found, or when you have said you would relocate. Nothing here can create, reorder or raise an opportunity.</span>
+      </div>
+    </div>
+    ${STATE.founder ? `<div class="card" style="margin-bottom:14px">
       <h3>Partner Routing</h3>
-      <div class="dim" style="font-size:var(--text-sm);margin-top:6px">${esc(r.note)}</div>
+      <div class="dim" style="font-size:var(--text-sm);margin-top:6px">Operator controls. Only the founder sees this form.</div>
       <div class="row" style="margin-top:14px;gap:8px;flex-wrap:wrap">
         <input id="p-name" placeholder="Partner name" style="background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:var(--text-sm)"/>
         <input id="p-template" placeholder="Your referral URL – use {code} for the tracking token" style="flex:1;min-width:280px;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:7px 10px;outline:none;font-size:var(--text-sm)"/>
@@ -3746,20 +3759,21 @@ async function renderReferrals() {
         <button class="btn sm" id="p-add">Add partner</button>
       </div>
       <div class="note" style="margin-top:10px">Paste your own affiliate link here when you have it. The engine appends a tracking token and routes through <span class="mono">/go/&lt;code&gt;</span> so clicks and conversions are attributed – without ever touching what gets recommended.</div>
-    </div>
+    </div>` : ''}
     <div class="grid" style="grid-template-columns:repeat(2,1fr)">
       ${r.programs.map((p) => `<div class="card">
         <div class="row" style="justify-content:space-between">
           <div><b style="font-size:var(--text-base)">${esc(p.name)}</b><div class="muted" style="font-size:var(--text-xs)">${esc(catLabel[p.category] || p.category)}</div></div>
-          <span class="chip ${p.active ? 'have' : ''}">${p.active ? 'active' : 'paused'}</span>
+          <span class="bdg ${p.active ? 'mom' : 'neu'}">${p.active ? 'Active' : 'Paused'}</span>
         </div>
-        <div class="kv" style="margin-top:10px"><span>Model</span><span class="mono">${esc(p.payout_model)}</span></div>
+        ${r.operator ? `<div class="kv" style="margin-top:10px"><span>Model</span><span class="mono">${esc(p.payout_model)}</span></div>
         <div class="kv"><span>Payout</span><span class="mono">${p.payout_amount ? money(p.payout_amount) : 'rev share'}</span></div>
         <div class="kv"><span>Clicks routed</span><span class="mono">${p.clicks}</span></div>
-        <div class="muted" style="font-size:var(--text-xs);margin-top:8px;word-break:break-all">${esc(p.template || '–')}</div>
+        <div class="muted" style="font-size:var(--text-xs);margin-top:8px;word-break:break-all">${esc(p.template || '–')}</div>`
+        : `<div class="muted" style="font-size:var(--text-sm);margin-top:8px">Attached to a gap the engine already found. It cannot change a score.</div>`}
       </div>`).join('')}
     </div>`;
-  $('#p-add').onclick = async () => {
+  if ($('#p-add')) $('#p-add').onclick = async () => {
     const name = $('#p-name').value.trim();
     const template = $('#p-template').value.trim();
     if (!name || !template) return toast('Name and URL required');
@@ -3862,12 +3876,12 @@ const VIEWS = {
   leads: [renderLeads, 'Leads', 'People who saw their number'],
   email: [renderEmail, 'Email', 'The retention loop – the brief that brings them back'],
   launch: [renderLaunch, 'Launch', 'Whether it is safe to send people here'],
-  referrals: [renderReferrals, 'Partners', 'Referral routing, isolated from ranking'],
+  partners: [renderReferrals, 'Partners', 'Referral routing, isolated from ranking'],
   plan: [renderPlan, 'Choose Your Plan', 'Know your value for free. Use it to make better moves.'],
   ops: [renderOps, 'Engine', 'What the system actually did'],
 };
 
-const FOUNDER_VIEWS = ['launch', 'ops'];
+const FOUNDER_VIEWS = ['launch', 'ops', 'partners'];
 
 async function go(view) {
   const changed = STATE.view !== view;

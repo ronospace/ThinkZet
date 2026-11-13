@@ -2137,11 +2137,20 @@ route('GET', /^\/api\/analytics$/, async (req, res, url) => {
 });
 
 // ---- referral / affiliate layer ----
+// The partner surface is operator data: payout models, affiliate templates, click counts. A customer
+// sees which partners exist and the rule that governs them, never the commercial terms.
 route('GET', /^\/api\/referrals$/, async (req, res) => {
-  json(res, 200, REF.summary(resolveUser(req)));
+  const full = REF.summary(resolveUser(req));
+  if (isFounder(req, res)) return json(res, 200, { ...full, operator: true });
+  json(res, 200, {
+    note: full.note,
+    operator: false,
+    programs: full.programs.filter((p) => p.active).map((p) => ({ name: p.name, category: p.category, active: 1 })),
+  });
 });
 
 route('POST', /^\/api\/referrals$/, async (req, res) => {
+  if (!isFounder(req, res)) return json(res, 403, { error: 'founder only' });
   const body = await readBody(req);
   const { name, slug, category, payoutModel, payoutAmount, template, notes } = body;
   if (!name || !slug) return json(res, 400, { error: 'name and slug required' });
