@@ -74,7 +74,7 @@ const routes = [];
 const route = (method, pattern, handler) => routes.push({ method, pattern, handler });
 
 function resolveUser(req) {
-  const u = AUTH.currentUser(req);
+  const u = AUTH.currentUser(req, res);
   return u ? u.id : DEMO_USER;
 }
 
@@ -300,7 +300,7 @@ route('POST', /^\/api\/auth\/apple\/callback$/, async (req, res) => {
 });
 
 route('POST', /^\/api\/me\/name$/, async (req, res) => {
-  const u = AUTH.currentUser(req);
+  const u = AUTH.currentUser(req, res);
   if (!u) return json(res, 401, { error: 'Sign in first' });
   const body = await readBody(req);
   const name = String(body.name || '').replace(/\s+/g, ' ').trim().slice(0, 80);
@@ -328,7 +328,7 @@ route('POST', /^\/api\/auth\/logout$/, async (req, res) => {
 })();
 
 route('GET', /^\/api\/auth\/me$/, async (req, res) => {
-  const u = AUTH.currentUser(req);
+  const u = AUTH.currentUser(req, res);
   if (!u) return json(res, 200, { user: null, demo: true });
   const profile = getProfile(u.id);
   json(res, 200, { user: effectiveUser(u), demo: false, hasProfile: !!profile, profile: profile ? { ...profile, target_countries: JSON.parse(profile.target_countries || '[]') } : null });
@@ -395,7 +395,7 @@ route('POST', /^\/api\/track$/, async (req, res) => {
   const body = await readBody(req);
   const name = String(body.event || '').trim();
   if (!FUNNEL_EVENTS.has(name)) return json(res, 400, { error: 'unknown event' });
-  const u = AUTH.currentUser(req);
+  const u = AUTH.currentUser(req, res);
   const props = {};
   for (const [k, v] of Object.entries(body.props || {})) {
     if (typeof v === 'string' || typeof v === 'number' || typeof v === 'boolean') props[k] = String(v).slice(0, 120);
@@ -413,7 +413,7 @@ route('POST', /^\/api\/feedback$/, async (req, res) => {
   const body = await readBody(req);
   const rating = Number(body.rating);
   if (!Number.isInteger(rating) || rating < 1 || rating > 5) return json(res, 400, { error: 'rating must be 1 to 5' });
-  const u = AUTH.currentUser(req);
+  const u = AUTH.currentUser(req, res);
   const surface = String(body.surface || 'app').slice(0, 40);
   const comment = body.comment ? String(body.comment).replace(/\s+/g, ' ').trim().slice(0, 600) : null;
   // An edit sends back the id it was given, and updates that row, so one person is one rating.
@@ -442,7 +442,7 @@ route('GET', /^\/api\/feedback$/, async (req, res) => {
 });
 
 route('GET', /^\/api\/ads$/, async (req, res) => {
-  const u = AUTH.currentUser(req);
+  const u = AUTH.currentUser(req, res);
   const plan = u ? BILLING.planFor(u.id) : 'free';
   const paid = plan === 'pro' || plan === 'plus';
   json(res, 200, {
@@ -584,7 +584,7 @@ route('POST', /^\/api\/onboarding$/, async (req, res) => {
 route('POST', /^\/api\/demo$/, async (req, res) => {
   // Demo mode belongs to signed-out visitors. For a signed-in person this endpoint would
   // overwrite their real profile with the demo one.
-  if (AUTH.currentUser(req)) return json(res, 403, { error: 'Demo mode is only for signed-out visitors' });
+  if (AUTH.currentUser(req, res)) return json(res, 403, { error: 'Demo mode is only for signed-out visitors' });
   const body = await readBody(req);
   const uid = resolveUser(req);
   const parsed = E.parseResume(DEMO_CV);
@@ -1727,7 +1727,7 @@ route('GET', /^\/unsubscribe\/([^/]+)\/([^/]+)$/, async (req, res, url, m) => {
 
 // ---- GDPR: export and erase, implemented rather than promised ----
 route('GET', /^\/api\/me\/export$/, async (req, res) => {
-  const authed = AUTH.currentUser(req);
+  const authed = AUTH.currentUser(req, res);
   if (!authed) return json(res, 401, { error: 'sign in to export your data' });
   const uid = authed.id;
   const user = db.prepare('SELECT id,email,name,country,created_at FROM users WHERE id=?').get(uid);
@@ -1758,7 +1758,7 @@ route('GET', /^\/api\/me\/export$/, async (req, res) => {
 });
 
 route('DELETE', /^\/api\/me$/, async (req, res) => {
-  const authed = AUTH.currentUser(req);
+  const authed = AUTH.currentUser(req, res);
   if (!authed) return json(res, 401, { error: 'sign in to delete your account' });
   const uid = authed.id;
   const user = db.prepare('SELECT id,email FROM users WHERE id=?').get(uid);
@@ -1783,16 +1783,16 @@ route('DELETE', /^\/api\/me$/, async (req, res) => {
 // ---- launch readiness: one screen that says whether it is safe to send people here ----
 // Operations surfaces are founder-only. The allowlist is FOUNDER_EMAILS, comma separated; when it is empty
 // nobody sees them, which is the safe default for a public deployment.
-function isFounder(req) {
-  const u = AUTH.currentUser(req);
+function isFounder(req, res) {
+  const u = AUTH.currentUser(req, res);
   if (!u || !u.email) return false;
   const list = String(process.env.FOUNDER_EMAILS || '').split(',').map((x) => x.trim().toLowerCase()).filter(Boolean);
   return list.includes(String(u.email).toLowerCase());
 }
-route('GET', /^\/api\/me\/flags$/, async (req, res) => json(res, 200, { founder: isFounder(req) }));
+route('GET', /^\/api\/me\/flags$/, async (req, res) => json(res, 200, { founder: isFounder(req, res) }));
 
 route('GET', /^\/api\/launch$/, async (req, res) => {
-  if (!isFounder(req)) return json(res, 403, { error: 'founder only' });
+  if (!isFounder(req, res)) return json(res, 403, { error: 'founder only' });
   const checks = [];
   const add = (key, label, ok, detail, blocking = true) => checks.push({ key, label, ok, detail, blocking });
 
@@ -2121,7 +2121,7 @@ route('POST', /^\/api\/opportunities\/opened$/, async (req, res) => {
 // ---- analytics ----
 route('POST', /^\/api\/events$/, async (req, res) => {
   const body = await readBody(req);
-  const uid = AUTH.currentUser(req)?.id || null;
+  const uid = AUTH.currentUser(req, res)?.id || null;
   AN.track(uid, String(body.name || 'unknown'), body.props || {}, body.path || null);
   json(res, 200, { ok: true });
 });
@@ -2168,7 +2168,7 @@ route('PATCH', /^\/api\/referrals\/(\d+)$/, async (req, res, url, m) => {
 
 // click-through: records, then redirects. Never influences what is shown.
 route('GET', /^\/go\/([a-z0-9]+)$/, async (req, res, url, m) => {
-  const u = AUTH.currentUser(req);
+  const u = AUTH.currentUser(req, res);
   const hit = REF.recordClick(m[1], {
     userId: u ? u.id : resolveUser(req),
     surface: url.searchParams.get('s'),
@@ -2251,7 +2251,7 @@ route('GET', /^\/api\/plan$/, async (req, res) => {
 route('POST', /^\/api\/billing\/checkout$/, async (req, res) => {
   // Payment must attach to the person paying. Signed out, resolveUser() is the shared demo account,
   // so a charge would be credited to nobody and the buyer would receive nothing.
-  const signedIn = AUTH.currentUser(req);
+  const signedIn = AUTH.currentUser(req, res);
   if (!signedIn) return json(res, 401, { error: 'Sign in first so your plan is attached to your account.', needsAuth: true });
   const body = await readBody(req);
   const uid = signedIn.id;
@@ -2283,7 +2283,7 @@ route('POST', /^\/api\/billing\/checkout$/, async (req, res) => {
 // are not built. Taking €49 for them would be selling something that does not exist. Interest is
 // recorded so we know whether to build it.
 route('POST', /^\/api\/plus\/interest$/, async (req, res) => {
-  const u = AUTH.currentUser(req);
+  const u = AUTH.currentUser(req, res);
   AN.track(u ? u.id : resolveUser(req), 'plus.interest', { signedIn: !!u });
   log(u ? u.id : null, 'plus.interest', 'billing', u ? u.id : null);
   json(res, 200, { ok: true, note: 'You are on the Pro+ list. We will email you when it opens, and you will not be charged before then.' });
@@ -2291,7 +2291,7 @@ route('POST', /^\/api\/plus\/interest$/, async (req, res) => {
 
 route('POST', /^\/api\/billing\/cancel$/, async (req, res) => {
   // Cancelling must reach Stripe, or the card keeps being charged while the app says "Free".
-  const u = AUTH.currentUser(req);
+  const u = AUTH.currentUser(req, res);
   if (!u) return json(res, 401, { error: 'Sign in first', needsAuth: true });
   try {
     const r = await BILLING.cancelSubscription(u.id);
@@ -2459,7 +2459,7 @@ const server = http.createServer(async (req, res) => {
   // for the domain returns the product rather than a business plan.
   if (pathname === '/strategy.html' || pathname === '/strategy') {
     res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
-    if (!isFounder(req)) { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end('not found'); }
+    if (!isFounder(req, res)) { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end('not found'); }
   }
   // Shared cards live at /s/<id>; the client renders them from the API.
   if (/^\/s\/[a-f0-9]+$/.test(pathname)) return serveStatic(req, res, '/index.html', publicOrigin(req));

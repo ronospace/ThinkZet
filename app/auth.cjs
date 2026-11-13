@@ -5,7 +5,7 @@ const crypto = require('node:crypto');
 const { db } = require('./db.cjs');
 
 const COOKIE = 'careeros_session';
-const SESSION_DAYS = 30;
+const SESSION_DAYS = 180;
 
 function randomCode() {
   return String(crypto.randomInt(100000, 999999));
@@ -77,12 +77,23 @@ function sessionForEmail(clean, displayName) {
   return { user, token: t, expiresAt: expires };
 }
 
-function currentUser(req) {
+// A session is rolling: every visit pushes its expiry forward, so someone who comes back weekly is
+// never asked to sign in again. The cookie is re-issued with the same lifetime, which keeps the
+// browser copy and the database row in step.
+function currentUser(req, res) {
   const t = parseCookies(req)[COOKIE];
   if (!t) return null;
   const s = db.prepare('SELECT * FROM sessions WHERE token=? AND expires_at > datetime(\'now\')').get(t);
   if (!s) return null;
-  db.prepare('UPDATE sessions SET last_seen=datetime(\'now\') WHERE token=?').run(t);
+  const left = new Date(s.expires_at).getTime() - Date.now();
+  // Only extend when less than 90 days remain, so a busy user does not write to the row on every request.
+  if (left < 90 * 86400000) {
+    const expires = new Date(Date.now() + SESSION_DAYS * 86400000).toISOString();
+    db.prepare('UPDATE sessions SET last_seen=datetime(\'now\'), expires_at=? WHERE token=?').run(expires, t);
+    if (res && typeof res.setHeader === 'function') setCookie(res, COOKIE, t, SESSION_DAYS * 86400);
+  } else {
+    db.prepare('UPDATE sessions SET last_seen=datetime(\'now\') WHERE token=?').run(t);
+  }
   return db.prepare('SELECT * FROM users WHERE id=?').get(s.user_id);
 }
 
