@@ -61,7 +61,8 @@ Owner: whoever is building. Reviewer: the founder.
 3. Every change ends with: `node scripts/check.cjs`, `node scripts/browser-check.cjs`, a measured phone and desktop check, one commit, one `restore-YYYYMMDD-N` tag, pushed.
 4. A commit message states what changed, the measurements that prove it, and the test counts.
 5. Tag before risky work, not after.
-6. A page withdrawn from the public answers 410, not 404. A 404 tells a crawler the page may return, so it keeps the URL; a 410 drops it on the next crawl.
+6. A page withdrawn from the public answers 410, not 404.
+7. A one-time token is claimed, never deleted. An OAuth state, a login code, a reset link is marked used and kept until its own expiry, so the second arrival can say "already completed" instead of "expired". Deleting the row makes a replay indistinguishable from a timeout, and the person who already authorised is told the link died. Claim with one conditional `UPDATE ... WHERE claimed_at IS NULL` and read its row count; that is the only atomic step SQLite gives you here. A 404 tells a crawler the page may return, so it keeps the URL; a 410 drops it on the next crawl.
 
 ## 8. Privacy and money
 
@@ -90,3 +91,4 @@ Owner: whoever is building. Reviewer: the founder.
 - 2026-11-13 - Created. Rules drawn from UI-107 to UI-111: the title fit, the token pass, the fact line, the panel pass, the shell scroll fix.
 - 2026-11-13 - Section 10 added after UI-03 and the focus-ring check: score tones are theme tokens, and a ring is proved with a real Tab key.
 - 2026-11-13 - 7.6 added after SEO-07: a withdrawn page answers 410 so the index lets go of it.
+- 2026-11-13 - 7.6 and 7.7 renumbered after AUTH-25: a one-time token is claimed, not deleted.

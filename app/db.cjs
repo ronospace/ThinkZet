@@ -417,6 +417,9 @@ const MIGRATIONS = [
   ['opportunities.degree_requirement', () => { if (!columnExists('opportunities', 'degree_requirement')) db.exec("ALTER TABLE opportunities ADD COLUMN degree_requirement TEXT DEFAULT 'unknown'"); }],
   ['opportunities.last_seen', () => { if (!columnExists('opportunities', 'last_seen')) db.exec("ALTER TABLE opportunities ADD COLUMN last_seen TEXT"); }],
   ['users.display_name', () => { if (!columnExists('users', 'display_name')) db.exec("ALTER TABLE users ADD COLUMN display_name TEXT"); }],
+  // A consumed OAuth state is marked, not deleted, so a duplicate callback can say "already completed"
+  // instead of "expired". The sweep still removes it once its own expiry passes.
+  ['oauth_states.claimed_at', () => { if (!columnExists('oauth_states', 'claimed_at')) db.exec("ALTER TABLE oauth_states ADD COLUMN claimed_at TEXT"); }],
   ['salary_records.dedupe_key', () => {
     if (!columnExists('salary_records', 'dedupe_key')) db.exec("ALTER TABLE salary_records ADD COLUMN dedupe_key TEXT");
     db.exec("DROP INDEX IF EXISTS idx_salary_dedupe");

@@ -115,6 +115,25 @@ async function call(method, path, body) {
   const stratOk = strat.status === 410 && /noindex/i.test(String(strat.headers?.['x-robots-tag'] || ''));
   if (stratOk) pass++; else { fail++; failures.push('invariant failed: strategy page answers 410 with noindex'); }
 
+  // A duplicate OAuth callback must not be reported as an expired link: the state is claimed once, and a
+  // replay says so. This is what made Apple sign-in need two attempts.
+  try {
+    const { DatabaseSync } = require('node:sqlite');
+    const path = require('node:path');
+    const dbf = process.env.DB_PATH || path.join(__dirname, '..', 'data', 'careeros.db');
+    const d = new DatabaseSync(dbf);
+    const state = 'check-replay-' + Date.now();
+    d.prepare("INSERT OR REPLACE INTO oauth_states (state,provider,nonce,expires_at) VALUES (?,?,?,?)")
+      .run(state, 'apple', 'n', new Date(Date.now() + 600000).toISOString());
+    const first = await fetch(BASE + '/api/auth/apple/callback', { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: 'code=x&state=' + state, redirect: 'manual' });
+    const second = await fetch(BASE + '/api/auth/apple/callback', { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: 'code=x&state=' + state, redirect: 'manual' });
+    const loc = second.headers.get('location') || '';
+    const replayOk = first.status === 303 && second.status === 303 && /already%20completed|already completed/i.test(loc);
+    if (replayOk) pass++; else { fail++; failures.push('invariant failed: a replayed OAuth state answers "already completed"'); }
+    d.prepare('DELETE FROM oauth_states WHERE state=?').run(state);
+    d.close();
+  } catch (e) { fail++; failures.push('invariant failed: replay check could not run - ' + e.message); }
+
   const legal = await call('GET', '/legal/privacy.html');
   if (legal.status === 200 && /Privacy/.test(legal.text || '')) pass++; else { fail++; failures.push('invariant failed: privacy page served'); }
 
