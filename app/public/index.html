@@ -857,16 +857,22 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 @media(max-width:760px){.market-snapshot{gap:12px;padding:12px}.market-snapshot .ds-grid{gap:14px}}
 .price-tagline{font-size:var(--text-sm);font-weight:600;font-style:italic;color:var(--ink2);margin:14px 0 6px;padding-top:12px;border-top:1px solid var(--line)}
 .plan-grid-compact .price-tagline{font-size:var(--text-sm);font-style:italic;margin:12px 0 4px;padding-top:10px}
-.plan-grid-compact .price.is-current{border-color:color-mix(in srgb,var(--good) 55%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--good) 28%,transparent)}
-html[data-theme="light"] .plan-grid-compact .price.is-current{border-color:#9FD9BC;box-shadow:0 0 0 1px rgba(14,157,99,.14)}
+.plan-grid-compact .price.is-current{border-color:var(--line2);box-shadow:none}
+html[data-theme="light"] .plan-grid-compact .price.is-current{border-color:var(--line2);box-shadow:none}
 .plan-grid-compact .price.is-current .chip.have{border-color:color-mix(in srgb,var(--good) 55%,var(--line));background:color-mix(in srgb,var(--good) 12%,var(--panel))}
 .plan-grid-compact .price .chip.have{background:color-mix(in srgb,var(--good) 12%,var(--panel));color:var(--good);border:1px solid color-mix(in srgb,var(--good) 45%,var(--line));border-radius:var(--radius-sm)}
 .plan-grid-compact .price .btn[disabled]{cursor:default}
-.plan-grid-compact .price.is-current .btn[disabled]{opacity:1;background:color-mix(in srgb,var(--good) 12%,var(--panel));color:var(--good);border:1px solid color-mix(in srgb,var(--good) 45%,var(--line))}
+.plan-grid-compact .price.is-current .btn[disabled]{opacity:1;background:var(--panel2);color:var(--muted);border:1px solid var(--line2)}
 .plan-grid-compact .price.is-featured .btn[disabled]{opacity:.7}
 .plan-grid-compact .price.is-plus{border-color:color-mix(in srgb,var(--gold) 60%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--gold) 30%,transparent)}
 html[data-theme="light"] .plan-grid-compact .price.is-plus{border-color:#E3C67F;box-shadow:0 0 0 1px rgba(199,154,58,.16)}
 .plan-done{background:color-mix(in srgb,var(--good) 14%,var(--panel));color:var(--good);border:1px solid color-mix(in srgb,var(--good) 45%,var(--line));opacity:1}
+/* The plan you are already on is a state, not an achievement: neutral, never success green. */
+.plan-cur{opacity:1;color:var(--muted);border-color:var(--line2);background:var(--panel2)}
+.pay-why{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;margin-top:14px;align-items:baseline}
+.pw-k{font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);white-space:nowrap}
+.pw-v{font-size:var(--text-base);color:var(--ink2);line-height:1.55}
+@media(max-width:560px){.pay-why{grid-template-columns:1fr;gap:4px}.pw-v{margin-bottom:10px}}
 html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;color:#0a7a45}
 .sub-panel{margin-bottom:14px}
 .sub-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
@@ -3283,7 +3289,7 @@ async function renderPlan() {
       ${cell(p.plan === 'free' ? 'is-current' : '', '', 'Free', 'Know Your Value', '€0', '',
         p.plans.free.features,
         p.plan === 'free'
-          ? '<button class="btn ghost plan-done" disabled>Continue Free</button>'
+          ? '<button class="btn ghost plan-cur" disabled>Current Plan</button>'
           : '<button class="btn ghost" id="downgrade">Continue Free</button>')}
       ${cell('featured', 'Most Chosen', 'Pro', 'Make Better Moves', '€19.99<span> /month</span>', 'or €149.99/year',
         p.plans.pro.features,
@@ -3295,6 +3301,15 @@ async function renderPlan() {
         p.plan === 'plus'
           ? '<button class="btn plan-done" disabled>Pro+ Unlocked</button>'
           : '<button class="btn plan-plus-cta" id="up-plus">Unlock Pro+</button>')}
+    </div>
+    <div class="card plain" style="margin-top:14px">
+      <h3>Why the Rate Check Is Free</h3>
+      <div class="pay-why">
+        <span class="pw-k">The gap</span>
+        <span class="pw-v">The rate gap is free, always. That is the moment that earns trust – you should be able to find out you are underpaid without paying.</span>
+        <span class="pw-k">What you pay for</span>
+        <span class="pw-v">What you pay for is the ongoing system: the full radar, saved searches, the daily brief, and a copilot that remembers your whole situation.</span>
+      </div>
     </div>
     <div class="card" style="margin-top:14px">
       <h3>Your Usage</h3>
