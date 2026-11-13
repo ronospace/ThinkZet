@@ -23,7 +23,7 @@ Last updated: 13 November 2026.
 | R-09 | Turn the Rate Intelligence and Career Score prose into labelled rows | Rates, Scores | done | UI-119 |
 | R-10 | The Copilot answer bubble and the Negotiation scripts are the last long unbroken prose in the app; both could carry a label | Copilot, Negotiation | open | – |
 | R-11 | Skill Gaps partner cards still show a partner name as a bare chip button; they should carry the same disclosure line the detail panel does | Gaps | open | – |
-| R-12 | The Pro+ card lists six "Compare …" bullets that read as a feature dump; they describe one job and could be stated once | Plan | open | – |
+| R-12 | The Pro+ card lists six "Compare …" bullets that read as a feature dump; they describe one job and could be stated once | Plan | done | `UI-122` |
 | R-13 | `docs/planning/AUDIT-2026-11-11.md` still lists the paywall essay as "unnecessary"; it is back by founder request and the audit should say so | Docs | open | – |
 | R-14 | Market Pulse and Career Trajectory carry the same paragraph-before-table shape and have not had the facts pass | Pulse, Trajectory | open | – |
 | R-15 | The landing page has no statement of what is free; a visitor meets the price cards before the rule | Landing | open | – |
@@ -33,6 +33,7 @@ Last updated: 13 November 2026.
 | R-19 | Counts were printed raw in 16 places, so 1646 rendered without a thousands separator; every count now goes through `int()` | Whole app | done | `UI-121` |
 | R-20 | Apple sign-in needed two attempts: the second callback found its state already consumed and answered "expired" to someone who had already authorised | Auth | done | `AUTH-25` |
 | R-21 | A duplicate OAuth callback now redirects into the app when a session already exists instead of reporting a failure | Auth | done | `AUTH-25` |
+| R-22 | Pro+ listed six "Compare …" bullets that repeated one idea; now two lines, the comparison and the negotiation brief | Plan | done | `UI-122` |
 
 ## How to use this
 
