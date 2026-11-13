@@ -946,6 +946,11 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .fb-why{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:var(--radius);color:var(--ink);padding:9px 11px;font:inherit;font-size:var(--text-sm);resize:vertical}
 .fb-why:focus{outline:none;border-color:var(--accent2)}
 @media(max-width:560px){.fb-stars{margin-left:0}.fb-star{width:30px;height:30px}}
+/* ---------- learning loop ---------- */
+.lrn-grid{grid-template-columns:1.1fr 1fr}
+.lrn-funnel{grid-template-columns:repeat(4,minmax(0,1fr))}
+@media(max-width:1100px){.lrn-grid{grid-template-columns:1fr}.lrn-funnel{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.lrn-funnel{grid-template-columns:1fr;gap:10px}}
 /* ---------- tracker ---------- */
 .tk-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
 .tk-col{min-height:180px}
@@ -3191,22 +3196,35 @@ async function renderLearning() {
   const intel = await api('/api/outcomes/intel');
   const recent = await api('/api/tracker');
   $('#view').innerHTML = `
-    <div class="grid" style="grid-template-columns:1.1fr 1fr">
+    <div class="card plain" style="margin-bottom:14px">
+      <h3>What This Page Does</h3>
+      <div class="facts">
+        <span class="fk">The idea</span>
+        <span class="fv">Every application you track and every outcome you report teaches the model what actually happens to you, not what happens to the market on average.</span>
+        <span class="fk">What it changes</span>
+        <span class="fv">Your interview and offer probabilities, and the scores built on them. Nothing else in the app is affected.</span>
+        <span class="fk">What it needs</span>
+        <span class="fv">One tracked opportunity and one outcome. Until then the model runs on published market figures alone, which is why every number below is either zero or a market average.</span>
+      </div>
+      <div style="margin-top:14px"><button class="btn sm" id="l-outcome">Report an outcome</button></div>
+    </div>
+    <div class="grid lrn-grid">
       <div class="card">
-        <h3>The Flywheel</h3>
+        <h3>Your Model</h3>
         <div class="big mono" style="margin:10px 0 2px">${l.totalOutcomes}</div>
-        <div class="dim">verified outcomes recorded</div>
-        <div style="margin-top:18px" class="dim">${esc(l.calibration.explanation)}</div>
+        <div class="dim">outcomes you have reported</div>
         <div style="margin-top:18px">
-          <div class="kv"><span>Model version</span><span class="mono">${esc(l.calibration.modelVersion)}</span></div>
-          <div class="kv"><span>Outcome weight in prior</span><span class="mono">${Math.round(l.calibration.shrinkage * 100)}%</span></div>
-          <div class="kv"><span>Interview prior lift</span><span class="mono">+${l.calibration.interviewPriorLift}%</span></div>
+          <div class="kv"><span>How much your outcomes count<span class="muted" style="font-size:var(--text-xs);display:block">Weight against the market average. It rises as you report more, and is capped so one lucky result cannot swing it.</span></span><span class="mono">${Math.round(l.calibration.shrinkage * 100)}%</span></div>
+          <div class="kv"><span>Effect on your interview estimate<span class="muted" style="font-size:var(--text-xs);display:block">How far your own results have moved the estimate away from the market figure.</span></span><span class="mono">+${l.calibration.interviewPriorLift}%</span></div>
           <div class="kv"><span>Offers logged</span><span class="mono">${l.offers}</span></div>
-          <div class="kv"><span>Avg salary delta on offers</span><span class="mono">${l.avgSalaryDeltaPct == null ? '–' : (l.avgSalaryDeltaPct > 0 ? '+' : '') + l.avgSalaryDeltaPct + '%'}</span></div>
+          <div class="kv"><span>Average salary change on offers</span><span class="mono">${l.avgSalaryDeltaPct == null ? '–' : (l.avgSalaryDeltaPct > 0 ? '+' : '') + l.avgSalaryDeltaPct + '%'}</span></div>
+          <div class="kv"><span>Model version</span><span class="mono">${esc(l.calibration.modelVersion)}</span></div>
         </div>
+        <div class="facts tight"><span class="fk">Status</span><span class="fv">${esc(l.calibration.explanation)}</span></div>
       </div>
       <div class="card">
-        <h3>Score distribution across your ${l.priors[0]?.n || 0} scored opportunities</h3>
+        <h3>What Your Scores Look Like</h3>
+        <div class="kv" style="margin-top:10px"><span>Scored opportunities</span><span class="mono">${l.priors[0]?.n || 0}</span></div>
         <div class="kv"><span>Average match score</span><span class="mono">${l.priors[0]?.m ?? '–'}</span></div>
         <div class="kv"><span>Average interview probability</span><span class="mono">${l.priors[0]?.p ?? '–'}%</span></div>
         <div class="facts tight">
@@ -3215,11 +3233,10 @@ async function renderLearning() {
           <span class="fk">How we blend</span>
           <span class="fv">We publish the prior and blend your observed outcomes into it – with shrinkage so one lucky offer cannot move the model.</span>
         </div>
-        <div style="margin-top:16px"><button class="btn sm" id="l-outcome">Report an outcome</button></div>
       </div>
     </div>
     <h2 class="section">Your Measured Funnel</h2>
-    <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="grid lrn-funnel">
       <div class="card"><h3>Applications</h3><div class="big mono">${intel.mine.funnel.applied}</div></div>
       <div class="card"><h3>Interview Rate</h3><div class="big mono">${intel.mine.funnel.interviewRate == null ? '–' : intel.mine.funnel.interviewRate + '%'}</div><div class="muted" style="font-size:var(--text-xs)">measured, not modelled</div></div>
       <div class="card"><h3>Offer Rate</h3><div class="big mono">${intel.mine.funnel.offerRate == null ? '–' : intel.mine.funnel.offerRate + '%'}</div><div class="muted" style="font-size:var(--text-xs)">of interviews</div></div>
@@ -3866,7 +3883,7 @@ const VIEWS = {
   twin: [renderTwin, 'Career Twin', 'The model of you that gets better with use'],
   auth: [renderAuth, 'Sign in', ''],
   copilot: [renderCopilot, 'Career Copilot', 'Grounded in your data, not generic advice'],
-  learning: [renderLearning, 'Learning Loop', 'Outcomes recalibrate the model – the flywheel'],
+  learning: [renderLearning, 'Learning Loop', 'What your own outcomes teach the model'],
   searches: [renderSearches, 'Saved Searches', 'Standing questions the engine keeps answering'],
   brief: [renderBrief, 'Daily Brief', 'What changed since you last looked'],
   negotiation: [renderNegotiation, 'Negotiation', 'The number to say, the evidence, and the fallback'],
