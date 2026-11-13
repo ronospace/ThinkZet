@@ -2752,6 +2752,7 @@ async function renderScores() {
         </div>`;
       }).join('')}</div>
       <div class="note" style="margin-top:12px">The shaded band is the middle of the market for your level. The tick is the median. Your dot is where you actually sit.</div>
+      <div class="note" style="margin-top:8px">Momentum is the only row that measures change rather than standing: it compares this update with your last, so a strong profile that is standing still scores low on it.</div>
     </div>
     <div class="scores-grid">
       ${cards.map(([label, v]) => {
@@ -3017,6 +3018,7 @@ async function renderCopilot() {
             <li><b>Your scores</b>: eight measures, benchmarked</li>
           </ul>
           <div class="mi-foot">Ask something specific and I will cite the sample I used.</div>
+          <div class="mi-foot">Answers are computed from your records by fixed rules, not written by a language model, so the same question always gives the same answer.</div>
         </div>
       </div>
       <div class="composer">
