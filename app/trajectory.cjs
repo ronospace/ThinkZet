@@ -21,9 +21,9 @@ function skillVelocity(skills) {
   return {
     velocity,
     drivers: [
-      { k: 'average skill growth', v: Math.round(avgGrowth) + '%' },
-      { k: 'emerging skills', v: String(emerging) },
-      { k: 'declining skills', v: String(declining) },
+      { k: 'Average Skill Growth', v: Math.round(avgGrowth) + '%' },
+      { k: 'Emerging Skills', v: String(emerging) },
+      { k: 'Declining Skills', v: String(declining) },
     ],
   };
 }

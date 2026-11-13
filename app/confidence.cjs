@@ -16,28 +16,28 @@ function opportunityConfidence(o) {
   let score = 50;
 
   const compDisclosed = o.comp_min != null;
-  if (compDisclosed) { score += 18; factors.push({ k: 'compensation disclosed', d: '+18' }); }
-  else factors.push({ k: 'no compensation disclosed', d: '-0', note: 'income potential is inferred from market, not this posting' });
+  if (compDisclosed) { score += 18; factors.push({ k: 'Compensation Disclosed', d: '+18' }); }
+  else factors.push({ k: 'No Compensation Disclosed', d: '-0', note: 'income potential is inferred from market, not this posting' });
 
   const descLen = (o.description || '').length;
-  if (descLen > 800) { score += 12; factors.push({ k: 'detailed description', d: '+12' }); }
-  else if (descLen < 200) { score -= 15; factors.push({ k: 'thin description', d: '-15' }); }
+  if (descLen > 800) { score += 12; factors.push({ k: 'Detailed Description', d: '+12' }); }
+  else if (descLen < 200) { score -= 15; factors.push({ k: 'Thin Description', d: '-15' }); }
 
   if (o.visa_sponsorship === 'yes' || o.visa_sponsorship === 'no') {
-    score += 8; factors.push({ k: 'sponsorship explicitly stated', d: '+8' });
+    score += 8; factors.push({ k: 'Sponsorship Explicitly Stated', d: '+8' });
   } else {
-    factors.push({ k: 'sponsorship unstated', d: '-0', note: 'most employers never say — treat as unknown, not as no' });
+    factors.push({ k: 'Sponsorship Unstated', d: '-0', note: 'most employers never say — treat as unknown, not as no' });
   }
 
   const ageDays = o.posted_at ? (Date.now() - new Date(o.posted_at).getTime()) / 86400000 : 30;
-  if (ageDays <= 7) { score += 10; factors.push({ k: 'posted this week', d: '+10' }); }
+  if (ageDays <= 7) { score += 10; factors.push({ k: 'Posted This Week', d: '+10' }); }
   else if (ageDays > 45) { score -= 20; factors.push({ k: `posted ${Math.round(ageDays)} days ago`, d: '-20' }); }
 
   if (o.source_count > 1) { score += 6; factors.push({ k: `seen on ${o.source_count} sources`, d: '+6' }); }
 
   const skills = Array.isArray(o.skills) ? o.skills : JSON.parse(o.skills || '[]');
   if (skills.length >= 5) { score += 6; factors.push({ k: `${skills.length} skills specified`, d: '+6' }); }
-  else if (skills.length === 0) { score -= 10; factors.push({ k: 'no skills specified', d: '-10' }); }
+  else if (skills.length === 0) { score -= 10; factors.push({ k: 'No Skills Specified', d: '-10' }); }
 
   score = Math.max(5, Math.min(95, score));
   return {

@@ -1483,7 +1483,7 @@ const TYPE_LABEL = { job: 'Jobs', contract: 'Contracts', fellowship: 'Fellowship
 
 // Score tone is semantic, not decorative: good / fair / weak, expressed through the
 // same three tokens as the rest of the system so both themes stay in balance.
-const factorRows = (factors) => factors.map((f) => `<div class="kv"><span>${esc(f.k)}</span><span class="chip ${f.d === 'strong' ? 'have' : f.d === 'thin' ? 'miss' : ''}">${esc(f.d)}</span></div>`).join('');
+const factorRows = (factors) => factors.map((f) => `<div class="kv"><span>${esc(f.k)}</span><span class="chip ${f.d === 'strong' ? 'have' : f.d === 'thin' ? 'miss' : ''}">${esc(titleCase(f.d))}</span></div>`).join('');
 // 83rd, 1st, 12th: the suffix is a real superscript so the number stays the hero.
 const ordSuffix = (n) => { const m = n % 100; if (m >= 11 && m <= 13) return 'th'; return ['th', 'st', 'nd', 'rd'][n % 10] || 'th'; };
 const ordinalHtml = (n) => `${n}<sup class="ord">${ordSuffix(n)}</sup>`;
@@ -1535,10 +1535,10 @@ async function renderSeo() {
             <div><div class="muted" style="font-size:var(--text-xs)">p75</div><div class="mono" style="font-size:var(--text-lg)">${fmt(b.p75)}</div></div>
             <div><div class="muted" style="font-size:var(--text-xs)">p90</div><div class="mono" style="font-size:var(--text-lg)">${fmt(b.p90)}</div></div>
           </div>
-          <div style="margin-top:16px;font-size:var(--text-sm);color:var(--muted)">${esc(b.segment)} · ${int(b.exactComparables)} exact-profile comparables · ${esc(b.confidence)} confidence</div>
+          <div style="margin-top:16px;font-size:var(--text-sm);color:var(--muted)">${esc(b.segment)} · ${int(b.exactComparables)} exact-profile comparables · ${esc(titleCase(b.confidence))} confidence</div>
         </div>
         <h2 style="font-size:var(--text-lg);margin:32px 0 10px">Where the Money Is</h2>
-        <div class="card">${(b.byChannel || []).filter((c) => c.n >= 5).map((c) => `<div class="kv"><span style="text-transform:capitalize">${esc(c.channel)} <span class="muted">· ${c.n} postings</span></span><span class="mono">${fmt(c.median)}</span></div>`).join('')}</div>
+        <div class="card">${(b.byChannel || []).filter((c) => c.n >= 5).map((c) => `<div class="kv"><span>${esc(titleCase(c.channel))} <span class="muted">· ${c.n} postings</span></span><span class="mono">${fmt(c.median)}</span></div>`).join('')}</div>
         <h2 style="font-size:var(--text-lg);margin:32px 0 10px">Skills That Pay More</h2>
         <div class="card">${r.levers.slice(0, 6).map((l) => `<div class="kv"><span>${esc(l.skill)}</span><span class="mono" style="color:var(--good)">+${l.premium}%</span></div>`).join('')}</div>
         <div class="card" style="margin-top:26px;text-align:center;">
@@ -1567,7 +1567,7 @@ async function renderSeo() {
           <div class="kv"><span>Market demand index</span><span class="mono">${s1.demand_index}/200</span></div>
           <div class="kv"><span>Salary premium</span><span class="mono" style="color:var(--good)">+${s1.salary_premium}%</span></div>
           <div class="kv"><span>90-day growth</span><span class="mono">${s1.growth_rate > 0 ? '+' : ''}${s1.growth_rate}%</span></div>
-          <div class="kv"><span>Emerging</span><span class="mono">${s1.is_emerging ? 'yes' : 'no'}</span></div>
+          <div class="kv"><span>Emerging</span><span class="mono">${s1.is_emerging ? 'Yes' : 'No'}</span></div>
         </div>
         <div class="card" style="margin-top:22px;text-align:center">
           <div style="font-size:var(--text-base);font-weight:600">Do you have ${esc(s1.canonical)}?</div>
@@ -1667,7 +1667,7 @@ async function runRateCheck() {
       return `You are ahead of the median. That is leverage, and it expires if you sit still.`;
     })();
     box.innerHTML = `
-      <div style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">${esc(b.segment)} · ${int(b.sampleSize)} comparables · ${esc(b.confidence)} confidence</div>
+      <div style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">${esc(b.segment)} · ${int(b.sampleSize)} comparables · ${esc(titleCase(b.confidence))} confidence</div>
       <div class="big-gap" style="color:${tone}">${esc(line)}</div>
       <div style="font-size:var(--text-base);color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b> ${sampleChip()}${v.gapAbs != null ? ` · you report ${fmt(r.input.current)}${per}` : ''}</div>
       <div class="scale">
@@ -1677,7 +1677,7 @@ async function runRateCheck() {
       <div class="legend"><span>p25 ${fmt(b.p25)}</span><span>p50 ${fmt(b.p50)}</span><span>p75 ${fmt(b.p75)}</span><span>p90 ${fmt(b.p90)}</span></div>
       <div style="margin-top:18px;font-size:var(--text-sm);color:var(--ink2)">
         <b style="color:var(--ink)">Where the Money Is:</b>
-        ${b.byChannel.filter((c) => c.n >= 5).map((c) => `${esc(c.channel)} ${fmt(c.median)}`).join(' · ') || 'not enough channel data'}
+        ${b.byChannel.filter((c) => c.n >= 5).map((c) => `${esc(titleCase(c.channel))} ${fmt(c.median)}`).join(' · ') || 'not enough channel data'}
       </div>
       <div style="margin-top:12px;font-size:var(--text-sm);color:var(--ink2)">
         <b style="color:var(--ink)">Skills That Pay More than yours:</b>
@@ -2022,7 +2022,7 @@ function renderOnboarding() {
       const tone = v.gapPct > 15 ? 'var(--bad)' : v.gapPct > 5 ? 'var(--warn)' : 'var(--good)';
       box.innerHTML = `
         <div class="card plain" style="border-color:var(--ai-border);">
-          <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">${esc(b.segment)} · ${int(b.sampleSize)} comparables · ${esc(b.confidence)} confidence</div>
+          <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">${esc(b.segment)} · ${int(b.sampleSize)} comparables · ${esc(titleCase(b.confidence))} confidence</div>
           <div style="font-size:clamp(24px,4.4vw,34px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:10px 0 6px;color:${tone}">${esc(v.headline)}</div>
           <div style="font-size:var(--text-base);color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b> ${sampleChip()}</div>
         ${sampleLine()}
@@ -2114,7 +2114,7 @@ async function renderRadar() {
     const pos = (v) => Math.max(0, Math.min(100, ((v - min) / (max - min)) * 100));
     return `
     <div class="rate-gap">
-      <div class="k">Rate intelligence · ${int(rates.sampleSize)} comparable postings · ${rates.confidence} confidence · ${esc(rates.segment || '')} ${sampleChip()}</div>
+      <div class="k">Rate intelligence · ${int(rates.sampleSize)} comparable postings · ${esc(titleCase(rates.confidence))} confidence · ${esc(rates.segment || '')} ${sampleChip()}</div>
       <div class="amount">${rates.gapPct > 0 ? 'You are ' + rates.gapPct + '% below market' : rates.gapPct < 0 ? 'You are ' + Math.abs(rates.gapPct) + '% above market' : 'You are at market'}</div>
       <div class="dim">Median for your exact profile: <b>${money(rates.p50)}</b>${PERIOD_LABEL[rates.period] || ''} · you report <b>${money(rates.current)}</b>${PERIOD_LABEL[rates.period] || ''} ${rates.gapAbs > 0 ? `<span style="color:var(--bad)">(${money(rates.gapAbs)}/yr on the table)</span>` : ''}</div>
       <div class="scale">
@@ -2160,7 +2160,7 @@ async function renderRadar() {
       <div class="refine-panel" id="refine-panel">
         <div class="refine-row">
           <span class="refine-label">Optimising for</span>
-          ${['balanced', 'income', 'growth', 'stability'].map((h) => `<button class="seg ${STATE.horizon === h ? 'on' : ''}" data-h="${h}">${h}</button>`).join('')}
+          ${['balanced', 'income', 'growth', 'stability'].map((h) => `<button class="seg ${STATE.horizon === h ? 'on' : ''}" data-h="${h}">${titleCase(h)}</button>`).join('')}
         </div>
         <div class="refine-row">
           <span class="refine-label">Sort</span>
@@ -2176,7 +2176,7 @@ async function renderRadar() {
           <input id="f-q" placeholder="Title, company or skill" value="${esc(FILTERS.q)}"/>
           <select id="f-country"><option value="">All countries</option>${[...new Set(feed.opportunities.map((o) => o.country).filter(Boolean))].sort().map((c) => `<option value="${c}" ${FILTERS.country === c ? 'selected' : ''}>${c}</option>`).join('')}</select>
           <select id="f-family"><option value="">All roles</option>${[...new Set(feed.opportunities.map((o) => o.role_family).filter(Boolean))].sort().map((c) => `<option value="${c}" ${FILTERS.family === c ? 'selected' : ''}>${titleCase(c)}</option>`).join('')}</select>
-          <select id="f-seniority"><option value="">All levels</option>${['junior', 'mid', 'senior', 'staff', 'lead', 'principal'].map((c) => `<option value="${c}" ${FILTERS.seniority === c ? 'selected' : ''}>${c}</option>`).join('')}</select>
+          <select id="f-seniority"><option value="">All levels</option>${['junior', 'mid', 'senior', 'staff', 'lead', 'principal'].map((c) => `<option value="${c}" ${FILTERS.seniority === c ? 'selected' : ''}>${titleCase(c)}</option>`).join('')}</select>
           <select id="f-degree">
             <option value="">Any education</option>
             <option value="open" ${FILTERS.degree === 'open' ? 'selected' : ''}>no degree required</option>
@@ -2383,7 +2383,7 @@ async function renderRadar() {
     if (FILTERS.q) active.push(FILTERS.q);
     if (FILTERS.country) active.push(FILTERS.country);
     if (FILTERS.family) active.push(titleCase(FILTERS.family));
-    if (FILTERS.seniority) active.push(FILTERS.seniority);
+    if (FILTERS.seniority) active.push(titleCase(FILTERS.seniority));
     if (FILTERS.degree) active.push('education: ' + FILTERS.degree);
     if (FILTERS.visa) active.push('visa only');
     if (STATE.types.length) active.push(STATE.types.map((t) => TYPE_LABEL[t] || t).join(', '));
@@ -2491,10 +2491,10 @@ function oppCard(o, idx = 0) {
         ${oppBadge(o)}
         <span class="chip type">${TYPE_LABEL[o.type] || o.type}</span>
         <span class="opp-comp">${comp}</span>
-        <span>${esc(o.city)}${o.country ? ', ' + esc(o.country) : ''} · ${esc(o.remote_type)}</span>
-        ${o.visa_sponsorship === 'yes' ? '<span class="chip have">visa sponsorship</span>' : ''}
+        <span>${esc(o.city)}${o.country ? ', ' + esc(o.country) : ''} · ${esc(titleCase(o.remote_type))}</span>
+        ${o.visa_sponsorship === 'yes' ? '<span class="chip have">Visa Sponsorship</span>' : ''}
         ${o.source_count > 1 ? `<span class="chip">${int(o.source_count)} sources</span>` : ''}
-        ${o.confidence ? `<span class="chip" title="${esc(o.confidence.factors.map((f) => f.k + ' ' + f.d).join(' · '))}" style="border-color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'};color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'}">${o.confidence.level} evidence</span>` : ''}
+        ${o.confidence ? `<span class="chip" title="${esc(o.confidence.factors.map((f) => f.k + ' ' + f.d).join(' · '))}" style="border-color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'};color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'}">${esc(titleCase(o.confidence.level))} Evidence</span>` : ''}
         ${(o.missing_skills || []).slice(0, 3).map((m) => badge(m, 'blk')).join('')}
       </div>
       <div class="why">${esc(top)}</div>
@@ -2650,12 +2650,12 @@ function openDetail(id) {
         <div class="score-wrap"><div class="score lg" style="--c:${c};--p:${o.match_score}" role="img" aria-label="Match ${o.match_score} out of 100"><b>${o.match_score}</b></div><span class="score-cap">match</span></div>
         <div style="flex:1">
           <h2 style="margin:0 0 4px;font-size:var(--text-xl)">${esc(o.title)}</h2>
-          <div class="dim">${esc(o.company)} · ${esc(o.city)}${o.country ? ', ' + esc(o.country) : ''} · ${esc(o.remote_type)} · ${TYPE_LABEL[o.type] || o.type}</div>
+          <div class="dim">${esc(o.company)} · ${esc(o.city)}${o.country ? ', ' + esc(o.country) : ''} · ${esc(titleCase(o.remote_type))} · ${TYPE_LABEL[o.type] || o.type}</div>
           <div class="row" style="margin-top:10px;gap:8px;flex-wrap:wrap">
             <span class="chip">${comp}</span>
-            <span class="chip">${esc(o.seniority || '–')}</span>
-            <span class="chip ${o.visa_sponsorship === 'yes' ? 'have' : ''}">visa: ${esc(o.visa_sponsorship)}</span>
-            <span class="chip ${o.degree_requirement === 'not_required' ? 'have' : ''}">degree: ${esc(o.degree_requirement || 'unknown')}</span>
+            <span class="chip">${esc(titleCase(o.seniority) || '–')}</span>
+            <span class="chip ${o.visa_sponsorship === 'yes' ? 'have' : ''}">Visa: ${esc(titleCase(o.visa_sponsorship))}</span>
+            <span class="chip ${o.degree_requirement === 'not_required' ? 'have' : ''}">Degree: ${esc(titleCase(o.degree_requirement) || 'Unknown')}</span>
             <span class="chip">${esc(o.source)} · quality ${Math.round((o.source_quality || 0) * 100)}</span>
             ${o.source_count > 1 ? `<span class="chip">seen on ${int(o.source_count)} boards</span>` : ''}
           </div>
@@ -2685,7 +2685,7 @@ function openDetail(id) {
         <h3 style="margin-top:18px">What Would Move You Up</h3>
         <div style="font-size:var(--text-sm)" class="dim">${(o.missing_skills || []).length ? 'Close: <b>' + o.missing_skills.map(esc).join(', ') + '</b> – each one raises both match and interview probability.' : 'You cover every listed skill. Your edge here is speed of application.'}</div>
         ${o.confidence ? `<div style="margin-top:16px;padding:10px 12px;border:1px solid var(--line);border-radius:9px;background:var(--panel2)">
-          <div class="row" style="justify-content:space-between"><span style="font-size:var(--text-sm)">Evidence quality</span><span class="mono" style="color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'}">${o.confidence.score}/100 · ${o.confidence.level}</span></div>
+          <div class="row" style="justify-content:space-between"><span style="font-size:var(--text-sm)">Evidence quality</span><span class="mono" style="color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'}">${int(o.confidence.score)}/100 · ${esc(titleCase(o.confidence.level))}</span></div>
           <div style="margin-top:8px;font-size:var(--text-xs);color:var(--muted);line-height:1.7">${o.confidence.factors.map((f) => `${esc(f.k)} <span class="mono">${esc(f.d)}</span>${f.note ? ' <span style="opacity:.7">– ' + esc(f.note) + '</span>' : ''}`).join('<br/>')}</div>
         </div>` : ''}
         <div class="kv" style="margin-top:16px"><span>Income potential</span><span class="mono">${o.income_potential}/100</span></div>
@@ -2715,7 +2715,7 @@ function openDetail(id) {
         <h3 style="margin:0">Cover Letter</h3>
         <div class="row" style="gap:6px">
           ${['direct', 'warm', 'formal'].map((t) => `<button class="chip cl-tone" data-t="${t}" style="cursor:pointer">${t}</button>`).join('')}
-          <button class="chip cl-copy" style="cursor:pointer">copy</button>
+          <button class="chip cl-copy" style="cursor:pointer">Copy</button>
         </div>
       </div>
       <div id="cl-body" class="dim" style="font-size:var(--text-sm);margin-top:10px">Choose a tone to generate a letter from your profile and this posting.</div>
@@ -2938,7 +2938,7 @@ async function renderRates() {
       <div class="card">
         <h3>Your Market Rate – ${r.period === 'hour' ? 'per hour' : 'per year'}, EUR</h3>
         <div class="big mono" style="margin:10px 0 2px">${money(r.p50)}</div>
-        <div class="dim">median across ${int(r.sampleSize)} comparable postings (${r.confidence} confidence)</div>
+        <div class="dim">median across ${int(r.sampleSize)} comparable postings (${esc(titleCase(r.confidence))} confidence)</div>
         ${r.market ? `<div class="pool-line">${(() => {
           // Say which market the number came from, and why, so a global fallback is never mistaken for a local figure.
           const m = r.market;
@@ -2964,12 +2964,12 @@ async function renderRates() {
           <h3>Median by Channel</h3>
           <div style="margin-top:10px">
             ${r.byChannel.map((c) => `
-              <div class="kv"><span>${esc(c.channel)} <span class="muted">(${c.n})</span></span><span class="mono">${money(c.median)}</span></div>
+              <div class="kv"><span>${esc(titleCase(c.channel))} <span class="muted">(${c.n})</span></span><span class="mono">${money(c.median)}</span></div>
             `).join('') || '<div class="muted">not enough data</div>'}
           </div>
           <div class="facts tight"><span class="fk">Why channels differ</span><span class="fv">The same profile pays differently as a hire, a contractor and on a marketplace. This is the split.</span></div>
         ${r.confidenceDetail ? `<div style="margin-top:14px;border-top:1px solid var(--line);padding-top:12px">
-          <div class="row" style="justify-content:space-between"><span style="font-size:var(--text-sm);font-weight:600">Benchmark confidence</span><span class="chip ${r.confidenceDetail.level === 'high' ? 'have' : r.confidenceDetail.level === 'low' ? 'miss' : ''}">${esc(r.confidenceDetail.level)}</span></div>
+          <div class="row" style="justify-content:space-between"><span style="font-size:var(--text-sm);font-weight:600">Benchmark confidence</span><span class="chip ${r.confidenceDetail.level === 'high' ? 'have' : r.confidenceDetail.level === 'low' ? 'miss' : ''}">${esc(titleCase(r.confidenceDetail.level))}</span></div>
           <div style="margin-top:6px">${factorRows(r.confidenceDetail.factors)}</div>
           ${r.confidenceDetail.caveat ? `<div style="margin-top:8px;font-size:var(--text-xs);color:var(--warn)">${esc(r.confidenceDetail.caveat)}</div>` : ''}
         </div>` : ''}
@@ -3002,7 +3002,7 @@ async function renderGaps() {
         ${plan.sequence.map((g) => `<div style="display:flex;gap:12px;align-items:center;padding:9px 0;border-bottom:1px solid var(--line)">
           <div class="mono" style="width:20px;color:var(--muted)">${g.order}</div>
           <div style="flex:1">
-            <div style="font-size:var(--text-sm)">${esc(g.skill)} ${g.emerging ? '<span class="chip have" style="margin-left:6px">emerging</span>' : ''}</div>
+            <div style="font-size:var(--text-sm)">${esc(g.skill)} ${g.emerging ? '<span class="chip have" style="margin-left:6px">Emerging</span>' : ''}</div>
             <div class="muted" style="font-size:var(--text-xs);margin-top:2px">unblocks ${g.blocking} · ${g.effortWeeks} weeks · ${g.adjacency === 'direct' ? 'in a category you already work in' : 'a lateral move'} · +${g.salaryPremium}% premium</div>
           </div>
           <div style="text-align:right"><div class="mono" style="font-size:var(--text-sm)">${g.cumulativeBlocking}</div><div class="muted" style="font-size:var(--text-2xs)">cumulative</div></div>
@@ -3115,15 +3115,15 @@ async function renderTwin() {
     <div class="grid" style="grid-template-columns:1fr 1fr">
       <div class="card">
         <h3>Identity</h3>
-        <div class="kv"><span>Seniority</span><span>${esc(t.identity?.seniority)}</span></div>
+        <div class="kv"><span>Seniority</span><span>${esc(titleCase(t.identity?.seniority) || '–')}</span></div>
         <div class="kv"><span>Years</span><span class="mono">${t.identity?.years ?? '–'}</span></div>
         <div class="kv"><span>Headline</span><span>${esc(t.identity?.headline || '–')}</span></div>
         <div class="kv"><span>Profile completeness</span><span class="mono">${t.completeness}%</span></div>
         <h3 style="margin-top:18px">Constraints</h3>
-        <div class="kv"><span>Remote preference</span><span>${esc(t.constraints?.remotePreference)}</span></div>
-        <div class="kv"><span>Willing to relocate</span><span>${t.constraints?.willingToRelocate ? 'yes' : 'no'}</span></div>
+        <div class="kv"><span>Remote preference</span><span>${esc(titleCase(t.constraints?.remotePreference) || '–')}</span></div>
+        <div class="kv"><span>Willing to relocate</span><span>${t.constraints?.willingToRelocate ? 'Yes' : 'No'}</span></div>
         <div class="kv"><span>Target countries</span><span>${(t.constraints?.targetCountries || []).join(', ') || '–'}</span></div>
-        <div class="kv"><span>Visa sponsorship needed</span><span>${t.constraints?.visaNeeded ? 'yes' : 'no'}</span></div>
+        <div class="kv"><span>Visa sponsorship needed</span><span>${t.constraints?.visaNeeded ? 'Yes' : 'No'}</span></div>
         <div class="kv"><span>Current &gt; target</span><span class="mono">${money(t.constraints?.currentRate)} &gt; ${money(t.constraints?.targetRateMin)}</span></div>
       </div>
       <div class="card">
@@ -3262,7 +3262,7 @@ async function renderLearning() {
     </div>
     <h2 class="section">Recent Outcomes</h2>
     <div class="card">
-      ${recent.outcomes.length ? recent.outcomes.map((o) => `<div class="kv"><span>${esc(o.outcome_type)}${o.salary_delta_pct != null ? ' · ' + (o.salary_delta_pct > 0 ? '+' : '') + o.salary_delta_pct + '%' : ''}</span><span class="muted">${new Date(o.occurred_at).toLocaleDateString('en-GB')}</span></div>`).join('') : '<div class="muted">No outcomes yet. Every reported outcome is data no competitor has.</div>'}
+      ${recent.outcomes.length ? recent.outcomes.map((o) => `<div class="kv"><span>${esc(titleCase(o.outcome_type))}${o.salary_delta_pct != null ? ' · ' + (o.salary_delta_pct > 0 ? '+' : '') + o.salary_delta_pct + '%' : ''}</span><span class="muted">${new Date(o.occurred_at).toLocaleDateString('en-GB')}</span></div>`).join('') : '<div class="muted">No outcomes yet. Every reported outcome is data no competitor has.</div>'}
     </div>`;
   $('#l-outcome').onclick = async () => {
     const apps = recent.applications;
@@ -3397,11 +3397,11 @@ async function renderNegotiation() {
 
     <h2 class="section">What to Say When They Name a Number</h2>
     <div class="card">
-      <div class="row" style="justify-content:space-between"><h3 style="margin:0">The Ask</h3><button class="chip cp" data-t="${esc(n.askScript)}" style="cursor:pointer">copy</button></div>
+      <div class="row" style="justify-content:space-between"><h3 style="margin:0">The Ask</h3><button class="chip cp" data-t="${esc(n.askScript)}" style="cursor:pointer">Copy</button></div>
       <div style="margin-top:10px;font-size:var(--text-base);line-height:1.75;font-style:italic;color:var(--tone-ink, var(--tone-ink))">${esc(n.askScript)}</div>
     </div>
     <div class="card" style="margin-top:12px">
-      <div class="row" style="justify-content:space-between"><h3 style="margin:0">If They Come in Low</h3><button class="chip cp" data-t="${esc(n.counterScript)}" style="cursor:pointer">copy</button></div>
+      <div class="row" style="justify-content:space-between"><h3 style="margin:0">If They Come in Low</h3><button class="chip cp" data-t="${esc(n.counterScript)}" style="cursor:pointer">Copy</button></div>
       <div style="margin-top:10px;font-size:var(--text-base);line-height:1.75;font-style:italic;color:var(--tone-ink, var(--tone-ink))">${esc(n.counterScript)}</div>
     </div>
 
@@ -3473,7 +3473,7 @@ async function renderEmail() {
         <div style="margin-top:10px;max-height:420px;overflow:auto">
           ${outbox.messages.length ? outbox.messages.map((m) => `<div style="padding:10px 0;border-bottom:1px solid var(--line)">
             <div class="row" style="justify-content:space-between"><span style="font-size:var(--text-sm);font-weight:550">${esc(m.subject)}</span><span class="chip ${m.status === 'sent' ? 'have' : ''}">${esc(m.status)}</span></div>
-            <div class="muted" style="font-size:var(--text-xs);margin-top:2px">${esc(m.to_email)} · ${esc(m.kind)} · ${m.sent_at ? new Date(m.sent_at).toLocaleString('en-GB') : 'queued'}</div>
+            <div class="muted" style="font-size:var(--text-xs);margin-top:2px">${esc(m.to_email)} · ${esc(titleCase(m.kind))} · ${m.sent_at ? new Date(m.sent_at).toLocaleString('en-GB') : 'queued'}</div>
           </div>`).join('') : '<div class="muted">Nothing composed yet.</div>'}
         </div>
       </div>
@@ -3795,7 +3795,7 @@ async function renderReferrals() {
           <div><b style="font-size:var(--text-base)">${esc(p.name)}</b><div class="muted" style="font-size:var(--text-xs)">${esc(catLabel[p.category] || p.category)}</div></div>
           <span class="bdg ${p.active ? 'mom' : 'neu'}">${p.active ? 'Active' : 'Paused'}</span>
         </div>
-        ${r.operator ? `<div class="kv" style="margin-top:10px"><span>Model</span><span class="mono">${esc(p.payout_model)}</span></div>
+        ${r.operator ? `<div class="kv" style="margin-top:10px"><span>Model</span><span class="mono">${esc(titleCase(p.payout_model))}</span></div>
         <div class="kv"><span>Payout</span><span class="mono">${p.payout_amount ? money(p.payout_amount) : 'rev share'}</span></div>
         <div class="kv"><span>Clicks routed</span><span class="mono">${p.clicks}</span></div>
         <div class="muted" style="font-size:var(--text-xs);margin-top:8px;word-break:break-all">${esc(p.template || '–')}</div>`
