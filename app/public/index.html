@@ -47,6 +47,7 @@
   --st-blocker-bg:#3A1B23;--st-blocker-ink:#FFA3B0;--st-blocker-line:#7A3341;
   --st-warm-bg:#0F2E2A;--st-warm-ink:#7FE3D0;--st-warm-line:#255F55;
   --st-week-bg:#152238;--st-week-ink:#9CC2FF;--st-week-line:#2E4A72;
+  --st-neutral-bg:#232536;--st-neutral-ink:#C3C7D6;--st-neutral-line:#3A3D52;
   --hero-grad:linear-gradient(135deg,#25213D 0%,#382541 100%);
   --glow:#A78BFA;
   --grid:#34334B;
@@ -107,6 +108,7 @@ html[data-theme="light"]{
   --st-blocker-bg:#FFE4E6;--st-blocker-ink:#9F1239;--st-blocker-line:#FBC9CE;
   --st-warm-bg:#CCFBF1;--st-warm-ink:#115E59;--st-warm-line:#A7EEE0;
   --st-week-bg:#E0EAFF;--st-week-ink:#1E3A8A;--st-week-line:#C3D4FB;
+  --st-neutral-bg:#F1F5F9;--st-neutral-ink:#334155;--st-neutral-line:#DCE3EC;
   --hero-grad:linear-gradient(135deg,#FFEDF7 0%,#F7ECFF 100%);
   --glow:#FF9AC6;
   --grid:#EDD5E3;
@@ -308,6 +310,17 @@ html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accen
 .prio{display:inline-block;margin-top:5px;font-size:var(--text-2xs);font-weight:650;letter-spacing:.01em;padding:2px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--muted);background:var(--panel2)}
 .prio.p1{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,var(--line2));background:color-mix(in srgb,var(--accent) 10%,var(--panel2))}
 .prio.p2{color:var(--ink2)}
+/* The shared badge: one geometry, five meanings. Every surface uses .bdg so a pill cannot drift. */
+.bdg{display:inline-block;font-size:var(--text-2xs);font-weight:650;letter-spacing:.01em;line-height:1.5;padding:2px 7px;border-radius:5px;border:1px solid var(--st-neutral-line);background:var(--st-neutral-bg);color:var(--st-neutral-ink);white-space:nowrap}
+.bdg.act{background:var(--st-apply-bg);border-color:var(--st-apply-line);color:var(--st-apply-ink)}
+.bdg.urg{background:var(--st-closing-bg);border-color:var(--st-closing-line);color:var(--st-closing-ink)}
+.bdg.blk{background:var(--st-blocker-bg);border-color:var(--st-blocker-line);color:var(--st-blocker-ink)}
+.bdg.mom{background:var(--st-warm-bg);border-color:var(--st-warm-line);color:var(--st-warm-ink)}
+.bdg.neu{background:var(--st-neutral-bg);border-color:var(--st-neutral-line);color:var(--st-neutral-ink)}
+.bdg.wk{background:var(--st-week-bg);border-color:var(--st-week-line);color:var(--st-week-ink)}
+button.bdg{cursor:pointer;font-family:inherit;transition:filter .12s ease,transform .08s ease}
+button.bdg:hover{filter:brightness(1.12)}
+button.bdg:active{transform:translateY(.5px)}
 /* One colour per meaning: apply, closing, blocker, keep warm. Tokens so both themes stay legible. */
 .prio.st-apply{color:var(--st-apply-ink);border-color:var(--st-apply-line);background:var(--st-apply-bg)}
 .prio.st-closing{color:var(--st-closing-ink);border-color:var(--st-closing-line);background:var(--st-closing-bg)}
@@ -923,6 +936,11 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .fb-why{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:var(--radius);color:var(--ink);padding:9px 11px;font:inherit;font-size:var(--text-sm);resize:vertical}
 .fb-why:focus{outline:none;border-color:var(--accent2)}
 @media(max-width:560px){.fb-stars{margin-left:0}.fb-star{width:30px;height:30px}}
+/* ---------- tracker ---------- */
+.tk-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+.tk-col{min-height:180px}
+@media(max-width:1100px){.tk-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.tk-grid{grid-template-columns:1fr;gap:10px}.tk-col{min-height:0}}
 /* ---------- brief metric bar ---------- */
 .bstat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
 .bstat>div{min-width:0}
@@ -2448,13 +2466,14 @@ function oppCard(o, idx = 0) {
     <div>
       <h4>${esc(o.title)} <span class="muted" style="font-weight:400">· ${esc(o.company)}</span></h4>
       <div class="meta">
+        ${oppBadge(o)}
         <span class="chip type">${TYPE_LABEL[o.type] || o.type}</span>
         <span class="opp-comp">${comp}</span>
         <span>${esc(o.city)}${o.country ? ', ' + esc(o.country) : ''} · ${esc(o.remote_type)}</span>
         ${o.visa_sponsorship === 'yes' ? '<span class="chip have">visa sponsorship</span>' : ''}
         ${o.source_count > 1 ? `<span class="chip">${o.source_count} sources</span>` : ''}
         ${o.confidence ? `<span class="chip" title="${esc(o.confidence.factors.map((f) => f.k + ' ' + f.d).join(' · '))}" style="border-color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'};color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'}">${o.confidence.level} evidence</span>` : ''}
-        ${(o.missing_skills || []).slice(0, 3).map((m) => `<span class="chip miss">${esc(m)}</span>`).join('')}
+        ${(o.missing_skills || []).slice(0, 3).map((m) => badge(m, 'blk')).join('')}
       </div>
       <div class="why">${esc(top)}</div>
     </div>
@@ -2522,6 +2541,21 @@ function actionClass(a) {
     : l === ACTION_LABEL.blocker ? 'st-blocker'
     : l === ACTION_LABEL.week ? 'st-week'
     : 'st-warm';
+}
+
+// Every badge in the app comes from here, so radar, tracker and brief cannot disagree.
+const BADGE_KIND = { act: 'act', urg: 'urg', blk: 'blk', mom: 'mom', neu: 'neu', wk: 'wk' };
+function badge(text, kind) {
+  return `<span class="bdg ${BADGE_KIND[kind] || 'neu'}">${esc(text)}</span>`;
+}
+// A radar card carries one state badge, chosen by what the person would do next.
+function oppBadge(o) {
+  const closes = o.closes_at ? new Date(o.closes_at) - Date.now() : null;
+  if (closes != null && closes > 0 && closes < 3 * 86400000) return badge('Closing Soon', 'urg');
+  if (o.tracked) return badge('In Progress', 'mom');
+  if (o.match_score >= 80) return badge('80+ Match', 'act');
+  if ((o.missing_skills || []).length >= 3) return badge('Missing Skills', 'blk');
+  return '';
 }
 
 const ACTION_LABEL = {
@@ -2990,18 +3024,21 @@ async function renderTracker() {
   const { applications, outcomes } = await api('/api/tracker');
   const cols = ['saved', 'applied', 'interviewing', 'offer'];
   const label = { saved: 'Saved', applied: 'Applied', interviewing: 'Interviewing', offer: 'Offer' };
+  // The same five meanings as the brief: saved is neutral, applied is in flight, interviewing is
+  // momentum, an offer is the immediate action. One badge component, so nothing drifts.
+  const kind = { saved: 'neu', applied: 'wk', interviewing: 'mom', offer: 'act' };
   $('#view').innerHTML = `
-    <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="grid tk-grid">
       ${cols.map((c) => {
         const items = applications.filter((a) => a.status === c);
-        return `<div class="card" style="min-height:180px">
-          <div class="row" style="justify-content:space-between"><h3 style="margin:0">${label[c]}</h3><span class="chip">${items.length}</span></div>
+        return `<div class="card tk-col">
+          <div class="row" style="justify-content:space-between"><h3 style="margin:0">${badge(label[c], kind[c])}</h3><span class="chip">${items.length}</span></div>
           <div style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
             ${items.map((a) => `<div style="border:1px solid var(--line);border-radius:9px;padding:9px 10px;background:var(--panel2)">
               <div style="font-size:var(--text-sm);font-weight:550">${esc(a.title)}</div>
               <div class="muted" style="font-size:var(--text-xs)">${esc(a.company)} · match ${a.match_score ?? '–'}</div>
               <div class="row" style="gap:5px;margin-top:7px;flex-wrap:wrap">
-                ${cols.filter((x) => x !== c).map((x) => `<button class="chip mv" data-id="${a.opportunity_id}" data-to="${x}" style="cursor:pointer">${label[x]}</button>`).join('')}
+                ${cols.filter((x) => x !== c).map((x) => `<button class="bdg ${kind[x]} mv" data-id="${a.opportunity_id}" data-to="${x}">${label[x]}</button>`).join('')}
               </div>
             </div>`).join('') || '<div class="muted" style="font-size:var(--text-sm)">empty</div>'}
           </div>
