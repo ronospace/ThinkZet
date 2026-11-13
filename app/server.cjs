@@ -73,7 +73,7 @@ setInterval(() => {
 const routes = [];
 const route = (method, pattern, handler) => routes.push({ method, pattern, handler });
 
-function resolveUser(req) {
+function resolveUser(req, res) {
   const u = AUTH.currentUser(req, res);
   return u ? u.id : DEMO_USER;
 }
