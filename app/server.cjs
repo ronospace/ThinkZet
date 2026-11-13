@@ -2489,7 +2489,7 @@ const server = http.createServer(async (req, res) => {
     const skills = db.prepare('SELECT canonical FROM skills WHERE demand_index >= 60').all();
     const countries = db.prepare(`SELECT country, COUNT(*) n FROM opportunities WHERE status='open' AND country NOT IN ('WW','EU')
       GROUP BY country HAVING n >= 20`).all();
-    const urls = ['/', '/?app=1'];
+    const urls = ['/'];
     const SLUG = { backend: 'software-engineer', frontend: 'frontend-engineer', data_science: 'data-scientist',
       data_engineering: 'data-engineer', ml_engineering: 'machine-learning-engineer', ai_engineering: 'ai-engineer',
       platform: 'platform-engineer', mobile: 'mobile-engineer', product: 'product-manager',
