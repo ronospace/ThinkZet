@@ -1046,7 +1046,6 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
         </div>
         <div class="foot-col">
           <div class="foot-h">Company</div>
-          <a href="/strategy.html">Strategy</a>
           <a href="/legal/terms.html">Terms</a>
           <a href="/legal/privacy.html">Privacy</a>
         </div>
@@ -1110,7 +1109,6 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
       <div class="rf-status"><span class="dot"></span><span id="engine-status">Engine Online</span> <span id="new-badge" class="chip" style="margin-left:6px;display:none"></span></div>
       <div class="rf-counts" id="engine-counts">–</div>
       <div class="rf-sep" role="separator"></div>
-      <div class="rf-legal"><a href="/strategy.html">Strategy Documents</a></div>
       <div class="rf-legal"><a href="/legal/privacy.html">Privacy</a> · <a href="/legal/terms.html">Terms</a></div>
       <div class="rf-copy">© 2026 ZyraFlow GmbH™</div>
     </div>
@@ -3902,7 +3900,6 @@ function buildPalette(q) {
     ...Object.entries(VIEWS).map(([k, v]) => ({ kind: 'go', label: v[1], hint: v[2], action: () => go(k) })),
     { kind: 'cmd', label: 'Run Live Ingest', hint: 'Fetch from all four adapters now', action: async () => { toast('Ingesting…'); const r = await post('/api/ingest', {}); toast(`${r.inserted} new · ${r.merged} merged`); await boot(); go(STATE.view); } },
     ...(STATE.authed ? [] : [{ kind: 'cmd', label: 'Demo Mode', hint: '8 years, €78k, targeting DE/NL', action: loadDemo }]),
-    { kind: 'cmd', label: 'Open Strategy Documents', hint: 'The business analysis behind this product', action: () => { window.open('/strategy.html', '_blank'); } },
   ];
   const opps = (STATE.feed?.opportunities || []).slice(0, 300).map((o) => ({
     kind: 'opp', label: `${o.title} · ${o.company}`, hint: `${o.city}${o.country ? ', ' + o.country : ''} · ${o.match_score}/100`, score: o.match_score, action: () => openDetail(o.id),

@@ -2438,7 +2438,7 @@ function serveStatic(req, res, pathname, origin) {
         if (e2) { res.writeHead(404); return res.end('not found'); }
         // Unknown paths must not answer 200 with the app shell: a catch-all that returns 200 for
         // /wp-login.php or /.env is the signature Safe Browsing treats as a cloaking page.
-        const known = pathname === '/' || pathname === '/index.html' || pathname === '/strategy.html'
+        const known = pathname === '/' || pathname === '/index.html'
           || /^\/(salary|skills|s|legal|go)\//.test(pathname);
         res.writeHead(known ? 200 : 404, { 'Content-Type': MIME['.html'] });
         res.end(origin ? withSeo(d2.toString('utf8'), origin, pathname) : d2);
@@ -2455,6 +2455,12 @@ const server = http.createServer(async (req, res) => {
   applySecurityHeaders(res);
   const url = new URL(req.url, `http://${req.headers.host}`);
   const pathname = url.pathname;
+  // The strategy document is internal. It is not served to the public and never indexed, so a search
+  // for the domain returns the product rather than a business plan.
+  if (pathname === '/strategy.html' || pathname === '/strategy') {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    if (!isFounder(req)) { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end('not found'); }
+  }
   // Shared cards live at /s/<id>; the client renders them from the API.
   if (/^\/s\/[a-f0-9]+$/.test(pathname)) return serveStatic(req, res, '/index.html', publicOrigin(req));
   // Public SEO surfaces render client-side from the same rate engine.
@@ -2467,6 +2473,7 @@ const server = http.createServer(async (req, res) => {
       'Allow: /',
       'Disallow: /?app=1',
       'Disallow: /api/',
+      'Disallow: /strategy.html',
       '',
       `Sitemap: ${publicOrigin(req)}/sitemap.xml`,
       '',
