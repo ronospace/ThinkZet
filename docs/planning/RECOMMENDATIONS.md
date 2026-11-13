@@ -29,6 +29,10 @@ Last updated: 13 November 2026.
 | R-15 | The landing page has no statement of what is free; a visitor meets the price cards before the rule | Landing | open | – |
 | R-16 | Learning Loop explained nothing: no statement of what the page is for, jargon labels ("flywheel", "shrinkage", "prior lift"), and a Report button duplicated in two cards | Learning Loop | done | `UI-120` |
 | R-17 | Learning Loop grids were inline four-column styles that squeezed on a phone; moved to `.lrn-grid` and `.lrn-funnel` with 1100 and 560 breakpoints | Learning Loop | done | `UI-120` |
+| R-18 | Export and Delete sat stacked as two full-width buttons with one shared paragraph; they are now a two-column row with a line each, side by side at every width | Career Twin | done | `UI-121` |
+| R-19 | Counts were printed raw in 16 places, so 1646 rendered without a thousands separator; every count now goes through `int()` | Whole app | done | `UI-121` |
+| R-20 | Apple sign-in needed two attempts: the second callback found its state already consumed and answered "expired" to someone who had already authorised | Auth | done | `AUTH-25` |
+| R-21 | A duplicate OAuth callback now redirects into the app when a session already exists instead of reporting a failure | Auth | done | `AUTH-25` |
 
 ## How to use this
 

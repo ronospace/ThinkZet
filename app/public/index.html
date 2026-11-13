@@ -946,6 +946,13 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .fb-why{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:var(--radius);color:var(--ink);padding:9px 11px;font:inherit;font-size:var(--text-sm);resize:vertical}
 .fb-why:focus{outline:none;border-color:var(--accent2)}
 @media(max-width:560px){.fb-stars{margin-left:0}.fb-star{width:30px;height:30px}}
+/* ---------- your data ---------- */
+.data-acts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.data-act{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
+.data-act .btn{width:100%;justify-content:center}
+.da-note{font-size:var(--text-xs);color:var(--muted);line-height:1.5}
+/* Side by side at every width: two short actions, and stacking them made the pair read as a sequence. */
+@media(max-width:560px){.data-acts{gap:8px}.data-act .btn{width:100%;padding-left:8px;padding-right:8px}}
 /* ---------- learning loop ---------- */
 .lrn-grid{grid-template-columns:1.1fr 1fr}
 .lrn-funnel{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -1518,7 +1525,7 @@ async function renderSeo() {
       <div class="land-wrap">
         <div class="land-nav"><div class="land-brand"><svg class="mark" viewBox="0 0 192 192" aria-hidden="true" focusable="false"><use href="#tz-mark"/></svg> <span class="wm">Think<i>Zet</i></span></div>
           <a class="btn ghost sm" href="/">Check your own</a></div>
-        <span class="land-kicker">Live market data · ${b.sampleSize} postings · updated continuously</span>
+        <span class="land-kicker">Live market data · ${int(b.sampleSize)} postings · updated continuously</span>
         <h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${esc(role)} salary${country ? ' in ' + esc(country) : ''}</h1>
         <p class="land-sub">What employers are actually publishing right now – not a survey, not self-reported.</p>
         <div class="card" style="margin-top:26px">
@@ -1528,7 +1535,7 @@ async function renderSeo() {
             <div><div class="muted" style="font-size:var(--text-xs)">p75</div><div class="mono" style="font-size:var(--text-lg)">${fmt(b.p75)}</div></div>
             <div><div class="muted" style="font-size:var(--text-xs)">p90</div><div class="mono" style="font-size:var(--text-lg)">${fmt(b.p90)}</div></div>
           </div>
-          <div style="margin-top:16px;font-size:var(--text-sm);color:var(--muted)">${esc(b.segment)} · ${b.exactComparables} exact-profile comparables · ${esc(b.confidence)} confidence</div>
+          <div style="margin-top:16px;font-size:var(--text-sm);color:var(--muted)">${esc(b.segment)} · ${int(b.exactComparables)} exact-profile comparables · ${esc(b.confidence)} confidence</div>
         </div>
         <h2 style="font-size:var(--text-lg);margin:32px 0 10px">Where the money is</h2>
         <div class="card">${(b.byChannel || []).filter((c) => c.n >= 5).map((c) => `<div class="kv"><span style="text-transform:capitalize">${esc(c.channel)} <span class="muted">· ${c.n} postings</span></span><span class="mono">${fmt(c.median)}</span></div>`).join('')}</div>
@@ -1539,7 +1546,7 @@ async function renderSeo() {
           <div class="dim" style="font-size:var(--text-sm);margin-top:6px">Free and takes a minute.</div>
           <a class="btn" href="/" style="margin-top:14px;display:inline-block">Check my market value</a>
         </div>
-        <div class="muted" style="font-size:var(--text-xs);margin-top:22px">Source: ${b.sampleSize} live postings disclosing pay, annualised to EUR. Discipline-level segments with fewer than eight postings are omitted rather than shown with false precision.</div>
+        <div class="muted" style="font-size:var(--text-xs);margin-top:22px">Source: ${int(b.sampleSize)} live postings disclosing pay, annualised to EUR. Discipline-level segments with fewer than eight postings are omitted rather than shown with false precision.</div>
       </div>`;
     return;
   }
@@ -1660,7 +1667,7 @@ async function runRateCheck() {
       return `You are ahead of the median. That is leverage, and it expires if you sit still.`;
     })();
     box.innerHTML = `
-      <div style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
+      <div style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase;color:var(--tone-kicker, var(--tone-kicker))">${esc(b.segment)} · ${int(b.sampleSize)} comparables · ${esc(b.confidence)} confidence</div>
       <div class="big-gap" style="color:${tone}">${esc(line)}</div>
       <div style="font-size:var(--text-base);color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b> ${sampleChip()}${v.gapAbs != null ? ` · you report ${fmt(r.input.current)}${per}` : ''}</div>
       <div class="scale">
@@ -2015,7 +2022,7 @@ function renderOnboarding() {
       const tone = v.gapPct > 15 ? 'var(--bad)' : v.gapPct > 5 ? 'var(--warn)' : 'var(--good)';
       box.innerHTML = `
         <div class="card plain" style="border-color:var(--ai-border);">
-          <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">${esc(b.segment)} · ${b.sampleSize} comparables · ${esc(b.confidence)} confidence</div>
+          <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">${esc(b.segment)} · ${int(b.sampleSize)} comparables · ${esc(b.confidence)} confidence</div>
           <div style="font-size:clamp(24px,4.4vw,34px);font-weight:780;letter-spacing:-.03em;line-height:1.14;margin:10px 0 6px;color:${tone}">${esc(v.headline)}</div>
           <div style="font-size:var(--text-base);color:var(--ink2)">Median for your profile: <b style="color:var(--ink)">${fmt(b.p50)}${per}</b> ${sampleChip()}</div>
         ${sampleLine()}
@@ -2086,7 +2093,7 @@ async function renderRadar() {
       briefHtml = `
       <div class="card tone-blue" style="margin-bottom:14px">
         <div class="brief-head">
-          <div class="muted brief-meta">Today's brief · ${brief.counts.newSinceYesterday} new · ${brief.counts.closingSoon} closing soon</div>
+          <div class="muted brief-meta">Today's brief · ${int(brief.counts.newSinceYesterday)} new · ${int(brief.counts.closingSoon)} closing soon</div>
           <span class="muted brief-ack">Auto-Acknowledged</span>
         </div>
         <div class="brief-hl">${esc(brief.headline)}</div>
@@ -2107,7 +2114,7 @@ async function renderRadar() {
     const pos = (v) => Math.max(0, Math.min(100, ((v - min) / (max - min)) * 100));
     return `
     <div class="rate-gap">
-      <div class="k">Rate intelligence · ${rates.sampleSize} comparable postings · ${rates.confidence} confidence · ${esc(rates.segment || '')} ${sampleChip()}</div>
+      <div class="k">Rate intelligence · ${int(rates.sampleSize)} comparable postings · ${rates.confidence} confidence · ${esc(rates.segment || '')} ${sampleChip()}</div>
       <div class="amount">${rates.gapPct > 0 ? 'You are ' + rates.gapPct + '% below market' : rates.gapPct < 0 ? 'You are ' + Math.abs(rates.gapPct) + '% above market' : 'You are at market'}</div>
       <div class="dim">Median for your exact profile: <b>${money(rates.p50)}</b>${PERIOD_LABEL[rates.period] || ''} · you report <b>${money(rates.current)}</b>${PERIOD_LABEL[rates.period] || ''} ${rates.gapAbs > 0 ? `<span style="color:var(--bad)">(${money(rates.gapAbs)}/yr on the table)</span>` : ''}</div>
       <div class="scale">
@@ -2341,7 +2348,7 @@ async function renderRadar() {
     mountFeedback();
     fitHeadlines();
     $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="plan-note"><span class="pn-k">Free</span><span class="pn-v">${rows.length - capped.length} more scored opportunities are hidden</span><button class="pn-link" onclick="go('plan')">See plans</button></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
-    $('#f-count').textContent = `${rows.length} of ${feed.opportunities.length} shown`;
+    $('#f-count').textContent = `${int(rows.length)} of ${int(feed.opportunities.length)} shown`;
     bindOppActions();
     renderFacets(rows);
   };
@@ -2461,7 +2468,7 @@ function renderFacets(rows) {
   body.innerHTML = `
     <div class="facet-row"><span class="muted">Median pay</span><span class="mono">${med ? money(med) : '–'}</span></div>
     <div class="facet-row"><span class="muted">Best match</span><span class="mono">${top.match_score}/100</span></div>
-    <div class="facet-row"><span class="muted">≥40% interview odds</span><span class="mono">${strong} of ${rows.length}</span></div>
+    <div class="facet-row"><span class="muted">≥40% interview odds</span><span class="mono">${int(strong)} of ${int(rows.length)}</span></div>
     <div class="facet-row"><span class="muted">Remote</span><span class="mono">${Math.round((remote / rows.length) * 100)}%</span></div>
     <div style="margin-top:12px;font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)">Top locations</div>
     ${countries.map(([c, n]) => `<div style="margin-top:6px"><div class="facet-row" style="border:none;padding:0"><span>${esc(c)}</span><span class="mono muted">${n}</span></div><div class="facet-mini"><i style="width:${Math.round((n / maxC) * 100)}%"></i></div></div>`).join('')}
@@ -2486,7 +2493,7 @@ function oppCard(o, idx = 0) {
         <span class="opp-comp">${comp}</span>
         <span>${esc(o.city)}${o.country ? ', ' + esc(o.country) : ''} · ${esc(o.remote_type)}</span>
         ${o.visa_sponsorship === 'yes' ? '<span class="chip have">visa sponsorship</span>' : ''}
-        ${o.source_count > 1 ? `<span class="chip">${o.source_count} sources</span>` : ''}
+        ${o.source_count > 1 ? `<span class="chip">${int(o.source_count)} sources</span>` : ''}
         ${o.confidence ? `<span class="chip" title="${esc(o.confidence.factors.map((f) => f.k + ' ' + f.d).join(' · '))}" style="border-color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'};color:${o.confidence.level === 'high' ? 'var(--good)' : o.confidence.level === 'medium' ? 'var(--warn)' : 'var(--bad)'}">${o.confidence.level} evidence</span>` : ''}
         ${(o.missing_skills || []).slice(0, 3).map((m) => badge(m, 'blk')).join('')}
       </div>
@@ -2650,7 +2657,7 @@ function openDetail(id) {
             <span class="chip ${o.visa_sponsorship === 'yes' ? 'have' : ''}">visa: ${esc(o.visa_sponsorship)}</span>
             <span class="chip ${o.degree_requirement === 'not_required' ? 'have' : ''}">degree: ${esc(o.degree_requirement || 'unknown')}</span>
             <span class="chip">${esc(o.source)} · quality ${Math.round((o.source_quality || 0) * 100)}</span>
-            ${o.source_count > 1 ? `<span class="chip">seen on ${o.source_count} boards</span>` : ''}
+            ${o.source_count > 1 ? `<span class="chip">seen on ${int(o.source_count)} boards</span>` : ''}
           </div>
         </div>
         <div class="probs" style="gap:18px">
@@ -2931,7 +2938,7 @@ async function renderRates() {
       <div class="card">
         <h3>Your market rate – ${r.period === 'hour' ? 'per hour' : 'per year'}, EUR</h3>
         <div class="big mono" style="margin:10px 0 2px">${money(r.p50)}</div>
-        <div class="dim">median across ${r.sampleSize} comparable postings (${r.confidence} confidence)</div>
+        <div class="dim">median across ${int(r.sampleSize)} comparable postings (${r.confidence} confidence)</div>
         ${r.market ? `<div class="pool-line">${(() => {
           // Say which market the number came from, and why, so a global fallback is never mistaken for a local figure.
           const m = r.market;
@@ -3135,12 +3142,17 @@ async function renderTwin() {
           <button class="btn sm" id="dn-save">Save Name</button>
         </div>
         <h3 style="margin-top:18px">Your Data</h3>
-        <div class="ob-actions" style="margin-top:10px;justify-content:flex-start">
-          <button class="btn ghost" id="d-export">Export Everything</button>
-          <button class="btn danger" id="d-delete">Delete My Account</button>
+        <div class="data-acts">
+          <div class="data-act">
+            <button class="btn ghost" id="d-export">Export Everything</button>
+            <div class="da-note">A JSON file of every record we hold.</div>
+          </div>
+          <div class="data-act">
+            <button class="btn danger" id="d-delete">Delete My Account</button>
+            <div class="da-note">Profile, CV, applications, outcomes and preferences, removed within 30 days.</div>
+          </div>
         </div>
-        <div class="muted" style="font-size:var(--text-xs);margin-top:8px">Export gives you a JSON file of every record we hold. Delete removes your profile, CV, applications, outcomes and preferences within 30 days.</div>
-        <div class="note" style="margin-top:14px">This is the switching cost: the twin accumulates history. A competitor can copy the UI in a week; it cannot copy your 12 months of behaviour and outcomes.</div>
+        <div class="facts tight"><span class="fk">Why it matters</span><span class="fv">This is the switching cost: the twin accumulates history. A competitor can copy the UI in a week; it cannot copy your 12 months of behaviour and outcomes.</span></div>
       </div>
     </div>`;
 }
@@ -3224,7 +3236,7 @@ async function renderLearning() {
       </div>
       <div class="card">
         <h3>What Your Scores Look Like</h3>
-        <div class="kv" style="margin-top:10px"><span>Scored opportunities</span><span class="mono">${l.priors[0]?.n || 0}</span></div>
+        <div class="kv" style="margin-top:10px"><span>Scored opportunities</span><span class="mono">${int(l.priors[0]?.n || 0)}</span></div>
         <div class="kv"><span>Average match score</span><span class="mono">${l.priors[0]?.m ?? '–'}</span></div>
         <div class="kv"><span>Average interview probability</span><span class="mono">${l.priors[0]?.p ?? '–'}%</span></div>
         <div class="facts tight">
@@ -3374,7 +3386,7 @@ async function renderNegotiation() {
   const copy = (t) => { navigator.clipboard.writeText(t); toast('Copied – go say it'); };
   $('#view').innerHTML = `
     <div class="card plain" style="border-color:var(--line);">
-      <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Negotiation brief · ${esc(n.confidence)} confidence · ${n.exactComparables} exact comparables</div>
+      <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Negotiation brief · ${esc(n.confidence)} confidence · ${int(n.exactComparables)} exact comparables</div>
       <div class="row" style="gap:26px;margin-top:14px;flex-wrap:wrap">
         <div><div class="muted" style="font-size:var(--text-xs)">Floor (p50)</div><div class="big sm mono">${money(n.floor)}</div></div>
         <div><div class="muted" style="font-size:var(--text-xs)">Your target (p75)</div><div class="big sm mono" style="color:var(--good)">${money(n.target)}</div></div>
@@ -4030,8 +4042,8 @@ async function renderBrief() {
           <div class="muted" style="font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase">Brief · ${new Date(b.generatedAt).toLocaleString('en-GB', { weekday: 'long', hour: '2-digit', minute: '2-digit' })}</div>
           <div class="brief-hl">${esc(b.headline)}</div>
           <div class="bstat">
-            <div><div class="bstat-v mono">${b.counts.newHighMatch}</div><div class="bstat-k">at 80+ match</div></div>
-            <div><div class="bstat-v mono">${b.counts.totalScored}</div><div class="bstat-k">in your scored set</div></div>
+            <div><div class="bstat-v mono">${int(b.counts.newHighMatch)}</div><div class="bstat-k">at 80+ match</div></div>
+            <div><div class="bstat-v mono">${int(b.counts.totalScored)}</div><div class="bstat-k">in your scored set</div></div>
             <div><div class="bstat-v mono">${b.momentum != null ? b.momentum : '–'}<span class="bstat-s">/100</span></div><div class="bstat-k">momentum</div></div>
           </div>
         </div>

@@ -26,6 +26,14 @@ const pending = {
     if (!row) return undefined;
     return { provider: row.provider, nonce: row.nonce, exp: new Date(row.expires_at).getTime() };
   },
+  // Claim the state exactly once. SQLite reports the number of rows a DELETE touched, so the caller
+  // that gets 1 owns this sign-in and every other callback for the same state is a replay. This is what
+  // stops a second Apple POST (a reload, a retry, a double tap on Continue) from consuming the code twice
+  // and answering "expired" to a person who already authorised.
+  claim(state) {
+    const info = AUTH_DB.prepare('DELETE FROM oauth_states WHERE state=?').run(state);
+    return (info.changes || 0) === 1;
+  },
   delete(state) { AUTH_DB.prepare('DELETE FROM oauth_states WHERE state=?').run(state); },
   sweep() { AUTH_DB.prepare("DELETE FROM oauth_states WHERE expires_at < datetime('now')").run(); },
 };
@@ -111,8 +119,9 @@ function decodeJwt(t) {
 
 async function finish(provider, origin, code, state, appleUser) {
   const st = pending.get(state);
-  pending.delete(state);
   if (!st || st.provider !== provider || st.exp < Date.now()) throw new Error('This sign-in link expired. Please try again.');
+  // Read first, then claim: the row must still exist to be read, and only one caller may delete it.
+  if (!pending.claim(state)) throw new Error('This sign-in was already completed. Please try again.');
 
   const form = new URLSearchParams({ grant_type: 'authorization_code', code, redirect_uri: redirectUri(origin, provider) });
   let url;

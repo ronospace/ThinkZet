@@ -277,6 +277,13 @@ async function oauthCallback(req, res, provider, params) {
     res.end();
   } catch (e) {
     const msg = String(e.message || e);
+    // A duplicate callback (reload, retry, a second tap on Continue) arrives after the first one has
+    // already set the session cookie. That is a success, not an error: send the person into the app.
+    if (/already completed/i.test(msg) && AUTH.currentUser(req, res)) {
+      noteOauth(provider, 'duplicate callback, already signed in', msg);
+      res.writeHead(303, { Location: '/?app=1', 'Cache-Control': 'no-store' });
+      return res.end();
+    }
     // Record which step failed and the provider's own words, so the diagnostic page can name the cause.
     const step = e.step || 'unknown';
     if (e.providerStatus || e.providerBody) {
