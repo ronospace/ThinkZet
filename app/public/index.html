@@ -889,6 +889,20 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .fb-why{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:var(--radius);color:var(--ink);padding:9px 11px;font:inherit;font-size:var(--text-sm);resize:vertical}
 .fb-why:focus{outline:none;border-color:var(--accent2)}
 @media(max-width:560px){.fb-stars{margin-left:0}.fb-star{width:30px;height:30px}}
+/* ---------- saved-search hits ---------- */
+.sh{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line);cursor:pointer}
+.sh:last-child{border-bottom:none;padding-bottom:0}
+.sh:hover .sh-t{color:var(--accent)}
+.sh-s{flex:0 0 auto;min-width:30px;height:24px;display:grid;place-items:center;border-radius:7px;font-size:var(--text-xs);font-weight:700;font-variant-numeric:tabular-nums;background:var(--score-hi-bg);color:var(--score-hi)}
+.sh-s.g{background:var(--score-good-bg);color:var(--score-good)}
+.sh-s.m{background:var(--score-mid-bg);color:var(--score-mid)}
+.sh-s.l{background:var(--score-low-bg);color:var(--score-low)}
+.sh-b{flex:1;min-width:0;display:block}
+.sh-t{display:block;font-size:var(--text-sm);font-weight:600;line-height:1.35;overflow-wrap:anywhere;transition:color .12s}
+.sh-c{display:block;font-size:var(--text-xs);color:var(--muted);margin-top:1px;overflow-wrap:anywhere}
+.sh-x{flex:0 0 auto;color:var(--muted);opacity:.5;font-size:var(--text-sm)}
+.sh-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:2px}
+.sh-n{font-size:var(--text-2xs);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 /* Declared last so it wins over every earlier title size on a very narrow phone. */
 @media(max-width:359px){.topbar h1,.tb-line h1{font-size:var(--text-sm)}.topbar #cmdk{display:none}}
 </style>
@@ -3884,7 +3898,14 @@ async function renderBrief() {
         <div>${(b.newHighMatch || []).map(oppCard).join('') || `<div class="empty-line"><span class="muted">Nothing new at 80+ since your last visit.</span><button class="btn sm ghost" onclick="go('radar')">Open the radar</button></div>`}</div>
 
         ${b.searchHits && b.searchHits.length ? `<h2 class="section">Your Saved Searches Found</h2>
-        ${b.searchHits.map((s) => `<div class="card" style="margin-bottom:10px"><h3>${esc(s.name)}</h3><div class="dim" style="font-size:var(--text-sm);margin-top:6px">${s.hits.map((h) => esc(h.title) + ' · ' + esc(h.company) + ' <span class="muted">(' + h.match_score + ')</span>').join('<br/>')}</div></div>`).join('')}` : ''}
+        ${b.searchHits.map((s) => `<div class="card" style="margin-bottom:10px">
+          <div class="sh-head"><h3 style="margin:0">${esc(s.name)}</h3><span class="sh-n">${s.hits.length} new</span></div>
+          ${s.hits.map((h) => `<div class="sh" data-opp="${esc(h.id)}">
+            <span class="sh-s ${h.match_score >= 85 ? '' : h.match_score >= 70 ? 'g' : h.match_score >= 55 ? 'm' : 'l'}">${h.match_score}</span>
+            <span class="sh-b"><span class="sh-t">${esc(h.title)}</span><span class="sh-c">${esc(h.company)}</span></span>
+            <span class="sh-x" aria-hidden="true">›</span>
+          </div>`).join('')}
+        </div>`).join('')}` : ''}
       </div>
       <div>
         <div class="card">
@@ -3914,6 +3935,7 @@ async function renderBrief() {
       go(a.dataset.go || 'rates');
     };
   });
+  document.querySelectorAll('.sh[data-opp]').forEach((el) => { el.onclick = () => openDetail(el.dataset.opp); });
   const lead = document.querySelector('.signal-lead');
   if (lead) lead.onclick = () => go('gaps');
   bindOppActions();
