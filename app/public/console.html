@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en" class="is-landing">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<meta name="robots" content="noindex,nofollow,noarchive"/>
+<title>Operator Console – ThinkZet</title>
+<link rel="icon" href="/icon.svg" type="image/svg+xml"/>
+<link rel="stylesheet" href="/style.css"/>
+<style>
+  :root{color-scheme:dark light}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font)}
+  .oc-head{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+    padding:12px 20px;background:var(--panel);border-bottom:1px solid var(--line)}
+  .oc-brand{display:flex;align-items:center;gap:9px;font-weight:700;letter-spacing:var(--tracking-tight)}
+  .oc-tag{font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase;color:var(--warn);
+    border:1px solid var(--line-tint);border-radius:var(--radius-sm);padding:3px 7px;background:var(--wash)}
+  .oc-nav{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+  .oc-nav button{font:inherit;font-size:var(--text-sm);padding:6px 12px;border-radius:var(--radius-sm);
+    border:1px solid var(--line-tint);background:var(--wash);color:var(--ink);cursor:pointer}
+  .oc-nav button[aria-current="true"]{border-color:var(--accent2);color:var(--accent2)}
+  .oc-nav button:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+  .oc-wrap{max-width:1180px;margin:0 auto;padding:24px 20px 80px}
+  .oc-lede{font-size:var(--text-sm);color:var(--ink2);margin:0 0 18px;max-width:720px;line-height:1.55}
+  .oc-back{font-size:var(--text-sm);color:var(--accent2)}
+  /* The consumer stylesheet scopes its cards to the app shell, so the console carries its own. */
+  #view .card{background:var(--panel);border:1px solid var(--line-tint);border-radius:var(--radius);padding:16px 18px;margin-bottom:14px}
+  #view .card h3{margin:0 0 10px;font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);font-weight:700}
+  #view .grid{display:grid;gap:14px}
+  #view .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  #view .kv{display:flex;justify-content:space-between;gap:14px;padding:7px 0;border-bottom:1px solid var(--line);align-items:baseline}
+  #view .kv:last-child{border-bottom:0}
+  #view .big{font-size:var(--text-2xl);font-weight:700;letter-spacing:var(--tracking-tight);font-variant-numeric:tabular-nums}
+  #view .mono{font-variant-numeric:tabular-nums}
+  #view .muted,#view .dim{color:var(--ink2);font-size:var(--text-sm)}
+  #view table{width:100%;border-collapse:collapse;font-size:var(--text-sm)}
+  #view th{text-align:left;font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);padding:8px 8px;border-bottom:1px solid var(--line)}
+  #view td{padding:8px;border-bottom:1px solid var(--line)}
+  #view .btn{font:inherit;font-size:var(--text-sm);padding:7px 12px;border-radius:var(--radius-sm);border:1px solid var(--line-tint);background:var(--wash);color:var(--ink);cursor:pointer}
+  #view .btn:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+  #view .chip{display:inline-block;font-size:var(--text-2xs);padding:2px 8px;border-radius:var(--radius-sm);border:1px solid var(--line-tint);background:var(--wash);color:var(--ink2)}
+  #view h3{color:var(--ink)}
+  @media(max-width:560px){.oc-nav{width:100%;margin-left:0}.oc-wrap{padding:18px 14px 60px}#view .grid{grid-template-columns:1fr!important}}
+</style>
+</head>
+<body>
+<header class="oc-head">
+  <span class="oc-brand"><svg class="mark" viewBox="0 0 192 192" aria-hidden="true" width="22" height="22"><use href="/index.html#tz-mark"/></svg>ThinkZet</span>
+  <span class="oc-tag">Operator console</span>
+  <nav class="oc-nav" id="oc-nav" aria-label="Operator screens"></nav>
+</header>
+<main class="oc-wrap">
+  <p class="oc-lede">This page is the internal half of ThinkZet. It holds the screens that run the business rather than answer a question about a career: the launch check, the engine, referral routing, leads, the email loop and the funnel. It is served only to a founder session, it is excluded from search, and the consumer application neither loads it nor links to it.</p>
+  <div id="view"></div>
+  <p style="margin-top:26px"><a class="oc-back" href="/">Back to ThinkZet</a></p>
+</main>
+<div class="toast" id="toast"></div>
+<script src="/internal.js"></script>
+<script>
+(() => {
+  const VIEWS = {
+    launch: [renderLaunch, 'Launch'],
+    ops: [renderOps, 'Engine'],
+    partners: [renderReferrals, 'Partners'],
+    leads: [renderLeads, 'Leads'],
+    email: [renderEmail, 'Email'],
+    analytics: [renderAnalytics, 'Funnel'],
+  };
+  const nav = document.getElementById('oc-nav');
+  nav.innerHTML = Object.entries(VIEWS).map(([k, v]) => `<button data-oc="${k}">${v[1]}</button>`).join('');
+  const show = (key) => {
+    const entry = VIEWS[key] || VIEWS.launch;
+    nav.querySelectorAll('button').forEach((b) => b.setAttribute('aria-current', String(b.dataset.oc === key)));
+    document.getElementById('view').innerHTML = '';
+    entry[0]();
+    history.replaceState(null, '', '#' + key);
+  };
+  nav.querySelectorAll('button').forEach((b) => { b.onclick = () => show(b.dataset.oc); });
+  show((location.hash || '#launch').slice(1));
+})();
+</script>
+</body>
+</html>

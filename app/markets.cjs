@@ -133,10 +133,13 @@ function config(cc, lang) {
 }
 
 // hreflang alternates for one market page: every market that can defend a page, plus x-default.
-function alternates(origin, codes) {
+// The tag names the language the page is actually written in and the market it describes, so an
+// English page about the German market is `en-de`, never a bare `de` that promises German words.
+function alternates(origin, codes, lang) {
   const list = (codes || []).filter(has);
-  return list.map((c) => ({ hreflang: c, href: `${origin}/${c}` }))
-    .concat([{ hreflang: 'x-default', href: `${origin}/` }]);
+  const l = LANGS.includes(lang) ? lang : 'en';
+  return list.map((c) => ({ hreflang: `${l}-${c}`, href: `${origin}/${c}` }))
+    .concat([{ hreflang: l, href: `${origin}/` }, { hreflang: 'x-default', href: `${origin}/` }]);
 }
 
 module.exports = { MARKETS, ALIAS, LANGS, LANG_NAME, has, get, alias, names, fromRequest, languageFor, config, alternates };

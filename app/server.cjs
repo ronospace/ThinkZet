@@ -2828,11 +2828,19 @@ function seoFor(pathname) {
   return null;
 }
 
+// Internal markup never reaches a consumer. The blocks are marked in the source and removed here,
+// before the response leaves the server, so no founder flag, hidden attribute or stylesheet can put
+// them back. A founder gets the same page with the blocks intact.
+function stripInternal(html) {
+  return html.replace(/[ \t]*<!-- @internal:start -->[\s\S]*?<!-- @internal:end -->[ \t]*\n?/g, '');
+}
+
 function withSeo(html, origin, pathname) {
   const clean = pathname === '/' ? '/' : pathname.replace(/\/$/, '');
   const canonical = `${origin}${clean}`;
   const seo = seoFor(clean);
-  const alts = seo && seo.market ? MK.alternates(origin, marketCodes(origin)) : [];
+  // The interface ships in English, so the document says so and the alternates say en-<market>.
+  const alts = seo && seo.market ? MK.alternates(origin, marketCodes(origin), 'en') : [];
   const head = [
     `<link rel="canonical" href="${canonical}"/>`,
     ...alts.map((a) => `<link rel="alternate" hreflang="${a.hreflang}" href="${a.href}"/>`),
@@ -2854,6 +2862,9 @@ function withSeo(html, origin, pathname) {
     })}</script>`,
   ].join('');
   let out = html.includes('rel="canonical"') ? html : html.replace('</head>', head + '</head>');
+  // Declared language matches the words on the page. A market route does not imply a translated
+  // interface; when one exists the tag changes with it, and not before.
+  out = out.replace(/<html lang="[^"]*"/, '<html lang="en"');
   if (seo) {
     out = out.replace(/<title>[^<]*<\/title>/, `<title>${seo.title.replace(/</g, '&lt;')}</title>`);
     // The crawler gets the same words the visitor gets, before any script runs.
@@ -2877,13 +2888,18 @@ function serveStatic(req, res, pathname, origin, seoPath) {
           || /^\/(salary|skills|s|legal|go)\//.test(described)
           || (/^\/[a-z]{2}$/.test(described) && MK.has(described.slice(1)));
         res.writeHead(known ? 200 : 404, { 'Content-Type': MIME['.html'] });
-        res.end(origin ? withSeo(d2.toString('utf8'), origin, described) : d2);
+        let out = d2.toString('utf8');
+        if (!isFounder(req, res)) out = stripInternal(out);
+        res.end(origin ? withSeo(out, origin, described) : out);
       });
       return;
     }
     const isHtml = (MIME[path.extname(file)] || '').includes('text/html');
     res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
-    res.end(isHtml && origin ? withSeo(data.toString('utf8'), origin, described) : data);
+    if (!isHtml) return res.end(data);
+    let out = data.toString('utf8');
+    if (!isFounder(req, res)) out = stripInternal(out);
+    res.end(origin ? withSeo(out, origin, described) : out);
   });
 }
 
@@ -2900,6 +2916,18 @@ const server = http.createServer(async (req, res) => {
     if (!isFounder(req, res)) { res.writeHead(410, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end('gone'); }
   }
   // Shared cards live at /s/<id>; the client renders them from the API.
+  // The operator console is a separate page served only to a founder session. A consumer asking for it
+  // gets the same 404 as any other unknown path, so its existence is not advertised.
+  if (pathname === '/console' || pathname === '/console.html' || pathname === '/internal.js') {
+    res.setHeader('X-Robots-Tag', 'noindex, nofollow, noarchive');
+    if (!isFounder(req, res)) { res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end('not found'); }
+    const file = pathname === '/internal.js' ? '/internal.js' : '/console.html';
+    return fs.readFile(path.join(PUBLIC, file), (err, data) => {
+      if (err) { res.writeHead(404); return res.end('not found'); }
+      res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'text/html', 'Cache-Control': 'no-store' });
+      res.end(data);
+    });
+  }
   if (/^\/s\/[a-f0-9]+$/.test(pathname)) return serveStatic(req, res, '/index.html', publicOrigin(req), pathname);
   // Public SEO surfaces render client-side from the same rate engine.
   if (/^\/(salary|skills)\/[^/]+(\/[A-Za-z]{2})?$/.test(pathname)) return serveStatic(req, res, '/index.html', publicOrigin(req), pathname);
