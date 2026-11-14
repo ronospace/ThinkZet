@@ -21,11 +21,11 @@ Last updated: 13 November 2026.
 | R-07 | Take the partner routing operator form off the customer surface: founder-only, and a plain rule statement for everyone else | Partners | done | `9d0f0e5`-series UI-119 |
 | R-08 | Stop the referrals API returning payout models, affiliate templates and click counts to a customer | Partners | done | UI-119 |
 | R-09 | Turn the Rate Intelligence and Career Score prose into labelled rows | Rates, Scores | done | UI-119 |
-| R-10 | The Copilot answer bubble and the Negotiation scripts are the last long unbroken prose in the app; both could carry a label | Copilot, Negotiation | open | – |
-| R-11 | Skill Gaps partner cards still show a partner name as a bare chip button; they should carry the same disclosure line the detail panel does | Gaps | open | – |
+| R-10 | The Copilot answer bubble and the Negotiation scripts are the last long unbroken prose in the app; both could carry a label | Copilot, Negotiation | done | `d63ba5c` |
+| R-11 | Skill Gaps partner cards still show a partner name as a bare chip button; they should carry the same disclosure line the detail panel does | Gaps | done | `UI-143` |
 | R-12 | The Pro+ card lists six "Compare …" bullets that read as a feature dump; they describe one job and could be stated once | Plan | done | `UI-122` |
-| R-13 | `docs/planning/AUDIT-2026-11-11.md` still lists the paywall essay as "unnecessary"; it is back by founder request and the audit should say so | Docs | open | – |
-| R-14 | Market Pulse and Career Trajectory carry the same paragraph-before-table shape and have not had the facts pass | Pulse, Trajectory | open | – |
+| R-13 | `docs/planning/AUDIT-2026-11-11.md` still lists the paywall essay as "unnecessary"; it is back by founder request and the audit should say so | Docs | done | `UI-143` |
+| R-14 | Market Pulse and Career Trajectory carry the same paragraph-before-table shape and have not had the facts pass | Pulse, Trajectory | done | `bd135a0` |
 | R-15 | The landing page has no statement of what is free; a visitor meets the price cards before the rule. A `.free-line` now sits above the cards: green rule, FREE kicker, one sentence naming the three free things and saying everything below is the ongoing system | Landing | done | `UI-135` |
 | R-16 | Learning Loop explained nothing: no statement of what the page is for, jargon labels ("flywheel", "shrinkage", "prior lift"), and a Report button duplicated in two cards | Learning Loop | done | `UI-120` |
 | R-17 | Learning Loop grids were inline four-column styles that squeezed on a phone; moved to `.lrn-grid` and `.lrn-funnel` with 1100 and 560 breakpoints | Learning Loop | done | `UI-120` |

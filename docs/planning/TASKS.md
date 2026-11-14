@@ -254,11 +254,11 @@ Numbered, categorised, in the order they should be taken. Every row names who ac
 
 | # | Task | State |
 |---|---|---|
-| D-1.1 | R-15: landing states what is free before the price cards | open, next |
+| D-1.1 | R-15: landing states what is free before the price cards | done (`2eae685`) |
 | D-1.2 | R-14: facts pass on Market Pulse, Career Trajectory and Engine | done (`8a3f7f4`, `bd135a0`, `0e7c0f9`) |
 | D-1.3 | R-10: copilot answers and negotiation scripts as prose, not label/value rows | done (`d63ba5c`) |
-| D-1.4 | R-11: Skill Gaps partner card disclosure line | open |
-| D-1.5 | R-13: correct the stale audit line about the paywall essay | open |
+| D-1.4 | R-11: Skill Gaps partner card disclosure line | done (`UI-143`) |
+| D-1.5 | R-13: correct the stale audit line about the paywall essay | done (`UI-143`) |
 | D-1.6 | Copilot mobile: 2-row scroller with a peeking card, sparkle header, 2x2 source tiles, accordion | done (`c09de62`) |
 | D-1.7 | R-34 to R-38: emphasis ladder, coloured section titles, green free plan, copilot desktop grid and phone composer | done (`dc9e3a2`) |
 | D-1.8 | Sweep every screen at 393 and 1440 for dead space of the kind the copilot had | open |
