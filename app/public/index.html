@@ -287,7 +287,8 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .btn{background:var(--accent2);color:var(--on-accent);padding:9px 15px;border-radius:var(--radius-sm);font-size:var(--text-sm);font-weight:600;letter-spacing:-.005em;transition:background .14s ease,transform .08s ease,box-shadow .14s ease;box-shadow:0 1px 2px rgba(0,0,0,.25)}
 .btn:hover{filter:brightness(1.08);box-shadow:0 2px 10px -2px color-mix(in srgb,var(--accent2) 55%,transparent)}
 .btn:active{transform:translateY(.5px)}
-.btn.ghost{background:transparent;border:1px solid var(--line2);color:var(--ink2);box-shadow:none}
+.btn.ghost{background:color-mix(in srgb,var(--accent2) 8%,var(--panel));border:1px solid color-mix(in srgb,var(--accent2) 26%,var(--line2));color:var(--ink);box-shadow:none}
+.btn.ghost:hover{background:color-mix(in srgb,var(--accent2) 15%,var(--panel));border-color:color-mix(in srgb,var(--accent2) 44%,var(--line2))}
 .btn.ghost:hover{color:var(--ink);border-color:var(--accent2)}
 .btn.sm{padding:5px 10px;font-size:var(--text-sm);border-radius:7px}
 .btn .ext{display:inline-block;margin-left:5px;font-size:var(--text-xs);opacity:.85;transform:translateY(-.5px)}
@@ -891,7 +892,7 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .ob-actions{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:10px;margin-top:22px;width:100%}
 .ob-actions .btn{display:inline-flex;align-items:center;justify-content:center;padding:11px 22px;min-width:132px}
 @media(max-width:340px){.ob-actions .btn{flex:1 1 100%}}
-.btn.danger{background:transparent;border:1px solid color-mix(in srgb,var(--bad) 55%,var(--line));color:var(--bad)}
+.btn.danger{background:color-mix(in srgb,var(--bad) 9%,var(--panel));border:1px solid color-mix(in srgb,var(--bad) 45%,var(--line));color:var(--bad)}
 .btn.danger:hover{background:color-mix(in srgb,var(--bad) 12%,var(--panel));border-color:var(--bad)}
 .plan-grid-compact{max-width:1000px;margin:0 auto;gap:var(--sp-4)}
 @media(max-width:900px){.plan-grid-compact{grid-template-columns:1fr!important;gap:14px}.plan-grid-compact .price{padding:20px}.plan-grid-compact .price-v{font-size:var(--text-2xl)}.plan-grid-compact .price li{font-size:var(--text-sm);padding:6px 0 6px 20px}.plan-grid-compact .price .btn{padding:11px 14px;font-size:var(--text-sm)}}
@@ -934,7 +935,7 @@ html[data-theme="light"] .plan-grid-compact .price.is-plus{border-color:#E3C67F;
 .plan-cur{opacity:1;color:var(--muted);border-color:var(--line2);background:var(--panel2)}
 /* One labelled fact per row: a paragraph that explains something becomes scannable without a word changing. */
 .facts{display:grid;grid-template-columns:auto 1fr;gap:10px 18px;margin-top:14px;align-items:baseline}
-.fk{font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:var(--muted);white-space:nowrap}
+.fk{font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;font-weight:500;color:var(--muted);white-space:nowrap}
 .fv{font-size:var(--text-base);color:var(--ink2);line-height:1.55}
 .facts.tight{margin-top:10px;gap:6px 14px}
 .facts.tight .fv{font-size:var(--text-sm)}

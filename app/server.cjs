@@ -2477,23 +2477,92 @@ function applySecurityHeaders(res) {
 
 // Injects a canonical link and Organization JSON-LD into the served HTML, so a crawler sees one
 // address per page and a machine-readable identity, without running the client bundle.
+// The public SEO surfaces are rendered by the client, which means every one of them used to be served
+// the same <title>, the same description and the same body. A crawler saw 205 identical documents and
+// indexed none of them. Each path now gets its own head and its own static body, built here from the
+// same slugs the sitemap uses, so what Google reads is what the visitor sees after hydration.
+const SEO_ROLE = { 'software-engineer': 'Backend Engineer', 'frontend-engineer': 'Frontend Engineer',
+  'data-scientist': 'Data Scientist', 'data-engineer': 'Data Engineer',
+  'machine-learning-engineer': 'Machine Learning Engineer', 'ai-engineer': 'AI Engineer',
+  'platform-engineer': 'Platform Engineer', 'mobile-engineer': 'Mobile Engineer',
+  'product-manager': 'Product Manager', 'security-engineer': 'Security Engineer',
+  'product-designer': 'Product Designer' };
+const SEO_COUNTRY = { de: 'Germany', us: 'United States', gb: 'United Kingdom', nl: 'Netherlands',
+  fr: 'France', es: 'Spain', ca: 'Canada', au: 'Australia', ch: 'Switzerland', at: 'Austria',
+  se: 'Sweden', dk: 'Denmark', no: 'Norway', fi: 'Finland', ie: 'Ireland', it: 'Italy',
+  pl: 'Poland', pt: 'Portugal', be: 'Belgium', in: 'India', br: 'Brazil', sg: 'Singapore',
+  jp: 'Japan', ee: 'Estonia', cz: 'Czechia', ro: 'Romania', hu: 'Hungary', gr: 'Greece' };
+
+function seoFor(pathname) {
+  const parts = pathname.split('/').filter(Boolean).map((x) => decodeURIComponent(x));
+  if (parts.length === 1 && /^[a-z]{2}$/.test(parts[0]) && SEO_COUNTRY[parts[0]]) {
+    const cc = parts[0];
+    const country = SEO_COUNTRY[cc];
+    return {
+      title: `${country} Salaries and Opportunities – Live Market Data | ThinkZet`,
+      description: `Every role ThinkZet tracks in ${country}, with the pay each one discloses, the sample behind it and the opportunities open now. One market among the ${Object.keys(SEO_COUNTRY).length} the platform covers.`,
+      h1: `${country}: Salaries and Opportunities`,
+      body: `ThinkZet reads live postings in ${country} and reports what each role pays, how deep the sample is, and which opportunities are open now. ${country} is one market among many; the same page exists for every country the corpus can defend with data.`,
+    };
+  }
+  if (parts[0] === 'salary' && parts[1]) {
+    const role = SEO_ROLE[parts[1]] || parts[1].replace(/-/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
+    const cc = (parts[2] || '').toLowerCase();
+    const country = SEO_COUNTRY[cc] || (cc ? cc.toUpperCase() : '');
+    const where = country ? ` in ${country}` : ' across every market we cover';
+    return {
+      title: `${role} Salary${country ? ' in ' + country : ''} – Live Market Rates | ThinkZet`,
+      description: `What ${role.toLowerCase()}s are paid${where}, computed from live postings with pay disclosed. Median, 25th and 75th percentile, sample size and confidence, plus the rate gap against your own number.`,
+      h1: `${role} Salary${country ? ' in ' + country : ''}`,
+      body: `ThinkZet computes ${role.toLowerCase()} pay${where} from live postings that disclose a number, and states the sample size behind every figure. Open the page to see the median, the interquartile band, the currencies in the pool and the gap against what you are paid today.`,
+    };
+  }
+  if (parts[0] === 'skills' && parts[1]) {
+    const skill = parts[1].replace(/-/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
+    return {
+      title: `${skill} Demand and Pay – Live Market Data | ThinkZet`,
+      description: `How many live postings ask for ${skill.toLowerCase()}, what they pay, and which roles it unlocks. Computed from the same corpus every other ThinkZet number comes from.`,
+      h1: `${skill} Demand and Pay`,
+      body: `ThinkZet counts how many live postings ask for ${skill.toLowerCase()}, what those postings pay, and which role families the skill appears in most. Every figure names its sample.`,
+    };
+  }
+  return null;
+}
+
 function withSeo(html, origin, pathname) {
   const clean = pathname === '/' ? '/' : pathname.replace(/\/$/, '');
   const canonical = `${origin}${clean}`;
+  const seo = seoFor(clean);
   const head = [
     `<link rel="canonical" href="${canonical}"/>`,
     `<meta property="og:url" content="${canonical}"/>`,
-    `<script type="application/ld+json">${JSON.stringify({
+    seo ? `<meta name="description" content="${seo.description.replace(/"/g, '&quot;')}"/>` : '',
+    seo ? `<meta property="og:title" content="${seo.title.replace(/"/g, '&quot;')}"/>` : '',
+    seo ? `<meta property="og:description" content="${seo.description.replace(/"/g, '&quot;')}"/>` : '',
+    seo ? `<meta property="og:type" content="article"/>` : '',
+    `<script type="application/ld+json">${JSON.stringify(seo ? {
+      '@context': 'https://schema.org', '@type': 'WebPage',
+      name: seo.title, description: seo.description, url: canonical,
+      isPartOf: { '@type': 'WebSite', name: 'ThinkZet', url: origin },
+      publisher: { '@type': 'Organization', name: 'ZyraFlow GmbH' },
+    } : {
       '@context': 'https://schema.org', '@type': 'Organization',
       name: 'ThinkZet', url: origin, description: 'AI intelligence platform for career decisions.',
       parentOrganization: { '@type': 'Organization', name: 'ZyraFlow GmbH' },
       contactPoint: [{ '@type': 'ContactPoint', email: 'support@thinkzet.com', contactType: 'customer support' }],
     })}</script>`,
   ].join('');
-  return html.includes('rel="canonical"') ? html : html.replace('</head>', head + '</head>');
+  let out = html.includes('rel="canonical"') ? html : html.replace('</head>', head + '</head>');
+  if (seo) {
+    out = out.replace(/<title>[^<]*<\/title>/, `<title>${seo.title.replace(/</g, '&lt;')}</title>`);
+    // The crawler gets the same words the visitor gets, before any script runs.
+    out = out.replace('</body>', `<noscript><main><h1>${seo.h1}</h1><p>${seo.body}</p></main></noscript></body>`);
+  }
+  return out;
 }
 
-function serveStatic(req, res, pathname, origin) {
+function serveStatic(req, res, pathname, origin, seoPath) {
+  const described = seoPath || pathname;
   let p = pathname === '/' ? '/index.html' : pathname;
   const file = path.join(PUBLIC, p);
   if (!file.startsWith(PUBLIC)) { res.writeHead(403); return res.end('forbidden'); }
@@ -2503,16 +2572,17 @@ function serveStatic(req, res, pathname, origin) {
         if (e2) { res.writeHead(404); return res.end('not found'); }
         // Unknown paths must not answer 200 with the app shell: a catch-all that returns 200 for
         // /wp-login.php or /.env is the signature Safe Browsing treats as a cloaking page.
-        const known = pathname === '/' || pathname === '/index.html'
-          || /^\/(salary|skills|s|legal|go)\//.test(pathname);
+        const known = described === '/' || described === '/index.html'
+          || /^\/(salary|skills|s|legal|go)\//.test(described)
+          || (/^\/[a-z]{2}$/.test(described) && SEO_COUNTRY[described.slice(1)]);
         res.writeHead(known ? 200 : 404, { 'Content-Type': MIME['.html'] });
-        res.end(origin ? withSeo(d2.toString('utf8'), origin, pathname) : d2);
+        res.end(origin ? withSeo(d2.toString('utf8'), origin, described) : d2);
       });
       return;
     }
     const isHtml = (MIME[path.extname(file)] || '').includes('text/html');
     res.writeHead(200, { 'Content-Type': MIME[path.extname(file)] || 'application/octet-stream', 'Cache-Control': 'no-cache' });
-    res.end(isHtml && origin ? withSeo(data.toString('utf8'), origin, pathname) : data);
+    res.end(isHtml && origin ? withSeo(data.toString('utf8'), origin, described) : data);
   });
 }
 
@@ -2529,9 +2599,11 @@ const server = http.createServer(async (req, res) => {
     if (!isFounder(req, res)) { res.writeHead(410, { 'Content-Type': 'text/plain; charset=utf-8' }); return res.end('gone'); }
   }
   // Shared cards live at /s/<id>; the client renders them from the API.
-  if (/^\/s\/[a-f0-9]+$/.test(pathname)) return serveStatic(req, res, '/index.html', publicOrigin(req));
+  if (/^\/s\/[a-f0-9]+$/.test(pathname)) return serveStatic(req, res, '/index.html', publicOrigin(req), pathname);
   // Public SEO surfaces render client-side from the same rate engine.
-  if (/^\/(salary|skills)\/[^/]+(\/[A-Za-z]{2})?$/.test(pathname)) return serveStatic(req, res, '/index.html', publicOrigin(req));
+  if (/^\/(salary|skills)\/[^/]+(\/[A-Za-z]{2})?$/.test(pathname)) return serveStatic(req, res, '/index.html', publicOrigin(req), pathname);
+  // A country hub is a real page: /de is one market among many, never a Germany-only product.
+  if (/^\/[a-z]{2}$/.test(pathname) && SEO_COUNTRY[pathname.slice(1)]) return serveStatic(req, res, '/index.html', publicOrigin(req), pathname);
 
   // robots.txt: the sitemap must be advertised here, and the app screens kept out of the index.
   if (pathname === '/robots.txt') {
@@ -2557,6 +2629,7 @@ const server = http.createServer(async (req, res) => {
     const countries = db.prepare(`SELECT country, COUNT(*) n FROM opportunities WHERE status='open' AND country NOT IN ('WW','EU')
       GROUP BY country HAVING n >= 20`).all();
     const urls = ['/'];
+    for (const c of countries) urls.push(`/${c.country.toLowerCase()}`);
     const SLUG = { backend: 'software-engineer', frontend: 'frontend-engineer', data_science: 'data-scientist',
       data_engineering: 'data-engineer', ml_engineering: 'machine-learning-engineer', ai_engineering: 'ai-engineer',
       platform: 'platform-engineer', mobile: 'mobile-engineer', product: 'product-manager',
