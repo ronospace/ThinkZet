@@ -3947,7 +3947,10 @@ async function renderOps() {
           <td>${r.ok === null ? '<span class="muted">not run</span>' : r.ok ? '<span style="color:var(--good)">● ok</span>' : `<span style="color:var(--bad)">● ${esc(r.error || 'fail')}</span>`}</td>
           <td class="mono">${int(r.count)}</td><td class="mono">${r.ms}ms</td></tr>`).join('')}
         </tbody></table>
-        <div class="note" style="margin-top:10px">Four real adapters. Each fails in isolation – a broken source degrades to zero rows and reports, it never takes the pipeline down.</div>
+        <div class="facts tight" style="margin-top:12px">
+          <span class="fk">Adapters registered</span><span class="fv">${int(live.adapters.length)}, each derived from the source list rather than typed out.</span>
+          <span class="fk">Failure</span><span class="fv">A broken source degrades to zero rows and reports. It never takes the pipeline down.</span>
+        </div>
       </div>
       <div class="card"><h3>What the Pipeline Did</h3>
         <div class="kv"><span>Fetched from APIs</span><span class="mono">${int(last ? last.fetched : 0)}</span></div>
@@ -3955,8 +3958,10 @@ async function renderOps() {
         <div class="kv"><span>Dropped as non-target (internships, sales, trades)</span><span class="mono">${int(last ? last.droppedNonTech : 0)}</span></div>
         <div class="kv"><span>Inserted as new canonical opportunities</span><span class="mono">${int(last ? last.inserted : 0)}</span></div>
         <div class="kv"><span>Merged as duplicates of existing</span><span class="mono">${int(last ? last.merged : 0)}</span></div>
-        <div class="kv"><span>Duplicate rate</span><span class="mono">${last ? last.duplicateRate + '%' : '–'}</span></div>
-        <div class="note" style="margin-top:12px">Classification is deterministic: title must contain core tech vocabulary, exclude internships/trades/sales, then map to one of 11 role families by signal priority.</div>
+        <div class="kv"><span>Duplicate rate</span><span class="mono">${last ? pct(last.duplicateRate, 1) : '–'}</span></div>
+        <div class="facts tight" style="margin-top:12px">
+          <span class="fk">Classification</span><span class="fv">Deterministic. A title must contain core tech vocabulary, must not be an internship, trade or sales role, then maps to one role family by signal priority.</span>
+        </div>
       </div>
     </div>
     <h2 class="section section-ico" data-ico="heart">Listing Health</h2>
@@ -3971,7 +3976,7 @@ async function renderOps() {
     <div class="grid" style="grid-template-columns:repeat(4,1fr)">
       <div class="card"><h3>Raw Listings Ingested</h3><div class="big mono">${int(o.ingest.raw)}</div></div>
       <div class="card"><h3>Canonical Opportunities</h3><div class="big mono">${int(o.totalOpportunities)}</div></div>
-      <div class="card"><h3>Duplicates Merged</h3><div class="big mono">${int(o.ingest.merged)}</div><div class="muted" style="font-size:var(--text-xs)">${o.ingest.duplicateRate}% of raw</div></div>
+      <div class="card"><h3>Duplicates Merged</h3><div class="big mono">${int(o.ingest.merged)}</div><div class="muted" style="font-size:var(--text-xs)">${o.ingest.duplicateRate == null ? 'Not measured on this run' : pct(o.ingest.duplicateRate, 1) + ' of raw'}</div></div>
       <div class="card"><h3>Salary Records</h3><div class="big mono">${int(o.salaryRecords)}</div></div>
     </div>
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
@@ -3988,11 +3993,14 @@ async function renderOps() {
     </div>
     <div class="card" style="margin-top:14px">
       <h3>Pipeline Honesty</h3>
-      <div class="kv"><span>Average sources per canonical opportunity</span><span class="mono">${o.avgSourcesPerOpportunity}</span></div>
+      <div class="kv"><span>Average listings merged into one opportunity</span><span class="mono">${o.avgSourcesPerOpportunity == null ? '–' : Number(o.avgSourcesPerOpportunity).toFixed(1)}</span></div>
       <div class="kv"><span>Opportunities seen on more than one board</span><span class="mono">${int(o.multiSourced)}</span></div>
       <div class="kv"><span>Listings with no disclosed compensation</span><span class="mono">${int(o.missingComp)}</span></div>
-      <div class="kv"><span>Ingestion time</span><span class="mono">${o.ingest.ms} ms</span></div>
-      <div class="note" style="margin-top:12px">Deduplication uses title-similarity (Jaccard on normalised tokens) + company + city + compensation bucket, merged above a 0.72 threshold, with survivor rules that keep the widest comp range and richest description. This is the unglamorous part every aggregator dies on.</div>
+      <div class="kv"><span>Ingestion time</span><span class="mono">${int(o.ingest.ms)} ms</span></div>
+      <div class="facts tight" style="margin-top:12px">
+        <span class="fk">Deduplication</span>
+        <span class="fv">Title similarity (Jaccard on normalised tokens) plus company, city and compensation bucket, merged above a 0.72 threshold, with survivor rules that keep the widest comp range and richest description.</span>
+      </div>
     </div>`;
 }
 
