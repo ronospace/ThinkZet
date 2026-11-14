@@ -254,22 +254,27 @@ Numbered, categorised, in the order they should be taken. Every row names who ac
 
 | # | Task | State |
 |---|---|---|
-| D-1.1 | R-15: landing states what is free before the price cards | open |
-| D-1.2 | R-14: facts pass on Market Pulse and Career Trajectory | partly done (`8a3f7f4` did Market Pulse) |
-| D-1.3 | R-10: copilot answers and negotiation scripts as prose, not label/value rows | open |
+| D-1.1 | R-15: landing states what is free before the price cards | open, next |
+| D-1.2 | R-14: facts pass on Market Pulse, Career Trajectory and Engine | done (`8a3f7f4`, `bd135a0`, `0e7c0f9`) |
+| D-1.3 | R-10: copilot answers and negotiation scripts as prose, not label/value rows | done (`d63ba5c`) |
 | D-1.4 | R-11: Skill Gaps partner card disclosure line | open |
 | D-1.5 | R-13: correct the stale audit line about the paywall essay | open |
 | D-1.6 | Copilot mobile: 2-row scroller with a peeking card, sparkle header, 2x2 source tiles, accordion | done (`c09de62`) |
+| D-1.7 | R-34 to R-38: emphasis ladder, coloured section titles, green free plan, copilot desktop grid and phone composer | done (`dc9e3a2`) |
+| D-1.8 | Sweep every screen at 393 and 1440 for dead space of the kind the copilot had | open |
 
 ### D-2 Credentials and operations (founder)
 
-| # | Task | State |
-|---|---|---|
-| D-2.1 | B-1 SEC-01: rotate the Apple `.p8` | ready |
-| D-2.2 | B-2 DATA-13: `ADZUNA_APP_ID` and `ADZUNA_APP_KEY` | ready |
-| D-2.3 | B-3 DATA-02: one bucket plus `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY` | ready |
-| D-2.4 | B-8 SEO-08: Search Console Request indexing | ready |
-| D-2.5 | Railway redeploy so `8a3f7f4` reaches production, then confirm Apple sign-in in one attempt and `/strategy.html` 410 | ready |
+Nothing here can be done by me: each row needs a key, a console login or a decision that is yours.
+
+| # | Task | State | What it unblocks |
+|---|---|---|---|
+| D-2.1 | B-1 SEC-01: rotate the Apple `.p8` in the Apple developer console, then paste the new key into Railway as `APPLE_PRIVATE_KEY` and redeploy | ready | Apple sign-in stops depending on a key that was pasted in chat |
+| D-2.2 | B-2 DATA-13: create a free Adzuna developer account, then set `ADZUNA_APP_ID` and `ADZUNA_APP_KEY` in Railway | ready | a seventh live source, and the first with disclosed pay in EUR |
+| D-2.3 | B-3 DATA-02: create one S3-compatible bucket (Cloudflare R2 or Hetzner), then set `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY` in Railway | ready | nightly backups leave the machine; `scripts/backup.cjs` already runs and verifies |
+| D-2.4 | B-8 SEO-08: in Search Console, Request indexing for the homepage and the top country pages | ready | first crawl of the 205-URL sitemap |
+| D-2.5 | Railway redeploy so `dc9e3a2` reaches production, then confirm Apple sign-in completes in one attempt and `/strategy.html` answers 410 | ready | production matches the repo |
+| D-2.6 | Approve the tag push `restore-20261113-31` (rejected earlier, retry declined) | waiting on you | tag history stays unbroken |
 
 ### D-3 Waiting or paused
 
@@ -278,3 +283,10 @@ Numbered, categorised, in the order they should be taken. Every row names who ac
 | D-3.1 | B-5 GRO-01 first 20 users | paused by founder |
 | D-3.2 | B-6 FB-03 testimonials | waiting on a paying cohort |
 | D-3.3 | B-4 DATA-01 model phrasing | optional; ships as rules mode without a key |
+
+### D-4 The shortest path to the first 20 people (after D-2.5)
+
+1. Redeploy, then open thinkzet.com on your phone and sign in with Apple once.
+2. Run the rate check on your own profile and read the number as a stranger would.
+3. Send the invite copy in `GRO-01-FIRST-20.md` to five people you already know, one at a time.
+4. Watch Leads for the first feedback row, and answer it the same day.
