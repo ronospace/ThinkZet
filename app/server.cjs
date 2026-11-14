@@ -31,6 +31,7 @@ const INTERVIEW = require('./interview.cjs');
 const AN = require('./analytics.cjs');
 const BILLING = require('./billing.cjs');
 const MAIL = require('./mailer.cjs');
+const LLM = require('./llm.cjs');
 
 const COMPANY = {
   name: 'ZyraFlow GmbH',
@@ -1242,8 +1243,14 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
     return `${pairs[0][0]} at ${pairs[0][1]} – it's the lowest of the six and the one worth attacking first`;
   }
 
-  log(resolveUser(req), 'copilot.message', null, null, { intent: q.slice(0, 40) });
-  json(res, 200, { reply, citations, grounded: true });
+  // DATA-01: the model may rephrase what the rules computed, never add to it. phrase() returns the
+  // deterministic answer unchanged when no key is set or when the rewrite loses a number.
+  const grounded = reply;
+  const phrased = await LLM.phrase(grounded, { voice: 'career copilot' });
+  reply = phrased;
+
+  log(resolveUser(req), 'copilot.message', null, null, { intent: q.slice(0, 40), mode: LLM.mode(), rewritten: phrased !== grounded });
+  json(res, 200, { reply, citations, grounded: true, mode: LLM.mode() });
 });
 
 route('POST', /^\/api\/copilot\/opportunity$/, async (req, res) => {
