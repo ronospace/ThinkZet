@@ -3,9 +3,9 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>ThinkZet – AI Intelligence Platform</title>
+<title>ThinkZet – Career &amp; Salary Intelligence</title>
 <meta name="theme-color" content="#10111F"/>
-<meta name="description" content="The market has been pricing you without you. ThinkZet reads live postings and shows you the number your employer never did – then every opportunity scored against your profile."/>
+<meta name="description" content="ThinkZet is global career, salary and opportunity intelligence. It reads live job postings to show your market rate, the roles that fit you and the move with the strongest earning potential."/>
 <link rel="icon" type="image/svg+xml" href="/icon.svg"/>
 <link rel="apple-touch-icon" href="/icon.svg"/>
 <link rel="manifest" href="/manifest.webmanifest"/>
@@ -785,7 +785,7 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
 /* ---------- landing ---------- */
 .landing{min-height:100vh;background:var(--bg-grad)}
 html[data-theme="light"] .landing{background:radial-gradient(1100px 560px at 50% -10%,var(--panel2) 0%,var(--bg) 62%)}
-.land-wrap{max-width:940px;margin:0 auto;padding:38px 24px 90px}
+.land-wrap{max-width:1280px;margin:0 auto;padding:38px 24px 90px}
 
 .land-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:var(--text-lg);letter-spacing:.02em}
 .land-brand .mark{width:30px;height:30px}
@@ -833,15 +833,72 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .land-nav-links a:nth-child(3){background:color-mix(in srgb,var(--good) 8%,var(--panel));border-color:color-mix(in srgb,var(--good) 30%,var(--line))}
 .land-nav-links a:nth-child(4){background:color-mix(in srgb,var(--score-mid) 8%,var(--panel));border-color:color-mix(in srgb,var(--score-mid) 30%,var(--line))}
 .land-nav-links a:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+/* The hero is two columns on a wide screen: the claim on the left, a working preview on the right.
+   The preview is the product, not an illustration, so the empty space it used to leave is now the
+   place a visitor sees a real benchmark and two real opportunities before signing up. */
+.hero-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:var(--sp-8);align-items:center;max-width:1280px;margin:0 auto}
+.hero-l{min-width:0}
+.hero-lede{font-size:var(--text-md);color:var(--ink2);line-height:1.55;margin:14px 0 0;max-width:52ch}
+.hero-r{min-width:0}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
+.land-cta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:var(--sp-5)}
+.land-cta .ar{font-size:1.05em;line-height:1}
+.proof{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-2);margin-top:var(--sp-6)}
+.proof-c{background:var(--wash);border:1px solid var(--line-tint);border-radius:var(--radius);padding:11px 13px;min-width:0}
+.proof-c b{display:block;font-size:var(--text-lg);font-weight:700;letter-spacing:var(--tracking-tight);font-variant-numeric:tabular-nums;color:var(--ink)}
+.proof-c span{display:block;font-size:var(--text-xs);color:var(--ink2);line-height:1.35;margin-top:2px}
+.proof-src{font-size:var(--text-xs);color:var(--muted);margin:10px 0 0}
+.proof-src a{color:var(--accent2)}
+.twin-prev{padding:var(--sp-5);min-width:0}
+.tp-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.tp-title{font-size:var(--text-md);font-weight:680;letter-spacing:var(--tracking-tight);margin:0}
+.tp-badge{font-size:var(--text-2xs);font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2);
+  background:color-mix(in srgb,var(--score-mid) 14%,var(--panel));border:1px solid color-mix(in srgb,var(--score-mid) 40%,var(--line));
+  border-radius:999px;padding:3px 9px;white-space:nowrap}
+.tp-badge.live{color:var(--ink);background:color-mix(in srgb,var(--good) 14%,var(--panel));border-color:color-mix(in srgb,var(--good) 40%,var(--line))}
+.tp-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:var(--sp-3)}
+.tp-tab{font:inherit;font-size:var(--text-2xs);font-weight:600;line-height:1.25;text-align:left;padding:7px 9px;min-height:44px;
+  border-radius:var(--radius-sm);border:1px solid var(--line-tint);background:var(--wash);color:var(--ink2);cursor:pointer;
+  transition:color .14s,border-color .14s,background .14s}
+.tp-tab:hover{color:var(--ink);border-color:var(--accent2)}
+.tp-tab.on{color:var(--ink);border-color:var(--accent2);background:color-mix(in srgb,var(--accent2) 12%,var(--panel))}
+.tp-tab:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+.tp-body{margin-top:var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-3)}
+.tp-wait{font-size:var(--text-sm);color:var(--ink2);margin:0}
+.tp-range{background:var(--wash);border:1px solid var(--line-tint);border-radius:var(--radius);padding:12px 13px}
+.tp-rk{font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+.tp-med{font-size:var(--text-xl);font-weight:700;letter-spacing:var(--tracking-tight);font-variant-numeric:tabular-nums;margin:3px 0 0;color:var(--ink)}
+.tp-med small{font-size:var(--text-xs);font-weight:500;color:var(--muted);letter-spacing:0;margin-left:5px}
+.tp-track{position:relative;height:7px;border-radius:4px;background:var(--track);margin:11px 0 0}
+.tp-track .band{position:absolute;top:0;bottom:0;background:color-mix(in srgb,var(--accent2) 45%,transparent);border-radius:4px}
+.tp-track .mid{position:absolute;top:-3px;width:2px;height:13px;background:var(--accent2);border-radius:1px}
+.tp-scale{display:flex;justify-content:space-between;gap:6px;margin-top:7px;font-size:var(--text-2xs);color:var(--ink2);font-variant-numeric:tabular-nums}
+.tp-scale b{color:var(--ink);font-weight:600}
+.tp-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
+.tp-chip{font-size:var(--text-2xs);color:var(--ink2);background:var(--panel);border:1px solid var(--line-tint);border-radius:999px;padding:2px 8px;white-space:nowrap}
+.tp-opps{display:flex;flex-direction:column;gap:7px}
+.tp-opp{display:flex;align-items:flex-start;gap:10px;padding:9px 11px;border:1px solid var(--line-tint);border-radius:var(--radius-sm);background:var(--wash);min-width:0}
+.tp-score{flex:none;width:34px;height:34px;margin-top:1px;border-radius:9px;display:grid;place-items:center;font-size:var(--text-sm);font-weight:700;
+  font-variant-numeric:tabular-nums;background:color-mix(in srgb,var(--score-hi) 16%,var(--panel));border:1px solid color-mix(in srgb,var(--score-hi) 40%,var(--line));color:var(--ink)}
+.tp-score.mid{background:color-mix(in srgb,var(--score-mid) 16%,var(--panel));border-color:color-mix(in srgb,var(--score-mid) 40%,var(--line))}
+.tp-score.low{background:color-mix(in srgb,var(--score-low) 16%,var(--panel));border-color:color-mix(in srgb,var(--score-low) 40%,var(--line))}
+.tp-oi{min-width:0;flex:1 1 auto}
+.tp-ot{font-size:var(--text-sm);font-weight:600;color:var(--ink);line-height:1.3;overflow-wrap:anywhere;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.tp-os{font-size:var(--text-xs);color:var(--ink2);margin-top:1px;overflow-wrap:anywhere}
+.tp-op{font-size:var(--text-xs);font-weight:600;color:var(--ink2);font-variant-numeric:tabular-nums;margin-top:2px}
+.tp-foot{font-size:var(--text-xs);color:var(--ink2);border-top:1px solid var(--line-tint);padding-top:9px}
+.tp-foot b{color:var(--ink);font-weight:600}
+.tp-empty{font-size:var(--text-sm);color:var(--ink2);line-height:1.5;border:1px dashed var(--line2);border-radius:var(--radius-sm);padding:11px 12px}
+@media(max-width:1023px){.hero-grid{grid-template-columns:1fr;gap:var(--sp-5)}.hero-lede{max-width:none}}
+@media(max-width:560px){.proof{gap:6px}.proof-c{padding:9px 10px}.proof-c b{font-size:var(--text-md)}.proof-c span{font-size:var(--text-2xs)}
+  .tp-tabs{grid-template-columns:1fr}.tp-tab{min-height:44px;padding:8px 10px;font-size:var(--text-xs)}}
+@media(max-width:359px){.proof{grid-template-columns:1fr}}
 .land-sec{margin-top:var(--sp-16);scroll-margin-top:76px}
 #check{scroll-margin-top:76px}
 .land-h2{font-size:clamp(22px,3vw,30px);letter-spacing:var(--tracking-tighter);margin:0 0 8px;font-weight:720;line-height:var(--leading-tight)}
 .land-sec-sub{color:var(--muted);font-size:var(--text-md);margin:0 0 var(--sp-6);max-width:640px}
 .hero-sec{padding:var(--sp-16) 0 var(--sp-10)}
-.proof{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-5);margin-top:var(--sp-10);padding-top:var(--sp-5);border-top:1px solid var(--line)}
-.proof > div{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
-.proof b{font-size:var(--text-lg);font-weight:720;letter-spacing:var(--tracking-tight);line-height:1.2;color:var(--ink);flex-shrink:0}
-.proof span{font-size:var(--text-sm);color:var(--muted);line-height:1.45;flex:1;min-width:120px}
 .how-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-4)}
 .how-step{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-6);box-shadow:var(--shadow-sm)}
 .how-n{font-size:var(--text-2xs);letter-spacing:.14em;color:var(--accent);font-weight:700}
@@ -902,9 +959,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
   .land-nav{padding:10px 16px;gap:8px}
   .land-brand{font-size:var(--text-base)}
   .land-nav .btn{white-space:nowrap;padding:7px 12px;font-size:var(--text-sm)}
-  .proof{grid-template-columns:1fr;gap:var(--sp-3)}
-  .proof > div{gap:8px}
-  .proof b{font-size:var(--text-md);min-width:64px}}
+}
 @media(max-width:760px){.check .row3,.check .row2,.trust{grid-template-columns:1fr!important}.land-wrap{padding:24px 18px 60px}.land-nav{margin-bottom:40px}}
 @media(max-width:900px){.shell{grid-template-columns:minmax(0,1fr)}.scores-grid{grid-template-columns:1fr 1fr}.form-grid{grid-template-columns:1fr}.opp{grid-template-columns:54px 1fr}.opp .right{display:none}}
 
@@ -1229,18 +1284,45 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
     </div>
   </div>
 
+
   <div class="land-wrap">
     <section class="hero-sec">
-      <span class="land-kicker">Free Intelligent Career Value Check</span>
-      <h1 class="land-h1">The market has been <br/><span class="accent">pricing you without you.</span></h1>
-      <p class="land-sub"><strong class="land-slogan">One profile, every opportunity.</strong><span class="land-sub-2">Live Pay Data, Matched to You.</span></p>
-      <div class="land-cta">
-        <a class="btn" href="#check">Check my market gap</a>
-      </div>
-      <div class="proof">
-        <div><b>1 in 3</b><span>are paid below the median for work they already do</span></div>
-        <div><b>&euro;13,500</b><span>average distance to the salary next door, for identical work</span></div>
-        <div><b>72%</b><span>of postings hide the number. Only you are guessing</span></div>
+      <div class="hero-grid">
+        <div class="hero-l">
+          <span class="land-kicker">Career &amp; Compensation Intelligence</span>
+          <h1 class="land-h1">The market has been <br/><span class="accent">pricing you without you.</span></h1>
+          <p class="hero-lede">ThinkZet builds your Career Twin from live global job postings, revealing your market rate, hidden high-fit roles and the career move with the strongest earning potential.</p>
+          <div class="land-cta">
+            <a class="btn" href="#check" id="hero-primary">Check my market gap</a>
+            <button class="btn ghost" id="hero-sample" type="button" aria-describedby="hero-sample-hint">Explore live sample <span class="ar" aria-hidden="true">&rarr;</span></button>
+            <span class="sr-only" id="hero-sample-hint">Cycles the three sample profiles shown in the preview card.</span>
+          </div>
+          <div class="proof" id="proof-bar" aria-live="polite">
+            <div class="proof-c"><b id="pf-below">&ndash;</b><span>Paid below market</span></div>
+            <div class="proof-c"><b id="pf-gap">&ndash;</b><span>Average market gap</span></div>
+            <div class="proof-c"><b id="pf-hidden">&ndash;</b><span>Salaries undisclosed</span></div>
+          </div>
+          <p class="proof-src" id="pf-src">Reading the live corpus&hellip;</p>
+        </div>
+
+        <div class="hero-r">
+          <div class="card plain twin-prev" id="twin-preview" aria-labelledby="tp-title">
+            <div class="tp-head">
+              <h2 class="tp-title" id="tp-title">Live Career Twin Preview</h2>
+              <span class="tp-badge" id="tp-badge">Sample preview</span>
+            </div>
+            <div class="tp-tabs" role="tablist" aria-label="Sample profiles">
+              <button class="tp-tab on" role="tab" aria-selected="true" data-p="0" id="tp-tab-0" aria-controls="tp-panel" tabindex="0">Senior Data Scientist &middot; UK</button>
+              <button class="tp-tab" role="tab" aria-selected="false" data-p="1" id="tp-tab-1" aria-controls="tp-panel" tabindex="-1">Staff Backend Engineer &middot; DE</button>
+              <button class="tp-tab" role="tab" aria-selected="false" data-p="2" id="tp-tab-2" aria-controls="tp-panel" tabindex="-1">Product Lead &middot; US</button>
+            </div>
+            <div id="tp-panel" role="tabpanel" aria-labelledby="tp-tab-0" tabindex="0">
+              <div class="tp-body" id="tp-body">
+                <p class="tp-wait">Reading the live corpus&hellip;</p>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -1312,89 +1394,8 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
           <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="cop" aria-hidden="true"></span><h3>Career Co-Pilot</h3></div><p>Grounded in your own data. It cites the sample it used, or says it does not know.</p></div>
         </div>
       </div>
-      <div class="row" style="gap:8px">
-        <button class="theme-btn" id="land-theme" title="Appearance" aria-label="Appearance">
-          <svg class="ico-auto" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="5.4"/><path d="M8 2.6v10.8"/><path d="M8 2.6a5.4 5.4 0 010 10.8z" fill="currentColor" stroke="none" opacity=".5"/></svg>
-          <svg class="ico-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2.9"/><path d="M8 1.8v1.6M8 12.6v1.6M1.8 8h1.6M12.6 8h1.6M3.6 3.6l1.15 1.15M11.25 11.25l1.15 1.15M12.4 3.6l-1.15 1.15M4.75 11.25L3.6 12.4"/></svg>
-          <svg class="ico-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 9.8A5.8 5.8 0 016.2 2.6a5.8 5.8 0 107.2 7.2z"/></svg>
-        </button>
-        <button class="btn ghost sm" id="land-signin">Sign in</button>
-      </div>
-    </div>
-  </div>
-
-  <div class="land-wrap">
-    <section class="hero-sec">
-      <span class="land-kicker">Free Intelligent Career Value Check</span>
-      <h1 class="land-h1">The market has been<br/><span class="accent">pricing you without you.</span></h1>
-      <p class="land-sub"><strong class="land-slogan">One profile, every opportunity.</strong><span class="land-sub-2">Live Pay Data, Matched to You.</span></p>
-      <div class="land-cta">
-        <a class="btn" href="#check">Check my market gap</a>
-      </div>
-      <div class="proof">
-        <div><b>1 in 3</b><span>are paid below the median for work they already do</span></div>
-        <div><b>&euro;13,500</b><span>average distance to the salary next door, for identical work</span></div>
-        <div><b>72%</b><span>of postings hide the number. Only you are guessing</span></div>
-      </div>
     </section>
 
-    <datalist id="dl-roles"></datalist>
-    <datalist id="dl-skills"></datalist>
-
-    <section class="check" id="check">
-      <h2>What Should You Be Earning?</h2>
-      <div class="row3">
-        <div><label for="c-role">Your Role</label><input id="c-role" list="dl-roles" autocomplete="off" placeholder="Senior Data Scientist"/></div>
-        <div><label for="c-years">Years of Experience</label><input id="c-years" type="number" min="0" max="45" placeholder="8"/></div>
-        <div><label for="c-country">Market</label>
-          <select id="c-country"><option value="">Any market</option></select>
-        </div>
-      </div>
-      <div class="row2">
-        <div><label for="c-current">What You Are Paid Now <span class="opt">Optional</span></label><input id="c-current" type="number" placeholder="Leave blank to see the band only"/></div>
-        <div><label for="c-skills">Strongest Skills <span class="opt">Optional</span></label><input id="c-skills" list="dl-skills" placeholder="Python, SQL, Machine Learning"/></div>
-      </div>
-      <button class="btn go" id="c-run">Show me the number</button>
-      <div class="muted" id="c-err" style="font-size:var(--text-sm);margin-top:10px"></div>
-      <div class="result" id="c-result"></div>
-    </section>
-
-    <section id="how" class="land-sec">
-      <h2 class="land-h2">Three questions, and the silence after each one</h2>
-      <div class="how-grid">
-        <div class="how-step">
-          <span class="how-n">01</span>
-          <h3>What Number Would You Say Out Loud?</h3>
-          <p>Most people cannot answer that in a negotiation, so they accept the first number they hear. We give you the median for your exact profile, seniority, skills and country, from postings that disclose pay.</p>
-        </div>
-        <div class="how-step">
-          <span class="how-n">02</span>
-          <h3>What Is Being Posted While You Sleep?</h3>
-          <p>The roles that fit you and are invisible to you, because they live on platforms you do not check and close in 72 hours. We scan them continuously and score each one against your twin.</p>
-        </div>
-        <div class="how-step">
-          <span class="how-n">03</span>
-          <h3>Which Move Actually Pays?</h3>
-          <p>Stay, switch, contract, relocate, pivot. Priced against your real market with the risk attached. Not the trending path. The profitable one.</p>
-        </div>
-      </div>
-    </section>
-
-    <section id="capabilities" class="land-sec">
-      <h2 class="land-h2">Nine Instruments, One Decision</h2>
-      <p class="land-sec-sub">Every screen answers a question you would otherwise answer by guessing.</p>
-      <div class="cap-grid">
-        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="twin" aria-hidden="true"></span><h3>Career Twin</h3></div><p>Understand your professional identity. A persistent model of your skills, constraints and trajectory.</p></div>
-        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="radar" aria-hidden="true"></span><h3>Opportunity Radar</h3></div><p>Discover opportunities. Every listing scored on fit, income and your real odds of getting it.</p></div>
-        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="rate" aria-hidden="true"></span><h3>Rate Intelligence</h3></div><p>Know your market value. The median for your exact profile, with sample size and confidence attached.</p></div>
-        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="pulse" aria-hidden="true"></span><h3>Market Pulse</h3></div><p>See what the whole market pays, by discipline and country, computed from live postings.</p></div>
-        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="path" aria-hidden="true"></span><h3>Career Trajectory</h3></div><p>Where each path lands in 12, 24 or 60 months, with the risk priced in.</p></div>
-        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="gap" aria-hidden="true"></span><h3>Skill Gap Intelligence</h3></div><p>The shortest sequence to unblock the most opportunities, ranked by what it actually pays.</p></div>
-        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="track" aria-hidden="true"></span><h3>Career Tracker</h3></div><p>Your pipeline, and the outcome loop that makes every estimate sharper.</p></div>
-        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="neg" aria-hidden="true"></span><h3>Negotiation Intelligence</h3></div><p>The number to say, the evidence behind it, and the counter when they come in low.</p></div>
-        <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="cop" aria-hidden="true"></span><h3>Career Co-Pilot</h3></div><p>Grounded in your own data. It cites the sample it used, or says it does not know.</p></div>
-      </div>
-    </section>
 
     <section id="pricing" class="land-sec">
       <h2 class="land-h2">The diagnosis is free. The prescription is not.</h2>
@@ -1946,6 +1947,9 @@ function showLanding() {
   const l = document.getElementById('landing');
   if (l) l.style.display = '';
   document.getElementById('app-shell').style.display = 'none';
+  // The hero preview and the proof bar are the product, so they load with the page, not on a click.
+  tpSelect(0, false);
+  loadProof();
 }
 
 async function runRateCheck() {
@@ -2067,6 +2071,170 @@ async function runRateCheck() {
   } catch (e) {
     btn.disabled = false; btn.innerHTML = 'Show me the number';
     err.textContent = 'Something broke: ' + e.message;
+  }
+}
+
+
+// ---- hero preview and proof bar ----
+// Both read the same endpoints the product reads. A sample persona is labelled as a sample; a
+// visitor-controlled preview is labelled live. Nothing is invented: a missing number prints a reason.
+const TP_PERSONAS = [
+  { role: 'Senior Data Scientist', years: 8, country: 'GB', label: 'Senior Data Scientist · UK' },
+  { role: 'Staff Backend Engineer', years: 10, country: 'DE', label: 'Staff Backend Engineer · DE' },
+  { role: 'Product Lead', years: 9, country: 'US', label: 'Product Lead · US' },
+];
+let tpIndex = 0;
+let tpUserDriven = false;
+let tpSeq = 0;
+
+const tpScoreTone = (n) => (n >= 75 ? '' : n >= 55 ? 'mid' : 'low');
+
+function tpRange(b) {
+  const cur = b.currency || 'EUR';
+  const per = b.period === 'hour' ? '/hr' : '/yr';
+  const min = b.p25 * 0.92, max = b.p90 * 1.05;
+  const pos = (x) => Math.max(0, Math.min(100, ((x - min) / (max - min)) * 100));
+  const conv = b.converted
+    ? `<span class="tp-chip">Converted from ${esc(b.reportingCurrency)} at the ${esc(b.rateAsOf || 'latest')} rate</span>`
+    : '';
+  return `
+    <div class="tp-range">
+      <div class="tp-rk">Market range · ${esc(titleCase(b.segment || ''))}</div>
+      <div class="tp-med">${money(b.p50, cur)}${per}<small>median</small></div>
+      <div class="tp-track" role="img" aria-label="Salary range from ${money(b.p25, cur)} at the 25th percentile to ${money(b.p75, cur)} at the 75th, median ${money(b.p50, cur)}">
+        <div class="band" style="left:${pos(b.p25)}%;width:${Math.max(2, pos(b.p75) - pos(b.p25))}%"></div>
+        <div class="mid" style="left:${pos(b.p50)}%"></div>
+      </div>
+      <div class="tp-scale"><span>P25 <b>${money(b.p25, cur)}</b></span><span>P50 <b>${money(b.p50, cur)}</b></span><span>P75 <b>${money(b.p75, cur)}</b></span></div>
+      <div class="tp-meta">
+        <span class="tp-chip">${esc(cur)}</span>
+        <span class="tp-chip">${int(b.sampleSize)} postings</span>
+        <span class="tp-chip">${esc(titleCase(b.confidence || 'unknown'))} confidence</span>
+        ${conv}
+      </div>
+    </div>`;
+}
+
+function tpOpps(list) {
+  if (!list || !list.length) {
+    return '<div class="tp-empty">No scored opportunity matched this profile in the current corpus. The full product scores every open posting.</div>';
+  }
+  return `<div class="tp-opps">${list.map((o) => {
+    const where = o.remote === 'remote' ? 'Remote' : [o.city, o.country].filter(Boolean).join(', ') || 'Location not stated';
+    const pay = o.compMin != null
+      ? `${money(o.compMin, o.currency || 'EUR')}${o.compMax != null && o.compMax !== o.compMin ? '–' + money(o.compMax, o.currency || 'EUR') : ''}`
+      : 'Pay not disclosed';
+    return `<div class="tp-opp">
+      <div class="tp-score ${tpScoreTone(o.matchScore)}" aria-label="Match score ${o.matchScore} out of 100">${int(o.matchScore)}</div>
+      <div class="tp-oi">
+        <div class="tp-ot">${esc(o.title || 'Untitled role')}</div>
+        <div class="tp-os">${esc(where)}</div>
+        <div class="tp-op">${esc(pay)}</div>
+      </div>
+    </div>`;
+  }).join('')}</div>`;
+}
+
+function tpSignal(skill, opps) {
+  if (!skill || !opps || !opps.length) return '';
+  return `<div class="tp-foot">Top skill opportunity: <b>${esc(skill)}</b></div>`;
+}
+
+async function tpLoad(opts) {
+  const seq = ++tpSeq;
+  const box = document.getElementById('tp-body');
+  const badge = document.getElementById('tp-badge');
+  if (!box) return;
+  box.innerHTML = '<p class="tp-wait">Reading the live corpus…</p>';
+  badge.textContent = opts.userDriven ? 'Live preview' : 'Sample preview';
+  badge.classList.toggle('live', !!opts.userDriven);
+  try {
+    const q = new URLSearchParams({ role: opts.role, years: String(opts.years), country: opts.country || '' });
+    const r = await api('/api/public/preview?' + q.toString());
+    if (seq !== tpSeq) return;
+    if (r.error || r.available === false) {
+      box.innerHTML = `<div class="tp-empty">${esc(r.reason || r.error || 'Insufficient live salary data for this role and market.')}</div>`;
+      return;
+    }
+    const b = r.benchmark;
+    box.innerHTML = tpRange(b) + tpOpps(r.opportunities) + tpSignal(r.topSkill, r.opportunities);
+  } catch (e) {
+    if (seq !== tpSeq) return;
+    box.innerHTML = '<div class="tp-empty">The preview could not be read just now. Reload to try again.</div>';
+  }
+}
+
+function tpSelect(i, focus) {
+  tpIndex = i;
+  tpUserDriven = false;
+  document.querySelectorAll('.tp-tab').forEach((t, k) => {
+    const on = k === i;
+    t.classList.toggle('on', on);
+    t.setAttribute('aria-selected', on ? 'true' : 'false');
+    t.tabIndex = on ? 0 : -1;
+    if (on) document.getElementById('tp-panel').setAttribute('aria-labelledby', t.id);
+  });
+  if (focus) document.getElementById('tp-tab-' + i).focus();
+  const p = TP_PERSONAS[i];
+  tpLoad({ role: p.role, years: p.years, country: p.country, userDriven: false });
+}
+
+document.querySelectorAll('.tp-tab').forEach((t) => {
+  t.addEventListener('click', () => tpSelect(Number(t.dataset.p), false));
+  t.addEventListener('keydown', (e) => {
+    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft' && e.key !== 'Home' && e.key !== 'End') return;
+    e.preventDefault();
+    const n = TP_PERSONAS.length;
+    const next = e.key === 'ArrowRight' ? (tpIndex + 1) % n : e.key === 'ArrowLeft' ? (tpIndex - 1 + n) % n : e.key === 'Home' ? 0 : n - 1;
+    tpSelect(next, true);
+  });
+});
+
+document.getElementById('hero-sample') && (document.getElementById('hero-sample').onclick = () => {
+  tpSelect((tpIndex + 1) % TP_PERSONAS.length, false);
+  document.getElementById('twin-preview').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+});
+
+document.getElementById('hero-primary') && (document.getElementById('hero-primary').onclick = (e) => {
+  e.preventDefault();
+  const target = document.getElementById('c-role');
+  document.getElementById('check').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  if (target) setTimeout(() => target.focus({ preventScroll: true }), 320);
+});
+
+// A calculator change updates the preview without a reload, once the three fields describe a profile.
+let tpDebounce = null;
+function tpFromCalculator() {
+  const role = document.getElementById('c-role').value.trim();
+  const years = document.getElementById('c-years').value;
+  const country = document.getElementById('c-country').value;
+  if (!role || years === '') return;
+  clearTimeout(tpDebounce);
+  tpDebounce = setTimeout(() => {
+    tpUserDriven = true;
+    document.querySelectorAll('.tp-tab').forEach((t) => { t.classList.remove('on'); t.setAttribute('aria-selected', 'false'); t.tabIndex = -1; });
+    tpLoad({ role, years: Number(years), country, userDriven: true });
+  }, 420);
+}
+['c-role', 'c-years', 'c-country'].forEach((id) => {
+  const el = document.getElementById(id);
+  if (el) { el.addEventListener('input', tpFromCalculator); el.addEventListener('change', tpFromCalculator); }
+});
+
+async function loadProof() {
+  const below = document.getElementById('pf-below');
+  if (!below) return;
+  const market = (STATE.market && STATE.market.code) || (location.pathname.match(/^\/([a-z]{2})\/?$/) || [])[1] || '';
+  try {
+    const p = await api('/api/public/proof' + (market ? `?market=${market}` : ''));
+    below.textContent = p.paidBelowPct == null ? '–' : `${p.paidBelowPct}%`;
+    document.getElementById('pf-gap').textContent = p.gapAmount == null ? '–' : money(p.gapAmount, p.gapCurrency);
+    document.getElementById('pf-hidden').textContent = p.undisclosedPct == null ? '–' : `${p.undisclosedPct}%`;
+    const src = document.getElementById('pf-src');
+    const conv = p.gapConverted ? ` Converted from ${esc(p.reportingCurrency)} at the ${esc(p.rateAsOf || 'latest')} rate.` : '';
+    src.innerHTML = `${int(p.openPostings)} live postings, ${int(p.withPay)} with pay disclosed.${conv} <a href="#how">How these are computed</a>`;
+  } catch (e) {
+    document.getElementById('pf-src').textContent = 'The corpus could not be read just now. Reload to try again.';
   }
 }
 

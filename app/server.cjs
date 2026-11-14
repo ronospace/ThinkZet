@@ -1580,6 +1580,163 @@ route('POST', /^\/api\/public\/rate-check$/, async (req, res) => {
   });
 });
 
+// ---- landing proof bar: three numbers, each computed from the corpus ----
+// The bar used to print a hand-typed 72% and a euro figure on every market page. Both are now
+// computed here: the share of live postings that hide the number, the share that pay below the
+// median for their own role and level, and the average distance from the lower quartile to the
+// median. The currency follows the market and the response carries the rate date.
+route('GET', /^\/api\/public\/proof$/, async (req, res) => {
+  const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
+  const country = String(url.searchParams.get('market') || '').toUpperCase().slice(0, 2) || null;
+  const LIVE = Object.keys(SOURCES.ADAPTERS);
+  const ph = LIVE.map(() => '?').join(',');
+
+  const open = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open'").get().n;
+  const withPay = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open' AND comp_min IS NOT NULL").get().n;
+  const undisclosedPct = open ? Math.round(((open - withPay) / open) * 100) : null;
+
+  // Below-median share: each live salary record is compared with the median of its own role family
+  // and seniority, so a junior in a low-paying family is not counted against a staff engineer.
+  const recs = db.prepare(`SELECT role_family, seniority, amount FROM salary_records
+    WHERE period='year' AND amount > 0 AND source IN (${ph})`).all(...LIVE);
+  const groups = new Map();
+  for (const r of recs) {
+    const k = `${r.role_family}|${r.seniority}`;
+    if (!groups.has(k)) groups.set(k, []);
+    groups.get(k).push(r.amount);
+  }
+  const median = (a) => { const s = [...a].sort((x, y) => x - y); return s.length ? s[Math.floor(s.length / 2)] : null; };
+  const medians = new Map();
+  for (const [k, v] of groups) medians.set(k, median(v));
+  const comparable = recs.filter((r) => (groups.get(`${r.role_family}|${r.seniority}`) || []).length >= 8);
+  const below = comparable.filter((r) => r.amount < medians.get(`${r.role_family}|${r.seniority}`)).length;
+  const paidBelowPct = comparable.length ? Math.round((below / comparable.length) * 100) : null;
+
+  // Average distance from the lower quartile to the median, across families deep enough to defend.
+  const gaps = [];
+  for (const [, v] of groups) {
+    if (v.length < 8) continue;
+    const s = [...v].sort((x, y) => x - y);
+    const p25 = s[Math.floor(s.length * 0.25)];
+    const p50 = s[Math.floor(s.length * 0.5)];
+    if (p50 > p25) gaps.push(p50 - p25);
+  }
+  const gapEur = gaps.length ? Math.round(gaps.reduce((a, b) => a + b, 0) / gaps.length) : null;
+
+  const MK = require('./markets.cjs');
+  const FX = require('./fx.cjs');
+  const target = country && MK.has(country) ? MK.get(country).currency : 'EUR';
+  const conv = FX.convert(gapEur, target);
+
+  json(res, 200, {
+    paidBelowPct,
+    paidBelowSample: comparable.length,
+    gapAmount: conv.amount, gapCurrency: conv.currency, gapConverted: conv.converted, rateAsOf: conv.asOf,
+    reportingGap: gapEur, reportingCurrency: 'EUR',
+    undisclosedPct,
+    openPostings: open,
+    withPay,
+    market: country,
+    asOf: db.prepare("SELECT MAX(created_at) t FROM opportunities").get().t,
+  });
+});
+
+// ---- landing preview: one call fills the hero card ----
+// The hero card and the free rate check must never disagree, so this endpoint runs the same synthetic
+// profile and the same rate engine the check runs, then adds the two best-scoring opportunities for
+// that profile. Nothing here is a second implementation and nothing here is invented: when a number
+// cannot be computed the field comes back null with a reason, and the client prints the reason.
+route('GET', /^\/api\/public\/preview$/, async (req, res) => {
+  const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
+  const role = String(url.searchParams.get('role') || '').trim();
+  const yearsRaw = url.searchParams.get('years');
+  const years = yearsRaw != null && yearsRaw !== '' ? Number(yearsRaw) : null;
+  const country = String(url.searchParams.get('country') || '').toUpperCase().slice(0, 2) || null;
+  if (!role || years == null || !Number.isFinite(years)) return json(res, 400, { error: 'role and years are required' });
+
+  const { classifyFamily, classifySeniority } = require('./classify.cjs');
+  const family = classifyFamily(role, [], role);
+  const seniority = classifySeniority(role, null, '') !== 'mid'
+    ? classifySeniority(role, null, '')
+    : (years >= 12 ? 'staff' : years >= 7 ? 'senior' : years >= 3 ? 'mid' : 'junior');
+
+  const fakeUser = `preview-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+  db.prepare('INSERT OR IGNORE INTO users (id,email,name) VALUES (?,?,?)').run(fakeUser, `${fakeUser}@anon.local`, 'Preview');
+  db.prepare(`INSERT INTO profiles (user_id,headline,summary,years_experience,seniority,current_rate,rate_unit,rate_currency,
+      remote_preference,willing_to_relocate,target_countries,visa_needed,completeness)
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)`)
+    .run(fakeUser, role, role, years, seniority, null, 'year', 'EUR', 'any', 1, JSON.stringify(country ? [country] : []), 0, 60);
+
+  let rates = null;
+  let opportunities = [];
+  try {
+    rates = E.rateIntelligence(fakeUser);
+    const twin = E.buildTwin(fakeUser);
+    const profile = db.prepare('SELECT * FROM profiles WHERE user_id=?').get(fakeUser);
+    if (twin && profile) {
+      const rows = country
+        ? db.prepare("SELECT * FROM opportunities WHERE status='open' AND (country=? OR remote_type='remote') ORDER BY posted_at DESC LIMIT 400").all(country)
+        : db.prepare("SELECT * FROM opportunities WHERE status='open' ORDER BY posted_at DESC LIMIT 400").all();
+      opportunities = rows
+        .map((o) => ({ o, s: E.scoreOpportunity(profile, twin, o) }))
+        .sort((a, b) => b.s.match_score - a.s.match_score)
+        .slice(0, 2)
+        .map(({ o, s }) => ({
+          id: o.id, title: o.title, company: o.company,
+          matchScore: Math.round(s.match_score),
+          country: o.country || null, remote: o.remote_type || null, city: o.city || null,
+          compMin: o.comp_min != null ? o.comp_min : null,
+          compMax: o.comp_max != null ? o.comp_max : null,
+          currency: o.currency || null, period: o.comp_period || null,
+        }));
+    }
+  } finally {
+    db.prepare('DELETE FROM profile_skills WHERE user_id=?').run(fakeUser);
+    db.prepare('DELETE FROM career_twin WHERE user_id=?').run(fakeUser);
+    db.prepare('DELETE FROM matches WHERE user_id=?').run(fakeUser);
+    db.prepare('DELETE FROM profiles WHERE user_id=?').run(fakeUser);
+    db.prepare('DELETE FROM users WHERE id=?').run(fakeUser);
+  }
+
+  if (!rates) {
+    return json(res, 200, {
+      ok: true, available: false,
+      reason: 'Insufficient live salary data for this role and market.',
+      input: { role, years, country, seniority, family },
+    });
+  }
+
+  // The corpus reports in EUR. A market page prints its own currency, so the figure is converted and
+  // the response says which currency it is and when the rate was taken. If no rate is available the
+  // reporting currency comes back unconverted rather than a guessed number.
+  const MK = require('./markets.cjs');
+  const FX = require('./fx.cjs');
+  const target = country && MK.has(country) ? MK.get(country).currency : 'EUR';
+  const conv = FX.convert(rates.p50, target);
+  const money = (n) => FX.convert(n, target).amount;
+
+  json(res, 200, {
+    ok: true,
+    available: true,
+    input: { role, years, country, seniority, family },
+    benchmark: {
+      p25: money(rates.p25), p50: money(rates.p50), p75: money(rates.p75), p90: money(rates.p90),
+      currency: conv.currency, converted: conv.converted, rateAsOf: conv.asOf,
+      reportingCurrency: 'EUR', reportingP50: Math.round(rates.p50),
+      period: rates.period, sampleSize: rates.sampleSize, exactComparables: rates.exactComparables,
+      confidence: rates.confidence, thin: rates.thin, segment: rates.segment,
+      market: rates.market, byChannel: rates.byChannel,
+    },
+    opportunities,
+    // The strongest paying skill in the vocabulary, from the same table the free check reads. It is a
+    // premium measured on the corpus, so it is printed as a skill name and never as an uplift here.
+    topSkill: (() => {
+      const row = db.prepare('SELECT canonical FROM skills WHERE salary_premium > 8 ORDER BY salary_premium DESC LIMIT 1').get();
+      return row ? row.canonical : null;
+    })(),
+  });
+});
+
 // ---- onboarding draft: step-by-step, saved as you go ----
 route('GET', /^\/api\/onboarding\/draft$/, async (req, res) => {
   const uid = resolveUser(req);
@@ -2842,6 +2999,9 @@ const server = http.createServer(async (req, res) => {
 const HOST = process.env.HOST || '0.0.0.0';
 server.listen(PORT, HOST, () => {
   console.log(`ThinkZet engine on http://127.0.0.1:${PORT}`);
+  // Warm the display rate table once, in the background, so the first market page prints its own
+  // currency instead of falling back to the reporting currency. A failure is not fatal.
+  require('./fx.cjs').table();
   console.log(`seed: ${ingest.raw ?? 0} raw → ${ingest.canonical ?? ingest.count} canonical, ${ingest.merged ?? 0} merged (${ingest.duplicateRate ?? 0}% dup) in ${ingestMs}ms`);
   // Live ingestion on boot, then every 30 minutes. Failures are isolated per source.
   const runLive = async (label) => {

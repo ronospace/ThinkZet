@@ -191,3 +191,24 @@ listed route can never 404 and a 404 route can never be listed.
 The test: add a market by adding one line to the registry. If anything else has to change, the
 architecture is wrong.
 
+## 19. Show the product before asking for anything
+
+A landing page that only describes the product is a claim. The first screen carries a working
+preview built from the same engine the signed-in product uses, so the visitor sees a real number
+before they see a form.
+
+- **One engine, no second implementation.** The preview calls the same rate intelligence and the
+  same scoring the free check calls. A preview that drifts from the product is a lie with a delay.
+- **Sample is a label, not a mood.** A preview the visitor has not driven says **Sample preview**;
+  the moment the calculator drives it, it says **Live preview**. Never print one and mean the other.
+- **No invented uplift.** A figure the corpus cannot defend is not printed. If the salary pool is
+  too thin, the card says so in a sentence rather than filling the space.
+- **A converted figure declares itself.** Money converted for display carries the rate date next to
+  it, and a currency with no rate prints the original amount labelled with its own currency.
+- **A proof number has a source line under it.** The count, the sample and a link to the method sit
+  in the same block, so a sceptical reader can check the claim without leaving the page.
+- **The page has one of everything.** One hero, one calculator, one capability grid, one datalist.
+  Duplicate ids are a defect, asserted at zero in the browser rather than eyeballed.
+
+The test: hide the marketing copy and the first screen should still tell a visitor what the product
+does, with a number they can trace.
