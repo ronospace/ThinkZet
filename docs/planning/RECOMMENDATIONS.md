@@ -26,7 +26,7 @@ Last updated: 13 November 2026.
 | R-12 | The Pro+ card lists six "Compare …" bullets that read as a feature dump; they describe one job and could be stated once | Plan | done | `UI-122` |
 | R-13 | `docs/planning/AUDIT-2026-11-11.md` still lists the paywall essay as "unnecessary"; it is back by founder request and the audit should say so | Docs | open | – |
 | R-14 | Market Pulse and Career Trajectory carry the same paragraph-before-table shape and have not had the facts pass | Pulse, Trajectory | open | – |
-| R-15 | The landing page has no statement of what is free; a visitor meets the price cards before the rule | Landing | open | – |
+| R-15 | The landing page has no statement of what is free; a visitor meets the price cards before the rule. A `.free-line` now sits above the cards: green rule, FREE kicker, one sentence naming the three free things and saying everything below is the ongoing system | Landing | done | `UI-135` |
 | R-16 | Learning Loop explained nothing: no statement of what the page is for, jargon labels ("flywheel", "shrinkage", "prior lift"), and a Report button duplicated in two cards | Learning Loop | done | `UI-120` |
 | R-17 | Learning Loop grids were inline four-column styles that squeezed on a phone; moved to `.lrn-grid` and `.lrn-funnel` with 1100 and 560 breakpoints | Learning Loop | done | `UI-120` |
 | R-18 | Export and Delete sat stacked as two full-width buttons with one shared paragraph; they are now a two-column row with a line each, side by side at every width | Career Twin | done | `UI-121` |

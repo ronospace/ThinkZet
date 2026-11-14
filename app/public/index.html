@@ -800,6 +800,9 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .cap:hover{border-color:var(--line2);transform:translateY(-1px)}
 .cap h3{font-size:var(--text-base);margin:0 0 5px;color:var(--ink);letter-spacing:var(--tracking-tight)}
 .cap p{font-size:var(--text-sm);color:var(--muted);line-height:var(--leading-normal);margin:0}
+.free-line{max-width:1000px;margin:0 auto var(--sp-5);padding:12px 16px;border:1px solid color-mix(in srgb,var(--good) 34%,var(--line));border-radius:var(--radius-md);
+  background:color-mix(in srgb,var(--good) 7%,var(--panel));font-size:var(--text-sm);color:var(--ink2);line-height:1.55;text-wrap:pretty}
+.free-k{display:block;font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;font-weight:700;color:color-mix(in srgb,var(--good) 74%,var(--ink));margin-bottom:3px}
 .price-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-4);align-items:stretch;max-width:1000px;margin:0 auto}
 .price{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius-lg);padding:var(--sp-6);box-shadow:var(--shadow-sm);position:relative;display:flex;flex-direction:column}
 .price.featured{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent),var(--shadow)}
@@ -1182,6 +1185,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
     <section id="pricing" class="land-sec">
       <h2 class="land-h2">The diagnosis is free. The prescription is not.</h2>
       <p class="land-sec-sub">You should be able to find out you are underpaid without paying. What you pay for is the ongoing system.</p>
+      <p class="free-line"><span class="free-k">Free, with no card and no trial</span> The rate gap check, ten scored opportunities and a five-item tracker. Everything below is the ongoing system, priced monthly or yearly.</p>
       <div class="price-grid">
         <div class="price">
           <h3>Free</h3>
