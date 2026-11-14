@@ -26,7 +26,7 @@ function opportunityConfidence(o) {
   if (o.visa_sponsorship === 'yes' || o.visa_sponsorship === 'no') {
     score += 8; factors.push({ k: 'Sponsorship Explicitly Stated', d: '+8' });
   } else {
-    factors.push({ k: 'Sponsorship Unstated', d: '-0', note: 'most employers never say — treat as unknown, not as no' });
+    factors.push({ k: 'Sponsorship Unstated', d: '-0', note: 'most employers never say, so treat it as unknown, not as no' });
   }
 
   const ageDays = o.posted_at ? (Date.now() - new Date(o.posted_at).getTime()) / 86400000 : 30;
@@ -58,7 +58,7 @@ function rateConfidence(exactComparables, sampleSize, confidenceLabel) {
     level: confidenceLabel,
     factors,
     caveat: exactComparables < 10
-      ? 'Few people with your exact profile are visible in this market right now. Widen your target or re-check in a week — the benchmark sharpens as inventory grows.'
+      ? 'Few people with your exact profile are visible in this market right now. Widen your target or re-check in a week. The benchmark sharpens as inventory grows.'
       : null,
   };
 }

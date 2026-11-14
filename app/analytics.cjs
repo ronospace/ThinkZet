@@ -1,7 +1,7 @@
 // Funnel instrumentation.
 //
 // Without this you cannot tell whether the product works. Every meaningful step is recorded,
-// and the dashboard is built from the same events the product fires — no second source of truth.
+// and the dashboard is built from the same events the product fires, so there is no second source of truth.
 'use strict';
 const { db } = require('./db.cjs');
 
@@ -50,7 +50,7 @@ function funnel({ sinceDays = 30, userId = null } = {}) {
     return stepOut;
   });
 
-  // Where the biggest drop is — the only number that matters for what to fix next.
+  // Where the biggest drop is: the only number that matters for what to fix next.
   let worst = null;
   for (let i = 1; i < steps.length; i++) {
     const drop = steps[i].conversionFromPrevious;
@@ -66,7 +66,7 @@ function funnel({ sinceDays = 30, userId = null } = {}) {
     overallConversion: top ? Math.round((end / top) * 100) : 0,
     biggestDrop: worst,
     verdict: worst
-      ? `The biggest leak is between "${worst.previous.label}" and "${worst.step.label}" — only ${worst.conversion}% get through. Fix that before adding anything new.`
+      ? `The biggest leak is between "${worst.previous.label}" and "${worst.step.label}": only ${worst.conversion}% get through. Fix that before adding anything new.`
       : 'Not enough data yet to find a leak.',
   };
 }

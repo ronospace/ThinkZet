@@ -1,5 +1,5 @@
 // Career Twin + Match Scoring + Career Score + Rate Intelligence.
-// Deterministic, explainable, calibrated by priors — no black box.
+// Deterministic, explainable, calibrated by priors. No black box.
 'use strict';
 const { db } = require('./db.cjs');
 const { SKILLS, resolveSkill } = require('./taxonomy.cjs');
@@ -324,7 +324,7 @@ function scoreOpportunity(profile, twin, opp) {
   const stretch = (SENIORITY_RANK[opp.seniority] || 2) - (SENIORITY_RANK[profile.seniority] || 2) >= 2;
 
   // Horizon-weighted ranking. The same opportunity is ranked differently depending on
-  // what the user is optimising for — income, growth, stability or optionality.
+  // what the user is optimising for: income, growth, stability or optionality.
   // Weights sum to 1.0. Default 'balanced' deliberately does NOT maximise income,
   // because "highest paying" and "best for you" are different questions.
   const HORIZON_WEIGHTS = {
@@ -629,7 +629,7 @@ function rateIntelligence(userId) {
     verdict = gapPct >= 15 ? 'underpaid' : gapPct >= 5 ? 'slightly_under' : gapPct > -10 ? 'at_market' : 'above_market';
   }
 
-  // Channel breakdown — where the money actually is
+  // Channel breakdown: where the money actually is
   const channels = {};
   for (const c of converted) {
     channels[c.channel] = channels[c.channel] || [];

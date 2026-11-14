@@ -86,7 +86,7 @@ function daysAhead(n) { const d = new Date(Date.now() + n * 86400000); return d.
 
 function makeOpportunities() {
   const rows = [];
-  // 1) Jobs & contracts — each "real" role posted on 1-3 boards (creates genuine duplicates)
+  // 1) Jobs & contracts: each "real" role posted on 1-3 boards (creates genuine duplicates)
   for (let i = 0; i < 640; i++) {
     const fam = pick(ROLE_FAMILIES);
     const [company, sector] = pick(COMPANIES);
@@ -152,7 +152,7 @@ function makeOpportunities() {
         comp_min: amount, comp_max: amount, currency: 'EUR', comp_period: t.period,
         visa_sponsorship: chance(0.5) ? 'yes' : 'unknown',
         skills: fam.skills.slice(0, 5).map(([s]) => s),
-        description: `${t.title} — ${company}. ${t.period === 'equity' ? 'Equity-only founding role.' : `Funding/value of ${amount} EUR (${t.period}).`}`,
+        description: `${t.title} at ${company}. ${t.period === 'equity' ? 'Equity-only founding role.' : `Funding/value of ${amount} EUR (${t.period}).`}`,
         apply_url: `https://example.com/programmes/${id}`,
         source: 'programmes', source_quality: 0.8, channel: t.type,
         posted_at: daysAgo(int(2, 40)), closes_at: daysAhead(int(5, 60)),

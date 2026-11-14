@@ -1,5 +1,5 @@
 // Live source adapters. Real HTTP, real pagination, real failure isolation.
-// Design rule: a broken source must never take the pipeline down — it degrades and reports.
+// Design rule: a broken source must never take the pipeline down. It degrades and reports.
 'use strict';
 
 const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122 Safari/537.36';

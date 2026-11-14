@@ -16,11 +16,11 @@ const FAMILY_SIGNALS = [
   ['backend', /\b(backend|back-end|software engineer|full[- ]stack|golang|java|node|rust developer|python developer)\b/i],
 ];
 
-// Explicit non-target roles. These are dropped from the default feed — a career OS for
+// Explicit non-target roles. These are dropped from the default feed: a career OS for
 // professionals should not show internships, trades or sales roles unless asked for.
 const EXCLUDE_TITLE = /(\bintern\b|\binternship\b|\bwerkstudent|\bpraktik|\bpraktikum\b|\bausbildung\b|\bazubi\b|\btrainee\b|\bworking student\b|\bservicetechniker|\belektrotechnik|\bcontroller\b|\bfilmproduktion|\bgrafik|\bcontent management\b|\bsales\b|\baccount (executive|manager)\b|\brecruiter\b|\bcustomer (support|success)\b|\bnurse\b|\bmedical\b|\bwarehouse\b|\bdriver\b|\bteacher\b|\blegal counsel\b|\bpeople ops\b|\bhr (manager|generalist)\b|\bmarketing (manager|intern)\b|\bfinance\b|\baccountant\b|\barchitect(ure)? internship\b)/i;
 
-// Core tech vocabulary — a title must contain at least one to be a real tech role.
+// Core tech vocabulary: a title must contain at least one to be a real tech role.
 const TECH_CORE = /\b(engineer|developer|scientist|architect|programmer|devops|sre|analyst|data|software|ml\b|machine learning|ai\b|llm|backend|frontend|full[- ]?stack|platform|infrastructure|security|cloud|qa\b|flutter|react|python|java|golang|rust|node|mobile|ios|android|kubernetes|sql|product manager|designer|ux|ui)\b/i;
 
 function classifyFamily(title, tags, description) {

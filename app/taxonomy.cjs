@@ -1,4 +1,4 @@
-// Skill taxonomy + alias resolution — the controlled vocabulary the whole system depends on.
+// Skill taxonomy + alias resolution: the controlled vocabulary the whole system depends on.
 'use strict';
 
 // canonical, category, aliases, demand index (100 = baseline), salary premium %, growth %, emerging, decay(yrs)
