@@ -708,11 +708,13 @@ route('GET', /^\/api\/negotiation$/, async (req, res) => {
     ? `The ${strongChannel.channel} channel pays a median of ${fmt(strongChannel.median)} across ${strongChannel.n} comparable postings – ${fmt(strongChannel.median - floor)} above your segment median.`
     : null;
 
+  // The script is read aloud, so it carries no em dash and every enumerated value is capitalised.
+  const famLabel = E.guessFamily(profile, twin).replace(/_/g, ' ').replace(/\b[a-z]/g, (m) => m.toUpperCase());
   const askScript = current
-    ? `"Based on what I'm seeing for senior ${E.guessFamily(profile, twin).replace(/_/g, ' ')} profiles with this stack, the range is ${fmt(rates.p25)} to ${fmt(rates.p75)} ${periodLabel}. I'm targeting ${fmt(target)} – that's the upper half of the band, and it reflects ${levers[0] ? levers[0].split(' (')[0] : 'the scope of the role'} on top of the core requirements. What's the band you've set for this level?"`
+    ? `"Based on what I'm seeing for ${famLabel} profiles with this stack, the range is ${fmt(rates.p25)} to ${fmt(rates.p75)} ${periodLabel}. I'm targeting ${fmt(target)}, the upper half of the band, and it reflects ${levers[0] ? levers[0].split(' (')[0] : 'the scope of the role'} on top of the core requirements. What's the band you've set for this level?"`
     : `"Before we go further, what band have you set for this level? I want to make sure we're in the same range."`;
 
-  const counterScript = `If they offer below ${fmt(floor)}: "That's below the median for this profile. I can work with the lower number if we revisit it at six months against a written scope – otherwise I'd need to be closer to ${fmt(target)}."`;
+  const counterScript = `If they offer below ${fmt(floor)}: "That's below the median for this profile. I can work with the lower number if we revisit it at six months against a written scope. Otherwise I'd need to be closer to ${fmt(target)}."`;
 
   json(res, 200, {
     period: rates.period,

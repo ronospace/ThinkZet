@@ -265,6 +265,7 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .sh-card h3{font-size:var(--text-base);font-weight:650;letter-spacing:normal;text-transform:none;color:var(--ink);margin:0}
 /* A sentence that states a finding is not a heading and not bold: it reads at body weight. */
 .stmt{font-size:var(--text-base);font-weight:400;line-height:1.55;color:var(--ink);margin-top:8px;text-wrap:pretty}
+.script{margin-top:10px;padding:2px 0 2px 14px;border-left:2px solid var(--accent);font-size:var(--text-base);font-weight:400;line-height:1.7;color:var(--ink);text-wrap:pretty;font-style:normal}
 .seq-head{display:flex;gap:12px;align-items:center;margin-top:16px;padding-bottom:5px;border-bottom:1px solid var(--line2);font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600}
 .seq-head span.sq-o{width:20px;flex:0 0 20px}
 .seq-head span:nth-child(2){flex:1}
@@ -3501,18 +3502,18 @@ async function renderNegotiation() {
     <h2 class="section">What to Say When They Name a Number</h2>
     <div class="card">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">The Ask</h3><button class="chip cp" data-t="${esc(n.askScript)}" style="cursor:pointer">Copy</button></div>
-      <div style="margin-top:10px;font-size:var(--text-base);line-height:1.75;font-style:italic;color:var(--tone-ink, var(--tone-ink))">${esc(n.askScript)}</div>
+      <div class="script">${esc(n.askScript)}</div>
     </div>
     <div class="card" style="margin-top:12px">
       <div class="row" style="justify-content:space-between"><h3 style="margin:0">If They Come in Low</h3><button class="chip cp" data-t="${esc(n.counterScript)}" style="cursor:pointer">Copy</button></div>
-      <div style="margin-top:10px;font-size:var(--text-base);line-height:1.75;font-style:italic;color:var(--tone-ink, var(--tone-ink))">${esc(n.counterScript)}</div>
+      <div class="script">${esc(n.counterScript)}</div>
     </div>
 
     <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
       <div class="card">
         <h3>Your Leverage</h3>
         <div style="margin-top:10px">
-          ${n.levers.map((l) => `<div class="kv"><span>${esc(l.split(' (')[0])}</span><span class="mono" style="color:var(--good)">${esc(l.split('(')[1].replace(')', ''))}</span></div>`).join('')}
+          ${n.levers.map((l) => { const m = String(l).match(/^(.*?)\s*\(([^)]*)\)\s*$/); return `<div class="kv"><span>${esc(m ? m[1] : l)}</span><span class="mono" style="color:var(--good)">${esc(m ? m[2] : '')}</span></div>`; }).join('')}
         </div>
         ${n.channelUpside ? `<div class="facts tight"><span class="fk">Channel</span><span class="fv">${esc(n.channelUpside)}</span></div>` : ''}
       </div>
