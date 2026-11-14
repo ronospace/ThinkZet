@@ -245,3 +245,36 @@ Two separate faults:
 Two conditions:
 1. Refund the test payment, as planned, so no money changes hands on a benchmark we are about to replace.
 2. Do not send the link to the first 20 people (GRO-01) until A1, A3 and A4 are in, because the headline number is the first thing a new user sees.
+
+## Section D: open queue as of 14 November 2026
+
+Numbered, categorised, in the order they should be taken. Every row names who acts.
+
+### D-1 Design and copy (me)
+
+| # | Task | State |
+|---|---|---|
+| D-1.1 | R-15: landing states what is free before the price cards | open |
+| D-1.2 | R-14: facts pass on Market Pulse and Career Trajectory | partly done (`8a3f7f4` did Market Pulse) |
+| D-1.3 | R-10: copilot answers and negotiation scripts as prose, not label/value rows | open |
+| D-1.4 | R-11: Skill Gaps partner card disclosure line | open |
+| D-1.5 | R-13: correct the stale audit line about the paywall essay | open |
+| D-1.6 | Copilot mobile: 2-row scroller with a peeking card, sparkle header, 2x2 source tiles, accordion | done (`c09de62`) |
+
+### D-2 Credentials and operations (founder)
+
+| # | Task | State |
+|---|---|---|
+| D-2.1 | B-1 SEC-01: rotate the Apple `.p8` | ready |
+| D-2.2 | B-2 DATA-13: `ADZUNA_APP_ID` and `ADZUNA_APP_KEY` | ready |
+| D-2.3 | B-3 DATA-02: one bucket plus `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY` | ready |
+| D-2.4 | B-8 SEO-08: Search Console Request indexing | ready |
+| D-2.5 | Railway redeploy so `8a3f7f4` reaches production, then confirm Apple sign-in in one attempt and `/strategy.html` 410 | ready |
+
+### D-3 Waiting or paused
+
+| # | Task | State |
+|---|---|---|
+| D-3.1 | B-5 GRO-01 first 20 users | paused by founder |
+| D-3.2 | B-6 FB-03 testimonials | waiting on a paying cohort |
+| D-3.3 | B-4 DATA-01 model phrasing | optional; ships as rules mode without a key |

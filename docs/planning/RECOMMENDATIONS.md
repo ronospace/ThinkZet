@@ -40,6 +40,11 @@ Last updated: 13 November 2026.
 | R-26 | Career Copilot asked its five questions as oval pills of different widths, three rows deep, and its intro bubble spent 315px of a 852px screen before a single answer | Career Copilot | done | `UI-124` |
 | R-27 | Card headings were bold titles at 15px competing with the page title; they are now full-caps labels at 11.5px, weight 600, and the three finding sentences ("Closing PyTorch alone unblocks 12 of your 60…") are body weight instead of bold | Skill Gaps, Negotiation, Career Trajectory, every card | done | `UI-125` |
 | R-28 | Skill Gaps repeated its own page title as a card heading, and printed "cumulative" under all four numbers | Skill Gaps | done | `UI-125` |
+| R-29 | Counts were printed as stored: 2867, 871, 1940, 68. Twelve raw template values now go through `int()`, so every count carries a separator and a null prints an en dash | Market Pulse, Career Tracker, Partners, Saved Searches, Outbox | done | `8a3f7f4` |
+| R-30 | Signal of the Day showed a violet box with a skill name, "Blocks 8 of your opportunities", then two label/value rows where one read "Add your pay to see it" as if it were a value. It is now a sentence saying what the blocker means, an explicit "See what closing it unblocks" link, and two labelled facts | Daily Brief | done | `8a3f7f4` |
+| R-31 | Market Pulse "How to Read This" was one 60-word paragraph. It is now five labelled rows: Source, Not a survey, Currency, Small samples, The number in brackets | Market Pulse | done | `8a3f7f4` |
+| R-32 | Status badges were weight 650 at 10.5px, as loud as a heading, and caps card headings sat at 11.5px, the same size as the body copy under them. Badges are now caps at weight 500 with 0.07em tracking, headings 12.5px, one step above body | Career Tracker, every card | done | `8a3f7f4` |
+| R-33 | The phone bar's six boxes had uneven gaps (4, 0, 0, 4, 8) because three groups each carried their own margin, and the rail collapse handle hung 11px past the right edge. One six-column grid with `display:contents` on the groups gives 4px everywhere and equal widths; the handle is hidden on a phone | Every screen, phone | done | `8a3f7f4` |
 
 ## How to use this
 

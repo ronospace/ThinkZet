@@ -114,14 +114,32 @@ of the composer still visible at 852px so the first answer is one tap away.
 
 ## 13. A heading is a label; a sentence is not a heading
 
-Card headings are full caps, letter-spaced, at `--text-xs` and weight 600, in `--ink2`. They are labels on a container,
+Card headings are full caps, letter-spaced, at `--text-sm` (12.5px) and weight 600, in `--ink2`. They are labels on a container,
 not titles competing with the page title, and they are never bold. A sentence that states a finding - "Closing PyTorch
 alone unblocks 12 of your 60 realistic opportunities" - is body copy at `--text-base`, weight 400, `--ink`, and it is
 never set as a heading. A name is not a label either: a saved search keeps its own case, its own size and weight 650, so
 `.sh-card h3` overrides the rule. One class carries the finding line, `.stmt`, used by Skill Gaps, Negotiation and Career
-Trajectory. Measured 14 November 2026: every card heading at 393 and 1440 is 11.5px, weight 600, uppercase, 1.15px
-tracking; the three finding lines are 14px weight 400.
+Trajectory. Measured 14 November 2026: every card heading at 393 and 1440 is 12.5px, weight 600, uppercase, 1.125px
+tracking; the three finding lines are 14px weight 400. A heading one step above body copy is the point: at 11.5px it was the
+same size as the sentence under it and the reader had to use weight alone to tell them apart.
 
 A repeated unit label is not repeated. "cumulative" under four numbers became one column header, `Cumulative unblocked`,
 because a word repeated once per row is noise the reader has to skip four times.
 
+## 14. A number is written for a reader, not for a database
+
+Every count is printed through `int()`, so it carries a thousands separator: 2,867 opportunities, 1,940 postings, 400 scored.
+A raw template value - `${items.length}`, `${p.sample}`, `${c.n}` - is a defect even when the number is small, because the
+same line prints 12 today and 1,204 next month. `int()` also turns null into an en dash rather than printing `null` or `NaN`.
+Money goes through `money()`, percentages through `pct()`, scores through `score()`. There is no fourth formatter and no
+inline `toLocaleString`. Measured 14 November 2026: twelve raw counts found and fixed; no bare four-digit run remains in the
+rendered text of Market Pulse or Career Tracker at 393 or 1440.
+
+## 15. Plain punctuation; an empty state is an instruction
+
+No em dash anywhere in shipped code or user-visible copy. A colon, a comma or a full stop does the same work and does not
+read as machine-written. The one exception is a parser character class, where the dash is data rather than prose.
+
+An empty state says what is missing and how it fills: "Nothing saved yet. Save an opportunity from the radar and it lands
+here." The word "empty" in grey tells the reader nothing and reads as a fault. One component carries it, `.tk-empty`, a
+dashed border at `--line`, `--text-sm` in `--ink2`.
