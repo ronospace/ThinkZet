@@ -261,7 +261,7 @@ Numbered, categorised, in the order they should be taken. Every row names who ac
 | D-1.5 | R-13: correct the stale audit line about the paywall essay | done (`UI-143`) |
 | D-1.6 | Copilot mobile: 2-row scroller with a peeking card, sparkle header, 2x2 source tiles, accordion | done (`c09de62`) |
 | D-1.7 | R-34 to R-38: emphasis ladder, coloured section titles, green free plan, copilot desktop grid and phone composer | done (`dc9e3a2`) |
-| D-1.8 | Sweep every screen at 393 and 1440 for dead space of the kind the copilot had | open |
+| D-1.8 | Sweep every screen at 393 and 1440 for dead space of the kind the copilot had | done (`UI-143`): 14 views x 2 widths measured; no card holds dead space, the only positive gaps are short pages that do not fill the viewport (Tracker 450px at 1440, Copilot 133px at 393) |
 
 ### D-2 Credentials and operations (founder)
 
