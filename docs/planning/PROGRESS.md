@@ -3,7 +3,7 @@
 One page. What is done, what is left, and the order to do it in.
 Detail: `TASKS.md`. Rules: `ENGINEERING.md`. Payments: `PAYMENTS.md`. Snapshot: `STATUS-2026-11-11.md`.
 
-Last updated: 11 November 2026 · `master` at `dd644a8` · tagged `restore-20261111-29` · tree clean, nothing unpushed.
+Last updated: 15 November 2026 · `master` at `47c816a` · tagged `restore-20261113-48` · tree clean, nothing unpushed.
 
 ## Where we are
 
@@ -30,7 +30,7 @@ If the answer is no, it is not next.
 | Data quality | De-duplicated salary corpus, single sample size and confidence, thin samples report a range |
 | Product | Radar, brief, rate check, tracker, negotiation, trajectory, gaps, cover letters, interview prep, copilot |
 | Feedback | Rating with stored distribution, one per surface, collapses to one line, read on the Leads screen |
-| SEO | 206 URLs, robots, canonical, JSON-LD, Search Console verified |
+| SEO | 219 URLs across 169 market routes, robots, canonical, hreflang, JSON-LD, Search Console verified |
 | Ads | Free plans only, consent first, slot collapsed until a creative renders |
 | Security | Security headers, rate limiting, 404 for unknown paths, GDPR export and delete |
 
