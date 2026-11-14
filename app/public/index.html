@@ -917,12 +917,12 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .plan-grid-compact .price.is-current h3{color:color-mix(in srgb,var(--good) 72%,var(--ink))}
 .plan-grid-compact .price.is-current .price-v{color:color-mix(in srgb,var(--good) 78%,var(--ink))}
 .plan-grid-compact .price.is-current li:before{background:var(--good);opacity:.9}
-.plan-grid-compact .price.is-current .btn.plan-cur{border-color:color-mix(in srgb,var(--good) 40%,var(--line));color:color-mix(in srgb,var(--good) 76%,var(--ink));background:color-mix(in srgb,var(--good) 8%,transparent)}
+.plan-grid-compact .price.is-current .btn.plan-cur[disabled]{opacity:1;border-color:color-mix(in srgb,var(--good) 45%,var(--line));color:color-mix(in srgb,var(--good) 82%,var(--ink));background:color-mix(in srgb,var(--good) 13%,var(--panel))}
 html[data-theme="light"] .plan-grid-compact .price.is-current{border-color:color-mix(in srgb,var(--good) 38%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--good) 16%,transparent),var(--shadow-sm)}
 .plan-grid-compact .price.is-current .chip.have{border-color:color-mix(in srgb,var(--good) 55%,var(--line));background:color-mix(in srgb,var(--good) 12%,var(--panel))}
 .plan-grid-compact .price .chip.have{background:color-mix(in srgb,var(--good) 12%,var(--panel));color:var(--good);border:1px solid color-mix(in srgb,var(--good) 45%,var(--line));border-radius:var(--radius-sm)}
 .plan-grid-compact .price .btn[disabled]{cursor:default}
-.plan-grid-compact .price.is-current .btn[disabled]{opacity:1;background:var(--panel2);color:var(--muted);border:1px solid var(--line2)}
+.plan-grid-compact .price.is-current .btn[disabled]:not(.plan-cur){opacity:1;background:var(--panel2);color:var(--muted);border:1px solid var(--line2)}
 .plan-grid-compact .price.is-featured .btn[disabled]{opacity:.7}
 .plan-grid-compact .price.is-plus{border-color:color-mix(in srgb,var(--gold) 60%,var(--line));box-shadow:0 0 0 1px color-mix(in srgb,var(--gold) 30%,transparent)}
 html[data-theme="light"] .plan-grid-compact .price.is-plus{border-color:#E3C67F;box-shadow:0 0 0 1px rgba(199,154,58,.16)}

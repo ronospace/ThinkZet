@@ -50,6 +50,7 @@ Last updated: 13 November 2026.
 | R-36 | The free plan card had lost its green and read as a disabled panel. It is green again on its own token: `--good` border at 42%, a 9% to 3% wash, the plan name and the price in the green mix, green list dots, and a green Current Plan button | Plan | done | `UI-133` |
 | R-37 | Copilot's five question cards were fixed at 165px inside two hidden-scrollbar scrollers, so a 1440 screen showed three cards and 600px of dead space beside them, and the data panel stopped at 545px while the composer ran to 1126px. Desktop is now a real three-column grid of 268px cards and the panel is full width; the phone keeps its scrollers, because five cards cannot fit 393px | Copilot | done | `UI-133` |
 | R-38 | On a phone the copilot composer floated mid-screen with 200px of dead space under it, because `.chat` was `min-height:60vh` with a `55vh` message cap. It is now `calc(100dvh - 196px)` with no cap, so the composer sits on the bottom bar | Copilot, phone | done | `UI-133` |
+| R-39 | The Current Plan button stayed neutral grey because `.plan-grid-compact .price.is-current .btn[disabled]` outranked `.plan-cur`. It now carries the same green as the card: 13% `--good` fill, 82% green ink, 45% green border, scoped with `:not(.plan-cur)` on the generic disabled rule so the two never fight again | Plan | done | `UI-134` |
 
 ## How to use this
 
