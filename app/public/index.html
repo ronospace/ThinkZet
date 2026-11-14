@@ -39,7 +39,7 @@
   --up:#4fd6a0;
   --down:#f2738a;
   --score-hi:#38c98a;--score-hi-bg:#0e2119;
-  --score-good:#6b93f7;--score-good-bg:#141b2b;
+  --score-good:#4fd6a0;--score-good-bg:#0e2119;
   --score-mid:#e2a83a;--score-mid-bg:#241c0f;
   --score-low:#f05666;--score-low-bg:#241417;
   --st-apply-bg:#2A2140;--st-apply-ink:#D8C4FF;--st-apply-line:#4B3A78;
@@ -100,7 +100,7 @@ html[data-theme="light"]{
   --up:#0e9d63;
   --down:#cf3448;
   --score-hi:#0a7a45;--score-hi-bg:var(--accent-soft);
-  --score-good:#1d4ed8;--score-good-bg:#eef3fd;
+  --score-good:#0a6f45;--score-good-bg:#e9f7f0;
   --score-mid:#a86400;--score-mid-bg:#fdf3e3;
   --score-low:#b02439;--score-low-bg:var(--accent-soft);
   --st-apply-bg:#F3E8FF;--st-apply-ink:#6B21A8;--st-apply-line:#E2CCFB;
@@ -638,7 +638,7 @@ table.t tr:hover td{background:var(--panel2)}
 .cp-hello p{margin:3px 0 0;font-size:var(--text-sm);color:var(--muted);line-height:1.45}
 /* A suggested question is a chip: one line, even count, wraps, never a row of boxes. */
 .cp-chips{display:flex;flex-wrap:wrap;gap:7px;margin:0 0 14px}
-.cp-chip{font:inherit;font-size:var(--text-sm);line-height:1.3;padding:6px 12px;border-radius:999px;border:1px solid var(--ai-border);
+.cp-chip{font:inherit;font-size:var(--text-sm);line-height:1.3;padding:6px 12px;border-radius:var(--radius-sm);border:1px solid var(--ai-border);
   background:var(--panel);color:var(--ink2);cursor:pointer;white-space:nowrap;transition:border-color .12s,background .12s,color .12s}
 .cp-chip:hover{border-color:var(--accent2);background:var(--panel2);color:var(--ink)}
 .cp-chip:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
@@ -3275,8 +3275,12 @@ async function renderTwin() {
 }
 
 /* ---------------- copilot ---------------- */
+// Ten prompts, every one of them answered by a grounded intent in /api/copilot, so a chip can never
+// ask a question the rules cannot answer. Five per row at 1440, two or three per row at 393.
 const CP_CHIPS = ['What should I do next?', 'Am I underpaid?', 'Which skills are blocking me?',
-  'What jobs fit me best?', 'How competitive am I?', 'What is my fastest growth path?'];
+  'What jobs fit me best?', 'How competitive am I?', 'What is my fastest growth path?',
+  'How do I prepare for an interview?', 'How do I negotiate my offer?', 'How are my applications going?',
+  'What is realistic for relocating?'];
 
 async function renderCopilot() {
   const me = STATE.profile || {};
