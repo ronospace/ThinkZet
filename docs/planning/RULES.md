@@ -171,3 +171,23 @@ ThinkZet is a worldwide platform. Germany is one market among many, and nothing 
 - A prioritisation that would only make sense in one country (a visa scheme, a tax rule, a public holiday) belongs in a market-specific surface, never in a global one.
 
 The test: if the same screen were shown to a user in Lisbon, Toronto and Singapore, would every sentence still be true? If not, the sentence is wrong, not the user.
+
+## 18. One registry, many markets
+
+A market is a configuration record, never a code path. `app/markets.cjs` is the only place a country,
+its currency, its language and its region are written down; every route, page, sitemap entry, select
+and `hreflang` reads from it. Three settings stay separate, because they answer three questions:
+
+- **market** - which labour market the numbers describe
+- **language** - which language the interface is written in
+- **currency** - which currency money is printed in
+
+A route may suggest a market and a header may suggest a language, and the visitor may override
+either. A code people type that ISO does not use for that market (`/uk`) is a permanent redirect to
+the real one (`/gb`), never a second page. A route the registry knows answers 200 to a crawler; a
+route it does not know answers 404. The sitemap lists only markets the corpus can defend, so a
+listed route can never 404 and a 404 route can never be listed.
+
+The test: add a market by adding one line to the registry. If anything else has to change, the
+architecture is wrong.
+

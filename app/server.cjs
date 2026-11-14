@@ -18,6 +18,7 @@ const crypto = require('node:crypto');
 
 const { db } = require('./db.cjs');
 const { SKILLS, resolveSkill } = require('./taxonomy.cjs');
+const MK = require('./markets.cjs');
 const { seedIfEmpty, ingestLive, lastRun } = require('./pipeline.cjs');
 const SOURCES = require('./sources.cjs');
 const E = require('./engine.cjs');
@@ -1143,6 +1144,33 @@ route('GET', /^\/api\/learning$/, async (req, res) => {
     },
     priors,
   });
+});
+
+// Market, language and currency are three separate settings. This endpoint answers all three for a
+// request without locking any of them: the route suggests a market, the header suggests a language,
+// and the caller may override either with a query parameter.
+route('GET', /^\/api\/markets\/config$/, async (req, res) => {
+  const url = new URL(req.url, 'http://x');
+  const market = MK.fromRequest(req, url);
+  const cfg = MK.config(market, MK.languageFor(req, url, market));
+  const rows = db.prepare(`SELECT country, COUNT(*) n FROM opportunities WHERE status='open' AND country NOT IN ('WW','EU')
+    GROUP BY country HAVING n >= 20 ORDER BY n DESC`).all().filter((r) => MK.has(r.country));
+  json(res, 200, {
+    ...cfg,
+    detected: { market, language: cfg.language },
+    markets: rows.map((r) => ({ code: String(r.country).toLowerCase(), name: MK.get(r.country).name,
+      currency: MK.get(r.country).currency, postings: r.n, url: `/${String(r.country).toLowerCase()}` })),
+    alternates: market ? MK.alternates(publicOrigin(req), rows.map((r) => String(r.country).toLowerCase())) : [],
+  });
+});
+
+// One global taxonomy feeds both autocompletes, so a role typed on the landing page and a role
+// scored in the app are the same string.
+route('GET', /^\/api\/taxonomy$/, async (req, res) => {
+  const skills = db.prepare('SELECT canonical FROM skills ORDER BY demand_index DESC').all().map((r) => r.canonical);
+  const roles = db.prepare(`SELECT role_family, COUNT(*) n FROM opportunities WHERE status='open'
+    GROUP BY role_family ORDER BY n DESC`).all().map((r) => ({ family: r.role_family, postings: r.n }));
+  json(res, 200, { skills, roles, roleLabels: SEO_ROLE });
 });
 
 route('GET', /^\/api\/skills$/, async (req, res) => {
@@ -2595,11 +2623,15 @@ const SEO_ROLE = { 'software-engineer': 'Backend Engineer', 'frontend-engineer':
   'platform-engineer': 'Platform Engineer', 'mobile-engineer': 'Mobile Engineer',
   'product-manager': 'Product Manager', 'security-engineer': 'Security Engineer',
   'product-designer': 'Product Designer' };
-const SEO_COUNTRY = { de: 'Germany', us: 'United States', gb: 'United Kingdom', nl: 'Netherlands',
-  fr: 'France', es: 'Spain', ca: 'Canada', au: 'Australia', ch: 'Switzerland', at: 'Austria',
-  se: 'Sweden', dk: 'Denmark', no: 'Norway', fi: 'Finland', ie: 'Ireland', it: 'Italy',
-  pl: 'Poland', pt: 'Portugal', be: 'Belgium', in: 'India', br: 'Brazil', sg: 'Singapore',
-  jp: 'Japan', ee: 'Estonia', cz: 'Czechia', ro: 'Romania', hu: 'Hungary', gr: 'Greece' };
+const SEO_COUNTRY = MK.names();
+
+// A market page is one template driven by the registry, so /de, /gb, /us and every future market are
+// the same page with different data. Nothing here names a home market.
+function marketCodes(origin) {
+  const rows = db.prepare(`SELECT country, COUNT(*) n FROM opportunities WHERE status='open' AND country NOT IN ('WW','EU')
+    GROUP BY country HAVING n >= 20`).all();
+  return rows.map((r) => String(r.country).toLowerCase()).filter((c) => MK.has(c));
+}
 
 function seoFor(pathname) {
   const parts = pathname.split('/').filter(Boolean).map((x) => decodeURIComponent(x));
@@ -2610,6 +2642,7 @@ function seoFor(pathname) {
       title: `${country} Salaries and Opportunities – Live Market Data | ThinkZet`,
       description: `Every role ThinkZet tracks in ${country}, with the pay each one discloses, the sample behind it and the opportunities open now. One market among the ${Object.keys(SEO_COUNTRY).length} the platform covers.`,
       h1: `${country}: Salaries and Opportunities`,
+      market: cc,
       body: `ThinkZet reads live postings in ${country} and reports what each role pays, how deep the sample is, and which opportunities are open now. ${country} is one market among many; the same page exists for every country the corpus can defend with data.`,
     };
   }
@@ -2641,8 +2674,10 @@ function withSeo(html, origin, pathname) {
   const clean = pathname === '/' ? '/' : pathname.replace(/\/$/, '');
   const canonical = `${origin}${clean}`;
   const seo = seoFor(clean);
+  const alts = seo && seo.market ? MK.alternates(origin, marketCodes(origin)) : [];
   const head = [
     `<link rel="canonical" href="${canonical}"/>`,
+    ...alts.map((a) => `<link rel="alternate" hreflang="${a.hreflang}" href="${a.href}"/>`),
     `<meta property="og:url" content="${canonical}"/>`,
     seo ? `<meta name="description" content="${seo.description.replace(/"/g, '&quot;')}"/>` : '',
     seo ? `<meta property="og:title" content="${seo.title.replace(/"/g, '&quot;')}"/>` : '',
@@ -2682,7 +2717,7 @@ function serveStatic(req, res, pathname, origin, seoPath) {
         // /wp-login.php or /.env is the signature Safe Browsing treats as a cloaking page.
         const known = described === '/' || described === '/index.html'
           || /^\/(salary|skills|s|legal|go)\//.test(described)
-          || (/^\/[a-z]{2}$/.test(described) && SEO_COUNTRY[described.slice(1)]);
+          || (/^\/[a-z]{2}$/.test(described) && MK.has(described.slice(1)));
         res.writeHead(known ? 200 : 404, { 'Content-Type': MIME['.html'] });
         res.end(origin ? withSeo(d2.toString('utf8'), origin, described) : d2);
       });
@@ -2711,7 +2746,14 @@ const server = http.createServer(async (req, res) => {
   // Public SEO surfaces render client-side from the same rate engine.
   if (/^\/(salary|skills)\/[^/]+(\/[A-Za-z]{2})?$/.test(pathname)) return serveStatic(req, res, '/index.html', publicOrigin(req), pathname);
   // A country hub is a real page: /de is one market among many, never a Germany-only product.
-  if (/^\/[a-z]{2}$/.test(pathname) && SEO_COUNTRY[pathname.slice(1)]) return serveStatic(req, res, '/index.html', publicOrigin(req), pathname);
+  // A code people type that ISO does not use for that market redirects once, so /uk and /gb are one
+  // address and never two pages.
+  if (/^\/[a-z]{2}$/.test(pathname)) {
+    const cc = pathname.slice(1);
+    const target = MK.alias(cc);
+    if (target) { res.writeHead(301, { Location: `/${target}${url.search || ''}` }); return res.end(); }
+    if (MK.has(cc)) return serveStatic(req, res, '/index.html', publicOrigin(req), pathname);
+  }
 
   // robots.txt: the sitemap must be advertised here, and the app screens kept out of the index.
   if (pathname === '/robots.txt') {
@@ -2735,7 +2777,7 @@ const server = http.createServer(async (req, res) => {
       GROUP BY role_family HAVING n >= 20 ORDER BY n DESC`).all();
     const skills = db.prepare('SELECT canonical FROM skills WHERE demand_index >= 60').all();
     const countries = db.prepare(`SELECT country, COUNT(*) n FROM opportunities WHERE status='open' AND country NOT IN ('WW','EU')
-      GROUP BY country HAVING n >= 20`).all();
+      GROUP BY country HAVING n >= 20`).all().filter((c) => MK.has(c.country));
     const urls = ['/'];
     for (const c of countries) urls.push(`/${c.country.toLowerCase()}`);
     const SLUG = { backend: 'software-engineer', frontend: 'frontend-engineer', data_science: 'data-scientist',

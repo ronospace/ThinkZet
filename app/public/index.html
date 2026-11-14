@@ -378,7 +378,7 @@ button.bdg:active{transform:translateY(.5px)}
 .signal-lead:hover{border-color:var(--accent2)}
 .signal-v{font-size:var(--text-lg);font-weight:680;letter-spacing:var(--tracking-tight);margin:3px 0 2px;color:var(--ink)}
 .signal-why{font-size:var(--text-sm);color:var(--ink2);line-height:1.5;margin-top:2px}
-.signal-go{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:var(--text-xs);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent2)}
+.signal-go{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:var(--text-sm);font-weight:600;color:var(--accent2)}
 .tk-empty{font-size:var(--text-sm);color:var(--ink2);line-height:1.5;padding:10px 11px;border:1px dashed var(--line);border-radius:9px}
 .pool-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:var(--text-xs)}
 .empty-line{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border:1px dashed var(--line2);border-radius:var(--radius);font-size:var(--text-sm)}
@@ -824,9 +824,14 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .land-nav-wrap{position:sticky;top:0;z-index:40;background:var(--topbar-bg);backdrop-filter:blur(14px);border-bottom:1px solid var(--line)}
 .land-nav{max-width:1080px;margin:0 auto!important;display:flex;align-items:center;justify-content:space-between;gap:16px;padding:12px 24px}
 .land-tag{font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-left:10px;padding-left:10px;border-left:1px solid var(--line2)}
-.land-nav-links{display:flex;gap:22px;font-size:var(--text-sm)}
-.land-nav-links a{color:var(--ink2);text-decoration:none;transition:color .14s}
-.land-nav-links a:hover{color:var(--ink)}
+.land-nav-links{display:flex;gap:6px;font-size:var(--text-sm);flex-wrap:wrap}
+.land-nav-links a{color:var(--ink2);text-decoration:none;padding:6px 12px;border-radius:var(--radius-sm);
+  border:1px solid var(--line-tint);background:var(--wash);transition:color .14s,border-color .14s,background .14s;white-space:nowrap}
+.land-nav-links a:hover{color:var(--ink);border-color:var(--accent2);background:color-mix(in srgb,var(--accent2) 10%,var(--panel))}
+.land-nav-links a:nth-child(2){background:color-mix(in srgb,var(--accent2) 8%,var(--panel));border-color:color-mix(in srgb,var(--accent2) 30%,var(--line))}
+.land-nav-links a:nth-child(3){background:color-mix(in srgb,var(--good) 8%,var(--panel));border-color:color-mix(in srgb,var(--good) 30%,var(--line))}
+.land-nav-links a:nth-child(4){background:color-mix(in srgb,var(--score-mid) 8%,var(--panel));border-color:color-mix(in srgb,var(--score-mid) 30%,var(--line))}
+.land-nav-links a:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
 .land-sec{margin-top:var(--sp-16);scroll-margin-top:76px}
 #check{scroll-margin-top:76px}
 .land-h2{font-size:clamp(22px,3vw,30px);letter-spacing:var(--tracking-tighter);margin:0 0 8px;font-weight:720;line-height:var(--leading-tight)}
@@ -841,6 +846,15 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .how-n{font-size:var(--text-2xs);letter-spacing:.14em;color:var(--accent);font-weight:700}
 .how-step h3{font-size:var(--text-md);margin:10px 0 8px;color:var(--ink);letter-spacing:var(--tracking-tight)}
 .how-step p{font-size:var(--text-sm);color:var(--ink2);line-height:var(--leading-normal);margin:0}
+/* Three pillars hold nine instruments. A pillar is a labelled column, not a bigger card, so the
+   grouping is read before the individual tools. */
+.pillar-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-4)}
+.pillar{display:flex;flex-direction:column;gap:var(--sp-3);min-width:0}
+.pillar-h{display:flex;align-items:baseline;gap:9px}
+.pillar-n{font-size:var(--text-2xs);font-weight:700;letter-spacing:.1em;color:var(--accent2)}
+.pillar-h h3{font-size:var(--text-lg);font-weight:680;letter-spacing:var(--tracking-tight);margin:0}
+.pillar-s{font-size:var(--text-sm);color:var(--ink2);line-height:1.5;margin:-6px 0 2px}
+@media(max-width:900px){.pillar-grid{grid-template-columns:1fr;gap:var(--sp-5)}}
 .cap-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:var(--sp-3)}
 .cap{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:var(--sp-4) var(--sp-5);box-shadow:var(--shadow-sm);transition:border-color .16s,transform .16s}
 .cap:hover{border-color:var(--line2);transform:translateY(-1px)}
@@ -953,6 +967,7 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .plan-plus-cta{background:linear-gradient(100deg,var(--gold-deep),var(--gold));color:var(--gold-ink);border:1px solid transparent}
 .plan-plus-cta:hover{filter:brightness(1.05)}
 .market-snapshot{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:var(--sp-4);padding:12px 16px;border:1px solid var(--line);border-radius:var(--radius);background:var(--panel)}
+.ds-wait{font-size:var(--text-sm);color:var(--ink2)}
 .ms-h{font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;white-space:nowrap}
 .market-snapshot .ds-grid{display:flex;flex-wrap:wrap;gap:22px}
 .market-snapshot .ds-cell{display:flex;align-items:baseline;gap:7px}
@@ -984,6 +999,10 @@ html[data-theme="light"] .plan-grid-compact .price.is-plus{border-color:#E3C67F;
 .fv{font-size:var(--text-base);color:var(--ink2);line-height:1.55}
 .facts.tight{margin-top:10px;gap:6px 14px}
 .facts.tight .fv{font-size:var(--text-sm)}
+.facts.stack{grid-template-columns:1fr;gap:2px}
+.facts.stack .fk{white-space:normal}
+.facts.stack .fv{margin-bottom:10px}
+.facts.stack .fv:last-child{margin-bottom:0}
 @media(max-width:560px){.facts{grid-template-columns:1fr;gap:4px}.fv{margin-bottom:10px}.facts.tight{gap:3px}.facts.tight .fv{margin-bottom:8px}}
 html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;color:#0a7a45}
 .sub-panel{margin-bottom:14px}
@@ -1005,9 +1024,10 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .msg-intro{display:block;white-space:normal}
 .mi-foot{margin-top:10px;font-size:var(--text-xs);color:var(--muted)}
 @media(min-width:901px){
-  html,body{overflow:hidden;height:100%}
+  html:not(.is-landing),html:not(.is-landing) body{overflow:hidden;height:100%}
   .shell{position:fixed;inset:0;height:100dvh}
 }
+html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:auto;min-height:100%}
 .cap-h{display:flex;align-items:center;gap:9px;margin-bottom:6px}
 .cap-h h3{margin:0}
 .cap-ico{width:22px;height:22px;flex:none;border-radius:7px;display:grid;place-items:center;background:color-mix(in srgb,var(--accent2) 14%,var(--panel));border:1px solid color-mix(in srgb,var(--accent2) 38%,var(--line))}
@@ -1078,6 +1098,65 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .da-note{font-size:var(--text-xs);color:var(--ink2);line-height:1.5}
 /* Side by side at every width: two short actions, and stacking them made the pair read as a sequence. */
 @media(max-width:560px){.data-acts{grid-template-columns:1fr;gap:14px}.data-act .btn{padding-left:8px;padding-right:8px}.sh-name{flex-wrap:wrap}.sh-input{flex:1 1 100%}}
+/* ---------- career calibration ---------- */
+.opt{font-size:var(--text-2xs);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);
+  background:var(--wash);border:1px solid var(--line-tint);border-radius:5px;padding:1px 5px;margin-left:6px;vertical-align:1px}
+.cal-hero{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:var(--sp-5);align-items:start}
+.cal-level{font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2);font-weight:600}
+.cal-name{font-size:var(--text-2xl);font-weight:720;letter-spacing:var(--tracking-tighter);line-height:1.15;margin-top:4px}
+.cal-count{font-size:var(--text-sm);color:var(--ink2);margin-top:6px}
+.cal-seg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:16px}
+.cal-seg i{display:block;height:8px;border-radius:999px;background:var(--panel2);border:1px solid var(--line-tint)}
+.cal-seg i.on{background:var(--accent2);border-color:transparent}
+.cal-seg i.part{background:linear-gradient(90deg,var(--accent2) var(--p,50%),var(--panel2) var(--p,50%))}
+.cal-mile{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:8px}
+.cal-mile span{font-size:var(--text-2xs);color:var(--muted);line-height:1.3}
+.cal-mile span.on{color:var(--ink);font-weight:600}
+.cal-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
+.cal-next{font-size:var(--text-sm);color:var(--ink2);margin-top:14px;line-height:1.5}
+.cal-now{background:var(--panel2);border:1px solid var(--line-tint);border-radius:var(--radius);padding:14px 16px}
+.cal-now .fk{display:block;margin-bottom:10px}
+.cal-pair{display:grid;gap:10px}
+.cal-pair>div{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.cal-pair .v.lock{flex:1 1 100%;text-align:right;margin-top:-2px}
+.cal-pair .k{font-size:var(--text-sm);color:var(--ink2);min-width:0}
+.cal-pair .v{font-size:var(--text-md);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cal-pair .v.lock{font-size:var(--text-sm);font-weight:600;color:var(--muted)}
+.cal-kpi .kpi-v{font-size:var(--text-xl)}
+.cal-kpi .kpi-k{font-size:var(--text-2xs);letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--ink2)}
+.cal-kpi .kpi-s{font-size:var(--text-xs);color:var(--ink2);margin-top:2px;line-height:1.35;min-height:2.7em}
+.cal-kpi .kpi{padding-bottom:var(--sp-3)}
+.cal-chart{position:relative;height:150px;margin-top:14px;border:1px solid var(--line-tint);border-radius:var(--radius);background:var(--panel2);overflow:hidden}
+.cal-chart .base{position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--line2)}
+.cal-chart .msg{position:absolute;inset:0;display:grid;place-items:center;padding:0 18px;text-align:center;
+  font-size:var(--text-sm);color:var(--ink2);line-height:1.5}
+.cal-bars{position:absolute;inset:12px 14px;display:flex;align-items:flex-end;gap:8px}
+.cal-bars .b{flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;gap:3px;height:100%}
+.cal-bars .b i{display:block;border-radius:4px 4px 0 0;background:var(--accent2);opacity:.85}
+.cal-bars .b i.act{background:var(--good)}
+.cal-bars .b em{font-style:normal;font-size:var(--text-2xs);color:var(--muted);text-align:center}
+.cal-wait{display:grid;gap:0}
+.cal-wait .w{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center;
+  padding:11px 0;border-bottom:1px solid var(--line)}
+.cal-wait .w:last-child{border-bottom:none;padding-bottom:0}
+.cal-wait .t{font-size:var(--text-sm);font-weight:600;line-height:1.35;min-width:0;overflow-wrap:anywhere}
+.cal-wait .s{font-size:var(--text-xs);color:var(--ink2);margin-top:2px}
+.cal-stage{font:inherit;font-size:var(--text-xs);padding:5px 7px;border-radius:6px;border:1px solid var(--line-tint);background:var(--wash);color:var(--ink);min-width:0}
+.cal-form{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+.cal-acc{border:1px solid var(--line-tint);border-radius:var(--radius-lg);background:var(--wash);margin-top:14px}
+.cal-acc summary{cursor:pointer;padding:14px 18px;font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;
+  font-weight:600;color:var(--ink2);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cal-acc summary::-webkit-details-marker{display:none}
+.cal-acc summary::after{content:'›';font-size:16px;color:var(--muted);transform:rotate(90deg);transition:transform .16s}
+.cal-acc[open] summary::after{transform:rotate(-90deg)}
+.cal-acc .in{padding:0 18px 16px}
+@media(max-width:1100px){.cal-hero{grid-template-columns:1fr}}
+@media(max-width:560px){
+  .cal-seg{gap:4px}.cal-mile{grid-template-columns:repeat(2,minmax(0,1fr));gap:4px 10px}
+  .cal-name{font-size:var(--text-xl)}
+  .cal-wait .w{grid-template-columns:1fr}
+  .cal-wait .w .btn{justify-self:start}
+}
 /* ---------- learning loop ---------- */
 .lrn-grid{grid-template-columns:1.1fr 1fr}
 .lrn-funnel{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -1152,6 +1231,100 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
   <div class="land-wrap">
     <section class="hero-sec">
       <span class="land-kicker">Free Intelligent Career Value Check</span>
+      <h1 class="land-h1">The market has been <br/><span class="accent">pricing you without you.</span></h1>
+      <p class="land-sub"><strong class="land-slogan">One profile, every opportunity.</strong><span class="land-sub-2">Live Pay Data, Matched to You.</span></p>
+      <div class="land-cta">
+        <a class="btn" href="#check">Check my market gap</a>
+      </div>
+      <div class="proof">
+        <div><b>1 in 3</b><span>are paid below the median for work they already do</span></div>
+        <div><b>&euro;13,500</b><span>average distance to the salary next door, for identical work</span></div>
+        <div><b>72%</b><span>of postings hide the number. Only you are guessing</span></div>
+      </div>
+    </section>
+
+    <datalist id="dl-roles"></datalist>
+    <datalist id="dl-skills"></datalist>
+
+    <section class="check" id="check">
+      <h2>What Should You Be Earning?</h2>
+      <div class="row3">
+        <div><label for="c-role">Your Role</label><input id="c-role" list="dl-roles" autocomplete="off" placeholder="Senior Data Scientist"/></div>
+        <div><label for="c-years">Years of Experience</label><input id="c-years" type="number" min="0" max="45" placeholder="8"/></div>
+        <div><label for="c-country">Market</label>
+          <select id="c-country"><option value="">Any market</option></select>
+        </div>
+      </div>
+      <div class="row2">
+        <div><label for="c-current">What You Are Paid Now <span class="opt">Optional</span></label><input id="c-current" type="number" placeholder="Leave blank to see the band only"/></div>
+        <div><label for="c-skills">Strongest Skills <span class="opt">Optional</span></label><input id="c-skills" list="dl-skills" placeholder="Python, SQL, Machine Learning"/></div>
+      </div>
+      <button class="btn go" id="c-run">Show me the number</button>
+      <div class="muted" id="c-err" style="font-size:var(--text-sm);margin-top:10px"></div>
+      <div class="result" id="c-result"></div>
+    </section>
+
+    <section id="how" class="land-sec">
+      <h2 class="land-h2">Three questions, and the silence after each one</h2>
+      <div class="how-grid">
+        <div class="how-step">
+          <span class="how-n">01</span>
+          <h3>What Number Would You Say Out Loud?</h3>
+          <p>Most people cannot answer that in a negotiation, so they accept the first number they hear. We give you the median for your exact profile, seniority, skills and country, from postings that disclose pay.</p>
+        </div>
+        <div class="how-step">
+          <span class="how-n">02</span>
+          <h3>What Is Being Posted While You Sleep?</h3>
+          <p>The roles that fit you and are invisible to you, because they live on platforms you do not check and close in 72 hours. We scan them continuously and score each one against your twin.</p>
+        </div>
+        <div class="how-step">
+          <span class="how-n">03</span>
+          <h3>Which Move Actually Pays?</h3>
+          <p>Stay, switch, contract, relocate, pivot. Priced against your real market with the risk attached. Not the trending path. The profitable one.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="capabilities" class="land-sec">
+      <h2 class="land-h2">Three Questions, Nine Instruments</h2>
+      <p class="land-sec-sub">Every screen answers one of three questions. Nothing here is a listing. Your Career Twin is the profile all nine are scored against: your skills, your constraints, your trajectory, kept current as you use the product.</p>
+      <div class="pillar-grid">
+        <div class="pillar">
+          <div class="pillar-h"><span class="pillar-n">01</span><h3>Know Your Worth</h3></div>
+          <p class="pillar-s">What you are worth, and what the market is really paying.</p>
+          <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="rate" aria-hidden="true"></span><h3>Rate Intelligence</h3></div><p>The median for your exact profile, with sample size and confidence attached.</p></div>
+          <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="pulse" aria-hidden="true"></span><h3>Market Pulse</h3></div><p>What the whole market pays, by discipline and market, computed from live postings.</p></div>
+          <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="neg" aria-hidden="true"></span><h3>Negotiation Intelligence</h3></div><p>The number to say, the evidence behind it, and the counter when they come in low.</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-h"><span class="pillar-n">02</span><h3>Find Hidden Roles</h3></div>
+          <p class="pillar-s">What exists that you would never have searched for.</p>
+          <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="radar" aria-hidden="true"></span><h3>Opportunity Radar</h3></div><p>Every listing scored on fit, income and your real odds of getting it.</p></div>
+          <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="gap" aria-hidden="true"></span><h3>Skill Gap Intelligence</h3></div><p>The shortest sequence to unblock the most opportunities, ranked by what it pays.</p></div>
+          <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="twin" aria-hidden="true"></span><h3>Career Twin</h3></div><p>Your persistent profile: the skills, constraints and trajectory everything else is scored against.</p></div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-h"><span class="pillar-n">03</span><h3>Plan Your Move</h3></div>
+          <p class="pillar-s">Where each path lands, and what makes the estimate sharper.</p>
+          <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="path" aria-hidden="true"></span><h3>Career Trajectory</h3></div><p>Where each path lands in 12, 24 or 60 months, with the risk priced in.</p></div>
+          <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="track" aria-hidden="true"></span><h3>Career Tracker</h3></div><p>Your pipeline, and the outcome loop that makes every estimate sharper.</p></div>
+          <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="cop" aria-hidden="true"></span><h3>Career Co-Pilot</h3></div><p>Grounded in your own data. It cites the sample it used, or says it does not know.</p></div>
+        </div>
+      </div>
+      <div class="row" style="gap:8px">
+        <button class="theme-btn" id="land-theme" title="Appearance" aria-label="Appearance">
+          <svg class="ico-auto" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="5.4"/><path d="M8 2.6v10.8"/><path d="M8 2.6a5.4 5.4 0 010 10.8z" fill="currentColor" stroke="none" opacity=".5"/></svg>
+          <svg class="ico-sun" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="8" r="2.9"/><path d="M8 1.8v1.6M8 12.6v1.6M1.8 8h1.6M12.6 8h1.6M3.6 3.6l1.15 1.15M11.25 11.25l1.15 1.15M12.4 3.6l-1.15 1.15M4.75 11.25L3.6 12.4"/></svg>
+          <svg class="ico-moon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 9.8A5.8 5.8 0 016.2 2.6a5.8 5.8 0 107.2 7.2z"/></svg>
+        </button>
+        <button class="btn ghost sm" id="land-signin">Sign in</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="land-wrap">
+    <section class="hero-sec">
+      <span class="land-kicker">Free Intelligent Career Value Check</span>
       <h1 class="land-h1">The market has been<br/><span class="accent">pricing you without you.</span></h1>
       <p class="land-sub"><strong class="land-slogan">One profile, every opportunity.</strong><span class="land-sub-2">Live Pay Data, Matched to You.</span></p>
       <div class="land-cta">
@@ -1164,28 +1337,21 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
       </div>
     </section>
 
+    <datalist id="dl-roles"></datalist>
+    <datalist id="dl-skills"></datalist>
+
     <section class="check" id="check">
       <h2>What Should You Be Earning?</h2>
       <div class="row3">
-        <div><label for="c-role">Your Role</label><input id="c-role" placeholder="Senior Data Scientist"/></div>
+        <div><label for="c-role">Your Role</label><input id="c-role" list="dl-roles" autocomplete="off" placeholder="Senior Data Scientist"/></div>
         <div><label for="c-years">Years of Experience</label><input id="c-years" type="number" min="0" max="45" placeholder="8"/></div>
-        <div><label for="c-country">Country</label>
-          <select id="c-country">
-            <option value="">Any</option>
-            <option value="DE">Germany</option><option value="NL">Netherlands</option>
-            <option value="GB">United Kingdom</option><option value="PT">Portugal</option>
-            <option value="ES">Spain</option><option value="FR">France</option>
-            <option value="PL">Poland</option><option value="CH">Switzerland</option>
-            <option value="SE">Sweden</option><option value="IE">Ireland</option>
-            <option value="CA">Canada</option><option value="US">United States</option>
-            <option value="IN">India</option><option value="AE">UAE</option>
-            <option value="WW">Remote (anywhere)</option>
-          </select>
+        <div><label for="c-country">Market</label>
+          <select id="c-country"><option value="">Any market</option></select>
         </div>
       </div>
       <div class="row2">
-        <div><label for="c-current">What You Are Paid Now (EUR)</label><input id="c-current" type="number" placeholder="78000"/></div>
-        <div><label for="c-skills">Strongest Skills, Comma Separated</label><input id="c-skills" placeholder="Python, SQL, Machine Learning"/></div>
+        <div><label for="c-current">What You Are Paid Now <span class="opt">Optional</span></label><input id="c-current" type="number" placeholder="Leave blank to see the band only"/></div>
+        <div><label for="c-skills">Strongest Skills <span class="opt">Optional</span></label><input id="c-skills" list="dl-skills" placeholder="Python, SQL, Machine Learning"/></div>
       </div>
       <button class="btn go" id="c-run">Show me the number</button>
       <div class="muted" id="c-err" style="font-size:var(--text-sm);margin-top:10px"></div>
@@ -1312,7 +1478,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
       </div>
       <div class="market-snapshot" id="data-sources">
         <span class="ms-h">Market Snapshot</span>
-        <div class="ds-grid" id="ds-grid"><span class="muted">Loading…</span></div>
+        <div class="ds-grid" id="ds-grid"><span class="ds-wait">Reading the live corpus…</span></div>
       </div>
       <div class="ds-note" id="ds-note"></div>
       <div class="foot-legal"><span>&copy; 2026 ZyraFlow GmbH&trade;. All rights reserved.</span><span>ThinkZet is a product of ZyraFlow GmbH&trade;.</span></div>
@@ -1346,7 +1512,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
       </div>
       <div class="nav-group"><span class="nav-label">Account</span>
       <button data-view="twin"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5.4" r="2.6"/><path d="M2.8 13.4c0-2.6 2.3-4.2 5.2-4.2s5.2 1.6 5.2 4.2"/></svg></span><span class="lbl">Career Twin</span></button>
-      <button data-view="learning"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg></span><span class="lbl">Learning Loop</span></button>
+      <button data-view="learning"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg></span><span class="lbl">Career Calibration</span></button>
       <button data-view="plan"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.8" y="3.6" width="12.4" height="8.8" rx="1.6"/><path d="M1.8 6.6h12.4"/></svg></span><span class="lbl">Plan</span></button>
       </div>
       
@@ -1393,7 +1559,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
             <span id="profile-pill" class="tb-drop-state">No Profile</span>
           </div>
           <div class="tb-row">
-            <button role="menuitem" id="run-ingest">
+            <button role="menuitem" id="run-ingest" data-founder="1" hidden>
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg>
               Run Ingest
             </button>
@@ -1937,7 +2103,7 @@ if (proYearBtn) proYearBtn.onclick = () => startCheckout('annual');
       cell('Confidence', titleCase(d.confidence)),
     ].join('');
     document.getElementById('ds-note').textContent = d.note + ' Last ingest ' + String(d.lastIngest || '').slice(0, 16) + ' UTC.';
-  } catch (e) { box.innerHTML = '<span class="muted">Data sources unavailable right now.</span>'; }
+  } catch (e) { box.innerHTML = '<span class="ds-wait">The corpus could not be read just now. Reload to try again.</span>'; }
 })();
 
 track('landing.view');
@@ -2048,7 +2214,7 @@ function renderOnboarding() {
       <div class="field"><label>Country</label>
         <select id="ob-country">
           <option value="">Any</option>
-          ${['DE','NL','GB','PT','ES','FR','PL','CH','SE','IE','CA','US','IN','AE','WW'].map((c) => `<option value="${c}" ${D.country === c ? 'selected' : ''}>${c}</option>`).join('')}
+          ${(STATE.markets || []).map((m) => `<option value="${m.code.toUpperCase()}" ${String(D.country || '').toLowerCase() === m.code ? 'selected' : ''}>${esc(m.name)}</option>`).join('')}
         </select>
       </div>
       <div class="field"><label>Remote Preference</label>
@@ -3390,78 +3556,6 @@ async function renderCopilot() {
   document.querySelectorAll('.cp-chip').forEach((b) => { b.onclick = () => send(b.dataset.q); });
 }
 
-/* ---------------- learning loop ---------------- */
-async function renderLearning() {
-  const l = await api('/api/learning');
-  const intel = await api('/api/outcomes/intel');
-  const recent = await api('/api/tracker');
-  $('#view').innerHTML = `
-    <div class="card plain" style="margin-bottom:14px">
-      <h3>What This Page Does</h3>
-      <div class="facts">
-        <span class="fk">The idea</span>
-        <span class="fv">Every application you track and every outcome you report teaches the model what actually happens to you, not what happens to the market on average.</span>
-        <span class="fk">What it changes</span>
-        <span class="fv">Your interview and offer probabilities, and the scores built on them. Nothing else in the app is affected.</span>
-        <span class="fk">What it needs</span>
-        <span class="fv">One tracked opportunity and one outcome. Until then the model runs on published market figures alone, which is why every number below is either zero or a market average.</span>
-      </div>
-      <div style="margin-top:14px"><button class="btn sm" id="l-outcome">Report an outcome</button></div>
-    </div>
-    <div class="grid lrn-grid">
-      <div class="card">
-        <h3>Your Model</h3>
-        <div class="big mono" style="margin:10px 0 2px">${int(l.totalOutcomes)}</div>
-        <div class="big-cap">outcomes you have reported</div>
-        <div style="margin-top:18px">
-          <div class="kv"><span>How much your outcomes count<span class="kv-note">Weight against the market average. It rises as you report more, and is capped so one lucky result cannot swing it.</span></span><span class="mono">${Math.round(l.calibration.shrinkage * 100)}%</span></div>
-          <div class="kv"><span>Effect on your interview estimate<span class="kv-note">How far your own results have moved the estimate away from the market figure.</span></span><span class="mono">+${l.calibration.interviewPriorLift}%</span></div>
-          <div class="kv"><span>Offers logged</span><span class="mono">${l.offers}</span></div>
-          <div class="kv"><span>Average salary change on offers</span><span class="mono">${l.avgSalaryDeltaPct == null ? '–' : (l.avgSalaryDeltaPct > 0 ? '+' : '') + l.avgSalaryDeltaPct + '%'}</span></div>
-          <div class="kv"><span>Model version</span><span class="mono">${esc(l.calibration.modelVersion)}</span></div>
-        </div>
-        <div class="facts tight"><span class="fk">Status</span><span class="fv">${esc(l.calibration.explanation)}</span></div>
-      </div>
-      <div class="card">
-        <h3>What Your Scores Look Like</h3>
-        <div class="kv" style="margin-top:10px"><span>Scored opportunities</span><span class="mono">${int(l.priors[0]?.n || 0)}</span></div>
-        <div class="kv"><span>Average match score</span><span class="mono">${l.priors[0]?.m ?? '–'}</span></div>
-        <div class="kv"><span>Average interview probability</span><span class="mono">${l.priors[0]?.p ?? '–'}%</span></div>
-        <div class="facts tight">
-          <span class="fk">Why it matters</span>
-          <span class="fv">Calibration is the whole game. A model that says 30% and is right 30% of the time is worth more than one that says 60% and is right 30% of the time.</span>
-          <span class="fk">How we blend</span>
-          <span class="fv">We publish the prior and blend your observed outcomes into it – with shrinkage so one lucky offer cannot move the model.</span>
-        </div>
-      </div>
-    </div>
-    <h2 class="section">Your Measured Funnel</h2>
-    <div class="grid lrn-funnel">
-      <div class="card"><h3>Applications</h3><div class="big mono">${intel.mine.funnel.applied}</div></div>
-      <div class="card"><h3>Interview Rate</h3><div class="big mono">${intel.mine.funnel.interviewRate == null ? '–' : intel.mine.funnel.interviewRate + '%'}</div><div class="muted" style="font-size:var(--text-xs)">measured, not modelled</div></div>
-      <div class="card"><h3>Offer Rate</h3><div class="big mono">${intel.mine.funnel.offerRate == null ? '–' : intel.mine.funnel.offerRate + '%'}</div><div class="muted" style="font-size:var(--text-xs)">of interviews</div></div>
-      <div class="card"><h3>End-to-end</h3><div class="big mono">${intel.mine.funnel.conversion == null ? '–' : intel.mine.funnel.conversion + '%'}</div><div class="muted" style="font-size:var(--text-xs)">application &gt; offer</div></div>
-    </div>
-    <div class="card" style="margin-top:14px">
-      <h3>Market Benchmark</h3>
-      <div class="dim" style="font-size:var(--text-sm);margin-top:8px">${esc(intel.market.note)}</div>
-      <div class="kv" style="margin-top:12px"><span>Consented outcomes reported</span><span class="mono">${intel.market.reportedOutcomes}</span></div>
-      <div class="kv"><span>Offers with compensation</span><span class="mono">${intel.market.offers}</span></div>
-    </div>
-    <h2 class="section">Recent Outcomes</h2>
-    <div class="card">
-      ${recent.outcomes.length
-        ? recent.outcomes.map((o) => `<div class="kv"><span>${esc(titleCase(o.outcome_type))}${o.salary_delta_pct != null ? ' · ' + (o.salary_delta_pct > 0 ? '+' : '') + pct(o.salary_delta_pct, 1) : ''}</span><span class="muted">${new Date(o.occurred_at).toLocaleDateString('en-GB')}</span></div>`).join('')
-        : '<div class="tk-empty">No outcomes yet. Every reported outcome is data no competitor has.</div>'}
-    </div>`;
-  $('#l-outcome').onclick = async () => {
-    const apps = recent.applications;
-    if (!apps.length) return toast('Track an opportunity first');
-    await post('/api/outcomes', { opportunityId: apps[0].opportunity_id, outcomeType: 'interview' });
-    toast('Outcome recorded – prior updated');
-    renderLearning();
-  };
-}
 
 /* ---------------- saved searches ---------------- */
 // A saved search is a standing question. The page therefore leads with what it found, never with a
@@ -3589,77 +3683,191 @@ async function renderSearches() {
   });
 }
 
-/* ---------------- learning loop ---------------- */
+/* ---------------- career calibration ---------------- */
+// The page answers one question: how much does ThinkZet know about you yet, and what is the next
+// thing that would teach it more. Every number is either measured from the user's own records or a
+// market figure, and each one says which. Nothing is illustrative.
+const CAL_LEVELS = [
+  { at: 0, name: 'Market Baseline' },
+  { at: 1, name: 'First Signal' },
+  { at: 5, name: 'Personalised Baseline' },
+  { at: 15, name: 'High-Confidence Twin' },
+];
+const OUTCOME_TYPES = ['interview', 'offer', 'rejection', 'no_response', 'rate_increase'];
+const OUTCOME_LABEL = { interview: 'Interview', offer: 'Offer', rejection: 'Rejected', no_response: 'No Response', rate_increase: 'Rate Increase' };
+const STAGE_SET = ['saved', 'applied', 'interviewing', 'offer', 'rejected', 'withdrawn', 'closed'];
+const STAGE_LABEL = { saved: 'Saved', applied: 'Applied', interviewing: 'Interviewing', offer: 'Offer', rejected: 'Rejected', withdrawn: 'Withdrawn', closed: 'Closed' };
+
+function calLevel(n) {
+  let i = 0;
+  for (let k = 0; k < CAL_LEVELS.length; k++) if (n >= CAL_LEVELS[k].at) i = k;
+  return i;
+}
+
 async function renderLearning() {
   const l = await api('/api/learning');
   const intel = await api('/api/outcomes/intel');
   const recent = await api('/api/tracker');
+  const n = l.totalOutcomes || 0;
+  const lvl = calLevel(n);
+  const nextAt = CAL_LEVELS[Math.min(lvl + 1, CAL_LEVELS.length - 1)].at;
+  const prevAt = CAL_LEVELS[lvl].at;
+  const span = Math.max(1, nextAt - prevAt);
+  const into = Math.min(1, Math.max(0, (n - prevAt) / span));
+  const share = Math.round((l.calibration.shrinkage || 0) * 100);
+  const prior = (l.priors && l.priors[0]) || {};
+  const awaiting = (recent.applications || []).filter((a) => a.status !== 'offer' && a.status !== 'rejected' && a.status !== 'withdrawn' && a.status !== 'closed');
+
+  // The chart is drawn only from real outcomes. With none, it is an honest empty state, not sample data.
+  const byType = l.byType || {};
+  const chart = n
+    ? `<div class="cal-bars">${OUTCOME_TYPES.filter((t) => byType[t]).map((t) => {
+      const v = byType[t]; const h = Math.max(8, Math.round((v / Math.max(...OUTCOME_TYPES.map((x) => byType[x] || 0))) * 100));
+      return `<div class="b"><i class="${t === 'interview' || t === 'offer' ? 'act' : ''}" style="height:${h}%"></i><em>${esc(OUTCOME_LABEL[t])} ${int(v)}</em></div>`;
+    }).join('')}</div>`
+    : `<div class="base"></div><div class="msg">Your calibration chart will appear after you report your first completed outcome.</div>`;
+
+  const stageSelect = (a) => `<select class="cal-stage" data-app="${esc(a.opportunity_id)}" aria-label="Stage for ${esc(a.title)}">
+      ${STAGE_SET.map((st) => `<option value="${st}" ${a.status === st ? 'selected' : ''}>${STAGE_LABEL[st]}</option>`).join('')}
+    </select>`;
+
   $('#view').innerHTML = `
-    <div class="card plain" style="margin-bottom:14px">
-      <h3>What This Page Does</h3>
-      <div class="facts">
-        <span class="fk">The idea</span>
-        <span class="fv">Every application you track and every outcome you report teaches the model what actually happens to you, not what happens to the market on average.</span>
-        <span class="fk">What it changes</span>
-        <span class="fv">Your interview and offer probabilities, and the scores built on them. Nothing else in the app is affected.</span>
-        <span class="fk">What it needs</span>
-        <span class="fv">One tracked opportunity and one outcome. Until then the model runs on published market figures alone, which is why every number below is either zero or a market average.</span>
-      </div>
-      <div style="margin-top:14px"><button class="btn sm" id="l-outcome">Report an outcome</button></div>
-    </div>
-    <div class="grid lrn-grid">
-      <div class="card">
-        <h3>Your Model</h3>
-        <div class="big mono" style="margin:10px 0 2px">${int(l.totalOutcomes)}</div>
-        <div class="big-cap">outcomes you have reported</div>
-        <div style="margin-top:18px">
-          <div class="kv"><span>How much your outcomes count<span class="kv-note">Weight against the market average. It rises as you report more, and is capped so one lucky result cannot swing it.</span></span><span class="mono">${Math.round(l.calibration.shrinkage * 100)}%</span></div>
-          <div class="kv"><span>Effect on your interview estimate<span class="kv-note">How far your own results have moved the estimate away from the market figure.</span></span><span class="mono">+${l.calibration.interviewPriorLift}%</span></div>
-          <div class="kv"><span>Offers logged</span><span class="mono">${l.offers}</span></div>
-          <div class="kv"><span>Average salary change on offers</span><span class="mono">${l.avgSalaryDeltaPct == null ? '–' : (l.avgSalaryDeltaPct > 0 ? '+' : '') + l.avgSalaryDeltaPct + '%'}</span></div>
-          <div class="kv"><span>Model version</span><span class="mono">${esc(l.calibration.modelVersion)}</span></div>
+    <div class="card plain cal-hero">
+      <div>
+        <div class="cal-level">Current level</div>
+        <div class="cal-name">${esc(CAL_LEVELS[lvl].name)}</div>
+        <div class="cal-count">${n === 0 ? 'No outcomes logged yet' : `${int(n)} outcome${n === 1 ? '' : 's'} logged`} · ${int(nextAt)} unlocks ${esc(CAL_LEVELS[Math.min(lvl + 1, CAL_LEVELS.length - 1)].name)}</div>
+        <div class="cal-seg" role="img" aria-label="${int(n)} of ${int(nextAt)} outcomes toward ${esc(CAL_LEVELS[Math.min(lvl + 1, CAL_LEVELS.length - 1)].name)}">
+          ${CAL_LEVELS.map((lv, i) => {
+            const done = i < lvl; const cur = i === lvl;
+            return `<i class="${done ? 'on' : cur && into > 0 ? 'part' : ''}" ${cur && into > 0 ? `style="--p:${Math.round(into * 100)}%"` : ''}></i>`;
+          }).join('')}
         </div>
-        <div class="facts tight"><span class="fk">Status</span><span class="fv">${esc(l.calibration.explanation)}</span></div>
+        <div class="cal-mile">
+          ${CAL_LEVELS.map((lv, i) => `<span class="${i <= lvl ? 'on' : ''}">${int(lv.at)} · ${esc(lv.name)}</span>`).join('')}
+        </div>
+        <div class="cal-acts">
+          ${awaiting.length
+            ? `<button class="btn sm" id="cal-primary">Update an outcome</button>`
+            : recent.applications && recent.applications.length
+              ? `<button class="btn sm" id="cal-primary">Log your first outcome</button>`
+              : `<button class="btn sm" id="cal-track">Go to Career Tracker</button>`}
+          <button class="btn ghost sm" id="cal-refresh">Refresh</button>
+        </div>
+        <div class="cal-next">${n === 0
+          ? 'Every opportunity you track and every outcome you report teaches ThinkZet what works for you, not only what works across the market.'
+          : `Your own results now carry ${share}% of the weight against the market figure. One unusual result cannot swing it.`}</div>
       </div>
-      <div class="card">
-        <h3>What Your Scores Look Like</h3>
-        <div class="kv" style="margin-top:10px"><span>Scored opportunities</span><span class="mono">${int(l.priors[0]?.n || 0)}</span></div>
-        <div class="kv"><span>Average match score</span><span class="mono">${l.priors[0]?.m ?? '–'}</span></div>
-        <div class="kv"><span>Average interview probability</span><span class="mono">${l.priors[0]?.p ?? '–'}%</span></div>
-        <div class="facts tight">
-          <span class="fk">Why it matters</span>
-          <span class="fv">Calibration is the whole game. A model that says 30% and is right 30% of the time is worth more than one that says 60% and is right 30% of the time.</span>
-          <span class="fk">How we blend</span>
-          <span class="fv">We publish the prior and blend your observed outcomes into it – with shrinkage so one lucky offer cannot move the model.</span>
+      <div class="cal-now">
+        <span class="fk">What changes as you calibrate</span>
+        <div class="cal-pair">
+          <div><span class="k">Market interview baseline</span><span class="v">${prior.p != null ? pct(prior.p, 1) : 'Not measured'}</span></div>
+          <div><span class="k">Your calibrated estimate</span><span class="v ${n ? '' : 'lock'}">${n ? pct(Math.min(99, Number(prior.p || 0) + Number(l.calibration.interviewPriorLift || 0)), 1) : 'Unlocks after your first completed outcome'}</span></div>
+          <div><span class="k">Signal weight on your records</span><span class="v ${share ? '' : 'lock'}">${share ? share + '%' : 'Using market baseline'}</span></div>
         </div>
       </div>
     </div>
-    <h2 class="section">Your Measured Funnel</h2>
-    <div class="grid lrn-funnel">
-      <div class="card"><h3>Applications</h3><div class="big mono">${intel.mine.funnel.applied}</div></div>
-      <div class="card"><h3>Interview Rate</h3><div class="big mono">${intel.mine.funnel.interviewRate == null ? '–' : intel.mine.funnel.interviewRate + '%'}</div><div class="muted" style="font-size:var(--text-xs)">measured, not modelled</div></div>
-      <div class="card"><h3>Offer Rate</h3><div class="big mono">${intel.mine.funnel.offerRate == null ? '–' : intel.mine.funnel.offerRate + '%'}</div><div class="muted" style="font-size:var(--text-xs)">of interviews</div></div>
-      <div class="card"><h3>End-to-end</h3><div class="big mono">${intel.mine.funnel.conversion == null ? '–' : intel.mine.funnel.conversion + '%'}</div><div class="muted" style="font-size:var(--text-xs)">application &gt; offer</div></div>
-    </div>
+
     <div class="card" style="margin-top:14px">
-      <h3>Market Benchmark</h3>
-      <div class="dim" style="font-size:var(--text-sm);margin-top:8px">${esc(intel.market.note)}</div>
-      <div class="kv" style="margin-top:12px"><span>Consented outcomes reported</span><span class="mono">${intel.market.reportedOutcomes}</span></div>
-      <div class="kv"><span>Offers with compensation</span><span class="mono">${intel.market.offers}</span></div>
+      <h3>Opportunities Awaiting an Update</h3>
+      ${awaiting.length ? `<div class="cal-wait" style="margin-top:10px">${awaiting.slice(0, 6).map((a) => `
+        <div class="w">
+          <div>
+            <div class="t">${esc(a.title)}</div>
+            <div class="s">${esc(a.company || 'Company not named')} · ${esc(STAGE_LABEL[a.status] || titleCase(a.status))}${a.updated_at ? ' · updated ' + esc(String(a.updated_at).slice(0, 10)) : ''}</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${stageSelect(a)}<button class="btn ghost sm" data-log="${esc(a.opportunity_id)}">Update outcome</button></div>
+        </div>`).join('')}</div>`
+        : `<div class="tk-empty" style="margin-top:10px">Track an opportunity to begin personal calibration. ${recent.applications && recent.applications.length ? 'Everything you track is already closed, so there is nothing waiting.' : ''}</div>
+           <div style="margin-top:12px"><button class="btn sm" id="cal-track2">Go to Career Tracker</button></div>`}
     </div>
-    <h2 class="section">Recent Outcomes</h2>
-    <div class="card">
-      ${recent.outcomes.length
-        ? recent.outcomes.map((o) => `<div class="kv"><span>${esc(titleCase(o.outcome_type))}${o.salary_delta_pct != null ? ' · ' + (o.salary_delta_pct > 0 ? '+' : '') + pct(o.salary_delta_pct, 1) : ''}</span><span class="muted">${new Date(o.occurred_at).toLocaleDateString('en-GB')}</span></div>`).join('')
-        : '<div class="tk-empty">No outcomes yet. Every reported outcome is data no competitor has.</div>'}
-    </div>`;
-  $('#l-outcome').onclick = async () => {
-    const apps = recent.applications;
-    if (!apps.length) return toast('Track an opportunity first');
-    await post('/api/outcomes', { opportunityId: apps[0].opportunity_id, outcomeType: 'interview' });
-    toast('Outcome recorded – prior updated');
-    renderLearning();
+
+    <div class="grid kpi-grid cal-kpi" style="margin-top:14px">
+      <div class="kpi"><div class="kpi-k">Outcomes Reported</div><div class="kpi-v">${n ? int(n) : 'None yet'}</div><div class="kpi-s">${n ? 'Your own results, not market averages' : 'Every outcome you log moves these numbers'}</div></div>
+      <div class="kpi"><div class="kpi-k">Personal Signal Weight</div><div class="kpi-v">${share ? share + '%' : 'Market'}</div><div class="kpi-s">${share ? 'Capped so one result cannot swing it' : 'Using market baseline'}</div></div>
+      <div class="kpi"><div class="kpi-k">Opportunities Scored</div><div class="kpi-v">${int(prior.n || 0)}</div><div class="kpi-s">Scored against your Career Twin</div></div>
+      <div class="kpi"><div class="kpi-k">Average Interview Estimate</div><div class="kpi-v">${prior.p != null ? pct(prior.p, 1) : 'Not measured'}</div><div class="kpi-s">${prior.m != null ? 'Average match ' + prior.m + '/100' : 'Available once roles are scored'}</div></div>
+    </div>
+
+    <div class="grid lrn-grid" style="margin-top:14px">
+      <div class="card">
+        <h3>Predicted vs Actual Interview Outcomes</h3>
+        <div class="cal-chart">${chart}</div>
+        <div class="facts tight" style="margin-top:12px">
+          <span class="fk">What you are seeing</span>
+          <span class="fv">${n ? 'Your reported outcomes, counted by type. The model compares these with what it predicted for the same opportunities.' : 'No outcomes reported yet, so there is nothing to compare. The chart fills as you report what actually happened.'}</span>
+        </div>
+      </div>
+      <div class="card">
+        <h3>Career Twin Confidence</h3>
+        <div class="cal-pair" style="margin-top:10px">
+          <div><span class="k">Current signal</span><span class="v">${n >= 15 ? 'Higher-Confidence Personal Model' : n >= 5 ? 'Growing Personal Evidence' : n >= 1 ? 'Early Personal Signal' : 'Market Intelligence'}</span></div>
+          <div><span class="k">Offers logged</span><span class="v ${l.offers ? '' : 'lock'}">${l.offers ? int(l.offers) : 'None yet'}</span></div>
+          <div><span class="k">Average salary change on offers</span><span class="v ${l.avgSalaryDeltaPct == null ? 'lock' : ''}">${l.avgSalaryDeltaPct == null ? 'Available after an offer is logged' : (l.avgSalaryDeltaPct > 0 ? '+' : '') + pct(l.avgSalaryDeltaPct, 1)}</span></div>
+        </div>
+        <div class="facts tight" style="margin-top:12px">
+          <span class="fk">Composition</span>
+          <span class="fv">${n ? `Market intelligence plus ${share}% weight on your own outcomes.` : 'Market intelligence only. No personal weight is applied until you report an outcome.'}</span>
+        </div>
+      </div>
+    </div>
+
+    <details class="cal-acc">
+      <summary>How Career Calibration Works</summary>
+      <div class="in">
+        <div class="facts">
+          <span class="fk">The baseline</span>
+          <span class="fv">Market intelligence comes first: live postings with pay disclosed, scored against your Career Twin. That is what every number is built on before you report anything.</span>
+          <span class="fk">Your outcomes</span>
+          <span class="fv">Each outcome you report is blended into that baseline. The weight grows with the number you report, so guidance becomes more personal rather than more certain.</span>
+          <span class="fk">Why real outcomes</span>
+          <span class="fv">A prediction can only be checked against what actually happened. Without outcomes the model can describe the market but not you.</span>
+          <span class="fk">One result cannot swing it</span>
+          <span class="fv">Weight is shrunk by n/(n+20), so a single lucky offer moves the model a little, never a lot. The interview lift is capped at 18%.</span>
+          <span class="fk">What is affected</span>
+          <span class="fv">Your interview and offer estimates and the scores built on them. Nothing else in the app changes.</span>
+          <span class="fk">Technical details</span>
+          <span class="fv">Model version ${esc(l.calibration.modelVersion)}. Shrinkage ${share}%, interview prior lift +${pct(l.calibration.interviewPriorLift, 1)}. Market benchmark is published only above 25 consented outcomes, to protect anonymity.</span>
+        </div>
+      </div>
+    </details>`;
+
+  const goTrack = () => go('tracker');
+  const t1 = $('#cal-track'); if (t1) t1.onclick = goTrack;
+  const t2 = $('#cal-track2'); if (t2) t2.onclick = goTrack;
+  const rf = $('#cal-refresh'); if (rf) rf.onclick = () => renderLearning();
+  const p1 = $('#cal-primary');
+  if (p1) p1.onclick = () => {
+    const first = awaiting[0] || (recent.applications || [])[0];
+    if (!first) return goTrack();
+    const row = document.querySelector(`[data-log="${first.opportunity_id}"]`);
+    if (row) row.click();
   };
+  document.querySelectorAll('[data-log]').forEach((b) => {
+    b.onclick = () => {
+      const host = b.closest('.w');
+      const existing = host.querySelector('.cal-form');
+      if (existing) return existing.remove();
+      const form = document.createElement('div');
+      form.className = 'cal-form';
+      form.innerHTML = OUTCOME_TYPES.map((t) => `<button class="btn ghost sm" data-t="${t}">${OUTCOME_LABEL[t]}</button>`).join('');
+      host.appendChild(form);
+      form.querySelectorAll('[data-t]').forEach((btn) => {
+        btn.onclick = async () => {
+          const r = await post('/api/outcomes', { opportunityId: b.dataset.log, outcomeType: btn.dataset.t });
+          toast(r.salaryDeltaPct != null ? `Recorded – ${r.salaryDeltaPct > 0 ? '+' : ''}${r.salaryDeltaPct}% against your current rate` : 'Recorded – your calibration moved');
+          renderLearning();
+        };
+      });
+    };
+  });
+  document.querySelectorAll('.cal-stage').forEach((sel) => {
+    sel.onchange = async () => {
+      await post('/api/applications', { opportunityId: sel.dataset.app, status: sel.value });
+      toast(`Stage set to ${STAGE_LABEL[sel.value]}`);
+      renderLearning();
+    };
+  });
 }
 
 /* ---------------- plan ---------------- */
@@ -4263,10 +4471,10 @@ const VIEWS = {
   rates: [renderRates, 'Rate Intelligence', 'What your exact profile is worth – the wedge'],
   gaps: [renderGaps, 'Skill Gaps', 'What is actually blocking your next move'],
   tracker: [renderTracker, 'Career Tracker', 'Your pipeline and the outcome loop'],
-  twin: [renderTwin, 'Career Twin', 'The model of you that gets better with use'],
+  twin: [renderTwin, 'Career Twin', 'Your professional profile, scored and kept current'],
   auth: [renderAuth, 'Sign in', ''],
   copilot: [renderCopilot, 'Career Co-Pilot', 'Grounded in your data, not generic advice'],
-  learning: [renderLearning, 'Learning Loop', 'What your own outcomes teach the model'],
+  learning: [renderLearning, 'Career Calibration', 'What your own outcomes teach the model'],
   searches: [renderSearches, 'Saved Searches', 'Standing questions the engine keeps answering'],
   brief: [renderBrief, 'Daily Brief', 'What changed since you last looked'],
   negotiation: [renderNegotiation, 'Negotiation', 'The number to say, the evidence, and the fallback'],
@@ -4338,7 +4546,39 @@ async function go(view) {
   }
 }
 
+// Market, language and currency arrive as three separate settings. The route preselects a market,
+// the browser suggests a language, and both stay changeable for the rest of the session.
+async function loadMarket() {
+  try {
+    const route = (location.pathname.match(/^\/([a-z]{2})\/?$/) || [])[1] || '';
+    const cfg = await api('/api/markets/config' + (route ? `?market=${route}` : ''));
+    STATE.market = cfg;
+    const sel = document.getElementById('c-country');
+    if (sel) {
+      const keep = sel.value;
+      sel.innerHTML = '<option value="">Any market</option>' +
+        cfg.markets.map((m) => `<option value="${m.code.toUpperCase()}">${esc(m.name)} · ${m.currency}</option>`).join('') +
+        '<option value="WW">Remote (anywhere)</option>';
+      sel.value = keep || (cfg.code ? cfg.code.toUpperCase() : '');
+    }
+    const cur = document.getElementById('c-current');
+    if (cur) cur.placeholder = `In ${cfg.currency}, or leave blank`;
+    document.documentElement.lang = cfg.language || 'en';
+  } catch (e) { /* a market failure must never block the page */ }
+  try {
+    const t = await api('/api/taxonomy');
+    STATE.taxonomy = t;
+    const roles = document.getElementById('dl-roles');
+    if (roles) roles.innerHTML = t.skills.length || t.roles.length
+      ? Object.values(t.roleLabels).map((v) => `<option value="${esc(v)}"></option>`).join('')
+      : '';
+    const skills = document.getElementById('dl-skills');
+    if (skills) skills.innerHTML = t.skills.map((v) => `<option value="${esc(v)}"></option>`).join('');
+  } catch (e) { /* autocomplete is an aid, not a requirement */ }
+}
+
 async function boot() {
+  loadMarket();
   const auth = await api('/api/auth/me');
   STATE.authed = !!auth.user;
   STATE.userRecord = auth.user;
@@ -4448,10 +4688,10 @@ async function renderBrief() {
           ${b.topGap ? `<div class="signal-lead" data-go="gaps">
             <div class="kpi-k">Biggest blocker</div>
             <div class="signal-v">${esc(b.topGap.skill)}</div>
-            <div class="signal-why">The one skill standing between you and the most of your ${int(b.counts.totalScored)} scored opportunities: ${int(b.topGap.blocking)} of them.</div>
+            <div class="signal-why">Missing from ${int(b.topGap.blocking)} of your ${int(b.counts.totalScored)} scored opportunities. No other skill blocks more of your set.</div>
             <div class="signal-go">See what closing it unblocks<span aria-hidden="true">›</span></div>
           </div>` : ''}
-          <div class="facts tight" style="margin-top:12px">
+          <div class="facts tight stack" style="margin-top:12px">
             ${!b.rates ? `<span class="fk">Your pay vs market</span><span class="fv">Add your pay on Career Twin and this line becomes a comparison.</span>` : ''}
             ${b.rates ? `<span class="fk">Your pay vs market</span><span class="fv">${money(b.rates.p50)} is the median for your level, and you are ${b.rates.gapPct > 0 ? b.rates.gapPct + '% below it' : Math.abs(b.rates.gapPct) + '% above it'}.</span>` : ''}
             ${b.scoreDelta != null ? `<span class="fk">Career Score since your last brief</span><span class="fv">${b.scoreDelta > 0 ? '+' : ''}${b.scoreDelta} ${Math.abs(b.scoreDelta) === 1 ? 'point' : 'points'}.</span>` : ''}
@@ -4687,7 +4927,9 @@ $('#logout') && ($('#logout').onclick = async () => {
   if (params.get('app')) showApp();
   const authed = await api('/api/auth/me');
   if (!authed.user && !params.get('app')) {
-    // Not signed in: the landing page is the product. The app stays behind it.
+    // Not signed in: the landing page is the product. The app stays behind it. The market, language
+    // and currency are still resolved first, because a market route must preselect its own market.
+    loadMarket();
     showLanding();
     return;
   }
