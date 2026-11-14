@@ -3863,7 +3863,10 @@ async function renderTrajectory(months) {
           <div class="kv"><span>Skill velocity</span><span class="mono">${t.velocity.velocity.toFixed(2)}x</span></div>
           ${t.velocity.drivers.map((d) => `<div class="kv"><span>${esc(d.k)}</span><span class="mono">${esc(d.v)}</span></div>`).join('')}
         </div>
-        <div class="note" style="margin-top:12px">Velocity above 1.0 means your skill mix is appreciating; it shortens time-to-promotion. Below 1.0 means the market is moving away from your stack.</div>
+        <div class="facts tight" style="margin-top:12px">
+          <span class="fk">How to read it</span>
+          <span class="fv">Above 1.0 your skill mix is appreciating and time to promotion shortens. Below 1.0 the market is moving away from your stack.</span>
+        </div>
       </div>
       <div class="card">
         <h3>Assumptions (All of Them)</h3>
