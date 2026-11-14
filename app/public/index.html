@@ -264,6 +264,26 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 /* A name is not a label: a saved search keeps its own case and its own weight. */
 .sh-card h3{font-size:var(--text-2xs);font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink2);margin:0}
 .sh-pay{flex:0 0 auto;font-size:var(--text-xs);color:var(--ink2);font-variant-numeric:tabular-nums;white-space:nowrap}
+.sh-titleline{display:flex;align-items:center;gap:6px;min-width:0}
+.sh-ico{flex:0 0 auto;width:24px;height:24px;display:grid;place-items:center;border-radius:6px;border:1px solid transparent;background:none;color:var(--muted);cursor:pointer;transition:color .12s,border-color .12s,background .12s}
+.sh-ico svg{width:13px;height:13px}
+.sh-ico:hover{color:var(--ink);border-color:var(--line2);background:var(--panel2)}
+.sh-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:7px}
+.sh-chip{display:inline-flex;align-items:center;gap:5px;font-size:var(--text-xs);line-height:1.3;padding:3px 8px;border-radius:999px;background:var(--panel2);border:1px solid var(--line);color:var(--ink);white-space:nowrap}
+.sh-chip i{font-style:normal;color:var(--ink2);font-size:var(--text-2xs);letter-spacing:.06em;text-transform:uppercase}
+.sh-watch{display:inline-flex;flex-wrap:wrap;gap:5px}
+.sh-alert{font:inherit;font-size:var(--text-xs);padding:3px 6px;border-radius:6px;border:1px solid var(--line2);background:var(--panel);color:var(--ink2);cursor:pointer}
+.sh-name{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.sh-input{font:inherit;font-size:var(--text-sm);padding:8px 11px;border-radius:var(--radius-sm);border:1px solid var(--line2);background:var(--panel);color:var(--ink);min-width:0;flex:1 1 190px;outline:none}
+.sh-input:focus{border-color:var(--accent2)}
+.sh-quick{display:flex;gap:2px;opacity:0;transition:opacity .12s}
+.sh:hover .sh-quick,.sh:focus-within .sh-quick{opacity:1}
+.sh-q{width:24px;height:24px;display:grid;place-items:center;border-radius:6px;border:1px solid transparent;background:none;color:var(--muted);cursor:pointer}
+.sh-q svg{width:12px;height:12px}
+.sh-q:hover{color:var(--ink);border-color:var(--line2);background:var(--panel)}
+.sh-q.on{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,transparent)}
+@media(hover:none){.sh-quick{opacity:1}}
+@media(max-width:560px){.sh-quick{opacity:1}.sh-alert{font-size:var(--text-2xs)}}
 @media(max-width:560px){.sh-pay{grid-column:2;justify-self:start;margin-top:2px}}
 /* A sentence that states a finding is not a heading and not bold: it reads at body weight. */
 .stmt{font-size:var(--text-base);font-weight:400;line-height:1.55;color:var(--ink);margin-top:8px;text-wrap:pretty}
@@ -1028,7 +1048,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 @media(max-width:560px){.sh-head{flex-wrap:wrap}.sh-headacts{order:2}}
 .sh-card{padding:16px 18px}
 .sh-hits{margin-top:12px;display:grid;gap:6px}
-.sh-hits .sh{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:10px;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 10px;cursor:pointer;font:inherit;color:inherit}
+.sh-hits .sh{display:grid;grid-template-columns:auto 1fr auto auto auto;align-items:center;gap:10px;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 10px;cursor:pointer;font:inherit;color:inherit}
 .sh-hits .sh:hover{border-color:var(--line2)}
 .sh-s{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:24px;border-radius:6px;font-size:var(--text-2xs);font-weight:700;font-variant-numeric:tabular-nums}
 .sh-s.g{background:var(--score-hi-bg);color:var(--score-hi)}
@@ -1039,13 +1059,13 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .sh-c{display:block;font-size:var(--text-xs);color:var(--muted);margin-top:1px}
 .sh-x{color:var(--muted);font-size:var(--text-md)}
 /* ---------- your data ---------- */
-.data-acts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
+.data-acts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;align-items:start}
 .data-act{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
 
 .data-act .btn{justify-content:center}
-.da-note{font-size:var(--text-xs);color:var(--muted);line-height:1.5}
+.da-note{font-size:var(--text-xs);color:var(--ink2);line-height:1.5}
 /* Side by side at every width: two short actions, and stacking them made the pair read as a sequence. */
-@media(max-width:560px){.data-acts{gap:8px}.data-act .btn{width:100%;padding-left:8px;padding-right:8px}}
+@media(max-width:560px){.data-acts{grid-template-columns:1fr;gap:14px}.data-act .btn{padding-left:8px;padding-right:8px}.sh-name{flex-wrap:wrap}.sh-input{flex:1 1 100%}}
 /* ---------- learning loop ---------- */
 .lrn-grid{grid-template-columns:1.1fr 1fr}
 .lrn-funnel{grid-template-columns:repeat(4,minmax(0,1fr))}
@@ -1078,7 +1098,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 .sh-s.l{background:var(--score-low-bg);color:var(--score-low)}
 .sh-b{flex:1;min-width:0;display:block}
 .sh-t{display:block;font-size:var(--text-sm);font-weight:600;line-height:1.35;overflow-wrap:anywhere;transition:color .12s}
-.sh-c{display:block;font-size:var(--text-xs);color:var(--muted);margin-top:1px;overflow-wrap:anywhere}
+.sh-c{display:block;font-size:var(--text-xs);color:var(--ink2);margin-top:1px;overflow-wrap:anywhere}
 .sh-x{flex:0 0 auto;color:var(--muted);opacity:.5;font-size:var(--text-sm)}
 .sh-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:2px}
 .sh-n{font-size:var(--text-2xs);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -1397,6 +1417,8 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 const $ = (s, r = document) => r.querySelector(s);
 const api = async (p, opt) => { const r = await fetch(p, opt); return r.json(); };
 const post = (p, b) => api(p, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(b || {}) });
+const patch = (p, b) => api(p, { method: 'PATCH', headers: { 'content-type': 'application/json' }, body: JSON.stringify(b || {}) });
+const del = (p) => api(p, { method: 'DELETE' });
 // One formatting rule for every number the product shows. Screens call these instead of building their own.
 const NUM = new Intl.NumberFormat('en-GB');
 const int = (n) => (n == null || n === '' || Number.isNaN(Number(n))) ? '–' : NUM.format(Math.round(Number(n)));
@@ -3402,6 +3424,20 @@ async function renderLearning() {
 /* ---------------- saved searches ---------------- */
 // A saved search is a standing question. The page therefore leads with what it found, never with a
 // form: the filters already chosen on the radar are the search, so saving is one button and no typing.
+// Every card prints its own rules as pills, so two searches can never look like the same search.
+const ALERT_LABEL = { instant: 'Instant', daily: 'Daily brief', muted: 'Muted' };
+const payText = (h) => {
+  if (h.compMin == null) return 'Pay not disclosed';
+  const cur = h.currency || 'EUR';
+  const conv = cur !== 'EUR';
+  const body = money(h.compMin, cur) + (h.compMax && h.compMax !== h.compMin ? '–' + money(h.compMax, cur) : '') + (PERIOD_LABEL[h.compPeriod] || '');
+  return body;
+};
+const payTitle = (h) => (h.currency && h.currency !== 'EUR'
+  ? `Listed in ${h.currency}. Shown as listed, not converted, so the number matches the posting.`
+  : 'Listed in EUR by the posting.');
+void 0;
+
 async function renderSearches() {
   const { searches } = await api('/api/saved-searches');
   const active = [];
@@ -3411,7 +3447,7 @@ async function renderSearches() {
   if (FILTERS.visa) active.push('Visa sponsorship');
   if (FILTERS.q) active.push(FILTERS.q);
   if (STATE.types.length) active.push(STATE.types.map((t) => titleCase(t)).join(', '));
-  const watching = active.length ? active.join(' · ') : 'Everything scored for you';
+  const watching = active.length ? active.join(' · ') : 'All Scored Roles';
   $('#view').innerHTML = `
     <div class="card plain" style="margin-bottom:14px">
       <h3>Watch a Search</h3>
@@ -3419,12 +3455,15 @@ async function renderSearches() {
         <span class="fk">What it does</span>
         <span class="fv">It re-runs your filters against every new posting and tells you only what is new, so you do not come back to search.</span>
         <span class="fk">What it watches</span>
-        <span class="fv">${esc(watching)}</span>
+        <span class="fv"><span class="sh-watch">${esc(watching)}</span></span>
       </div>
       <div class="data-acts" style="margin-top:12px">
         <div class="data-act">
-          <button class="btn" id="s-add">Watch This Search</button>
-          <div class="da-note">Saves the filters above as a standing search and names it for you. You can rename it afterwards.</div>
+          <div class="sh-name">
+            <input id="s-name" class="sh-input" maxlength="80" placeholder="Name this search (optional)" aria-label="Name this search"/>
+            <button class="btn" id="s-add">Watch This Search</button>
+          </div>
+          <div class="da-note">Saves the filters above as a standing search. Leave the name blank and it is named from the filters.</div>
         </div>
         <div class="data-act">
           <button class="btn ghost" id="s-edit">Change the Filters</button>
@@ -3436,36 +3475,149 @@ async function renderSearches() {
       ${searches.length ? searches.map((s) => `<div class="card sh-card" data-search="${esc(s.id)}">
         <div class="sh-head">
           <div class="sh-headmain">
-            <h3 style="margin:0">${esc(s.name)}</h3>
-            ${s.label && s.label !== s.name ? `<div class="dim" style="font-size:var(--text-sm);margin-top:4px">${esc(s.label)}</div>` : ''}
+            <div class="sh-titleline">
+              <h3 style="margin:0">${esc(s.name)}</h3>
+              <button class="sh-ico" data-rename="${esc(s.id)}" title="Rename this search" aria-label="Rename this search"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M11.2 2.6l2.2 2.2-8 8H3.2v-2.2z"/><path d="M9.6 4.2l2.2 2.2"/></svg></button>
+            </div>
+            <div class="sh-chips">${(s.chips && s.chips.length ? s.chips : [{ key: 'all', label: '', value: 'All Scored Roles' }]).map((c) => `<span class="sh-chip">${c.label ? `<i>${esc(c.label)}</i>` : ''}${esc(c.value)}</span>`).join('')}</div>
           </div>
           <div class="sh-headacts">
-            <span class="bdg ${s.newCount ? 'act' : 'neu'}">${s.newCount ? int(s.newCount) + (s.newCount >= 400 ? '+' : '') + ' new' : 'Up to date'}</span>
+            <span class="bdg ${s.newCount ? 'act' : 'neu'}" title="${int(s.newCount)} new since you last looked, ${int(s.total)} match this search">${s.newCount ? int(s.newCount) + (s.newCount >= 400 ? '+' : '') + ' new' : 'Up to date'}</span>
+            ${s.newCount ? `<button class="chip" data-seen="${esc(s.id)}" style="cursor:pointer">Mark as Seen</button>` : ''}
+            <select class="sh-alert" data-alert="${esc(s.id)}" aria-label="Alert frequency for ${esc(s.name)}">
+              ${['instant', 'daily', 'muted'].map((a) => `<option value="${a}"${(s.alert || 'daily') === a ? ' selected' : ''}>${ALERT_LABEL[a]}</option>`).join('')}
+            </select>
+            <button class="chip" data-edit="${esc(s.id)}" style="cursor:pointer">Edit Filters</button>
             <button class="chip del" data-id="${esc(s.id)}" style="cursor:pointer">Remove</button>
           </div>
         </div>
-        ${s.hits && s.hits.length ? `<div class="sh-hits">${s.hits.map((h) => `<button class="sh" data-opp="${esc(h.id)}">
+        ${s.hits && s.hits.length ? `<div class="sh-hits">${s.hits.map((h) => `<div class="sh" data-opp="${esc(h.id)}" role="button" tabindex="0">
           <span class="sh-s ${h.matchScore >= 80 ? 'g' : h.matchScore >= 65 ? 'm' : 'l'}">${int(h.matchScore)}</span>
           <span class="sh-b"><span class="sh-t">${esc(h.title)}</span><span class="sh-c">${[h.company, h.country, h.seniority ? titleCase(h.seniority) : '', h.family ? titleCase(h.family) : ''].filter(Boolean).map(esc).join(' · ')}</span></span>
-          <span class="sh-pay">${h.compMin != null ? money(h.compMin) + (h.compMax && h.compMax !== h.compMin ? '–' + money(h.compMax) : '') + (PERIOD_LABEL[h.compPeriod] || '') : 'Pay not disclosed'}</span>
+          <span class="sh-pay" title="${esc(payTitle(h))}">${esc(payText(h))}</span>
+          <span class="sh-quick">
+            <button class="sh-q" data-save="${esc(h.id)}" title="Save to Career Tracker" aria-label="Save to Career Tracker"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M4 2.6h8v11l-4-2.6-4 2.6z"/></svg></button>
+            <button class="sh-q" data-dismiss="${esc(h.id)}" title="Dismiss this opportunity" aria-label="Dismiss this opportunity"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+          </span>
           <span class="sh-x">›</span>
-        </button>`).join('')}</div>` : `<div class="empty-line">Nothing new since you last looked. ${int(s.total)} scored ${s.total === 1 ? 'opportunity matches' : 'opportunities match'} this search.</div>`}
+        </div>`).join('')}</div>` : `<div class="empty-line">Nothing new since you last looked. ${int(s.total)} scored ${s.total === 1 ? 'opportunity matches' : 'opportunities match'} this search.</div>`}
       </div>`).join('') : '<div class="card"><div class="empty-line">No searches watched yet. Set filters on The Radar, then press Watch This Search.</div></div>'}
     </div>
     `;
+  const reload = () => renderSearches();
   $('#s-add').onclick = async () => {
     const filters = {};
     Object.entries(FILTERS).forEach(([k, v]) => { if (v && v !== 45) filters[k] = v; });
     if (STATE.types.length) filters.types = STATE.types.join(',');
-    const r = await post('/api/saved-searches', { filters });
-    toast(`Watching ${r.name || 'this search'}`);
-    renderSearches();
+    const name = ($('#s-name').value || '').trim();
+    await post('/api/saved-searches', { filters, name: name || undefined });
+    reload();
   };
   $('#s-edit').onclick = () => go('radar');
-  document.querySelectorAll('.del').forEach((b) => {
-    b.onclick = async () => { await api('/api/saved-searches/' + b.dataset.id, { method: 'DELETE' }); renderSearches(); };
+  document.querySelectorAll('[data-seen]').forEach((b) => { b.onclick = async () => { await patch('/api/saved-searches/' + b.dataset.seen, { seen: true }); reload(); }; });
+  document.querySelectorAll('[data-alert]').forEach((sel) => { sel.onchange = async () => { await patch('/api/saved-searches/' + sel.dataset.alert, { alert: sel.value }); }; });
+  document.querySelectorAll('[data-rename]').forEach((b) => {
+    b.onclick = async () => {
+      const card = b.closest('.sh-card'); const h = card.querySelector('h3');
+      const next = prompt('Name this search', h.textContent);
+      if (next == null || !next.trim()) return;
+      await patch('/api/saved-searches/' + b.dataset.rename, { name: next.trim() }); reload();
+    };
   });
-  document.querySelectorAll('.sh[data-opp]').forEach((b) => { b.onclick = () => openDetail(b.dataset.opp); });
+  document.querySelectorAll('[data-edit]').forEach((b) => {
+    b.onclick = async () => {
+      const s2 = searches.find((x) => x.id === b.dataset.edit);
+      Object.assign(FILTERS, { seniority: '', family: '', country: '', visa: '', q: '' });
+      Object.entries(s2.filters || {}).forEach(([k, v]) => { if (k in FILTERS) FILTERS[k] = v; });
+      STATE.types = (s2.filters && s2.filters.types) ? String(s2.filters.types).split(',') : [];
+      go('radar');
+    };
+  });
+  document.querySelectorAll('[data-id]').forEach((b) => { b.onclick = async () => { await del('/api/saved-searches/' + b.dataset.id); reload(); }; });
+  document.querySelectorAll('.sh').forEach((row) => {
+    const open = (e) => { if (e.target.closest('.sh-q')) return; openOpp(row.dataset.opp); };
+    row.onclick = open;
+    row.onkeydown = (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open(e); } };
+  });
+  document.querySelectorAll('[data-save]').forEach((b) => {
+    b.onclick = async (e) => { e.stopPropagation(); await post('/api/applications', { opportunityId: b.dataset.save, status: 'saved' }); b.classList.add('on'); b.title = 'Saved to Career Tracker'; };
+  });
+  document.querySelectorAll('[data-dismiss]').forEach((b) => {
+    b.onclick = async (e) => { e.stopPropagation(); await post('/api/dismiss', { opportunityId: b.dataset.dismiss }); reload(); };
+  });
+}
+
+/* ---------------- learning loop ---------------- */
+async function renderLearning() {
+  const l = await api('/api/learning');
+  const intel = await api('/api/outcomes/intel');
+  const recent = await api('/api/tracker');
+  $('#view').innerHTML = `
+    <div class="card plain" style="margin-bottom:14px">
+      <h3>What This Page Does</h3>
+      <div class="facts">
+        <span class="fk">The idea</span>
+        <span class="fv">Every application you track and every outcome you report teaches the model what actually happens to you, not what happens to the market on average.</span>
+        <span class="fk">What it changes</span>
+        <span class="fv">Your interview and offer probabilities, and the scores built on them. Nothing else in the app is affected.</span>
+        <span class="fk">What it needs</span>
+        <span class="fv">One tracked opportunity and one outcome. Until then the model runs on published market figures alone, which is why every number below is either zero or a market average.</span>
+      </div>
+      <div style="margin-top:14px"><button class="btn sm" id="l-outcome">Report an outcome</button></div>
+    </div>
+    <div class="grid lrn-grid">
+      <div class="card">
+        <h3>Your Model</h3>
+        <div class="big mono" style="margin:10px 0 2px">${int(l.totalOutcomes)}</div>
+        <div class="big-cap">outcomes you have reported</div>
+        <div style="margin-top:18px">
+          <div class="kv"><span>How much your outcomes count<span class="kv-note">Weight against the market average. It rises as you report more, and is capped so one lucky result cannot swing it.</span></span><span class="mono">${Math.round(l.calibration.shrinkage * 100)}%</span></div>
+          <div class="kv"><span>Effect on your interview estimate<span class="kv-note">How far your own results have moved the estimate away from the market figure.</span></span><span class="mono">+${l.calibration.interviewPriorLift}%</span></div>
+          <div class="kv"><span>Offers logged</span><span class="mono">${l.offers}</span></div>
+          <div class="kv"><span>Average salary change on offers</span><span class="mono">${l.avgSalaryDeltaPct == null ? '–' : (l.avgSalaryDeltaPct > 0 ? '+' : '') + l.avgSalaryDeltaPct + '%'}</span></div>
+          <div class="kv"><span>Model version</span><span class="mono">${esc(l.calibration.modelVersion)}</span></div>
+        </div>
+        <div class="facts tight"><span class="fk">Status</span><span class="fv">${esc(l.calibration.explanation)}</span></div>
+      </div>
+      <div class="card">
+        <h3>What Your Scores Look Like</h3>
+        <div class="kv" style="margin-top:10px"><span>Scored opportunities</span><span class="mono">${int(l.priors[0]?.n || 0)}</span></div>
+        <div class="kv"><span>Average match score</span><span class="mono">${l.priors[0]?.m ?? '–'}</span></div>
+        <div class="kv"><span>Average interview probability</span><span class="mono">${l.priors[0]?.p ?? '–'}%</span></div>
+        <div class="facts tight">
+          <span class="fk">Why it matters</span>
+          <span class="fv">Calibration is the whole game. A model that says 30% and is right 30% of the time is worth more than one that says 60% and is right 30% of the time.</span>
+          <span class="fk">How we blend</span>
+          <span class="fv">We publish the prior and blend your observed outcomes into it – with shrinkage so one lucky offer cannot move the model.</span>
+        </div>
+      </div>
+    </div>
+    <h2 class="section">Your Measured Funnel</h2>
+    <div class="grid lrn-funnel">
+      <div class="card"><h3>Applications</h3><div class="big mono">${intel.mine.funnel.applied}</div></div>
+      <div class="card"><h3>Interview Rate</h3><div class="big mono">${intel.mine.funnel.interviewRate == null ? '–' : intel.mine.funnel.interviewRate + '%'}</div><div class="muted" style="font-size:var(--text-xs)">measured, not modelled</div></div>
+      <div class="card"><h3>Offer Rate</h3><div class="big mono">${intel.mine.funnel.offerRate == null ? '–' : intel.mine.funnel.offerRate + '%'}</div><div class="muted" style="font-size:var(--text-xs)">of interviews</div></div>
+      <div class="card"><h3>End-to-end</h3><div class="big mono">${intel.mine.funnel.conversion == null ? '–' : intel.mine.funnel.conversion + '%'}</div><div class="muted" style="font-size:var(--text-xs)">application &gt; offer</div></div>
+    </div>
+    <div class="card" style="margin-top:14px">
+      <h3>Market Benchmark</h3>
+      <div class="dim" style="font-size:var(--text-sm);margin-top:8px">${esc(intel.market.note)}</div>
+      <div class="kv" style="margin-top:12px"><span>Consented outcomes reported</span><span class="mono">${intel.market.reportedOutcomes}</span></div>
+      <div class="kv"><span>Offers with compensation</span><span class="mono">${intel.market.offers}</span></div>
+    </div>
+    <h2 class="section">Recent Outcomes</h2>
+    <div class="card">
+      ${recent.outcomes.length
+        ? recent.outcomes.map((o) => `<div class="kv"><span>${esc(titleCase(o.outcome_type))}${o.salary_delta_pct != null ? ' · ' + (o.salary_delta_pct > 0 ? '+' : '') + pct(o.salary_delta_pct, 1) : ''}</span><span class="muted">${new Date(o.occurred_at).toLocaleDateString('en-GB')}</span></div>`).join('')
+        : '<div class="tk-empty">No outcomes yet. Every reported outcome is data no competitor has.</div>'}
+    </div>`;
+  $('#l-outcome').onclick = async () => {
+    const apps = recent.applications;
+    if (!apps.length) return toast('Track an opportunity first');
+    await post('/api/outcomes', { opportunityId: apps[0].opportunity_id, outcomeType: 'interview' });
+    toast('Outcome recorded – prior updated');
+    renderLearning();
+  };
 }
 
 /* ---------------- plan ---------------- */

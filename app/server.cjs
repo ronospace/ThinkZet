@@ -2402,12 +2402,30 @@ function filterLabel(f = {}) {
   return parts.length ? parts.join(' · ') : 'Everything scored for you';
 }
 
+// The same filter set as labelled pairs, so a card can print removable pills instead of one long
+// sentence and the reader can see which rule produced which row.
+const FILTER_KEY = { seniority: 'Seniority', family: 'Role family', country: 'Market', visa: 'Visa', q: 'Keyword', types: 'Type', minScore: 'Min score', remote: 'Work mode' };
+function filterChips(f = {}) {
+  const out = [];
+  if (f.seniority) out.push({ key: 'seniority', label: 'Seniority', value: titleCaseServer(f.seniority) });
+  if (f.family) out.push({ key: 'family', label: 'Role family', value: titleCaseServer(f.family) });
+  if (f.q) out.push({ key: 'q', label: 'Keyword', value: String(f.q) });
+  if (f.country) out.push({ key: 'country', label: 'Market', value: String(f.country).toUpperCase() });
+  if (f.visa) out.push({ key: 'visa', label: 'Visa', value: 'Sponsorship' });
+  if (f.types) out.push({ key: 'types', label: 'Type', value: String(f.types).split(',').map((t) => titleCaseServer(t.replace(/[_-]+/g, ' '))).join(', ') });
+  if (f.minScore && Number(f.minScore) > 45) out.push({ key: 'minScore', label: 'Min score', value: String(Number(f.minScore)) });
+  if (f.remote) out.push({ key: 'remote', label: 'Work mode', value: FILTER_WORD[f.remote] || String(f.remote) });
+  return out;
+}
+const titleCaseServer = (v) => String(v == null ? '' : v).replace(/[_-]+/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
+
 route('GET', /^\/api\/saved-searches$/, async (req, res) => {
   const uid = resolveUser(req);
   const rows = db.prepare('SELECT * FROM saved_searches WHERE user_id=? ORDER BY created_at DESC').all(uid);
   // Each search answers with what it found, not just what it watches: a count and the rows themselves,
   // so the page never asks the person to go and search for the result it already has.
   const top = opportunitiesWithMatch(uid, { limit: 400, minScore: 45 });
+  const dismissed = new Set(db.prepare('SELECT opportunity_id FROM dismissed_opps WHERE user_id=?').all(uid).map((r) => r.opportunity_id));
   const seen = new Set(db.prepare('SELECT opportunity_id FROM brief_seen WHERE user_id=?').all(uid).map((r) => r.opportunity_id));
   const hit = (o, f) =>
     (!f.country || o.country === f.country) &&
@@ -2419,9 +2437,11 @@ route('GET', /^\/api\/saved-searches$/, async (req, res) => {
   const searches = rows.map((r) => {
     const f = JSON.parse(r.filters || '{}');
     const matched = top.filter((o) => hit(o, f));
-    const fresh = matched.filter((o) => !seen.has(o.id));
+    const fresh = matched.filter((o) => !seen.has(o.id) && !dismissed.has(o.id));
+    const today = new Date().toISOString().slice(0, 10);
     return {
-      ...r, filters: f, label: filterLabel(f),
+      ...r, filters: f, label: filterLabel(f), chips: filterChips(f), alert: r.alert || 'daily',
+      newToday: fresh.filter((o) => String(o.posted_at || o.first_seen || '').slice(0, 10) === today).length,
       newCount: fresh.length,
       total: matched.length,
       hits: fresh.slice(0, 3).map((o) => ({ id: o.id, title: o.title, company: o.company, matchScore: o.match_score,
@@ -2439,6 +2459,44 @@ route('POST', /^\/api\/saved-searches$/, async (req, res) => {
   db.prepare('INSERT INTO saved_searches (id,user_id,name,filters) VALUES (?,?,?,?)')
     .run(id, resolveUser(req), body.name || filterLabel(filters), JSON.stringify(filters));
   json(res, 200, { ok: true, id, name: body.name || filterLabel(filters) });
+});
+
+// A saved search is edited in place: its name, its filters, its alert rhythm, or its seen mark.
+route('PATCH', /^\/api\/saved-searches\/([^/]+)$/, async (req, res, url, m) => {
+  const uid = resolveUser(req);
+  const body = await readBody(req);
+  const row = db.prepare('SELECT * FROM saved_searches WHERE id=? AND user_id=?').get(m[1], uid);
+  if (!row) return json(res, 404, { error: 'not found' });
+  if (body.seen) {
+    // Marking a search seen records every hit it currently returns, so the next visit is honestly empty.
+    const f = JSON.parse(row.filters || '{}');
+    const top = opportunitiesWithMatch(uid, { limit: 400, minScore: 45 });
+    const hit = (o) => (!f.country || o.country === f.country) && (!f.family || o.role_family === f.family) &&
+      (!f.seniority || o.seniority === f.seniority) && (!f.visa || o.visa_sponsorship === 'yes') &&
+      (!f.q || `${o.title} ${o.company}`.toLowerCase().includes(String(f.q).toLowerCase())) &&
+      (!f.types || String(f.types).split(',').includes(o.type));
+    const ins = db.prepare('INSERT OR IGNORE INTO brief_seen (user_id,opportunity_id) VALUES (?,?)');
+    top.filter(hit).forEach((o) => ins.run(uid, o.id));
+    return json(res, 200, { ok: true, seen: true });
+  }
+  if (body.alert) {
+    if (!['instant', 'daily', 'muted'].includes(body.alert)) return json(res, 400, { error: 'alert must be instant, daily or muted' });
+    db.prepare('UPDATE saved_searches SET alert=? WHERE id=? AND user_id=?').run(body.alert, m[1], uid);
+    return json(res, 200, { ok: true, alert: body.alert });
+  }
+  const name = body.name != null ? String(body.name).slice(0, 80) : row.name;
+  const filters = body.filters ? JSON.stringify(body.filters) : row.filters;
+  db.prepare('UPDATE saved_searches SET name=?, filters=? WHERE id=? AND user_id=?').run(name, filters, m[1], uid);
+  json(res, 200, { ok: true, name, filters: JSON.parse(filters), chips: filterChips(JSON.parse(filters)) });
+});
+
+// Dismissing a hit removes it from every search's new list without deleting the opportunity.
+route('POST', /^\/api\/dismiss$/, async (req, res) => {
+  const uid = resolveUser(req);
+  const body = await readBody(req);
+  if (!body.opportunityId) return json(res, 400, { error: 'opportunityId required' });
+  db.prepare('INSERT OR IGNORE INTO dismissed_opps (user_id,opportunity_id) VALUES (?,?)').run(uid, body.opportunityId);
+  json(res, 200, { ok: true });
 });
 
 route('DELETE', /^\/api\/saved-searches\/([^/]+)$/, async (req, res, url, m) => {

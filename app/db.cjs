@@ -386,6 +386,12 @@ CREATE TABLE IF NOT EXISTS saved_searches (
   filters TEXT,
   created_at TEXT DEFAULT (datetime('now'))
 );
+CREATE TABLE IF NOT EXISTS dismissed_opps (
+  user_id TEXT NOT NULL,
+  opportunity_id TEXT NOT NULL,
+  created_at TEXT DEFAULT (datetime('now')),
+  PRIMARY KEY (user_id, opportunity_id)
+);
 
 CREATE TABLE IF NOT EXISTS feed_snapshots (
   user_id TEXT, day TEXT, payload TEXT, created_at TEXT DEFAULT (datetime('now')),
@@ -419,6 +425,8 @@ const MIGRATIONS = [
   ['users.display_name', () => { if (!columnExists('users', 'display_name')) db.exec("ALTER TABLE users ADD COLUMN display_name TEXT"); }],
   // A consumed OAuth state is marked, not deleted, so a duplicate callback can say "already completed"
   // instead of "expired". The sweep still removes it once its own expiry passes.
+  // A saved search carries its own alert rhythm, so the person can mute one without deleting it.
+  ['saved_searches.alert', () => { if (!columnExists('saved_searches', 'alert')) db.exec("ALTER TABLE saved_searches ADD COLUMN alert TEXT DEFAULT 'daily'"); }],
   ['oauth_states.claimed_at', () => { if (!columnExists('oauth_states', 'claimed_at')) db.exec("ALTER TABLE oauth_states ADD COLUMN claimed_at TEXT"); }],
   ['salary_records.dedupe_key', () => {
     if (!columnExists('salary_records', 'dedupe_key')) db.exec("ALTER TABLE salary_records ADD COLUMN dedupe_key TEXT");
