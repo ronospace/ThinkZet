@@ -1587,7 +1587,8 @@ route('POST', /^\/api\/public\/rate-check$/, async (req, res) => {
 // median. The currency follows the market and the response carries the rate date.
 route('GET', /^\/api\/public\/proof$/, async (req, res) => {
   const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
-  const country = String(url.searchParams.get('market') || '').toUpperCase().slice(0, 2) || null;
+  // `market` and `country` are the same question asked by two callers, so both are accepted.
+  const country = String(url.searchParams.get('market') || url.searchParams.get('country') || '').toUpperCase().slice(0, 2) || null;
   const LIVE = Object.keys(SOURCES.ADAPTERS);
   const ph = LIVE.map(() => '?').join(',');
 

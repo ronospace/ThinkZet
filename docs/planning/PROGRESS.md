@@ -3,7 +3,7 @@
 One page. What is done, what is left, and the order to do it in.
 Detail: `TASKS.md`. Rules: `ENGINEERING.md`. Payments: `PAYMENTS.md`. Snapshot: `STATUS-2026-11-11.md`.
 
-Last updated: 15 November 2026 · `master` at `47c816a` · tagged `restore-20261113-48` · tree clean, nothing unpushed.
+Last updated: 15 November 2026 · `master` at `bd60694` · tagged `restore-20261113-50` · tree clean, nothing unpushed.
 
 ## Where we are
 
@@ -33,6 +33,7 @@ If the answer is no, it is not next.
 | SEO | 219 URLs across 169 market routes, robots, canonical, hreflang, JSON-LD, Search Console verified |
 | Ads | Free plans only, consent first, slot collapsed until a creative renders |
 | Security | Security headers, rate limiting, 404 for unknown paths, GDPR export and delete |
+| Landing | Two-column hero with a live Career Twin preview, proof bar computed from the corpus (`/api/public/proof`), display-only FX with the rate date, one hero and one calculator |
 
 ## 2. Open – founder
 
