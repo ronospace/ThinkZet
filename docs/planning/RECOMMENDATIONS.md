@@ -38,6 +38,8 @@ Last updated: 13 November 2026.
 | R-24 | Values were printed as stored: senior, any, no, high, emerging, copy, balanced. Every enumerated value now goes through `titleCase()` or a `Yes`/`No` pair, including the server-side trajectory drivers and confidence factors | Whole app | done | `COPY-41` || R-24 | Values were printed as stored: senior, any, no, high, emerging, copy, balanced. Every enumerated value now goes through `titleCase()` or a `Yes`/`No` pair, including the server-side trajectory drivers and confidence factors | Whole app | done | `COPY-41` |
 | R-25 | Saved Searches asked for a name in a text box and showed filters as `horizon: balanced`; it now names itself from the filters, shows what it watches in words, and lists the matches it found with a score chip and a new count | Saved Searches | done | `UI-123` |
 | R-26 | Career Copilot asked its five questions as oval pills of different widths, three rows deep, and its intro bubble spent 315px of a 852px screen before a single answer | Career Copilot | done | `UI-124` |
+| R-27 | Card headings were bold titles at 15px competing with the page title; they are now full-caps labels at 11.5px, weight 600, and the three finding sentences ("Closing PyTorch alone unblocks 12 of your 60…") are body weight instead of bold | Skill Gaps, Negotiation, Career Trajectory, every card | done | `UI-125` |
+| R-28 | Skill Gaps repeated its own page title as a card heading, and printed "cumulative" under all four numbers | Skill Gaps | done | `UI-125` |
 
 ## How to use this
 

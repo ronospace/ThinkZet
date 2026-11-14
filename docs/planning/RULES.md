@@ -112,3 +112,16 @@ rectangular rows (one column below 700px), and the copilot intro is a full-width
 and four facts. Measured: rows 35px tall at 393 and 39px at 1440, intro 283px on a phone and 179px on a desk, with 14px
 of the composer still visible at 852px so the first answer is one tap away.
 
+## 13. A heading is a label; a sentence is not a heading
+
+Card headings are full caps, letter-spaced, at `--text-xs` and weight 600, in `--ink2`. They are labels on a container,
+not titles competing with the page title, and they are never bold. A sentence that states a finding - "Closing PyTorch
+alone unblocks 12 of your 60 realistic opportunities" - is body copy at `--text-base`, weight 400, `--ink`, and it is
+never set as a heading. A name is not a label either: a saved search keeps its own case, its own size and weight 650, so
+`.sh-card h3` overrides the rule. One class carries the finding line, `.stmt`, used by Skill Gaps, Negotiation and Career
+Trajectory. Measured 14 November 2026: every card heading at 393 and 1440 is 11.5px, weight 600, uppercase, 1.15px
+tracking; the three finding lines are 14px weight 400.
+
+A repeated unit label is not repeated. "cumulative" under four numbers became one column header, `Cumulative unblocked`,
+because a word repeated once per row is noise the reader has to skip four times.
+
