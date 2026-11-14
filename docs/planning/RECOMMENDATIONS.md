@@ -37,6 +37,7 @@ Last updated: 13 November 2026.
 | R-23 | Card headings were sentence case in 13 places and title case in the rest; every `h2`/`h3` now uses title case, and the skill count goes through `int()` | Whole app | done | `COPY-40` |
 | R-24 | Values were printed as stored: senior, any, no, high, emerging, copy, balanced. Every enumerated value now goes through `titleCase()` or a `Yes`/`No` pair, including the server-side trajectory drivers and confidence factors | Whole app | done | `COPY-41` || R-24 | Values were printed as stored: senior, any, no, high, emerging, copy, balanced. Every enumerated value now goes through `titleCase()` or a `Yes`/`No` pair, including the server-side trajectory drivers and confidence factors | Whole app | done | `COPY-41` |
 | R-25 | Saved Searches asked for a name in a text box and showed filters as `horizon: balanced`; it now names itself from the filters, shows what it watches in words, and lists the matches it found with a score chip and a new count | Saved Searches | done | `UI-123` |
+| R-26 | Career Copilot asked its five questions as oval pills of different widths, three rows deep, and its intro bubble spent 315px of a 852px screen before a single answer | Career Copilot | done | `UI-124` |
 
 ## How to use this
 

@@ -104,34 +104,19 @@ Last updated: 13 November 2026.
 
 ## B. You – needs the founder
 
-| ID | Cat | Task | Next action |
-|---|---|---|---|
+Numbered so you can say "B-4" instead of describing it. Each row says what is already built, so the action is a
+variable, a click or a decision rather than a piece of work. Status is `READY` when nothing but your step remains.
 
-
-| DATA-06 | DATA | **The 176% rate gap is an artefact of the synthetic corpus.** Backend/senior comparables are 1,461 records, of which 1,311 are USD/year at an average of 174,705 and 109 are CAD at 229,000; only 4 are EUR. The benchmark is a US-market number applied to a EUR salary, and the headline multiplies it. Country filter does not change it (Any, DE and US all return 138,000). Fixing this is DATA-03 | You decide A or B, then Us | OPEN |
-
-| AUTH-01 | AUTH | Google credentials set in Railway and live on production; the client JSON confirms redirect `https://thinkzet.com/api/auth/google/callback` | none |
-
-| PAY-01b | PAY | Stripe product renamed from MirrorSpread Pro to ThinkZet Pro; checkout now requests 3DS automatically; payment suite updated because Pro+ is displayed again, so it asserts the waitlist path and that a plus checkout cannot be bought | Us | DONE | product read back, payment-check 20/20 |
-| PAY-08 | PAY | Subscription visibility: `/api/plan` returns plan, status, cycle, since, periodEnd, cancelsAtPeriodEnd and the Stripe subscription id; the plan screen shows a Plan / Status / Renews panel and states the active plan on its card | Us | DONE | three states proven on an isolated server: free none, pro active, pro cancels_at_period_end |
-| PAY-07 | PAY | Currency decision: keep EUR as the settlement and price currency (Stripe account is DE, EUR, no FX on the successful charge), and keep Adaptive Pricing on so a non-EUR card sees its own currency at checkout. Rates stay EUR; a USD view is a display option, not a currency change | Us | DONE | successful charge 200 eur with no conversion, card country KE |
-| PAY-06 | PAY | Renewal attribution: `invoice.paid` now resolves the user from the subscription id, the subscription inside the invoice lines, or the stored customer id, in that order, and refuses to guess when none match | Us | DONE | four cases proven: subscription id, subscription in lines, customer id, unattributable stays free |
-| PAY-01a | PAY | Diagnosed: Stripe answers `payment_intent_authentication_failure` on a card intent, no charge created. The session is 200 **eur** but Stripe presents **30,313 KES** because Adaptive Pricing converted for a Kenyan device, and the page then says "charge you in KES". Account is DE with EUR settlement, so a KES presentment is what the issuer refuses. Also found: the checkout statement descriptor is `FLOW AI`, not ThinkZet | Us | DONE | session `cs_live_b1tTuVsfb1zlF2sAMbx4y0bAXIESTRz9lYT5rw8Bqa8OmrSoAaQq8fBOod` |
-| PAY-01 | PAY | Real €19.99 payment, confirm Pro unlocks, refund yourself | thinkzet.com → Upgrade |
-| PAY-05 | PAY | Cancellation proven: the subscription is canceled at Stripe and `customer.subscription.deleted` downgraded the account to free | Us | DONE | subscription status canceled, webhook downgraded to free |
-| MON-01 | MON | AdSense publisher id `pub-8707491489514576` supplied and wired: `/api/ads` returns enabled only for a free plan with a client id set, and the loader injects AdSense only after consent. AdMob app and banner ids stay on file for a future native app | Us | DONE | enabled true with a client id, false without; paid plans excluded |
-| MON-05 | MON | Consent banner never appears on the sign-in screen: the ad mount returns early when the view is auth, so no consent is requested where no ad exists | Us | DONE | measured on the auth screen: banner false, script false, consent null |
-| MON-04 | MON | Ads are off for Pro and Pro+: `/api/ads` returns enabled false with reason "paid plan, ads never shown", so the consent banner never appears and the AdSense script is never injected | Us | DONE | four cases on an isolated server: signed out and free enabled, pro and pro+ disabled |
-| MON-03 | MON | Consent banner for ads: shown only when `/api/ads` reports enabled and no choice is stored, Allow injects the AdSense script and one labelled unit below the radar list, No thanks stores a refusal and loads nothing | Us | DONE | measured: before banner true, slot false, script false; after Allow banner false, slot true, script true, consent yes |
-| MON-02 | MON | Ad placement rules, agreed before any code: never on Pro or Pro+, never inside the rate result, the copilot or the brief, never above the first insight, one unit below the radar list and one on the market pages, labelled, EEA consent first | Us | OPEN | needs MON-01 decision |
-| PAY-05 | PAY | Live proof of cancellation against a real Stripe subscription (steps in `docs/planning/PAYMENTS.md`) | After PAY-01: subscribe, cancel in the app, confirm Stripe shows "cancels at period end" |
-| SEC-03 | SEC | Safe Browsing review requested through Search Console by the verified owner; routing fix deployed and transparency API clean | You | DONE | review submitted 10 Nov 2026 |
-| SEC-01 | SEC | Roll the Stripe live key, webhook secret and Resend key (all pasted in chat) | Roll in each dashboard, update Railway |
-| DEP-01 | DEP | Confirm the volume keeps data across a redeploy | DONE 11 Nov 2026: display name DEP01-check and the Applied tracker state both survived, service returned to Active, volume confirmed persistent |
-
-
-| REPO-01 | REPO | Rename GitHub repo `MirrorSpread` to `ThinkZet` | GitHub → Settings; then Us updates `deploy/*` |
-| DATA-01 | DATA | Make the copilot and cover letters generative | Supply `LLM_ENDPOINT`, `LLM_API_KEY`, `LLM_MODEL` |
+| # | ID | Cat | What is already built | Your step | Status |
+|---|---|---|---|---|---|
+| B-1 | SEC-01 | SEC | Rotation runbook written, `appleKeyUsable()` verifies the key parses and the client secret matches it, providers reports `{"google":true,"apple":true}` on the current key | Create `ThinkZet Sign in with Apple 2` at developer.apple.com, paste `APPLE_PRIVATE_KEY` (and `APPLE_KEY_ID` if it changed) in Railway, sign in once on a phone, then revoke the old key. Steps 1 to 9 in `SEC-01-APPLE-ROTATION.md` | READY |
+| B-2 | DATA-13 | DATA | `adzuna` adapter written and registered only when its keys exist; the benchmark source list is now derived from the registered adapters, so a key is the whole change | Register at developer.adzuna.com, then set `ADZUNA_APP_ID` and `ADZUNA_APP_KEY` in Railway. Optional: `ADZUNA_COUNTRIES` (default `de,gb,ch,us`) | READY |
+| B-3 | DATA-02 | DATA | `scripts/backup.cjs` takes a `VACUUM INTO` snapshot, verifies it with `PRAGMA integrity_check` and row counts, uploads with hand-signed SigV4, prunes to 7, and runs today with no bucket (proved: 21.1 MB, integrity ok, 36 tables, 2,866 opportunities) | Create one bucket (Cloudflare R2 is free at this size, same account as the domain), then set `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY`. Run `node scripts/backup.cjs` once to prove it, then schedule it | READY |
+| B-4 | DATA-01 | DATA | Copilot and cover letters are deterministic by design and say so on screen; the generative path is a drop-in behind three variables | Supply `LLM_ENDPOINT`, `LLM_API_KEY`, `LLM_MODEL` if you want generative answers. Not required for launch: every answer already cites its sample | OPTIONAL |
+| B-5 | GRO-01 | GRO | `GRO-01-FIRST-20.md` has 4 buckets, invite copy, 5 test steps, 5 questions and a 7-day schedule | Send the link to the first 20 people. Paused by you on 11 Nov; say the word and it resumes | PAUSED |
+| B-6 | FB-03 | FB | Rating and comment capture is live on every surface; the testimonials block renders only rows that exist | Nothing until there is a paying cohort. It fills itself after 14 days of Pro | WAITING |
+| B-7 | PAY-01 | PAY | Live Stripe product, both prices, webhook grant, refund and downgrade all proved end to end | Nothing. Kept here only as the record that money works | DONE |
+| B-8 | SEO-08 | SEO | Sitemap is 205 URLs, `/strategy.html` answers 410, Search Console verified | Search Console → URL inspection on `https://thinkzet.com/` → Request indexing. The removal request for the old strategy page is already filed | READY |
 
 ## C. Blocked
 
@@ -141,7 +126,6 @@ Last updated: 13 November 2026.
 | EML-02 | EML | Sender `ThinkZet <brief@thinkzet.com>` | EML-01 (cleared) |
 | AUTH-06 | AUTH | Display name: provider name on first sign-in, user override in `users.display_name`, the override wins in every API response and the UI, and a later provider name never overwrites it | Us | DONE | 6 checks on an isolated server |
 | AUTH-03 | AUTH | Both providers live on production: providers reports google and apple true, both start routes return the provider with the thinkzet.com redirect, a forged state is refused and recorded in /api/auth/diagnostic. The consent step itself needs a human browser | You: click Continue with Google and Continue with Apple once | OPEN |
-| DATA-02 | DATA | Offsite backup of the SQLite volume | DEP-01 |
 | FB-01 | FB | In-app feedback: a short rating (1 to 5) plus an optional comment, stored against the account or the lead, surfaced on a Leads screen with an average and a distribution | Us | DONE | DONE 11 Nov 2026: rating plus optional comment, stored in `feedback`, summarised on the Leads screen with total, average, distribution and recent comments |
 | FB-02 | FB | Ask for a rating at the right moment only: after the first rate check result, after a recorded outcome, and once at day 7. Never on the paywall, never twice | Us | DONE | DONE 11 Nov 2026: shown once per surface on the radar, never on the paywall, collapsed to one line after answering, never asked twice |
 | FB-03 | FB | Public proof: a review request by email to paying customers after 14 days, and a testimonials block on the landing page that shows only real, attributed quotes | Us | OPEN | needs FB-01 and a first paying cohort |

@@ -585,12 +585,29 @@ table.t tr:hover td{background:var(--panel2)}
 .msg.user{align-self:flex-end;background:var(--nav-active);border:1px solid var(--line2)}
 .msg.bot{align-self:flex-start;background:var(--panel);border:1px solid var(--line)}
 .msg .cite{margin-top:8px;font-size:var(--text-xs);color:var(--muted);border-top:1px solid var(--line);padding-top:7px}
-.suggest{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.suggest button{font-size:var(--text-sm);padding:6px 11px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2)}
-.suggest button:hover{color:var(--ink);border-color:var(--line2)}
-.composer{display:flex;gap:10px}
-.composer input{flex:1;background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:11px 14px;outline:none}
+.suggest{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:12px}
+.suggest button{display:flex;align-items:center;gap:8px;text-align:left;font:inherit;font-size:var(--text-sm);line-height:1.35;padding:10px 12px;border-radius:8px;border:1px solid var(--line2);background:var(--panel2);color:var(--ink2);cursor:pointer}
+.suggest button:hover{color:var(--ink);border-color:var(--accent2)}
+.suggest button .sq{flex:0 0 auto;width:6px;height:6px;border-radius:2px;background:var(--accent2);opacity:.75}
+.composer{display:flex;gap:8px;align-items:center}
+.composer input{flex:1 1 auto;min-width:0;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:11px 12px;outline:none;font:inherit;font-size:var(--text-base);color:var(--ink)}
 .composer input:focus{border-color:var(--accent2)}
+.composer .btn{flex:0 0 auto}
+/* The intro is a card, not a bubble: it carries a definition and four facts, so it takes the full width. */
+.msg-intro{max-width:100%;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
+.msg-intro .facts.tight{margin-top:12px;gap:5px 14px}
+.mi-lead{font-weight:650;color:var(--ink);margin-bottom:10px;font-size:var(--text-base)}
+.mi-list{margin:0;padding:0;list-style:none;display:grid;grid-template-columns:1fr 1fr;gap:4px 18px}
+.mi-list li{font-size:var(--text-sm);color:var(--ink2);line-height:1.5;padding-left:12px;position:relative}
+.mi-list li::before{content:"";position:absolute;left:0;top:8px;width:5px;height:5px;border-radius:2px;background:var(--accent2);opacity:.7}
+.mi-list b{color:var(--ink);font-weight:650}
+@media(max-width:700px){
+  .suggest{grid-template-columns:1fr;gap:6px}
+  .suggest button{padding:8px 11px;min-height:0}
+  .mi-list{grid-template-columns:1fr;gap:2px}
+  .msg-intro{padding:12px 14px}
+  .msg-intro .facts.tight .fv{font-size:var(--text-xs);line-height:1.45}
+}
 
 .kv{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:var(--text-sm)}
 .kv:last-child{border-bottom:none}
@@ -894,10 +911,6 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 @media(max-width:560px){.ad-consent{flex-direction:column;align-items:stretch;bottom:88px}.ad-consent .row{justify-content:flex-end}}
 /* The intro is markup, not a typed message: pre-wrap would render its indentation as blank lines. */
 .msg-intro{display:block;white-space:normal}
-.mi-lead{font-weight:650;color:var(--ink);margin-bottom:8px}
-.mi-list{margin:0;padding-left:18px;display:grid;gap:4px}
-.mi-list li{font-size:var(--text-sm);color:var(--ink2);line-height:1.5}
-.mi-list b{color:var(--ink);font-weight:650}
 .mi-foot{margin-top:10px;font-size:var(--text-xs);color:var(--muted)}
 @media(min-width:901px){
   html,body{overflow:hidden;height:100%}
@@ -3181,7 +3194,7 @@ async function renderCopilot() {
   $('#view').innerHTML = `
     <div class="chat">
       <div class="suggest">
-        ${['What should I do next?', 'Am I underpaid?', 'Which skills are blocking me?', 'What is realistic for relocating to Germany?', 'How am I doing overall?'].map((q) => `<button data-q="${esc(q)}">${esc(q)}</button>`).join('')}
+        ${['What should I do next?', 'Am I underpaid?', 'Which skills are blocking me?', 'What is realistic for relocating to Germany?', 'How am I doing overall?'].map((q) => `<button data-q="${esc(q)}"><span class="sq" aria-hidden="true"></span><span>${esc(q)}</span></button>`).join('')}
       </div>
       <div class="msgs" id="msgs">
         <div class="msg bot msg-intro">
@@ -3201,7 +3214,7 @@ async function renderCopilot() {
         </div>
       </div>
       <div class="composer">
-        <input id="q" placeholder="Ask about your rate, your next move, your gaps…"/>
+        <input id="q" placeholder="Ask about your rate or next move" aria-label="Ask the copilot"/>
         <button class="btn" id="send">Ask</button>
       </div>
     </div>`;

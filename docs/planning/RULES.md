@@ -92,3 +92,23 @@ Owner: whoever is building. Reviewer: the founder.
 - 2026-11-13 - Section 10 added after UI-03 and the focus-ring check: score tones are theme tokens, and a ring is proved with a real Tab key.
 - 2026-11-13 - 7.6 added after SEO-07: a withdrawn page answers 410 so the index lets go of it.
 - 2026-11-13 - 7.6 and 7.7 renumbered after AUTH-25: a one-time token is claimed, not deleted.
+
+## 11. Capability that waits for a credential
+
+A source, a backup target or a model that needs a key is built and registered before the key exists, so the key is a
+variable rather than a piece of work. Two rules make that safe: an adapter whose credential is absent is not registered
+at all (a missing key must never become a failing source in the ingest log), and any list of sources is derived from the
+registered adapters rather than typed out again (a second list is a second thing to forget). `scripts/backup.cjs` runs
+with no bucket and says so; `sources.cjs` registers `adzuna` only when both of its keys are present. Measured 14 November
+2026: registered adapters without keys are the six live feeds, with keys the same six plus `adzuna`; the backup wrote
+21.1 MB, passed `integrity_check`, and reported 36 tables.
+
+## 12. A question is a row, not a pill
+
+An ask the product already knows how to answer is a row with a mark, a left edge and a full-width hit area, laid out on
+the page grid, never an oval of whatever width its words happen to need. Ovals read as tags, they cannot be scanned down
+a column, and five of them at 393px pushed the first answer 315px down the screen. `.suggest` is a two-column grid of
+rectangular rows (one column below 700px), and the copilot intro is a full-width card because it carries a definition
+and four facts. Measured: rows 35px tall at 393 and 39px at 1440, intro 283px on a phone and 179px on a desk, with 14px
+of the composer still visible at 852px so the first answer is one tap away.
+

@@ -152,6 +152,56 @@ async function remotive() {
   });
 }
 
+// ---------- Adzuna (credentialed: DE, GB, CH, US, and every other country it covers) ----------
+// Adzuna answers 401 without an app id and key. Both live in the environment, so the day the
+// credential arrives this adapter starts returning rows with no code change: the source list is
+// built from ADAPTERS, and an adapter whose keys are absent is simply not registered.
+const ADZUNA_COUNTRIES = (process.env.ADZUNA_COUNTRIES || 'de,gb,ch,us').split(',').map((c) => c.trim().toLowerCase()).filter(Boolean);
+
+function adzunaConfigured() {
+  return !!(process.env.ADZUNA_APP_ID && process.env.ADZUNA_APP_KEY);
+}
+
+async function adzunaCountry(cc) {
+  const id = process.env.ADZUNA_APP_ID;
+  const key = process.env.ADZUNA_APP_KEY;
+  if (!id || !key) throw new Error('adzuna needs ADZUNA_APP_ID and ADZUNA_APP_KEY');
+  const url = `https://api.adzuna.com/v1/api/jobs/${cc}/search/1?app_id=${encodeURIComponent(id)}&app_key=${encodeURIComponent(key)}`
+    + '&results_per_page=50&content-type=application/json&what=' + encodeURIComponent(process.env.ADZUNA_WHAT || '');
+  const j = await getJSON(url);
+  const rows = Array.isArray(j.results) ? j.results : [];
+  return rows.map((r) => {
+    const pay = parsePayText([r.salary_min ? `${r.salary_min}` : '', r.salary_max ? `${r.salary_max}` : '', r.salary_is_predicted === '1' ? '' : ''].join(' ').trim());
+    return {
+      externalId: `adzuna-${cc}-${r.id}`,
+      title: r.title || '',
+      company: (r.company && r.company.display_name) || '',
+      description: strip(r.description).slice(0, 2000),
+      city: (r.location && r.location.area && r.location.area[3]) || (r.location && r.location.display_name) || '',
+      country: cc.toUpperCase(),
+      remote: /remote/i.test(`${r.title || ''} ${r.description || ''}`),
+      tags: [...(r.category ? [r.category.label] : []), ...((r.category && r.category.tag) || '')].filter(Boolean),
+      jobTypes: r.contract_time ? [r.contract_time] : [],
+      url: r.redirect_url || '',
+      postedAt: r.created || new Date().toISOString(),
+      currency: pay ? pay.currency : (r.salary_min ? 'EUR' : null),
+      compMin: r.salary_min || (pay ? pay.compMin : null),
+      compMax: r.salary_max || (pay ? pay.compMax : null),
+      compPeriod: pay ? pay.compPeriod : (r.salary_min ? 'year' : null),
+    };
+  });
+}
+
+async function adzuna() {
+  const out = [];
+  const failures = [];
+  for (const cc of ADZUNA_COUNTRIES) {
+    try { out.push(...(await adzunaCountry(cc))); } catch (e) { failures.push(`${cc}:${e.message}`); }
+  }
+  if (!out.length && failures.length) throw new Error('adzuna ' + failures.join(' '));
+  return out;
+}
+
 // ---------- We Work Remotely (RSS, salary parsed from the listing text) ----------
 async function weworkremotely() {
   const xml = await getJSON; // placeholder to keep the linter quiet about unused imports
@@ -241,6 +291,12 @@ const ADAPTERS = {
   weworkremotely: { fn: weworkremotely, quality: 0.58, label: 'We Work Remotely', note: 'Global remote RSS, pay parsed from the listing' },
 };
 
+// A credentialed adapter is registered only when its credential is present, so a missing key can
+// never turn into a failing source in the ingest log, and adding the key is the whole change.
+if (adzunaConfigured()) {
+  ADAPTERS.adzuna = { fn: adzuna, quality: 0.82, label: 'Adzuna', note: `Credentialed, ${ADZUNA_COUNTRIES.join('/').toUpperCase()} salary-dense` };
+}
+
 async function fetchSource(key, opts) {
   const a = ADAPTERS[key];
   if (!a) throw new Error('unknown source ' + key);
@@ -258,4 +314,4 @@ async function fetchAll(keys = Object.keys(ADAPTERS)) {
   return results;
 }
 
-module.exports = { ADAPTERS, fetchSource, fetchAll, getJSON, strip };
+module.exports = { ADAPTERS, fetchSource, fetchAll, getJSON, strip, adzunaConfigured };

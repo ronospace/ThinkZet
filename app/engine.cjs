@@ -5,6 +5,7 @@ const { db } = require('./db.cjs');
 const { SKILLS, resolveSkill } = require('./taxonomy.cjs');
 const { CURRENCY_RATES, SENIORITY_MULT, BASE_ANNUAL_EUR } = require('./corpus.cjs');
 const { extractYearsRequired } = require('./classify.cjs');
+const SOURCES = require('./sources.cjs');
 
 const SENIORITY_RANK = { junior: 1, mid: 2, senior: 3, staff: 4, lead: 4, principal: 5 };
 
@@ -505,7 +506,9 @@ function rateIntelligence(userId) {
   // role and a fellowship stipend are not salaries, and including them inflates the benchmark.
   // Option A: only figures that came from a live source feed the benchmark. The seeded corpus is kept
   // for opportunity display, but it never contributes a salary number.
-  const LIVE_SOURCES = ['arbeitnow', 'jobicy', 'remoteok', 'hackernews', 'remotive', 'weworkremotely'];
+  // Derived from the registered adapters, so a credentialed source that comes online contributes to the
+  // benchmark the moment its key is set, and a source that is removed stops contributing without an edit here.
+  const LIVE_SOURCES = Object.keys(SOURCES.ADAPTERS);
   const recs = db.prepare(`SELECT * FROM salary_records
     WHERE period IN ('year','hour','month','day') AND source IN (${LIVE_SOURCES.map(() => '?').join(',')})`)
     .all(...LIVE_SOURCES);
