@@ -262,7 +262,9 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .card h3{margin:0 0 4px;font-size:var(--text-sm);font-weight:600;letter-spacing:.02em;color:var(--ink2)}
 .card h3{font-size:var(--text-sm);font-weight:600;color:var(--ink2);letter-spacing:.09em;text-transform:uppercase;margin:0 0 8px}
 /* A name is not a label: a saved search keeps its own case and its own weight. */
-.sh-card h3{font-size:var(--text-base);font-weight:650;letter-spacing:normal;text-transform:none;color:var(--ink);margin:0}
+.sh-card h3{font-size:var(--text-2xs);font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--ink2);margin:0}
+.sh-pay{flex:0 0 auto;font-size:var(--text-xs);color:var(--ink2);font-variant-numeric:tabular-nums;white-space:nowrap}
+@media(max-width:560px){.sh-pay{grid-column:2;justify-self:start;margin-top:2px}}
 /* A sentence that states a finding is not a heading and not bold: it reads at body weight. */
 .stmt{font-size:var(--text-base);font-weight:400;line-height:1.55;color:var(--ink);margin-top:8px;text-wrap:pretty}
 .script{margin-top:10px;padding:2px 0 2px 14px;border-left:2px solid var(--accent);font-size:var(--text-base);font-weight:400;line-height:1.7;color:var(--ink);text-wrap:pretty;font-style:normal}
@@ -1026,7 +1028,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 @media(max-width:560px){.sh-head{flex-wrap:wrap}.sh-headacts{order:2}}
 .sh-card{padding:16px 18px}
 .sh-hits{margin-top:12px;display:grid;gap:6px}
-.sh-hits .sh{display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:10px;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 10px;cursor:pointer;font:inherit;color:inherit}
+.sh-hits .sh{display:grid;grid-template-columns:auto 1fr auto auto;align-items:center;gap:10px;width:100%;text-align:left;background:var(--panel2);border:1px solid var(--line);border-radius:9px;padding:8px 10px;cursor:pointer;font:inherit;color:inherit}
 .sh-hits .sh:hover{border-color:var(--line2)}
 .sh-s{display:inline-flex;align-items:center;justify-content:center;min-width:30px;height:24px;border-radius:6px;font-size:var(--text-2xs);font-weight:700;font-variant-numeric:tabular-nums}
 .sh-s.g{background:var(--score-hi-bg);color:var(--score-hi)}
@@ -1039,7 +1041,8 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
 /* ---------- your data ---------- */
 .data-acts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px}
 .data-act{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
-.data-act .btn{width:100%;justify-content:center}
+
+.data-act .btn{justify-content:center}
 .da-note{font-size:var(--text-xs);color:var(--muted);line-height:1.5}
 /* Side by side at every width: two short actions, and stacking them made the pair read as a sequence. */
 @media(max-width:560px){.data-acts{gap:8px}.data-act .btn{width:100%;padding-left:8px;padding-right:8px}}
@@ -3418,10 +3421,15 @@ async function renderSearches() {
         <span class="fk">What it watches</span>
         <span class="fv">${esc(watching)}</span>
       </div>
-      <div class="row" style="margin-top:12px;gap:8px;flex-wrap:wrap;align-items:center">
-        <button class="btn" id="s-add">Watch This Search</button>
-        <button class="btn ghost" id="s-edit">Change the Filters</button>
-        <span class="dim" style="font-size:var(--text-xs)">Named for you. You can rename it after.</span>
+      <div class="data-acts" style="margin-top:12px">
+        <div class="data-act">
+          <button class="btn" id="s-add">Watch This Search</button>
+          <div class="da-note">Saves the filters above as a standing search and names it for you. You can rename it afterwards.</div>
+        </div>
+        <div class="data-act">
+          <button class="btn ghost" id="s-edit">Change the Filters</button>
+          <div class="da-note">Opens The Radar with the same filters, so you can widen or narrow what is watched before saving.</div>
+        </div>
       </div>
     </div>
     <div class="sh-list">
@@ -3438,7 +3446,8 @@ async function renderSearches() {
         </div>
         ${s.hits && s.hits.length ? `<div class="sh-hits">${s.hits.map((h) => `<button class="sh" data-opp="${esc(h.id)}">
           <span class="sh-s ${h.matchScore >= 80 ? 'g' : h.matchScore >= 65 ? 'm' : 'l'}">${int(h.matchScore)}</span>
-          <span class="sh-b"><span class="sh-t">${esc(h.title)}</span><span class="sh-c">${esc(h.company)}${h.country ? ' · ' + esc(h.country) : ''}</span></span>
+          <span class="sh-b"><span class="sh-t">${esc(h.title)}</span><span class="sh-c">${[h.company, h.country, h.seniority ? titleCase(h.seniority) : '', h.family ? titleCase(h.family) : ''].filter(Boolean).map(esc).join(' · ')}</span></span>
+          <span class="sh-pay">${h.compMin != null ? money(h.compMin) + (h.compMax && h.compMax !== h.compMin ? '–' + money(h.compMax) : '') + (PERIOD_LABEL[h.compPeriod] || '') : 'Pay not disclosed'}</span>
           <span class="sh-x">›</span>
         </button>`).join('')}</div>` : `<div class="empty-line">Nothing new since you last looked. ${int(s.total)} scored ${s.total === 1 ? 'opportunity matches' : 'opportunities match'} this search.</div>`}
       </div>`).join('') : '<div class="card"><div class="empty-line">No searches watched yet. Set filters on The Radar, then press Watch This Search.</div></div>'}

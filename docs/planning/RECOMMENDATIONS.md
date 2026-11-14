@@ -63,3 +63,8 @@ Last updated: 13 November 2026.
   commit. The row is then marked `done` with the commit.
 - At the end of the build we walk the table top to bottom and decide each `open` row: build, defer or reject.
 - A `rejected` row keeps its number and gains one line saying why, so the same idea is not raised twice.
+| R-45 | Saved Searches gave two unlabelled buttons and a floating sentence, so nobody could tell what either one did | Two labelled columns, each with a one-line note under its button: Watch This Search saves the filters as a standing search, Change the Filters opens The Radar with the same filters | Done `UI-138` |
+| R-46 | A saved-search hit printed a title, a company and a country, and nothing about what the opportunity pays or what it is | Each row now carries pay (or "Pay not disclosed"), seniority and role family beside the company and market, so the row answers "what is it, what does it pay" without opening it | Done `UI-138` |
+| R-47 | The saved-search card heading was 15px mixed case, the only card heading in the product that was not a caps label | `.sh-card h3` is now the caps label used everywhere else (12.5px, 600, 0.09em, `--ink2`); the search's own name keeps its case in the row above | Done `UI-138` |
+| R-48 | Career Co-Pilot asked five questions as 165x76 boxes in two staggered scrollers, and answered into a plain column | Six one-line chips, avatar-led bubbles, a typing indicator, a growing composer with Enter and Shift+Enter, and a collapsible Career Context of six badges | Done `UI-137` |
+
