@@ -164,7 +164,6 @@ a{color:var(--accent);text-decoration:none}
 .nav::-webkit-scrollbar{width:6px}
 .nav::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px}
 .nav-group{display:flex;flex-direction:column;gap:1px;margin-bottom:8px}
-.nav-more{display:none}
 .nav-label{position:sticky;top:0;z-index:2;display:block;font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);font-weight:700;padding:7px 10px 4px;opacity:1;background:var(--panel);box-shadow:0 1px 0 var(--line)}
 .nav-wrap{position:relative;flex:1 1 auto;min-height:0;display:flex;overflow:hidden}
 .nav button{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:var(--ink2);text-align:left;width:100%;font-size:var(--text-base)}
@@ -666,30 +665,12 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
   .nav::-webkit-scrollbar{display:none}
   .nav-group{flex-direction:row;margin:0;gap:0}
   .nav-label{display:none}
-  /* Equal boxes with their own padding, so the first and last label sit the same distance from the edge. */
-  .nav button{flex-direction:column;gap:3px;padding:7px 10px;min-width:62px;justify-content:center;text-align:center;font-size:var(--text-nav);white-space:nowrap;border-radius:9px}
-  .nav-group:last-child{padding-right:0}
-  .nav-more{display:flex}
-  /* A phone bar holds five equal boxes. The rest are one tap away behind More, so no label is ever cut. */
-  .nav button:not(.nav-pri):not(.nav-more){display:none}
-  /* Six equal columns on one grid: groups dissolve, so every gap is the same 4px and nothing drifts. */
-  /* The collapse handle belongs to a sidebar. On a bottom bar it hung 11px past the right edge. */
+  /* The original bar: one scrolling row of every section, full labels, nothing hidden. */
   .rail-toggle{display:none}
-  .nav{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:4px}
-  .nav-group{display:contents}
-  .nav button{min-width:0;padding:7px 0}
-  /* Short labels on a phone: the full name is in the header and in More. A cut word is worse than a short one. */
-  .nav button[data-view="brief"] .lbl::after{content:"Brief"}
-  .nav button[data-view="radar"] .lbl::after{content:"Radar"}
-  .nav button[data-view="scores"] .lbl::after{content:"Score"}
-  .nav button[data-view="tracker"] .lbl::after{content:"Tracker"}
-  .nav button[data-view="copilot"] .lbl::after{content:"Copilot"}
-  .nav button[data-view="brief"] .lbl,.nav button[data-view="radar"] .lbl,.nav button[data-view="scores"] .lbl,.nav button[data-view="tracker"] .lbl,.nav button[data-view="copilot"] .lbl{font-size:0}
-  .nav button[data-view="brief"] .lbl::after,.nav button[data-view="radar"] .lbl::after,.nav button[data-view="scores"] .lbl::after,.nav button[data-view="tracker"] .lbl::after,.nav button[data-view="copilot"] .lbl::after{font-size:var(--text-2xs)}
-  /* The groups are the flex items of the bar, so they must share the width too, or their content wins. */
-  .nav-group{flex:1 1 0;min-width:0}
-  .nav-group:has(> button:not(.nav-pri):not(.nav-more)){flex:0 0 auto}
-  .nav{padding-inline:6px;overflow-x:hidden}
+  .nav{display:flex;flex-direction:row;gap:4px;padding:0 8px;overflow-x:auto;overflow-y:hidden;scrollbar-width:none;scroll-snap-type:x proximity}
+  .nav-group{display:flex;flex-direction:row;gap:4px;margin:0;flex:0 0 auto}
+  /* width:auto undoes the sidebar's width:100%, which made every box 194px wide in a row. */
+  .nav button{flex:0 0 auto;width:auto;flex-direction:column;gap:3px;padding:7px 10px;min-width:0;justify-content:center;text-align:center;font-size:var(--text-nav);white-space:nowrap;border-radius:9px;scroll-snap-align:start}
   .nav button .ico{width:18px;height:18px}
   .nav button .ico svg{width:17px;height:17px}
   .nav button.active{box-shadow:none;background:var(--nav-active)}
@@ -1303,7 +1284,7 @@ html[data-theme="light"] .plan-done{background:#EAF7F0;border-color:#9FD9BC;colo
       <button data-view="learning"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg></span><span class="lbl">Learning Loop</span></button>
       <button data-view="plan"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.8" y="3.6" width="12.4" height="8.8" rx="1.6"/><path d="M1.8 6.6h12.4"/></svg></span><span class="lbl">Plan</span></button>
       </div>
-      <div class="nav-group"><button class="nav-more" id="nav-more" aria-label="All sections"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="3.2" cy="8" r="1.1"/><circle cx="8" cy="8" r="1.1"/><circle cx="12.8" cy="8" r="1.1"/></svg></span>More</button></div>
+      
       <div class="nav-group" data-founder="1" hidden><span class="nav-label">Operations</span>
       <button data-view="partners" data-founder="1" hidden><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6.4 9.6a2.6 2.6 0 003.7 0l2.1-2.1a2.6 2.6 0 00-3.7-3.7l-1 1"/><path d="M9.6 6.4a2.6 2.6 0 00-3.7 0L3.8 8.5a2.6 2.6 0 003.7 3.7l1-1"/></svg></span><span class="lbl">Partners</span></button>
       <button data-view="analytics"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.4 13.2V8.4M6.2 13.2V4.2M10 13.2v-6M13.8 13.2V2.8"/></svg></span><span class="lbl">Funnel</span></button>
@@ -3290,7 +3271,6 @@ async function renderCopilot() {
     msgs.scrollTop = msgs.scrollHeight;
   };
   $('#send').onclick = () => send();
-  $('#nav-more').onclick = () => openPalette();
   $('#q').onkeydown = (e) => { if (e.key === 'Enter') send(); };
   document.querySelectorAll('.cp-card').forEach((b) => { b.onclick = () => send(b.dataset.q); });
 }
