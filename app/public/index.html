@@ -635,7 +635,8 @@ table.t tr:hover td{background:var(--panel2)}
   .cp-hello h2{font-size:var(--text-md)}
 }
 
-.kv{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:var(--text-sm)}
+.kv{display:flex;justify-content:space-between;align-items:baseline;gap:14px;padding:7px 0;border-bottom:1px solid var(--line);font-size:var(--text-sm)}
+.kv-note{display:block;font-size:var(--text-xs);color:var(--muted);line-height:1.45;margin-top:3px;max-width:56ch;text-wrap:pretty}
 .kv:last-child{border-bottom:none}
 .kv span:first-child{color:var(--muted)}
 .palette{position:fixed;inset:0;background:rgba(5,7,10,.72);backdrop-filter:blur(6px);display:none;align-items:flex-start;justify-content:center;padding-top:12vh;z-index:100}
@@ -3299,8 +3300,8 @@ async function renderLearning() {
         <div class="big mono" style="margin:10px 0 2px">${l.totalOutcomes}</div>
         <div class="dim">outcomes you have reported</div>
         <div style="margin-top:18px">
-          <div class="kv"><span>How much your outcomes count<span class="muted" style="font-size:var(--text-xs);display:block">Weight against the market average. It rises as you report more, and is capped so one lucky result cannot swing it.</span></span><span class="mono">${Math.round(l.calibration.shrinkage * 100)}%</span></div>
-          <div class="kv"><span>Effect on your interview estimate<span class="muted" style="font-size:var(--text-xs);display:block">How far your own results have moved the estimate away from the market figure.</span></span><span class="mono">+${l.calibration.interviewPriorLift}%</span></div>
+          <div class="kv"><span>How much your outcomes count<span class="kv-note">Weight against the market average. It rises as you report more, and is capped so one lucky result cannot swing it.</span></span><span class="mono">${Math.round(l.calibration.shrinkage * 100)}%</span></div>
+          <div class="kv"><span>Effect on your interview estimate<span class="kv-note">How far your own results have moved the estimate away from the market figure.</span></span><span class="mono">+${l.calibration.interviewPriorLift}%</span></div>
           <div class="kv"><span>Offers logged</span><span class="mono">${l.offers}</span></div>
           <div class="kv"><span>Average salary change on offers</span><span class="mono">${l.avgSalaryDeltaPct == null ? '–' : (l.avgSalaryDeltaPct > 0 ? '+' : '') + l.avgSalaryDeltaPct + '%'}</span></div>
           <div class="kv"><span>Model version</span><span class="mono">${esc(l.calibration.modelVersion)}</span></div>
@@ -3335,6 +3336,7 @@ async function renderLearning() {
     </div>
     <h2 class="section">Recent Outcomes</h2>
     <div class="card">
+      ${recent.outcomes.length ? '' : '<div class="tk-empty">No outcomes yet. Every reported outcome is data no competitor has.</div>'}
       ${recent.outcomes.length ? recent.outcomes.map((o) => `<div class="kv"><span>${esc(titleCase(o.outcome_type))}${o.salary_delta_pct != null ? ' · ' + (o.salary_delta_pct > 0 ? '+' : '') + o.salary_delta_pct + '%' : ''}</span><span class="muted">${new Date(o.occurred_at).toLocaleDateString('en-GB')}</span></div>`).join('') : '<div class="muted">No outcomes yet. Every reported outcome is data no competitor has.</div>'}
     </div>`;
   $('#l-outcome').onclick = async () => {
