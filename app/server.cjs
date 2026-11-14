@@ -2424,7 +2424,9 @@ route('GET', /^\/api\/saved-searches$/, async (req, res) => {
       ...r, filters: f, label: filterLabel(f),
       newCount: fresh.length,
       total: matched.length,
-      hits: fresh.slice(0, 3).map((o) => ({ id: o.id, title: o.title, company: o.company, matchScore: o.match_score, country: o.country })),
+      hits: fresh.slice(0, 3).map((o) => ({ id: o.id, title: o.title, company: o.company, matchScore: o.match_score,
+        country: o.country, compMin: o.comp_min, compMax: o.comp_max, currency: o.currency, compPeriod: o.comp_period,
+        seniority: o.seniority, family: o.role_family, postedAt: o.posted_at })),
     };
   });
   json(res, 200, { searches });

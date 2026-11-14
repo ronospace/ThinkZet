@@ -159,3 +159,15 @@ Two consequences worth stating, because they were both broken:
 
 - A caption under a hero number is not a footnote. `0` over `outcomes you have reported` at 11px grey reads as a caption for a chart nobody drew. At `--text-sm` weight 500 in `--ink2` it reads as the answer's name.
 - A gradient belongs to a transition, not to a decoration. The section title is the one element that says "the next thing starts here", so it is the one element that gets colour. The hero gradient stays landing-only (RULES 3).
+
+## 17. Global by default, never one country
+
+ThinkZet is a worldwide platform. Germany is one market among many, and nothing in the product may imply otherwise.
+
+- No country is the default. A rate check with no country pools the whole corpus, then the currency area, then the country, in that order (DATA-11).
+- No copy names a country as the home market. "In Germany" appears only where a page is explicitly about Germany.
+- No list of countries is typed out by hand. It is derived from the corpus, so a market appears the moment the data can defend it and disappears when it cannot.
+- A country code is a real page, not a redirect and not a 404. `/de` is the hub for one market, and the same route exists for every country in the corpus.
+- A prioritisation that would only make sense in one country (a visa scheme, a tax rule, a public holiday) belongs in a market-specific surface, never in a global one.
+
+The test: if the same screen were shown to a user in Lisbon, Toronto and Singapore, would every sentence still be true? If not, the sentence is wrong, not the user.
