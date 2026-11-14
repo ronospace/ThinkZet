@@ -143,3 +143,19 @@ read as machine-written. The one exception is a parser character class, where th
 An empty state says what is missing and how it fills: "Nothing saved yet. Save an opportunity from the radar and it lands
 here." The word "empty" in grey tells the reader nothing and reads as a fault. One component carries it, `.tk-empty`, a
 dashed border at `--line`, `--text-sm` in `--ink2`.
+
+## 16. One emphasis order, and colour carries the transition
+
+Emphasis is a ladder, not a switch. Nothing is bold because it is important; a thing is bold because it is higher on the ladder than what surrounds it. The order, top to bottom:
+
+1. **Hero number** - `.big` at `--text-2xl`, weight 700, tight tracking. One per card, never two.
+2. **Section title** - `h2.section` at `--text-md`, weight 650, and the only place a gradient is allowed inside a result surface: `--ink` to a 94% `--accent2` mix across the last third, clipped to the text. It marks where the next block starts without a rule or a heavier weight.
+3. **Card heading** - full caps, weight 600, 0.09-0.1em tracking, `--ink2` (RULES 13). A label, never bold.
+4. **Row label** - `.kv` at body size, weight 400, `--ink`.
+5. **Caption** - `.big-cap` at `--text-sm`, weight 500, `--ink2`. The sentence under a hero number is a sentence, not a footnote: it sits one step above `--text-xs` so it can be read without leaning in.
+6. **Note** - `.kv-note` or `.muted` at `--text-xs`, weight 400, `--muted`.
+
+Two consequences worth stating, because they were both broken:
+
+- A caption under a hero number is not a footnote. `0` over `outcomes you have reported` at 11px grey reads as a caption for a chart nobody drew. At `--text-sm` weight 500 in `--ink2` it reads as the answer's name.
+- A gradient belongs to a transition, not to a decoration. The section title is the one element that says "the next thing starts here", so it is the one element that gets colour. The hero gradient stays landing-only (RULES 3).
