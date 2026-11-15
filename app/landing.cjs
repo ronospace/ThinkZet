@@ -80,8 +80,9 @@ function oppsHTML(list, lang) {
   return `<div class="tp-opps">${list
     .map((o) => {
       const where = o.remote === 'remote' ? (de ? 'Remote' : 'Remote') : [o.city, o.country].filter(Boolean).join(', ') || (de ? 'Ort nicht angegeben' : 'Location not stated');
+      const per = o.period === 'hour' ? '/hr' : o.period === 'year' ? '/yr' : '';
       const pay = o.compMin != null
-        ? `${money(o.compMin, o.currency || 'EUR')}${o.compMax != null && o.compMax !== o.compMin ? '–' + money(o.compMax, o.currency || 'EUR') : ''}`
+        ? `${money(o.compMin, o.currency || 'EUR')}${o.compMax != null && o.compMax !== o.compMin ? '–' + money(o.compMax, o.currency || 'EUR') : ''}${per}`
         : de ? 'Keine Gehaltsangabe' : 'Salary undisclosed';
       return `<div class="tp-opp">
       <div class="tp-score ${scoreTone(o.matchScore)}" aria-label="${de ? 'Passung' : 'Match score'} ${o.matchScore} ${de ? 'von 100' : 'out of 100'}">${int(o.matchScore)}</div>

@@ -672,7 +672,7 @@ function guessFamily(profile, twin) {
   if (/kubernetes|terraform|sre/.test(text)) return 'platform';
   if (/flutter|mobile|ios|android/.test(text)) return 'mobile';
   if (/react|frontend/.test(text)) return 'frontend';
-  if (/product manager|roadmap/.test(text)) return 'product';
+  if (/product manager|product lead|product owner|head of product|principal pm|group pm|roadmap/.test(text)) return 'product';
   return 'backend';
 }
 

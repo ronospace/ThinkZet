@@ -6,9 +6,9 @@ const BASE = process.env.BASE || 'http://127.0.0.1:4173';
 const GETS = [
   '/api/health', '/api/me', '/api/auth/me', '/api/feed?limit=5', '/api/scores', '/api/rates',
   '/api/twin', '/api/tracker', '/api/gaps', '/api/gaps/plan', '/api/brief', '/api/learning',
-  '/api/outcomes/intel', '/api/plan', '/api/referrals', '/api/ops', '/api/pulse', '/api/ingest',
-  '/api/saved-searches', '/api/negotiation', '/api/trajectory', '/api/analytics',
-  '/api/billing/status', '/api/leads', '/api/email/status', '/api/email/prefs', '/api/email/outbox',
+  '/api/outcomes/intel', '/api/plan', '/api/referrals', '/api/pulse',
+  '/api/saved-searches', '/api/negotiation', '/api/trajectory',
+  '/api/billing/status', '/api/email/status', '/api/email/prefs', '/api/email/outbox',
   '/api/onboarding/draft', '/api/opportunities/lifecycle', '/api/email/sequence',
   '/api/habit', '/api/scores/v2', '/api/referrals/recommendations',
   '/api/data-sources',
@@ -61,6 +61,17 @@ async function call(method, path, body) {
       const ok = r.status === 200 && r.json && !r.json.error;
       if (ok) pass++; else { fail++; failures.push(`POST ${p} -> ${r.status} ${r.json?.error || ''}`); }
     } catch (e) { fail++; failures.push(`POST ${p} -> ${e.message}`); }
+  }
+
+  // The operator boundary. Ingestion health, lead records and funnel internals are founder data,
+  // so a stranger must be told they do not exist. Asserted, not assumed: the console page 404s, and
+  // so must every endpoint behind it.
+  for (const p of ['/api/ops', '/api/ingest', '/api/leads', '/api/analytics', '/console', '/internal.js', '/diagnostic']) {
+    try {
+      const r = await call('GET', p);
+      const ok = r.status === 404;
+      if (ok) pass++; else { fail++; failures.push(`operator boundary: ${p} -> ${r.status} for a stranger`); }
+    } catch (e) { fail++; failures.push(`operator boundary: ${p} -> ${e.message}`); }
   }
 
   // Invariants

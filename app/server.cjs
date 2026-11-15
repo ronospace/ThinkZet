@@ -257,6 +257,13 @@ route('POST', /^\/api\/auth\/apple\/probe$/, async (req, res) => {
   json(res, 200, { ok: r.ok, code: r.code, at: r.at });
 });
 
+// A founder-only endpoint answers the same 404 a missing route answers, so a stranger cannot map
+// our operator surface by probing it. Nothing about ingestion, leads or credentials is served.
+function notFound(res) {
+  res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8', 'X-Robots-Tag': 'noindex, nofollow, noarchive' });
+  res.end('Not found');
+}
+
 // The same report as a page, so nobody needs a terminal to read it. Founder only: it names our
 // providers and prints booleans about our own credentials, which is operator data (RULES 20).
 route('GET', /^\/diagnostic$/, async (req, res) => {
@@ -2700,6 +2707,7 @@ route('GET', /^\/api\/public\/share\/([a-f0-9]+)$/, async (req, res, url, m) => 
 });
 
 route('GET', /^\/api\/leads$/, async (req, res) => {
+  if (!isFounder(req, res)) return notFound(res);
   const rows = db.prepare('SELECT id,email,role,years,country,current_salary,gap_pct,gap_abs,median,source,converted_user_id,created_at FROM leads ORDER BY created_at DESC LIMIT 200').all();
   const total = db.prepare('SELECT COUNT(*) n FROM leads').get().n;
   const converted = db.prepare('SELECT COUNT(*) n FROM leads WHERE converted_user_id IS NOT NULL').get().n;
@@ -2728,6 +2736,7 @@ route('POST', /^\/api\/events$/, async (req, res) => {
 });
 
 route('GET', /^\/api\/analytics$/, async (req, res, url) => {
+  if (!isFounder(req, res)) return notFound(res);
   const uid = resolveUser(req);
   const days = Number(url.searchParams.get('days') || 30);
   json(res, 200, {
@@ -2965,6 +2974,7 @@ route('POST', /^\/api\/ingest$/, async (req, res) => {
 });
 
 route('GET', /^\/api\/ingest$/, async (req, res) => {
+  if (!isFounder(req, res)) return notFound(res);
   const last = lastRun();
   const counts = db.prepare("SELECT source, COUNT(*) n FROM opportunities WHERE source IN ('arbeitnow','remoteok','jobicy','hackernews') GROUP BY source").all();
   const liveTotal = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE source IN ('arbeitnow','remoteok','jobicy','hackernews')").get().n;
@@ -3090,6 +3100,7 @@ route('DELETE', /^\/api\/saved-searches\/([^/]+)$/, async (req, res, url, m) => 
 
 // ---- operations / transparency ----
 route('GET', /^\/api\/ops$/, async (req, res) => {
+  if (!isFounder(req, res)) return notFound(res);
   const bySource = db.prepare(`SELECT source, COUNT(*) n, AVG(source_quality) q FROM opportunities GROUP BY source ORDER BY n DESC`).all();
   const byType = db.prepare('SELECT type, COUNT(*) n FROM opportunities GROUP BY type ORDER BY n DESC').all();
   const dup = db.prepare(`SELECT ROUND(AVG(source_count),2) avg_sources, COUNT(*) n FROM opportunities`).get();
