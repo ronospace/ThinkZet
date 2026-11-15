@@ -842,9 +842,13 @@ html[data-theme="light"] .hero-sec::before{background:radial-gradient(60% 60% at
 .hero-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:var(--sp-8);align-items:start;max-width:1280px;margin:0 auto}
 .hero-l{min-width:0}
 .hero-lede{font-size:var(--text-md);color:var(--ink2);line-height:1.55;margin:14px 0 0;max-width:52ch}
-.hero-brief{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px;max-width:52ch}
-.hero-brief li{position:relative;padding-left:18px;font-size:var(--text-sm);line-height:1.55;color:var(--ink2)}
-.hero-brief li::before{content:"";position:absolute;left:0;top:.6em;width:6px;height:6px;border-radius:50%;background:var(--accent2);box-shadow:0 0 0 3px var(--wash)}
+.hero-brief{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:0;max-width:52ch;counter-reset:brief}
+.hero-brief li{position:relative;padding:0 0 11px 27px;font-size:var(--text-sm);line-height:1.55;color:var(--ink2)}
+.hero-brief li+li{border-top:1px solid var(--line-tint);padding-top:11px}
+.hero-brief li:last-child{padding-bottom:0;border-bottom:none}
+.hero-brief li::before{content:counter(brief,decimal-leading-zero);counter-increment:brief;
+  position:absolute;left:0;top:1px;width:auto;height:auto;border-radius:0;background:none;box-shadow:none;
+  font-size:10px;font-weight:700;letter-spacing:.09em;color:var(--accent2);line-height:1.9}
 .hero-brief b{color:var(--ink);font-weight:650}
 .hero-r{min-width:0}
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
@@ -912,6 +916,26 @@ html[data-theme="light"] .hero-sec::before{background:radial-gradient(60% 60% at
 @media(max-width:1023px){.hero-grid{grid-template-columns:1fr;gap:var(--sp-5)}.hero-lede{max-width:none}}
 @media(max-width:560px){.proof{gap:6px}.proof-c{padding:9px 10px}.proof-c b{font-size:var(--text-md)}.proof-c span{font-size:var(--text-2xs)}
   .tp-tabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.tp-tab{min-height:44px;padding:6px 5px;font-size:var(--text-2xs)}}
+/* ---------- hero on a phone ----------
+   Two actions share one row so the proof cards clear the fold on a 393px screen. 58/42 keeps the
+   primary action dominant without starving the secondary of a 44px tap target. The three signals
+   become numbered rows with a hairline, because a round bullet reads as a paragraph. Scoped below
+   768px so the desktop two-column hero is untouched. */
+@media(max-width:767px){
+  .land-cta{display:grid;grid-template-columns:58fr 42fr;gap:8px;margin-top:var(--sp-4)}
+  .land-cta .btn{min-height:44px;padding:0 12px;font-size:var(--text-sm);border-radius:10px;gap:6px;white-space:nowrap}
+  .land-cta .cta-go{font-size:1em;line-height:1}
+  .land-kicker{font-size:10px;letter-spacing:.1em;padding:4px 9px}
+  .land-h1{font-weight:760;line-height:.98;margin-top:16px}
+  .hero-lede{margin-top:12px;line-height:1.5}
+  .hero-brief{margin-top:12px}
+  .hero-brief li{padding:0 0 10px 26px;line-height:1.5}
+  .hero-brief li+li{padding-top:10px}
+}
+@media(max-width:359px){
+  .land-cta{grid-template-columns:1fr;gap:8px}
+  .land-cta .btn{white-space:normal}
+}
 @media(max-width:359px){.proof{grid-template-columns:1fr}}
 .land-sec{margin-top:var(--sp-16);scroll-margin-top:76px}
 #check{scroll-margin-top:76px}
