@@ -6,7 +6,7 @@ reviewed once at the end. One row per recommendation. Status is `open`, `done`, 
 Rule: a recommendation is added here the moment it is raised, with the number it will keep forever. Numbers
 are never reused and never reordered.
 
-Last updated: 15 November 2026.
+Last updated: 16 November 2026.
 
 ## Register
 
@@ -128,3 +128,8 @@ Last updated: 15 November 2026.
 | R-106 | A GBP benchmark sat above USD job salaries, and a converted EUR pool was sold as UK evidence at High confidence | Foreign-currency rows are dropped rather than converted; `estimated`, `mode`, `sourceMarket` and `evidenceConfidence` added; converted figures cap at Medium and print "Estimated converted benchmark · source EUR area · rate 2026-11-13" | Done `A-F` |
 | R-107 | `Staff Backend Engineer · DE` wrapped onto two lines and pushed the tab row apart | Renamed `Backend Engineer · DE`, `white-space:nowrap` restored, and each tab carries a short label under 381px; one row measured at 1440, 1024, 393, 360 and 320 | Done `A-F` |
 | R-108 | Kicker and sample badge were oval pills | `border-radius:6px` with `--wash` and `--line-tint`; measured computed 6px on both | Done `A-F` |
+| R-109 | The preview card held 86px of dead space at 1440 and 70px at 393, because the reserved height pooled under the last block | `justify-content:space-between` on `.tp-body` and the footer line no longer takes `margin-top:auto`; dead space measured 0 at 1440, 1024 and 393 across all three personas | Done `UI-149` |
+| R-110 | A persona with one matching role looked like a filter that had failed | One sentence inside the list explains it: "Only one role in this market discloses pay. The full product scores every open posting." Rendered by `landing.cjs` and by the client, so the first paint carries it | Done `UI-149` |
+| R-111 | The converted-benchmark chip ran 42px past the card edge and was clipped on a phone | `.tp-chip{max-width:100%}` and `.tp-chip-est{white-space:normal;line-height:1.35;text-align:left}`; overflow measured -141 at 1440, -35 at 1024 and -35 at 393 | Done `UI-149` |
+| R-112 | Footer tiles were stretched to their tallest neighbour, leaving two empty boxes beside the four contact addresses | `.foot-grid{align-items:start}`; heights are now 130/105/156 at 1440 and 122/98/146 at 393, each as tall as its own links | Done `UI-149` |
+| R-113 | Three footer cards in a two-column phone grid left the third alone on its row with an empty half beside it | Below 760px the last card spans both columns, declared after the 900px rule so order cannot lose it; widths measured 174/174/357 at 393, 157/157/324 at 360, 137/137/284 at 320 | Done `UI-150` |
