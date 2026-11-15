@@ -262,3 +262,28 @@ control that closes the gap.
   with the intelligence the person came for.
 
 The test: open the screen as its owner, find a wrong value, and fix it without leaving the page.
+
+## 23. The first paint is the server's answer, and a dash is never one
+
+A visitor's first second is the product. It is rendered by the server from a validated cache, and it is
+either a real figure or an honest statement that there is none. It is never a placeholder that promises
+to become a figure later.
+
+- The initial response carries the proof metrics, the sample preview and the snapshot. A wait line is
+  only for a change the visitor made, never for the first render.
+- No dashes. An unavailable aggregate removes its cards from the response and prints one sentence in
+  their place. Three dashes and "Reading the live corpus…" is the state this rule exists to forbid.
+- The preview card reserves its full height on first render, so a persona switch swaps content inside a
+  box that does not move. A card that grows after hydration is a layout shift, not a load.
+- A failure is logged server-side with the reason and the duration, and answered with a consumer-safe
+  sentence. No stack trace, no endpoint name, no schema detail reaches the browser.
+- One currency per card. A job priced in another currency is dropped, not converted under a benchmark in
+  a different one; the row prints "Salary undisclosed" instead.
+- A converted benchmark declares itself: "Estimated converted benchmark", the pool it came from, and the
+  rate date. Its confidence is computed from the evidence behind it and can never be raised by the
+  conversion, so a converted figure never reads "High confidence".
+- A tab that must stay on one row carries a short label for the widths where the full one cannot fit.
+  It truncates nothing and wraps nothing.
+
+The test: load the page with JavaScript disabled and read the bytes. Every figure is there, no dash is,
+and the card is the height it will still be once the script runs.

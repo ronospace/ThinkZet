@@ -789,7 +789,7 @@ html[data-theme="light"] .landing{background:radial-gradient(1100px 560px at 50%
 
 .land-brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:var(--text-lg);letter-spacing:.02em}
 .land-brand .mark{width:30px;height:30px}
-.land-kicker{display:inline-flex;align-items:center;gap:7px;font-size:var(--text-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border:1px solid var(--ai-border);background:var(--accent-soft);padding:5px 11px;border-radius:999px}
+.land-kicker{display:inline-flex;align-items:center;gap:7px;font-size:var(--text-xs);letter-spacing:.12em;text-transform:uppercase;color:var(--accent);border:1px solid var(--line-tint);background:var(--wash);padding:5px 11px;border-radius:6px}
 html[data-theme="light"] .land-kicker{color:var(--accent2)}
 .land-h1{font-size:clamp(32px,5.2vw,52px);line-height:1;letter-spacing:-.04em;margin:20px 0 0;font-weight:800}
 .land-h1 .accent{color:var(--accent2)}
@@ -836,7 +836,10 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 /* The hero is two columns on a wide screen: the claim on the left, a working preview on the right.
    The preview is the product, not an illustration, so the empty space it used to leave is now the
    place a visitor sees a real benchmark and two real opportunities before signing up. */
-.hero-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:var(--sp-8);align-items:center;max-width:1280px;margin:0 auto}
+.hero-sec{position:relative;isolation:isolate}
+.hero-sec::before{content:"";position:absolute;inset:-8% -6% auto -6%;height:78%;z-index:-1;pointer-events:none;background:radial-gradient(60% 60% at 22% 30%,color-mix(in srgb,var(--accent2) 16%,transparent) 0%,transparent 70%),radial-gradient(45% 45% at 82% 12%,color-mix(in srgb,var(--accent2) 10%,transparent) 0%,transparent 72%)}
+html[data-theme="light"] .hero-sec::before{background:radial-gradient(60% 60% at 22% 30%,color-mix(in srgb,var(--accent2) 9%,transparent) 0%,transparent 70%),radial-gradient(45% 45% at 82% 12%,color-mix(in srgb,var(--accent2) 6%,transparent) 0%,transparent 72%)}
+.hero-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:var(--sp-8);align-items:start;max-width:1280px;margin:0 auto}
 .hero-l{min-width:0}
 .hero-lede{font-size:var(--text-md);color:var(--ink2);line-height:1.55;margin:14px 0 0;max-width:52ch}
 .hero-brief{list-style:none;margin:14px 0 0;padding:0;display:grid;gap:8px;max-width:52ch}
@@ -858,16 +861,16 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .tp-title{font-size:var(--text-md);font-weight:680;letter-spacing:var(--tracking-tight);margin:0}
 .tp-badge{font-size:var(--text-2xs);font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:var(--ink2);
   background:color-mix(in srgb,var(--score-mid) 14%,var(--panel));border:1px solid color-mix(in srgb,var(--score-mid) 40%,var(--line));
-  border-radius:999px;padding:3px 9px;white-space:nowrap}
+  border-radius:6px;padding:3px 9px;white-space:nowrap}
 .tp-badge.live{color:var(--ink);background:color-mix(in srgb,var(--good) 14%,var(--panel));border-color:color-mix(in srgb,var(--good) 40%,var(--line))}
 .tp-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:var(--sp-3)}
-.tp-tab{font:inherit;font-size:var(--text-2xs);font-weight:600;line-height:1.25;text-align:left;padding:7px 9px;min-height:44px;
+.tp-tab{font:inherit;font-size:var(--text-2xs);font-weight:600;line-height:1.25;text-align:left;padding:7px 9px;min-height:44px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
   border-radius:var(--radius-sm);border:1px solid var(--line-tint);background:var(--wash);color:var(--ink2);cursor:pointer;
   transition:color .14s,border-color .14s,background .14s}
 .tp-tab:hover{color:var(--ink);border-color:var(--accent2)}
 .tp-tab.on{color:var(--ink);border-color:var(--accent2);background:color-mix(in srgb,var(--accent2) 12%,var(--panel))}
 .tp-tab:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
-.tp-body{margin-top:var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-3)}
+.tp-body{margin-top:var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-3);min-height:390px}
 .tp-wait{font-size:var(--text-sm);color:var(--ink2);margin:0}
 .tp-range{background:var(--wash);border:1px solid var(--line-tint);border-radius:var(--radius);padding:12px 13px}
 .tp-rk{font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
@@ -880,6 +883,8 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .tp-scale b{color:var(--ink);font-weight:600}
 .tp-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:9px}
 .tp-chip{font-size:var(--text-2xs);color:var(--ink2);background:var(--panel);border:1px solid var(--line-tint);border-radius:999px;padding:2px 8px;white-space:nowrap}
+.tp-chip-est{border-color:color-mix(in srgb,var(--score-mid) 45%,var(--line));background:color-mix(in srgb,var(--score-mid) 12%,var(--panel));color:var(--ink)}
+.tp-est{font-size:var(--text-2xs);font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--score-mid);margin-left:6px}
 .tp-opps{display:flex;flex-direction:column;gap:7px}
 .tp-opp{display:flex;align-items:flex-start;gap:10px;padding:9px 11px;border:1px solid var(--line-tint);border-radius:var(--radius-sm);background:var(--wash);min-width:0}
 .tp-score{flex:none;width:34px;height:34px;margin-top:1px;border-radius:9px;display:grid;place-items:center;font-size:var(--text-sm);font-weight:700;
@@ -896,7 +901,7 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .tp-empty{font-size:var(--text-sm);color:var(--ink2);line-height:1.5;border:1px dashed var(--line2);border-radius:var(--radius-sm);padding:11px 12px}
 @media(max-width:1023px){.hero-grid{grid-template-columns:1fr;gap:var(--sp-5)}.hero-lede{max-width:none}}
 @media(max-width:560px){.proof{gap:6px}.proof-c{padding:9px 10px}.proof-c b{font-size:var(--text-md)}.proof-c span{font-size:var(--text-2xs)}
-  .tp-tabs{grid-template-columns:1fr}.tp-tab{min-height:44px;padding:8px 10px;font-size:var(--text-xs)}}
+  .tp-tabs{grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}.tp-tab{min-height:44px;padding:6px 5px;font-size:var(--text-2xs)}}
 @media(max-width:359px){.proof{grid-template-columns:1fr}}
 .land-sec{margin-top:var(--sp-16);scroll-margin-top:76px}
 #check{scroll-margin-top:76px}
@@ -1400,9 +1405,9 @@ body.tw-lock{overflow:hidden}
           <h1 class="land-h1"><span data-i18n="hero.h1a">The market has been</span> <br/><span class="accent" data-i18n="hero.h1b">pricing you without you.</span></h1>
           <p class="hero-lede" data-i18n="hero.lede">ThinkZet builds your Career Twin from live global job postings, revealing your market rate, hidden high-fit roles and the career move with the strongest earning potential.</p>
           <ul class="hero-brief">
-            <li data-i18n="hero.b1"><b>Your worth, priced.</b> The median, the band and the sample behind it, for your role, seniority, skills and market.</li>
-            <li data-i18n="hero.b2"><b>The roles you would miss.</b> Every open posting scored on fit, income and your real odds, not sorted by who paid for placement.</li>
-            <li data-i18n="hero.b3"><b>The move that pays.</b> Stay, switch, contract or relocate, each priced against your market with the risk attached.</li>
+            <li data-i18n="hero.b1"><b>Your worth, priced.</b> See the median, range and evidence for your role and market.</li>
+            <li data-i18n="hero.b2"><b>Roles you might miss.</b> Find opportunities ranked by fit, pay and realistic odds.</li>
+            <li data-i18n="hero.b3"><b>The move that pays.</b> Compare staying, switching, contracting or relocating.</li>
           </ul>
           <div class="land-cta">
             <a class="btn" href="#check" id="hero-primary" data-i18n="hero.primary">Check my market gap</a>
@@ -1424,9 +1429,9 @@ body.tw-lock{overflow:hidden}
               <span class="tp-badge" id="tp-badge" data-i18n="twin.sample">Sample preview</span>
             </div>
             <div class="tp-tabs" role="tablist" data-i18n-aria="twin.tabs" aria-label="Sample profiles">
-              <button class="tp-tab on" role="tab" aria-selected="true" data-p="0" id="tp-tab-0" aria-controls="tp-panel" tabindex="0">Senior Data Scientist &middot; UK</button>
-              <button class="tp-tab" role="tab" aria-selected="false" data-p="1" id="tp-tab-1" aria-controls="tp-panel" tabindex="-1">Staff Backend Engineer &middot; DE</button>
-              <button class="tp-tab" role="tab" aria-selected="false" data-p="2" id="tp-tab-2" aria-controls="tp-panel" tabindex="-1">Product Lead &middot; US</button>
+              <button class="tp-tab on" role="tab" aria-selected="true" data-p="0" id="tp-tab-0" aria-controls="tp-panel" tabindex="0" data-full="Senior Data Scientist &middot; UK" data-short="Data Scientist &middot; UK">Senior Data Scientist &middot; UK</button>
+              <button class="tp-tab" role="tab" aria-selected="false" data-p="1" id="tp-tab-1" aria-controls="tp-panel" tabindex="-1" data-full="Backend Engineer &middot; DE" data-short="Backend &middot; DE">Backend Engineer &middot; DE</button>
+              <button class="tp-tab" role="tab" aria-selected="false" data-p="2" id="tp-tab-2" aria-controls="tp-panel" tabindex="-1" data-full="Product Lead &middot; US" data-short="Product &middot; US">Product Lead &middot; US</button>
             </div>
             <div id="tp-panel" role="tabpanel" aria-labelledby="tp-tab-0" tabindex="0">
               <div class="tp-body" id="tp-body">
@@ -2195,9 +2200,9 @@ async function runRateCheck() {
 // Both read the same endpoints the product reads. A sample persona is labelled as a sample; a
 // visitor-controlled preview is labelled live. Nothing is invented: a missing number prints a reason.
 const TP_PERSONAS = [
-  { role: 'Senior Data Scientist', years: 8, country: 'GB', label: 'Senior Data Scientist · UK' },
-  { role: 'Staff Backend Engineer', years: 10, country: 'DE', label: 'Staff Backend Engineer · DE' },
-  { role: 'Product Lead', years: 9, country: 'US', label: 'Product Lead · US' },
+  { role: 'Senior Data Scientist', years: 8, country: 'GB', label: 'Senior Data Scientist · UK', hint: 'data|scientist|machine learning|ml|ai' },
+  { role: 'Backend Engineer', years: 10, country: 'DE', label: 'Backend Engineer · DE', hint: 'backend|back-end|platform|distributed|software engineer' },
+  { role: 'Product Lead', years: 9, country: 'US', label: 'Product Lead · US', hint: 'product' },
 ];
 let tpIndex = 0;
 let tpUserDriven = false;
@@ -2256,16 +2261,22 @@ function tpSignal(skill, opps) {
   return `<div class="tp-foot">${esc(T('twin.topSkill') || 'Top skill opportunity')}: <b>${esc(skill)}</b></div>`;
 }
 
+// The first persona is rendered by the server, so the card is already full when the page paints.
+// Asking for it again would only replace good markup with a wait line, so the key is remembered and
+// a matching request is skipped. Every other persona fetches as before.
+let tpPrimedKey = 'Senior Data Scientist|8|GB';
 async function tpLoad(opts) {
   const seq = ++tpSeq;
   const box = document.getElementById('tp-body');
   const badge = document.getElementById('tp-badge');
   if (!box) return;
-  box.innerHTML = `<p class="tp-wait">${esc(T('twin.wait') || 'Reading the live corpus…')}</p>`;
+  const key = `${opts.role}|${opts.years}|${opts.country || ''}`;
   badge.textContent = opts.userDriven ? (T('twin.live') || 'Live preview') : (T('twin.sample') || 'Sample preview');
   badge.classList.toggle('live', !!opts.userDriven);
+  if (!opts.userDriven && key === tpPrimedKey && box.querySelector('.tp-range,.tp-empty')) return;
+  box.innerHTML = `<p class="tp-wait">${esc(T('twin.wait') || 'Reading the live corpus…')}</p>`;
   try {
-    const q = new URLSearchParams({ role: opts.role, years: String(opts.years), country: opts.country || '' });
+    const q = new URLSearchParams({ role: opts.role, years: String(opts.years), country: opts.country || '', hint: opts.hint || '' });
     const r = await api('/api/public/preview?' + q.toString());
     if (seq !== tpSeq) return;
     if (r.error || r.available === false) {
@@ -2292,8 +2303,20 @@ function tpSelect(i, focus) {
   });
   if (focus) document.getElementById('tp-tab-' + i).focus();
   const p = TP_PERSONAS[i];
-  tpLoad({ role: p.role, years: p.years, country: p.country, userDriven: false });
+  tpLoad({ role: p.role, years: p.years, country: p.country, hint: p.hint, userDriven: false });
 }
+
+// Three tabs must stay on one row at every width. Below 381px the full labels cannot fit at a
+// legible size, so each tab carries a short form and the row keeps its shape instead of truncating.
+function twTabLabels() {
+  const short = window.innerWidth <= 380;
+  document.querySelectorAll('.tp-tab').forEach((t) => {
+    const next = short ? t.dataset.short : t.dataset.full;
+    if (next && t.innerHTML !== next) t.innerHTML = next;
+  });
+}
+twTabLabels();
+window.addEventListener('resize', twTabLabels);
 
 document.querySelectorAll('.tp-tab').forEach((t) => {
   t.addEventListener('click', () => tpSelect(Number(t.dataset.p), false));

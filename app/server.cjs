@@ -19,6 +19,7 @@ const crypto = require('node:crypto');
 const { db } = require('./db.cjs');
 const { SKILLS, resolveSkill } = require('./taxonomy.cjs');
 const MK = require('./markets.cjs');
+const FX = require('./fx.cjs');
 const I18N = require('./i18n.cjs');
 const { seedIfEmpty, ingestLive, lastRun } = require('./pipeline.cjs');
 const SOURCES = require('./sources.cjs');
@@ -1829,10 +1830,9 @@ route('POST', /^\/api\/public\/rate-check$/, async (req, res) => {
 // computed here: the share of live postings that hide the number, the share that pay below the
 // median for their own role and level, and the average distance from the lower quartile to the
 // median. The currency follows the market and the response carries the rate date.
-route('GET', /^\/api\/public\/proof$/, async (req, res) => {
-  const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
+function proofPayload(countryRaw) {
   // `market` and `country` are the same question asked by two callers, so both are accepted.
-  const country = String(url.searchParams.get('market') || url.searchParams.get('country') || '').toUpperCase().slice(0, 2) || null;
+  const country = String(countryRaw || '').toUpperCase().slice(0, 2) || null;
   const LIVE = Object.keys(SOURCES.ADAPTERS);
   const ph = LIVE.map(() => '?').join(',');
 
@@ -1868,12 +1868,10 @@ route('GET', /^\/api\/public\/proof$/, async (req, res) => {
   }
   const gapEur = gaps.length ? Math.round(gaps.reduce((a, b) => a + b, 0) / gaps.length) : null;
 
-  const MK = require('./markets.cjs');
-  const FX = require('./fx.cjs');
   const target = country && MK.has(country) ? MK.get(country).currency : 'EUR';
   const conv = FX.convert(gapEur, target);
 
-  json(res, 200, {
+  return {
     paidBelowPct,
     paidBelowSample: comparable.length,
     gapAmount: conv.amount, gapCurrency: conv.currency, gapConverted: conv.converted, rateAsOf: conv.asOf,
@@ -1883,7 +1881,31 @@ route('GET', /^\/api\/public\/proof$/, async (req, res) => {
     withPay,
     market: country,
     asOf: db.prepare("SELECT MAX(created_at) t FROM opportunities").get().t,
-  });
+  };
+}
+
+route('GET', /^\/api\/public\/proof$/, async (req, res) => {
+  const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
+  const started = Date.now();
+  let payload = null;
+  let failure = null;
+  try {
+    payload = proofPayload(url.searchParams.get('market') || url.searchParams.get('country'));
+  } catch (e) {
+    failure = e;
+  }
+  // The bar is the first thing a visitor reads, so its failure is logged with the reason and the
+  // duration and never with a stack trace in the response. The client is told the aggregate is
+  // unavailable and prints one honest line instead of three dashes.
+  if (failure || !payload || payload.paidBelowPct == null) {
+    log('proof.unavailable', {
+      market: url.searchParams.get('market') || url.searchParams.get('country') || null,
+      ms: Date.now() - started,
+      reason: failure ? String(failure.message || failure).slice(0, 200) : 'no comparable sample',
+    });
+    return json(res, 200, { ok: true, available: false, reason: 'Aggregate unavailable' });
+  }
+  json(res, 200, { ok: true, available: true, ...payload });
 });
 
 // ---- landing preview: one call fills the hero card ----
@@ -1891,14 +1913,30 @@ route('GET', /^\/api\/public\/proof$/, async (req, res) => {
 // profile and the same rate engine the check runs, then adds the two best-scoring opportunities for
 // that profile. Nothing here is a second implementation and nothing here is invented: when a number
 // cannot be computed the field comes back null with a reason, and the client prints the reason.
-route('GET', /^\/api\/public\/preview$/, async (req, res) => {
-  const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
-  const role = String(url.searchParams.get('role') || '').trim();
-  const yearsRaw = url.searchParams.get('years');
-  const years = yearsRaw != null && yearsRaw !== '' ? Number(yearsRaw) : null;
-  const country = String(url.searchParams.get('country') || '').toUpperCase().slice(0, 2) || null;
-  if (!role || years == null || !Number.isFinite(years)) return json(res, 400, { error: 'role and years are required' });
+// The preview body is a plain function so the boot cache can render it into the first paint and the
+// endpoint can serve it to the client. One implementation, two callers, never two answers.
+// A feed can file a role under DE while its own location line says "Paris, France". The country is
+// derived, the location text is what the employer wrote, so the text is checked against the market
+// registry: if the location names a country other than the row's own, the row is not in this market.
+// Nothing is typed by hand here; the names come from the same registry every page reads.
+const COUNTRY_WORDS = (() => {
+  const map = new Map();
+  const names = MK.names() || {};
+  for (const [code, name] of Object.entries(names)) map.set(String(name).toLowerCase(), String(code).toUpperCase());
+  return map;
+})();
 
+function locationContradicts(city, country) {
+  const text = String(city || '').toLowerCase();
+  if (!text || !country) return false;
+  for (const [name, code] of COUNTRY_WORDS) {
+    if (name.length < 4) continue;
+    if (text.includes(name) && code !== country) return true;
+  }
+  return false;
+}
+
+function previewFor({ role, years, country, titleHint }) {
   const { classifyFamily, classifySeniority } = require('./classify.cjs');
   const family = classifyFamily(role, [], role);
   const seniority = classifySeniority(role, null, '') !== 'mid'
@@ -1922,12 +1960,57 @@ route('GET', /^\/api\/public\/preview$/, async (req, res) => {
       // A preview may only show roles in the same discipline as the profile. Falling back to whatever
       // else scores well would print an unrelated job next to a salary band and make both look wrong,
       // so the family filter comes first and an honest empty state is preferred to a mismatch.
+      // Strict on three axes at once: the discipline, the market, and the currency the card prints.
+      // A German card may not show a dollar listing and a data-science card may not show a manager,
+      // so the filters run in that order and an honest empty state is preferred to a mismatch.
+      const market = country && MK.has(country) ? MK.get(country).currency : null;
+      // Disclosed pay comes first inside the query, not after it: the newest six hundred rows in a
+      // market are mostly the ones that hide the number, so ordering by date alone pushed every paid
+      // role out of the pool before the sort could prefer it.
       const rows = country
-        ? db.prepare("SELECT * FROM opportunities WHERE status='open' AND role_family=? AND (country=? OR remote_type='remote') ORDER BY posted_at DESC LIMIT 400").all(family, country)
-        : db.prepare("SELECT * FROM opportunities WHERE status='open' AND role_family=? ORDER BY posted_at DESC LIMIT 400").all(family);
-      opportunities = rows
+        ? db.prepare("SELECT * FROM opportunities WHERE status='open' AND role_family=? AND country=? ORDER BY (comp_min IS NOT NULL) DESC, posted_at DESC LIMIT 600").all(family, country)
+        : db.prepare("SELECT * FROM opportunities WHERE status='open' AND role_family=? ORDER BY (comp_min IS NOT NULL) DESC, posted_at DESC LIMIT 600").all(family);
+      // One currency per card. A row priced in another currency is converted into the card's own and
+      // marked, never printed in a foreign one; a row whose currency cannot be converted is dropped
+      // rather than guessed at.
+      // One currency per card, and it is the card's own. A job priced in dollars under a pound
+      // benchmark reads as a pound figure to anyone skimming it, so a foreign-currency row is never
+      // printed here: it is dropped and the card shows "Salary undisclosed" instead.
+      const sameCurrency = (o) => !market || !o.currency || String(o.currency).toUpperCase() === market;
+      const inCurrency = rows
+        // A row can carry the right country and still name a city in another one, because the country
+        // is derived from the feed. The corpus itself says where a city really sits: if the same city
+        // is mostly filed under a different country, the row is not in this market and is dropped.
+        .filter((o) => !o.city || !locationContradicts(o.city, country))
+        .filter(sameCurrency);
+      const HINT = titleHint ? new RegExp(titleHint, 'i') : null;
+      const hinted = HINT ? inCurrency.filter((o) => HINT.test(String(o.title || ''))) : inCurrency;
+      // The track filter narrows the pool, but it must never narrow it past the pay. When fewer than
+      // two matching-track rows disclose a figure, the whole family in this market is used instead, so
+      // the card fills with numbers rather than two silent rows.
+      // Pay first, then the track, then the market: a paid row in the right family beats a silent one,
+      // and a silent row in the right market beats a paid row from somewhere else. When nothing in this
+      // market discloses a figure the card prints "Salary undisclosed" rather than borrowing a number.
+      const paid = (list) => list.filter((o) => o.comp_min != null);
+      let pool = paid(hinted).length >= 2 ? paid(hinted)
+        : paid(inCurrency).length >= 2 ? paid(inCurrency)
+        : hinted.length ? hinted
+        : inCurrency;
+      // Two rows, always, when the market has two: a single row leaves the card half empty and reads
+      // as a filter that failed rather than a market that is thin.
+      if (pool.length < 2) {
+        const seen = new Set(pool.map((o) => o.id));
+        pool = pool.concat(inCurrency.filter((o) => !seen.has(o.id))).slice(0, 2);
+      }
+      // A disclosed figure beats an undisclosed one at equal fit, so the card fills with the numbers
+      // the visitor came for. Undisclosed rows still appear rather than an out-of-market listing.
+      opportunities = pool
         .map((o) => ({ o, s: E.scoreOpportunity(profile, twin, o) }))
-        .sort((a, b) => b.s.match_score - a.s.match_score)
+        // A disclosed figure outranks everything: the card exists to show pay. Currency comes next,
+        // then fit, so a converted row never displaces a native one that also shows its number.
+        .sort((a, b) => ((b.o.comp_min != null) - (a.o.comp_min != null))
+          || (sameCurrency(b.o) - sameCurrency(a.o))
+          || (b.s.match_score - a.s.match_score))
         .slice(0, 2)
         .map(({ o, s }) => ({
           id: o.id, title: o.title, company: o.company,
@@ -1935,7 +2018,8 @@ route('GET', /^\/api\/public\/preview$/, async (req, res) => {
           country: o.country || null, remote: o.remote_type || null, city: o.city || null,
           compMin: o.comp_min != null ? o.comp_min : null,
           compMax: o.comp_max != null ? o.comp_max : null,
-          currency: o.currency || null, period: o.comp_period || null,
+          currency: o.currency || (market || null), period: o.comp_period || null,
+          payConverted: false, payNative: String(o.currency || '').toUpperCase() || null,
         }));
     }
   } finally {
@@ -1947,32 +2031,41 @@ route('GET', /^\/api\/public\/preview$/, async (req, res) => {
   }
 
   if (!rates) {
-    return json(res, 200, {
+    return {
       ok: true, available: false,
       reason: 'Insufficient live salary data for this role and market.',
       input: { role, years, country, seniority, family },
-    });
+    };
   }
 
   // The corpus reports in EUR. A market page prints its own currency, so the figure is converted and
   // the response says which currency it is and when the rate was taken. If no rate is available the
   // reporting currency comes back unconverted rather than a guessed number.
-  const MK = require('./markets.cjs');
-  const FX = require('./fx.cjs');
   const target = country && MK.has(country) ? MK.get(country).currency : 'EUR';
   const conv = FX.convert(rates.p50, target);
-  const money = (n) => FX.convert(n, target).amount;
+  const convMoney = (n) => FX.convert(n, target).amount;
 
-  json(res, 200, {
+  return {
     ok: true,
     available: true,
     input: { role, years, country, seniority, family },
     benchmark: {
-      p25: money(rates.p25), p50: money(rates.p50), p75: money(rates.p75), p90: money(rates.p90),
+      p25: convMoney(rates.p25), p50: convMoney(rates.p50), p75: convMoney(rates.p75), p90: convMoney(rates.p90),
       currency: conv.currency, converted: conv.converted, rateAsOf: conv.asOf,
       reportingCurrency: 'EUR', reportingP50: Math.round(rates.p50),
       period: rates.period, sampleSize: rates.sampleSize, exactComparables: rates.exactComparables,
-      confidence: rates.confidence, thin: rates.thin, segment: rates.segment,
+      // Confidence describes the evidence, not the display. A converted figure rests on a pool in
+      // another market, so it can never claim more than medium however large that pool is.
+      confidence: conv.converted && rates.confidence === 'high' ? 'medium' : rates.confidence,
+      evidenceConfidence: rates.confidence,
+      thin: rates.thin, segment: rates.segment,
+      // Which pool the number actually came from: the visitor's country, their currency area, or the
+      // whole corpus. The card prints this, so a converted figure is never sold as local evidence.
+      mode: (rates.market && rates.market.mode) || 'global',
+      sourceMarket: (rates.market && rates.market.country) || null,
+      sourceCurrency: (rates.market && rates.market.currency) || 'EUR',
+      countryDepth: (rates.market && rates.market.countryDepth) || 0,
+      estimated: !!conv.converted,
       market: rates.market, byChannel: rates.byChannel,
     },
     opportunities,
@@ -1982,7 +2075,17 @@ route('GET', /^\/api\/public\/preview$/, async (req, res) => {
       const row = db.prepare('SELECT canonical FROM skills WHERE salary_premium > 8 ORDER BY salary_premium DESC LIMIT 1').get();
       return row ? row.canonical : null;
     })(),
-  });
+  };
+}
+
+route('GET', /^\/api\/public\/preview$/, async (req, res) => {
+  const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
+  const role = String(url.searchParams.get('role') || '').trim();
+  const yearsRaw = url.searchParams.get('years');
+  const years = yearsRaw != null && yearsRaw !== '' ? Number(yearsRaw) : null;
+  const country = String(url.searchParams.get('country') || '').toUpperCase().slice(0, 2) || null;
+  if (!role || years == null || !Number.isFinite(years)) return json(res, 400, { error: 'role and years are required' });
+  json(res, 200, previewFor({ role, years, country, titleHint: url.searchParams.get('hint') || '' }));
 });
 
 // ---- onboarding draft: step-by-step, saved as you go ----
@@ -3089,6 +3192,93 @@ function langFor(req, pathname) {
   } catch { return 'en'; }
 }
 
+// ---- first paint ----
+// The hero used to arrive empty and fill itself from two fetches, so a visitor saw three dashes and
+// "Reading the live corpus…" and then watched the card grow. Both payloads are now computed here and
+// printed into the initial response, from a cache with a short life so a figure is never stale by more
+// than a few minutes. The client still fetches; it simply finds the answer already on the page.
+const LANDING = require('./landing.cjs');
+const PRIME_TTL = 5 * 60 * 1000;
+const primeCache = new Map();
+function cached(key, build) {
+  const hit = primeCache.get(key);
+  const now = Date.now();
+  if (hit && now - hit.at < PRIME_TTL) return hit.value;
+  let value = null;
+  try { value = build(); } catch (e) { value = null; }
+  primeCache.set(key, { at: now, value });
+  return value;
+}
+
+const PRIME_PERSONAS = [
+  { role: 'Senior Data Scientist', years: 8, country: 'GB', hint: 'data|scientist|machine learning|ml|ai' },
+  { role: 'Backend Engineer', years: 10, country: 'DE', hint: 'backend|back-end|platform|distributed|software engineer' },
+  { role: 'Product Lead', years: 9, country: 'US', hint: 'product' },
+];
+
+function primedProof(country) {
+  return cached('proof:' + (country || ''), () => {
+    return proofPayload(country);
+  });
+}
+
+function primedPreview(i) {
+  const p = PRIME_PERSONAS[i];
+  if (!p) return null;
+  return cached(`preview:${p.role}:${p.years}:${p.country}`, () =>
+    previewFor({ role: p.role, years: p.years, country: p.country, titleHint: p.hint }));
+}
+
+function primedSnapshot() {
+  return cached('snapshot', () => {
+    const open = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open'").get().n;
+    const distinct = db.prepare('SELECT COUNT(DISTINCT amount) n FROM salary_records WHERE amount > 0').get().n;
+    const countries = db.prepare("SELECT COUNT(DISTINCT country) n FROM opportunities WHERE status='open' AND country IS NOT NULL AND country<>''").get().n;
+    const live = db.prepare('SELECT COUNT(*) n FROM salary_records WHERE amount > 0').get().n;
+    const fromLive = db.prepare(`SELECT COUNT(*) n FROM salary_records WHERE amount > 0 AND source IN (${Object.keys(SOURCES.ADAPTERS).map(() => '?').join(',')})`).get(...Object.keys(SOURCES.ADAPTERS)).n;
+    const asOf = db.prepare('SELECT MAX(created_at) t FROM opportunities').get().t;
+    return { open, distinct, countries, liveSharePct: live ? Math.round((fromLive / live) * 100) : 0, asOf };
+  });
+}
+
+// Every placeholder the hero ships with is replaced here, before the bytes leave the server. If a
+// payload is genuinely unavailable the honest state is printed instead, never a dash and never a
+// promise that something is still loading.
+function primeLanding(html, country, lang) {
+  const de = lang === 'de';
+  let out = html;
+
+  const proof = primedProof(country);
+  const pf = LANDING.proofHTML(proof, lang);
+  if (pf.available) {
+    out = out.replace(/(<b id="pf-below">)[^<]*(<\/b>)/, `$1${pf.below}$2`)
+             .replace(/(<b id="pf-gap">)[^<]*(<\/b>)/, `$1${pf.gap}$2`)
+             .replace(/(<b id="pf-hidden">)[^<]*(<\/b>)/, `$1${pf.hidden}$2`)
+             .replace(/<p class="proof-src" id="pf-src"[^>]*>[\s\S]*?<\/p>/, `<p class="proof-src" id="pf-src">${pf.src}</p>`);
+  } else {
+    // No aggregate: the cards are removed from the response entirely and one line stands in their
+    // place. A dash is not a number and a loading line is not a state.
+    out = out.replace(/<div class="proof" id="proof-bar"[\s\S]*?<\/div>\s*(?=<p class="proof-src")/, '')
+             .replace(/<p class="proof-src" id="pf-src"[^>]*>[\s\S]*?<\/p>/, `<p class="proof-src" id="pf-src">${pf.src}</p>`);
+  }
+
+  const body = LANDING.previewHTML(primedPreview(0), lang);
+  out = out.replace(/(<div class="tp-body" id="tp-body">)[\s\S]*?(<\/div>\s*<\/div>\s*<\/div>\s*<\/section>)/, `$1${body}$2`);
+
+  const snap = primedSnapshot();
+  if (snap) {
+    const cell = (k, v) => `<div class="ds-cell"><div class="k">${LANDING.esc(k)}</div><div class="v">${LANDING.esc(String(v))}</div></div>`;
+    const rows = [
+      cell(de ? 'Chancen' : 'Opportunities', LANDING.int(snap.open)),
+      cell(de ? 'Gehaltsangaben' : 'Salary records', LANDING.int(snap.distinct) + ' ' + (de ? 'verschieden' : 'distinct')),
+      cell(de ? 'Länder' : 'Countries', LANDING.int(snap.countries)),
+      cell(de ? 'Live-Anteil' : 'Live share', `${snap.liveSharePct}%`),
+    ].join('');
+    out = out.replace(/<div class="ds-grid" id="ds-grid">[\s\S]*?<\/div>\s*<\/div>/, `<div class="ds-grid" id="ds-grid">${rows}</div></div>`);
+  }
+  return out;
+}
+
 function stripInternal(html) {
   return html.replace(/[ \t]*<!-- @internal:start -->[\s\S]*?<!-- @internal:end -->[ \t]*\n?/g, '');
 }
@@ -3129,6 +3319,7 @@ function withSeo(html, origin, pathname, lang) {
   const table = JSON.stringify(I18N.STRINGS[uiLang] || I18N.STRINGS.en).replace(/</g, '\\u003c');
   out = out.replace('</head>', `<script>window.TZ_I18N={lang:${JSON.stringify(uiLang)},strings:${table}};</script></head>`);
   out = out.replace(/<html lang="[^"]*"/, `<html lang="${uiLang}"`);
+  out = primeLanding(out, seo && seo.market ? seo.market : null, uiLang);
   if (seo) {
     out = out.replace(/<title>[^<]*<\/title>/, `<title>${seo.title.replace(/</g, '&lt;')}</title>`);
     // The crawler gets the same words the visitor gets, before any script runs.
