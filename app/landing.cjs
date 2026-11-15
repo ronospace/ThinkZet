@@ -69,6 +69,14 @@ function oppsHTML(list, lang) {
   if (!list || !list.length) {
     return `<div class="tp-empty">${de ? 'Keine bewertete Chance passte zu diesem Profil im aktuellen Bestand. Das vollständige Produkt bewertet jede offene Anzeige.' : 'No scored opportunity matched this profile in the current corpus. The full product scores every open posting.'}</div>`;
   }
+  const thin =
+    list.length === 1
+      ? `<div class="tp-note">${
+          de
+            ? 'Nur eine Anzeige in diesem Markt nennt das Gehalt. Das vollständige Produkt bewertet jede offene Anzeige.'
+            : 'Only one role in this market discloses pay. The full product scores every open posting.'
+        }</div>`
+      : '';
   return `<div class="tp-opps">${list
     .map((o) => {
       const where = o.remote === 'remote' ? (de ? 'Remote' : 'Remote') : [o.city, o.country].filter(Boolean).join(', ') || (de ? 'Ort nicht angegeben' : 'Location not stated');
@@ -84,7 +92,7 @@ function oppsHTML(list, lang) {
       </div>
     </div>`;
     })
-    .join('')}</div>`;
+    .join('')}${thin}</div>`;
 }
 
 function previewHTML(data, lang) {
