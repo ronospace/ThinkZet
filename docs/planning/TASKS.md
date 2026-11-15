@@ -274,7 +274,28 @@ Nothing here can be done by me: each row needs a key, a console login or a decis
 | D-2.3 | B-3 DATA-02: create one S3-compatible bucket (Cloudflare R2 or Hetzner), then set `S3_ENDPOINT`, `S3_BUCKET`, `S3_ACCESS_KEY`, `S3_SECRET_KEY` in Railway | ready | nightly backups leave the machine; `scripts/backup.cjs` already runs and verifies |
 | D-2.4 | B-8 SEO-08: in Search Console, Request indexing for the homepage and the top country pages | ready | first crawl of the 205-URL sitemap |
 | D-2.5 | Railway redeploy so `dc9e3a2` reaches production, then confirm Apple sign-in completes in one attempt and `/strategy.html` answers 410 | ready | production matches the repo |
-| D-2.6 | Approve the tag push `restore-20261113-31` (rejected earlier, retry declined) | waiting on you | tag history stays unbroken |
+| D-2.6 | Approve the tag push `restore-20261113-31` (rejected earlier, retry declined) | done: pushed 15 November, tag history unbroken | nothing |
+
+### D-1.9 Closed in UI-145 (15 November 2026)
+
+| # | Task | Proof |
+|---|---|---|
+| D-1.9 | Consumer-only product: operator screens out of the bundle, internal markup stripped server-side, `/console` founder only | `/console` and `/internal.js` 404 signed out; public HTML greps zero for Operations, Ingest, Demo Mode, Founder, Admin, Debug, Funnel, Leads |
+| D-1.10 | `/de` declares the language it renders | `/de` returns `lang="de"` with German copy; `/gb?lang=de` returns German in GBP; `en-<market>` otherwise |
+| D-1.11 | Hero says what the product does | three-bullet brief under the lede, one promise per instrument |
+| D-1.12 | `keepsNumbers()` tested | `node scripts/llm-unit.cjs` 17/17 |
+| D-1.13 | Preview cannot show a foreign discipline | `/api/public/preview` filters on `role_family`; `Product Lead` classifies as `product` |
+| D-1.14 | README and planning docs match the product | README rewritten; `MISSION-PLAN.md` added; register at R-92, none open |
+
+### D-1.15 Closed in UI-146 (15 November 2026)
+
+| # | Task | Proof |
+|---|---|---|
+| D-1.15 | Career Twin is editable, transparent and action-oriented | `PATCH /api/twin/profile` saved a desired role, completeness moved 93 to 100, checklist emptied, toast confirmed; drawer opened with focus on the first field, Escape returned focus to the opener |
+| D-1.16 | Internal strategy copy removed from the consumer bundle | grep for switching cost, moat, retention, competitive advantage, data advantage, lock-in, funnel, conversion target, revenue optimisation across `index.html`, `internal.js`, `console.html`, `i18n.cjs`, `twin.cjs`, `server.cjs` returns nothing |
+| D-1.17 | Account controls moved out of Career Twin | `Account & Privacy` page: Display Name, Export Your Data, Privacy, Delete Your Account |
+| D-1.18 | Missing compensation never renders as zero | `null` in, "Current compensation not provided" out |
+| D-1.19 | Five widths measured | 1440/1024/768/393/320: no horizontal scroll, tail gap 22/22/18/18/18px, zero console errors |
 
 ### D-3 Waiting or paused
 

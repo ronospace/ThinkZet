@@ -380,3 +380,22 @@ async function renderOps() {
       </div>
     </div>`;
 }
+
+// The account-menu operator action. It lives here rather than in the consumer bundle so the product
+// never names an ingest: this file is served only to a founder session.
+const runIngestBtn = document.getElementById('run-ingest');
+if (runIngestBtn) {
+  runIngestBtn.onclick = async () => {
+    const label = runIngestBtn.innerHTML;
+    runIngestBtn.disabled = true;
+    runIngestBtn.textContent = 'Ingesting…';
+    try {
+      const r = await post('/api/ingest', {});
+      toast(`${int(r.fetched)} fetched · ${int(r.kept)} kept · ${int(r.inserted)} new · ${int(r.droppedNonTech)} non-tech dropped · ${int(r.ms)}ms`);
+    } catch (e) {
+      toast('Ingest did not run.');
+    }
+    runIngestBtn.disabled = false;
+    runIngestBtn.innerHTML = label;
+  };
+}

@@ -6,7 +6,7 @@ reviewed once at the end. One row per recommendation. Status is `open`, `done`, 
 Rule: a recommendation is added here the moment it is raised, with the number it will keep forever. Numbers
 are never reused and never reordered.
 
-Last updated: 13 November 2026.
+Last updated: 15 November 2026.
 
 ## Register
 
@@ -98,3 +98,26 @@ Last updated: 13 November 2026.
 | R-76 | Nine capabilities sat in a flat grid under a heading that repeated the section above it | Three pillars of three, each with a number, a question and a one-line answer; heading is now "Three Questions, Nine Instruments" | Done `UI-144` |
 | R-77 | `.proof` was defined twice and the later rule won on order, so the bar rendered as three stacked lines | One definition, in one place, with the phone rules in the media query that owns them | Done `UI-144` |
 | R-78 | The document title still said "AI Intelligence Platform" and the description did not mention salary | "ThinkZet - Career & Salary Intelligence" plus a description naming market rate, fit and earning potential | Done `UI-144` |
+| R-79 | The consumer bundle shipped the operator screens: six render functions, their VIEWS entries, a founder flag read and a hidden Operations group were delivered to every visitor | Moved to `public/internal.js` and `public/console.html`; `/console` and `/internal.js` answer 404 to anyone but a founder and carry `X-Robots-Tag: noindex` | Done `UI-145` |
+| R-80 | Internal markup was hidden with an attribute and a CSS rule, which any devtools session could undo | `@internal:start`/`@internal:end` markers plus `stripInternal()` in `serveStatic`, so the block never leaves the server for a non-founder | Done `UI-145` |
+| R-81 | A hidden element is still an exposed element: `data-founder`, `hidden` and a founder flag all shipped the operator markup to consumers | Removed entirely; a view absent from the consumer map renders "This Screen Is Not Part of the Product" for everyone, founder included | Done `UI-145` |
+| R-82 | Demo Mode appeared in the account menu of a signed-out visitor | Button, handler, palette command and `loadDemo()` deleted; the demo persona remains an API the test suite uses, never a consumer control | Done `UI-145` |
+| R-83 | Run Ingest sat in the account menu and the command palette | Button keeps its position in the founder markup only; its handler lives in `internal.js`, so the consumer bundle names no ingest | Done `UI-145` |
+| R-84 | Market Snapshot was a stuck placeholder because one inline fetch had no states and no timeout | `DS_STATES` loading / empty / unsupported / failed with an eight second `AbortController` and a retry, printing no ingest, adapter or database detail | Done `UI-145` |
+| R-85 | `/de` declared `lang="de"` and German hreflang while rendering English copy: a false language promise to a reader and to a crawler | `app/i18n.cjs` holds the words; the server translates first and then declares, so the tag can only name the language actually rendered | Done `UI-145` |
+| R-86 | A market route implied a language, which contradicts the rule that market, language and currency are three separate settings | `langFor()` resolves `?lang=`, then `Accept-Language`, then the market's own language, then English; `/gb?lang=de` serves German in GBP | Done `UI-145` |
+| R-87 | Runtime-rendered lines (Market Snapshot, the twin card, the proof source line) were English in every language | The server ships one string table as `window.TZ_I18N`; `T(key, vars)` reads it, so there is no second copy of the words in the bundle | Done `UI-145` |
+| R-88 | The hero said what the product feels like and never what it does: one sentence, then two buttons | Three-bullet brief under the lede, one bullet per promise, each naming the instrument that delivers it | Done `UI-145` |
+| R-89 | `keepsNumbers()` was the only guard between a model and a changed fact, and it had no test | `scripts/llm-unit.cjs`: 17 assertions on the 0.8 threshold from both sides, the mode gate, and `phrase()` returning the evidence unchanged without a key | Done `UI-145` |
+| R-90 | A preview could show a role from another discipline beside a salary band, because it scored whatever the corpus held | `/api/public/preview` filters on `role_family` first and prefers an honest empty state to a mismatch; `Product Lead` now classifies as `product`, not `non_tech` | Done `UI-145` |
+| R-91 | `README.md` described a 57-assertion suite, a demo persona and a Hetzner launch gate that no longer matched the product | Rewritten: current counts, the consumer-only architecture, the console, the language model and the real deploy targets | Done `UI-145` |
+| R-92 | Career Twin was a static record: a person could see a wrong value and had no way to correct it | `PATCH /api/twin/profile` writes only the fields the body names, records the source per field, rebuilds the twin and the matches, and recomputes completeness | Done `UI-146` |
+| R-93 | Completeness was a single opaque 33% with no explanation and no way to move it | `app/twin.cjs` holds eleven named items with printed weights; the page shows the bar, the points earned and one actionable row per missing item | Done `UI-146` |
+| R-94 | `This is the switching cost…` was founder strategy printed inside the product | Deleted; replaced with a plain privacy statement, and the register's banned-phrase list is grepped to zero across the consumer bundle | Done `UI-146` |
+| R-95 | A value's origin was invisible, so a CV-extracted seniority looked like a confirmed fact | Per-field source chips: You entered this, From your CV, Inferred by ThinkZet, Needs review, Source not recorded | Done `UI-146` |
+| R-96 | Seniority `Senior` beside `2` years raised a question the page never asked | Calm verification row naming both values, stating that nothing was changed, and offering Review; the person's value always stands | Done `UI-146` |
+| R-97 | Account deletion sat in the intelligence view with the same weight as the profile | Moved to `Account & Privacy` with export and display name; deletion is last, in its own card, behind a typed confirmation | Done `UI-146` |
+| R-98 | Missing compensation rendered as `€0` and a missing target as `–` | `null` in, `Current compensation not provided` out, with an Add control beside it; zero is never printed for an absent figure | Done `UI-146` |
+| R-99 | Skills were one undifferentiated row of chips | Grouped into Confirmed, Recognised from your CV, Inferred, and Suggested to review, each with its own tone and a remove control | Done `UI-146` |
+| R-100 | `Behaviour Signals` and a bare `25/100` momentum read as surveillance and explained nothing | Renamed `Activity & Progress`; a disclosure lists what counts, what does not, how to raise it and when it was last updated | Done `UI-146` |
+| R-101 | The left card held a large empty area because the two columns were forced to equal height | `align-items:start` with content-driven cards; measured tail gap 22px at 1440 and 18px at 393 | Done `UI-146` |

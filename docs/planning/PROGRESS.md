@@ -1,9 +1,9 @@
-# ThinkZet – Mission Plan
+# ThinkZet – Progress Board
 
-One page. What is done, what is left, and the order to do it in.
-Detail: `TASKS.md`. Rules: `ENGINEERING.md`. Payments: `PAYMENTS.md`. Snapshot: `STATUS-2026-11-11.md`.
+What has shipped, what is open, and what is deliberately not built.
+The order of work lives in `MISSION-PLAN.md`. The queue lives in `TASKS.md`. The law lives in `RULES.md`.
 
-Last updated: 15 November 2026 · `master` at `bd60694` · tagged `restore-20261113-50` · tree clean, nothing unpushed.
+Last updated: 15 November 2026 · `master` at `UI-146` · tagged `restore-20261113-53` · tree clean, nothing unpushed.
 
 ## Where we are
 
@@ -34,6 +34,13 @@ If the answer is no, it is not next.
 | Ads | Free plans only, consent first, slot collapsed until a creative renders |
 | Security | Security headers, rate limiting, 404 for unknown paths, GDPR export and delete |
 | Landing | Two-column hero with a live Career Twin preview, proof bar computed from the corpus (`/api/public/proof`), display-only FX with the rate date, one hero and one calculator |
+| Consumer surface | Operator screens moved out of the product into `public/internal.js` and `/console`; internal markup stripped server-side; no founder flag, no demo control, no ingest control in the consumer bundle (`UI-145`) |
+| Language | `app/i18n.cjs` holds English and German; the server translates then declares, so `lang`, hreflang and the copy agree; market, language and currency stay three settings (`UI-145`) |
+| Hero copy | Three-bullet brief under the lede: what the product does, in words a stranger can repeat (`UI-145`) |
+| Preview honesty | `/api/public/preview` filters on `role_family`, so a preview never shows a role from another discipline beside a salary band (`UI-145`) |
+| Tests | 62 API, 17 LLM unit, 10 browser route and width checks |
+| Career Twin | Rebuilt as an editor: intro, completeness bar with weighted checklist, per-field source chips, conflict prompts, grouped skills, Activity & Progress, Personalisation Status, Profile Sources, and an accessible edit drawer (`UI-146`) |
+| Account | `Account & Privacy` page holds display name, export and deletion; the red delete control no longer sits in the intelligence view (`UI-146`) |
 
 ## 2. Open – founder
 

@@ -187,9 +187,12 @@ function readiness() {
       APPLE_KEY_ID: has('APPLE_KEY_ID'),
       APPLE_PRIVATE_KEY: has('APPLE_PRIVATE_KEY'),
       keyParses,
-      // Mint the client secret and verify it against the key's own public half. That proves the key id,
-      // team id and client id agree without contacting Apple and without revealing any of them.
-      clientSecretOk: keyParses ? (() => {
+      // Mint the client secret and check the signature against the key's own public half. This proves one
+      // thing only: the JWT is well formed and signed by the key in APPLE_PRIVATE_KEY. It cannot prove that
+      // APPLE_KEY_ID or APPLE_TEAM_ID name the same key and team, because the check never asks Apple.
+      // Naming it clientSecretOk claimed more than it measured, which is exactly how a broken Apple key
+      // reads as ready. Use POST /api/auth/apple/probe for the answer that involves Apple.
+      signatureMatchesKey: keyParses ? (() => {
         try {
           const jwt = appleClientSecret();
           const [h, b, sig] = jwt.split('.');
@@ -197,9 +200,53 @@ function readiness() {
           return crypto.verify('sha256', Buffer.from(`${h}.${b}`), { key: pub, dsaEncoding: 'ieee-p1363' }, Buffer.from(sig, 'base64url'));
         } catch { return false; }
       })() : false,
+      ...appleFormat(),
       ready: !!(has('APPLE_CLIENT_ID') && has('APPLE_TEAM_ID') && has('APPLE_KEY_ID') && keyParses),
     },
   };
 }
 
-module.exports = { providers, startUrl, finish, readiness };
+
+// Apple answers invalid_client when the client secret itself is refused, and invalid_grant when the
+// secret was accepted but the authorization code was not. Sending a deliberately bad code therefore
+// tells the two apart in one request, without a browser and without revealing a single value:
+//   invalid_grant  -> our credentials are good, the code was the problem
+//   invalid_client -> Apple is refusing the key, the key id, the team id or the client id
+// The result is a boolean on the diagnostic page, never a key.
+let appleProbe = { at: null, ok: null, code: null };
+async function probeApple() {
+  if (!providers().apple) { appleProbe = { at: new Date().toISOString(), ok: false, code: 'not_configured' }; return appleProbe; }
+  try {
+    const form = new URLSearchParams({
+      grant_type: 'authorization_code', code: 'thinkzet-probe', redirect_uri: redirectUri('https://thinkzet.com', 'apple'),
+      client_id: env('APPLE_CLIENT_ID'), client_secret: appleClientSecret(),
+    });
+    const res = await fetch('https://appleid.apple.com/auth/token', {
+      method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: form, signal: AbortSignal.timeout(12000),
+    });
+    const j = await res.json().catch(() => ({}));
+    const code = String(j.error || res.status);
+    appleProbe = { at: new Date().toISOString(), ok: code === 'invalid_grant', code };
+  } catch (e) {
+    appleProbe = { at: new Date().toISOString(), ok: null, code: 'unreachable' };
+  }
+  return appleProbe;
+}
+function appleCredentials() { return appleProbe; }
+
+// Apple's own format rules, checked locally. A Services ID is a reverse-domain identifier and is
+// never the app's bundle id; the key id and team id are ten characters. These catch the two mistakes
+// that produce invalid_client while every variable is present and the key parses.
+function appleFormat() {
+  const cid = env('APPLE_CLIENT_ID');
+  const kid = env('APPLE_KEY_ID');
+  const tid = env('APPLE_TEAM_ID');
+  return {
+    clientIdLooksLikeServicesId: /^[A-Za-z0-9.-]+\.[A-Za-z0-9.-]+$/.test(cid) && cid.split('.').length >= 3,
+    keyIdTenChars: /^[A-Z0-9]{10}$/.test(kid),
+    teamIdTenChars: /^[A-Z0-9]{10}$/.test(tid),
+  };
+}
+
+module.exports = { providers, startUrl, finish, readiness, probeApple, appleCredentials, appleFormat };

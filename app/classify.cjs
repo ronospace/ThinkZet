@@ -21,7 +21,7 @@ const FAMILY_SIGNALS = [
 const EXCLUDE_TITLE = /(\bintern\b|\binternship\b|\bwerkstudent|\bpraktik|\bpraktikum\b|\bausbildung\b|\bazubi\b|\btrainee\b|\bworking student\b|\bservicetechniker|\belektrotechnik|\bcontroller\b|\bfilmproduktion|\bgrafik|\bcontent management\b|\bsales\b|\baccount (executive|manager)\b|\brecruiter\b|\bcustomer (support|success)\b|\bnurse\b|\bmedical\b|\bwarehouse\b|\bdriver\b|\bteacher\b|\blegal counsel\b|\bpeople ops\b|\bhr (manager|generalist)\b|\bmarketing (manager|intern)\b|\bfinance\b|\baccountant\b|\barchitect(ure)? internship\b)/i;
 
 // Core tech vocabulary: a title must contain at least one to be a real tech role.
-const TECH_CORE = /\b(engineer|developer|scientist|architect|programmer|devops|sre|analyst|data|software|ml\b|machine learning|ai\b|llm|backend|frontend|full[- ]?stack|platform|infrastructure|security|cloud|qa\b|flutter|react|python|java|golang|rust|node|mobile|ios|android|kubernetes|sql|product manager|designer|ux|ui)\b/i;
+const TECH_CORE = /\b(engineer|developer|scientist|architect|programmer|devops|sre|analyst|data|software|ml\b|machine learning|ai\b|llm|backend|frontend|full[- ]?stack|platform|infrastructure|security|cloud|qa\b|flutter|react|python|java|golang|rust|node|mobile|ios|android|kubernetes|sql|product (manager|owner|lead)|head of product|designer|ux|ui)\b/i;
 
 function classifyFamily(title, tags, description) {
   const text = `${title} ${(tags || []).join(' ')}`;

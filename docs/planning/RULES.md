@@ -212,3 +212,53 @@ before they see a form.
 
 The test: hide the marketing copy and the first screen should still tell a visitor what the product
 does, with a number they can trace.
+
+## 20. A hidden thing is not a removed thing
+
+Anything the product does not offer a customer must not be delivered to that customer. Hiding it with an
+attribute, a class, a founder flag or a client-side condition is not removal: every one of those is one
+devtools session away from being visible again, and all of them are present in the accessibility tree and in
+the bytes of the response.
+
+- Operator markup is fenced with `@internal:start` / `@internal:end` and removed server-side by
+  `stripInternal()` before the response leaves, for anyone who is not a founder.
+- Operator code lives in its own file (`public/internal.js`), served only to a founder, and never
+  referenced by the consumer document. The consumer bundle defines none of those functions.
+- An operator route answers the same 404 as any unknown path to everyone else, and carries
+  `X-Robots-Tag: noindex, nofollow, noarchive` so it can never be indexed.
+- A view that is not in the consumer map does not exist, whoever is signed in.
+
+The test: fetch the public page as a signed-out visitor and as Googlebot, and grep the bytes for every
+operator word. The count must be zero, not the element hidden.
+
+## 21. The declared language is the rendered language
+
+A document may only claim a language it actually speaks. `lang`, `hreflang`, the metadata and the visible
+copy are one statement, and a market route does not imply a translation.
+
+- `app/i18n.cjs` holds every interface string, keyed once, in English and German.
+- The server translates the document first and sets `lang` afterwards, so the tag cannot name a language the
+  page does not have.
+- Market, interface language and currency stay three separate settings: `/gb?lang=de` is German copy in GBP.
+- Text rendered after load reads the same table through `T(key)`, so there is never a second copy of the words.
+- An element with no key stays as written, so a missing translation is visible in review rather than blank.
+
+The test: load the page, read `document.documentElement.lang`, and check that every sentence on it is in that
+language. If not, the tag is wrong or the copy is.
+
+## 22. A profile belongs to the person it describes
+
+A screen that shows someone their own data is an editor, not a record. If a value can be wrong, it must be
+correctable; if it came from somewhere, it must say where; if it is missing, it must say so and offer the
+control that closes the gap.
+
+- Every stored value carries its source: entered by the person, read from their CV, imported from their
+  account, inferred, or awaiting review. A value with no recorded source says so.
+- A save writes only the fields the request names. A partial form can never blank a value nobody touched.
+- Completeness is a sum of named items with printed weights, so the percentage reconciles by hand.
+- An absent figure is absent. Zero is a number and is never printed for a field that was left empty.
+- A contradiction is a question, never a correction: name both values, say nothing was changed, offer Review.
+- Destructive account actions live on their own page, last, behind a confirmation. They never share a card
+  with the intelligence the person came for.
+
+The test: open the screen as its owner, find a wrong value, and fix it without leaving the page.

@@ -428,6 +428,11 @@ const MIGRATIONS = [
   // A saved search carries its own alert rhythm, so the person can mute one without deleting it.
   ['saved_searches.alert', () => { if (!columnExists('saved_searches', 'alert')) db.exec("ALTER TABLE saved_searches ADD COLUMN alert TEXT DEFAULT 'daily'"); }],
   ['oauth_states.claimed_at', () => { if (!columnExists('oauth_states', 'claimed_at')) db.exec("ALTER TABLE oauth_states ADD COLUMN claimed_at TEXT"); }],
+  ['profiles.desired_roles', () => { if (!columnExists('profiles', 'desired_roles')) db.exec("ALTER TABLE profiles ADD COLUMN desired_roles TEXT"); }],
+  ['profiles.employment_type', () => { if (!columnExists('profiles', 'employment_type')) db.exec("ALTER TABLE profiles ADD COLUMN employment_type TEXT"); }],
+  ['profiles.field_sources', () => { if (!columnExists('profiles', 'field_sources')) db.exec("ALTER TABLE profiles ADD COLUMN field_sources TEXT"); }],
+  ['profiles.cv_name', () => { if (!columnExists('profiles', 'cv_name')) db.exec("ALTER TABLE profiles ADD COLUMN cv_name TEXT"); }],
+  ['profiles.cv_uploaded_at', () => { if (!columnExists('profiles', 'cv_uploaded_at')) db.exec("ALTER TABLE profiles ADD COLUMN cv_uploaded_at TEXT"); }],
   ['salary_records.dedupe_key', () => {
     if (!columnExists('salary_records', 'dedupe_key')) db.exec("ALTER TABLE salary_records ADD COLUMN dedupe_key TEXT");
     db.exec("DROP INDEX IF EXISTS idx_salary_dedupe");

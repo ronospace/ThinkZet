@@ -19,6 +19,7 @@ const crypto = require('node:crypto');
 const { db } = require('./db.cjs');
 const { SKILLS, resolveSkill } = require('./taxonomy.cjs');
 const MK = require('./markets.cjs');
+const I18N = require('./i18n.cjs');
 const { seedIfEmpty, ingestLive, lastRun } = require('./pipeline.cjs');
 const SOURCES = require('./sources.cjs');
 const E = require('./engine.cjs');
@@ -98,6 +99,8 @@ function readBody(req) {
 const log = (userId, action, entityType, entityId, metadata) =>
   db.prepare('INSERT INTO activity_logs (user_id,action,entity_type,entity_id,metadata) VALUES (?,?,?,?,?)')
     .run(userId, action, entityType, entityId, metadata ? JSON.stringify(metadata) : null);
+
+const int = (n) => Number(n || 0).toLocaleString('en-GB');
 
 function getProfile(userId) {
   return db.prepare('SELECT * FROM profiles WHERE user_id=?').get(userId) || null;
@@ -237,10 +240,29 @@ function noteOauth(provider, outcome, detail, raw) {
   if (OAUTH_LOG.length > 10) OAUTH_LOG.pop();
   console.log(`  oauth ${provider}: ${outcome} ${detail ? '- ' + String(detail).slice(0, 160) : ''}${raw ? ' | ' + String(raw).slice(0, 300) : ''}`);
 }
-route('GET', /^\/api\/auth\/diagnostic$/, async (req, res) => json(res, 200, { recent: OAUTH_LOG, readiness: OAUTH.readiness() }));
+// Sign-in diagnosis is operator data, not customer data. A signed-out visitor and a crawler get the
+// same 404 as any unknown path (RULES 20), so the provider names and the booleans are never published.
+route('GET', /^\/api\/auth\/diagnostic$/, async (req, res) => {
+  if (!isFounder(req, res)) return json(res, 404, { error: 'not found' });
+  json(res, 200, { recent: OAUTH_LOG, readiness: OAUTH.readiness(), appleCredentials: OAUTH.appleCredentials() });
+});
+// Ask Apple directly whether it accepts our client secret. It sends a deliberately invalid code, so the
+// only two answers are "credentials refused" and "credentials accepted, code refused". One request,
+// no browser, no key in the reply. This is what tells a wrong key id from a wrong code.
+route('POST', /^\/api\/auth\/apple\/probe$/, async (req, res) => {
+  if (!isFounder(req, res)) return json(res, 404, { error: 'not found' });
+  const r = await OAUTH.probeApple();
+  noteOauth('apple', r.ok ? 'credentials accepted by Apple' : 'credentials refused by Apple', r.code);
+  json(res, 200, { ok: r.ok, code: r.code, at: r.at });
+});
 
-// The same report as a page, so nobody needs a terminal to read it.
+// The same report as a page, so nobody needs a terminal to read it. Founder only: it names our
+// providers and prints booleans about our own credentials, which is operator data (RULES 20).
 route('GET', /^\/diagnostic$/, async (req, res) => {
+  if (!isFounder(req, res)) {
+    res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8', 'X-Robots-Tag': 'noindex, nofollow, noarchive' });
+    return res.end('not found');
+  }
   const r = OAUTH.readiness();
   const ok = (v) => (v ? '<span style="color:#2f9e6b">yes</span>' : '<span style="color:#c0392b">no</span>');
   const row = (k, v) => `<tr><td style="padding:4px 12px 4px 0;color:#667">${k}</td><td>${ok(v)}</td></tr>`;
@@ -255,8 +277,30 @@ route('GET', /^\/diagnostic$/, async (req, res) => {
     <h1 style="font-size:19px;margin:0 0 4px">Sign-in diagnostic</h1>
     <p style="color:#667;font-size:13px;margin:0">Booleans only. No key, secret or identifier is shown.</p>
     ${provider('Google', r.google)}${provider('Apple', r.apple)}
+    <h2 style="font-size:15px;margin:26px 0 6px">Apple credentials, tested against Apple</h2>
+    <p style="color:#667;font-size:13px;margin:0 0 8px">Sends one deliberately invalid code. Apple can only answer
+    "credentials refused" or "credentials accepted, code refused", which is exactly the difference between a wrong
+    key and a wrong code. No key is sent to this page.</p>
+    <button id="probe" style="font:600 13px -apple-system,sans-serif;padding:9px 16px;border-radius:8px;border:1px solid #d9d3e6;background:#fff;cursor:pointer">Test Apple credentials</button>
+    <p id="probe-out" style="font:13px ui-monospace,monospace;margin:10px 0 0;color:#334"></p>
     <h2 style="font-size:15px;margin:26px 0 6px">Recent attempts</h2>${events}
-    <p style="color:#889;font-size:12px;margin-top:26px">JSON: <a href="/api/auth/diagnostic">/api/auth/diagnostic</a></p>`);
+    <p style="color:#889;font-size:12px;margin-top:26px">JSON: <a href="/api/auth/diagnostic">/api/auth/diagnostic</a></p>
+    <script>
+      document.getElementById('probe').onclick = async (e) => {
+        const b = e.target, out = document.getElementById('probe-out');
+        b.disabled = true; b.textContent = 'Asking Apple…'; out.textContent = '';
+        try {
+          const r = await fetch('/api/auth/apple/probe', { method: 'POST' });
+          const j = await r.json();
+          out.textContent = j.ok === true
+            ? 'Apple accepted our credentials (' + j.code + '). The key, key id, team id and client id all agree.'
+            : j.ok === false
+              ? 'Apple refused our credentials (' + j.code + '). The key, key id, team id or client id is wrong.'
+              : 'Could not reach Apple (' + j.code + ').';
+        } catch (err) { out.textContent = 'Request failed: ' + err.message; }
+        b.disabled = false; b.textContent = 'Test Apple credentials';
+      };
+    </script>`);
 });
 
 async function oauthCallback(req, res, provider, params) {
@@ -779,9 +823,209 @@ route('GET', /^\/api\/markets$/, async (req, res, url) => {
   });
 });
 
+// ---- the Career Twin, as its owner sees it ----
+// One builder so the page and any future surface read the same numbers. Everything derived lives in
+// twin.cjs, so the weights and the labels are in one file rather than in the markup.
+const TWIN = require('./twin.cjs');
+const RATE_UNITS = ['year', 'month', 'day', 'hour'];
+const REMOTE_PREFS = ['any', 'remote', 'hybrid', 'onsite'];
+const EMPLOYMENT_TYPES = ['permanent', 'contract', 'freelance', 'part-time', 'internship'];
+const SENIORITIES = ['intern', 'junior', 'mid', 'senior', 'staff', 'lead', 'principal', 'director', 'vp', 'exec'];
+const CURRENCIES = Array.from(new Set(Object.values(MK.MARKETS).map((m) => m.currency))).sort();
+
+function twinProfile(uid) {
+  const profile = getProfile(uid);
+  const skills = profile
+    ? db.prepare(`SELECT s.id, s.canonical, s.category, s.demand_index, s.salary_premium, s.growth_rate,
+        ps.proficiency, ps.source FROM profile_skills ps JOIN skills s ON s.id=ps.skill_id
+        WHERE ps.user_id=? ORDER BY s.canonical`).all(uid)
+    : [];
+  const apps = profile ? db.prepare('SELECT status, COUNT(*) n FROM applications WHERE user_id=? GROUP BY status').all(uid) : [];
+  const outcomes = profile ? db.prepare('SELECT outcome_type, COUNT(*) n FROM outcomes WHERE user_id=? GROUP BY outcome_type').all(uid) : [];
+  const outcomeCount = outcomes.reduce((a, b) => a + b.n, 0);
+  const appCount = apps.reduce((a, b) => a + b.n, 0);
+  const cv = !!(profile && profile.resume_text);
+  const comp = TWIN.completeness(profile, skills, cv);
+  const src = TWIN.sources(profile, skills);
+  const conf = TWIN.conflicts(profile, skills);
+  const pers = TWIN.personalisation(profile, skills, outcomeCount, appCount);
+  const countries = profile ? JSON.parse(profile.target_countries || '[]') : [];
+  const roles = profile ? JSON.parse(profile.desired_roles || '[]') : [];
+  return {
+    ok: true,
+    hasProfile: !!profile,
+    identity: {
+      headline: profile?.headline || null,
+      currentRole: profile?.current_role || null,
+      seniority: profile?.seniority || null,
+      years: profile?.years_experience ?? null,
+      education: null,
+    },
+    preferences: {
+      remotePreference: profile?.remote_preference || null,
+      willingToRelocate: !!(profile && profile.willing_to_relocate),
+      targetCountries: Array.isArray(countries) ? countries : [],
+      visaNeeded: !!(profile && profile.visa_needed),
+      desiredRoles: Array.isArray(roles) ? roles : [],
+      employmentType: profile?.employment_type || null,
+    },
+    compensation: {
+      current: profile?.current_rate > 0 ? profile.current_rate : null,
+      target: profile?.target_rate_min > 0 ? profile.target_rate_min : null,
+      currency: profile?.rate_currency || null,
+      period: profile?.rate_unit || null,
+    },
+    skills,
+    sources: src,
+    sourceList: profileSourceList(profile, skills, cv, appCount, outcomeCount),
+    completeness: comp,
+    conflicts: conf,
+    personalisation: pers,
+    momentum: (() => {
+      const t = db.prepare('SELECT state FROM career_twin WHERE user_id=?').get(uid);
+      try { return JSON.parse(t.state).momentum ?? null; } catch { return null; }
+    })(),
+    counts: { applications: appCount, outcomes: outcomeCount },
+    options: {
+      countries: Object.entries(MK.MARKETS).map(([code, m]) => ({ code, name: m.name, currency: m.currency })).sort((a, b) => a.name.localeCompare(b.name)),
+      currencies: CURRENCIES,
+      rateUnits: RATE_UNITS,
+      remotePrefs: REMOTE_PREFS,
+      employmentTypes: EMPLOYMENT_TYPES,
+      seniorities: SENIORITIES,
+    },
+    updatedAt: profile?.updated_at || null,
+  };
+}
+
+// Only sources that actually exist, in the order a person would think about them.
+function profileSourceList(profile, skills, cv, appCount, outcomeCount) {
+  const out = [];
+  if (cv) out.push({ key: 'cv', label: 'Uploaded CV', detail: profile.cv_name ? profile.cv_name : 'On file', at: profile.cv_uploaded_at || profile.updated_at, action: 'review' });
+  const manual = skills.filter((s) => s.source === 'manual').length + (profile && profile.current_role ? 1 : 0);
+  if (manual) out.push({ key: 'manual', label: 'Details you entered', detail: `${int(manual)} item${manual === 1 ? '' : 's'} added by you`, at: profile.updated_at, action: null });
+  if (appCount) out.push({ key: 'tracker', label: 'Career Tracker activity', detail: `${int(appCount)} opportunit${appCount === 1 ? 'y' : 'ies'} tracked`, at: null, action: 'tracker' });
+  if (outcomeCount) out.push({ key: 'outcomes', label: 'Outcomes you reported', detail: `${int(outcomeCount)} recorded`, at: null, action: 'learning' });
+  if (!out.length) out.push({ key: 'none', label: 'Nothing yet', detail: 'Add your details or upload a CV and they appear here.', at: null, action: null });
+  return out;
+}
+
+// The stored twin state, unchanged and still served: the score engine writes it and other screens read it.
 route('GET', /^\/api\/twin$/, async (req, res) => {
   const twin = db.prepare('SELECT * FROM career_twin WHERE user_id=?').get(resolveUser(req));
   json(res, 200, twin ? { ...JSON.parse(twin.state), updatedAt: twin.updated_at } : null);
+});
+route('GET', /^\/api\/twin\/profile$/, async (req, res) => json(res, 200, twinProfile(resolveUser(req))));
+
+// A field is only written when the body names it. Absent means "leave what is there", so a partial
+// form can never blank a value the person did not touch.
+route('PATCH', /^\/api\/twin\/profile$/, async (req, res) => {
+  const uid = resolveUser(req);
+  const before = getProfile(uid);
+  if (!before) return json(res, 400, { error: 'Complete the free check first, then edit your Career Twin.' });
+  const b = await readBody(req);
+  const errs = {};
+  const set = {};
+  const touched = [];
+
+  const num = (v, min, max, label) => {
+    const n = Number(v);
+    if (!Number.isFinite(n)) { errs[label] = 'Enter a number'; return null; }
+    if (n < min || n > max) { errs[label] = `Enter a value between ${min} and ${max}`; return null; }
+    return n;
+  };
+  const txt = (v, max) => String(v == null ? '' : v).replace(/\s+/g, ' ').trim().slice(0, max);
+
+  if ('headline' in b) { const v = txt(b.headline, 120); set.headline = v || null; touched.push('headline'); }
+  if ('currentRole' in b) { const v = txt(b.currentRole, 80); set.current_role = v || null; touched.push('current_role'); }
+  if ('seniority' in b) {
+    const v = String(b.seniority || '').toLowerCase();
+    if (v && !SENIORITIES.includes(v)) errs.seniority = 'Choose a seniority';
+    else { set.seniority = v || null; touched.push('seniority'); }
+  }
+  if ('years' in b) {
+    if (b.years === '' || b.years == null) { set.years_experience = null; touched.push('years_experience'); }
+    else { const n = num(b.years, 0, 60, 'years'); if (n !== null) { set.years_experience = Math.round(n); touched.push('years_experience'); } }
+  }
+  if ('remotePreference' in b) {
+    const v = String(b.remotePreference || '');
+    if (v && !REMOTE_PREFS.includes(v)) errs.remotePreference = 'Choose a work arrangement';
+    else { set.remote_preference = v || null; touched.push('remote_preference'); }
+  }
+  if ('willingToRelocate' in b) { set.willing_to_relocate = b.willingToRelocate ? 1 : 0; touched.push('willing_to_relocate'); }
+  if ('visaNeeded' in b) { set.visa_needed = b.visaNeeded ? 1 : 0; }
+  if ('employmentType' in b) {
+    const v = String(b.employmentType || '');
+    if (v && !EMPLOYMENT_TYPES.includes(v)) errs.employmentType = 'Choose an employment type';
+    else set.employment_type = v || null;
+  }
+  if ('targetCountries' in b) {
+    const list = Array.isArray(b.targetCountries) ? b.targetCountries : [];
+    const bad = list.filter((c) => !MK.has(String(c).toLowerCase()));
+    if (bad.length) errs.targetCountries = 'One of those is not a market we cover yet';
+    else { set.target_countries = JSON.stringify(list.map((c) => String(c).toLowerCase())); touched.push('target_countries'); }
+  }
+  if ('desiredRoles' in b) {
+    const list = (Array.isArray(b.desiredRoles) ? b.desiredRoles : []).map((x) => txt(x, 60)).filter(Boolean).slice(0, 8);
+    set.desired_roles = JSON.stringify(list); touched.push('desired_roles');
+  }
+  if ('current' in b) {
+    if (b.current === '' || b.current == null) { set.current_rate = null; touched.push('current_rate'); }
+    else { const n = num(b.current, 0, 100000000, 'current'); if (n !== null) { set.current_rate = n; touched.push('current_rate'); } }
+  }
+  if ('target' in b) {
+    if (b.target === '' || b.target == null) { set.target_rate_min = null; touched.push('target_rate_min'); }
+    else { const n = num(b.target, 0, 100000000, 'target'); if (n !== null) { set.target_rate_min = n; touched.push('target_rate_min'); } }
+  }
+  if ('currency' in b) {
+    const v = String(b.currency || '').toUpperCase();
+    if (v && !CURRENCIES.includes(v)) errs.currency = 'Choose a currency';
+    else { set.rate_currency = v || null; touched.push('rate_currency'); }
+  }
+  if ('period' in b) {
+    const v = String(b.period || '');
+    if (v && !RATE_UNITS.includes(v)) errs.period = 'Choose a pay period';
+    else { set.rate_unit = v || null; touched.push('rate_unit'); }
+  }
+  if (Object.keys(errs).length) return json(res, 400, { error: 'Some values need attention', fields: errs });
+
+  // Sources: whatever the person edits becomes theirs. A field they did not touch keeps the source it
+  // had, so a CV-extracted value stays labelled as CV-extracted until they confirm or change it.
+  let sources = {};
+  try { sources = JSON.parse(before.field_sources || '{}') || {}; } catch { sources = {}; }
+  for (const f of touched) sources[f] = 'manual';
+  set.field_sources = JSON.stringify(sources);
+
+  const cols = Object.keys(set);
+  if (cols.length) {
+    db.prepare(`UPDATE profiles SET ${cols.map((c) => `${c}=?`).join(', ')}, updated_at=datetime('now') WHERE user_id=?`)
+      .run(...cols.map((c) => set[c]), uid);
+  }
+
+  // Skills are replaced as a set only when the body sends them, so a name is never silently dropped.
+  if (Array.isArray(b.skills)) {
+    const wanted = Array.from(new Set(b.skills.map((x) => resolveSkill(String(x))).filter(Boolean))).slice(0, 60);
+    const keep = db.prepare('SELECT skill_id, source FROM profile_skills WHERE user_id=?').all(uid);
+    const keepIds = new Set(keep.map((k) => k.skill_id));
+    const ids = wanted.map((c) => db.prepare('SELECT id FROM skills WHERE canonical=?').get(c)).filter(Boolean).map((r) => r.id);
+    const drop = [...keepIds].filter((id) => !ids.includes(id));
+    for (const id of drop) db.prepare('DELETE FROM profile_skills WHERE user_id=? AND skill_id=?').run(uid, id);
+    for (const id of ids) {
+      if (keepIds.has(id)) db.prepare("UPDATE profile_skills SET source='manual' WHERE user_id=? AND skill_id=?").run(uid, id);
+      else db.prepare("INSERT INTO profile_skills (user_id,skill_id,proficiency,confidence,source) VALUES (?,?,'working',1,'manual')").run(uid, id);
+    }
+    touched.push('skills');
+  }
+
+  // Recompute completeness from the weights, then the twin, so every downstream score uses the new data.
+  const skills = db.prepare(`SELECT s.canonical, ps.source FROM profile_skills ps JOIN skills s ON s.id=ps.skill_id WHERE ps.user_id=?`).all(uid);
+  const after = getProfile(uid);
+  const comp = TWIN.completeness(after, skills, !!after.resume_text);
+  db.prepare('UPDATE profiles SET completeness=? WHERE user_id=?').run(comp.percent, uid);
+  try { E.buildTwin(uid); } catch { /* the twin rebuilds on next read */ }
+  try { E.computeMatches(uid); } catch { /* matches refresh on the next radar load */ }
+  log(uid, 'twin.updated', 'profile', uid, { fields: touched });
+  json(res, 200, { ok: true, updated: touched, completeness: comp.percent, profile: twinProfile(uid) });
 });
 
 route('GET', /^\/api\/tracker$/, async (req, res) => {
@@ -1675,9 +1919,12 @@ route('GET', /^\/api\/public\/preview$/, async (req, res) => {
     const twin = E.buildTwin(fakeUser);
     const profile = db.prepare('SELECT * FROM profiles WHERE user_id=?').get(fakeUser);
     if (twin && profile) {
+      // A preview may only show roles in the same discipline as the profile. Falling back to whatever
+      // else scores well would print an unrelated job next to a salary band and make both look wrong,
+      // so the family filter comes first and an honest empty state is preferred to a mismatch.
       const rows = country
-        ? db.prepare("SELECT * FROM opportunities WHERE status='open' AND (country=? OR remote_type='remote') ORDER BY posted_at DESC LIMIT 400").all(country)
-        : db.prepare("SELECT * FROM opportunities WHERE status='open' ORDER BY posted_at DESC LIMIT 400").all();
+        ? db.prepare("SELECT * FROM opportunities WHERE status='open' AND role_family=? AND (country=? OR remote_type='remote') ORDER BY posted_at DESC LIMIT 400").all(family, country)
+        : db.prepare("SELECT * FROM opportunities WHERE status='open' AND role_family=? ORDER BY posted_at DESC LIMIT 400").all(family);
       opportunities = rows
         .map((o) => ({ o, s: E.scoreOpportunity(profile, twin, o) }))
         .sort((a, b) => b.s.match_score - a.s.match_score)
@@ -2831,16 +3078,29 @@ function seoFor(pathname) {
 // Internal markup never reaches a consumer. The blocks are marked in the source and removed here,
 // before the response leaves the server, so no founder flag, hidden attribute or stylesheet can put
 // them back. A founder gets the same page with the blocks intact.
+// Interface language for a request: an explicit ?lang= wins, then the visitor's own header, then the
+// language the market registry records for that route, then English. It is independent of currency and
+// of market selection, so a German reader on /gb still gets German.
+function langFor(req, pathname) {
+  try {
+    const url = new URL(req.url, `http://127.0.0.1:${PORT}`);
+    const market = /^\/([a-z]{2})\/?$/.test(pathname) ? pathname.slice(1, 3) : null;
+    return MK.languageFor(req, url, market && MK.has(market) ? market : null);
+  } catch { return 'en'; }
+}
+
 function stripInternal(html) {
   return html.replace(/[ \t]*<!-- @internal:start -->[\s\S]*?<!-- @internal:end -->[ \t]*\n?/g, '');
 }
 
-function withSeo(html, origin, pathname) {
+function withSeo(html, origin, pathname, lang) {
   const clean = pathname === '/' ? '/' : pathname.replace(/\/$/, '');
   const canonical = `${origin}${clean}`;
   const seo = seoFor(clean);
-  // The interface ships in English, so the document says so and the alternates say en-<market>.
-  const alts = seo && seo.market ? MK.alternates(origin, marketCodes(origin), 'en') : [];
+  // The declared language follows the words actually rendered. A market route does not imply a
+  // translation, so the language is resolved on its own and the alternates carry the same value.
+  const uiLang = I18N.has(lang) ? lang : 'en';
+  const alts = seo && seo.market ? MK.alternates(origin, marketCodes(origin), uiLang) : [];
   const head = [
     `<link rel="canonical" href="${canonical}"/>`,
     ...alts.map((a) => `<link rel="alternate" hreflang="${a.hreflang}" href="${a.href}"/>`),
@@ -2862,9 +3122,13 @@ function withSeo(html, origin, pathname) {
     })}</script>`,
   ].join('');
   let out = html.includes('rel="canonical"') ? html : html.replace('</head>', head + '</head>');
-  // Declared language matches the words on the page. A market route does not imply a translated
-  // interface; when one exists the tag changes with it, and not before.
-  out = out.replace(/<html lang="[^"]*"/, '<html lang="en"');
+  // Translate first, then declare: the tag can never promise words the page does not have.
+  out = I18N.apply(out, uiLang);
+  // The client renders text after load, so it is handed the same table rather than a second copy of
+  // the words. One table, one language, and the document tag and the script agree by construction.
+  const table = JSON.stringify(I18N.STRINGS[uiLang] || I18N.STRINGS.en).replace(/</g, '\\u003c');
+  out = out.replace('</head>', `<script>window.TZ_I18N={lang:${JSON.stringify(uiLang)},strings:${table}};</script></head>`);
+  out = out.replace(/<html lang="[^"]*"/, `<html lang="${uiLang}"`);
   if (seo) {
     out = out.replace(/<title>[^<]*<\/title>/, `<title>${seo.title.replace(/</g, '&lt;')}</title>`);
     // The crawler gets the same words the visitor gets, before any script runs.
@@ -2890,7 +3154,7 @@ function serveStatic(req, res, pathname, origin, seoPath) {
         res.writeHead(known ? 200 : 404, { 'Content-Type': MIME['.html'] });
         let out = d2.toString('utf8');
         if (!isFounder(req, res)) out = stripInternal(out);
-        res.end(origin ? withSeo(out, origin, described) : out);
+        res.end(origin ? withSeo(out, origin, described, langFor(req, described)) : out);
       });
       return;
     }
@@ -2899,7 +3163,7 @@ function serveStatic(req, res, pathname, origin, seoPath) {
     if (!isHtml) return res.end(data);
     let out = data.toString('utf8');
     if (!isFounder(req, res)) out = stripInternal(out);
-    res.end(origin ? withSeo(out, origin, described) : out);
+    res.end(origin ? withSeo(out, origin, described, langFor(req, described)) : out);
   });
 }
 
