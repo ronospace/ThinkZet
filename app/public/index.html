@@ -850,6 +850,12 @@ html[data-theme="light"] .hero-sec::before{background:radial-gradient(60% 60% at
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .land-cta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:var(--sp-5)}
 .land-cta .ar{font-size:1.05em;line-height:1}
+.btn.cta{display:inline-flex;align-items:center;justify-content:center;gap:9px}
+.cta-go{font-size:1.05em;line-height:1;opacity:.85;transition:transform .14s ease}
+.cta:hover .cta-go{transform:translateX(2px)}
+.cta-ic{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--accent2) 16%,transparent);color:var(--accent2);flex:0 0 auto}
+.cta-ic svg{display:block}
+@media(prefers-reduced-motion:reduce){.cta:hover .cta-go{transform:none}}
 .proof{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-2);margin-top:var(--sp-6)}
 .proof-c{background:var(--wash);border:1px solid var(--line-tint);border-radius:var(--radius);padding:11px 13px;min-width:0}
 .proof-c b{display:block;font-size:var(--text-lg);font-weight:700;letter-spacing:var(--tracking-tight);font-variant-numeric:tabular-nums;color:var(--ink)}
@@ -864,11 +870,14 @@ html[data-theme="light"] .hero-sec::before{background:radial-gradient(60% 60% at
   border-radius:6px;padding:3px 9px;white-space:nowrap}
 .tp-badge.live{color:var(--ink);background:color-mix(in srgb,var(--good) 14%,var(--panel));border-color:color-mix(in srgb,var(--good) 40%,var(--line))}
 .tp-tabs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;margin-top:var(--sp-3)}
-.tp-tab{font:inherit;font-size:var(--text-2xs);font-weight:600;line-height:1.25;text-align:left;padding:7px 9px;min-height:44px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+.tp-tab{display:flex;flex-direction:column;justify-content:center;gap:2px;font:inherit;font-size:var(--text-2xs);font-weight:600;line-height:1.2;text-align:left;padding:7px 9px;min-height:44px;white-space:nowrap;overflow:hidden;
   border-radius:var(--radius-sm);border:1px solid var(--line-tint);background:var(--wash);color:var(--ink2);cursor:pointer;
   transition:color .14s,border-color .14s,background .14s}
 .tp-tab:hover{color:var(--ink);border-color:var(--accent2)}
 .tp-tab.on{color:var(--ink);border-color:var(--accent2);background:color-mix(in srgb,var(--accent2) 12%,var(--panel))}
+.tp-tab-m{font-size:var(--text-2xs);font-weight:700;letter-spacing:.1em;color:var(--muted);line-height:1}
+.tp-tab.on .tp-tab-m{color:var(--accent2)}
+.tp-tab-l{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;min-width:0}
 .tp-tab:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
 .tp-body{margin-top:var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-3);min-height:390px}
 .tp-wait{font-size:var(--text-sm);color:var(--ink2);margin:0}
@@ -1410,8 +1419,8 @@ body.tw-lock{overflow:hidden}
             <li data-i18n="hero.b3"><b>The move that pays.</b> Compare staying, switching, contracting or relocating.</li>
           </ul>
           <div class="land-cta">
-            <a class="btn" href="#check" id="hero-primary" data-i18n="hero.primary">Check my market gap</a>
-            <button class="btn ghost" id="hero-sample" type="button" aria-describedby="hero-sample-hint" data-i18n="hero.sample">Explore live sample <span class="ar" aria-hidden="true">&rarr;</span></button>
+            <a class="btn cta" href="#check" id="hero-primary"><span data-i18n="hero.primary">Check my market gap</span><span class="cta-go" aria-hidden="true">&gt;</span></a>
+            <button class="btn ghost cta" id="hero-sample" type="button" aria-describedby="hero-sample-hint"><span class="cta-ic" aria-hidden="true"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3v4h-4"/><path d="M3 13v-4h4"/><path d="M12.6 7A5 5 0 0 0 4 5.2"/><path d="M3.4 9A5 5 0 0 0 12 10.8"/></svg></span><span data-i18n="hero.sample">Explore live sample</span></button>
             <span class="sr-only" id="hero-sample-hint" data-i18n="hero.sampleHint">Cycles the three sample profiles shown in the preview card.</span>
           </div>
           <div class="proof" id="proof-bar" aria-live="polite">
@@ -1429,9 +1438,9 @@ body.tw-lock{overflow:hidden}
               <span class="tp-badge" id="tp-badge" data-i18n="twin.sample">Sample preview</span>
             </div>
             <div class="tp-tabs" role="tablist" data-i18n-aria="twin.tabs" aria-label="Sample profiles">
-              <button class="tp-tab on" role="tab" aria-selected="true" data-p="0" id="tp-tab-0" aria-controls="tp-panel" tabindex="0" data-full="Senior Data Scientist &middot; UK" data-short="Data Scientist &middot; UK">Senior Data Scientist &middot; UK</button>
-              <button class="tp-tab" role="tab" aria-selected="false" data-p="1" id="tp-tab-1" aria-controls="tp-panel" tabindex="-1" data-full="Backend Engineer &middot; DE" data-short="Backend &middot; DE">Backend Engineer &middot; DE</button>
-              <button class="tp-tab" role="tab" aria-selected="false" data-p="2" id="tp-tab-2" aria-controls="tp-panel" tabindex="-1" data-full="Product Lead &middot; US" data-short="Product &middot; US">Product Lead &middot; US</button>
+              <button class="tp-tab on" role="tab" aria-selected="true" data-p="0" id="tp-tab-0" aria-controls="tp-panel" tabindex="0"><span class="tp-tab-m">UK</span><span class="tp-tab-l" data-full="Senior Data Scientist" data-short="Data Scientist" data-mini="Data">Senior Data Scientist</span></button>
+              <button class="tp-tab" role="tab" aria-selected="false" data-p="1" id="tp-tab-1" aria-controls="tp-panel" tabindex="-1"><span class="tp-tab-m">DE</span><span class="tp-tab-l" data-full="Backend Engineer" data-short="Backend" data-mini="Backend">Backend Engineer</span></button>
+              <button class="tp-tab" role="tab" aria-selected="false" data-p="2" id="tp-tab-2" aria-controls="tp-panel" tabindex="-1"><span class="tp-tab-m">US</span><span class="tp-tab-l" data-full="Product Lead" data-short="Product" data-mini="Product">Product Lead</span></button>
             </div>
             <div id="tp-panel" role="tabpanel" aria-labelledby="tp-tab-0" tabindex="0">
               <div class="tp-body" id="tp-body">
@@ -2308,12 +2317,16 @@ function tpSelect(i, focus) {
 
 // Three tabs must stay on one row at every width. Below 381px the full labels cannot fit at a
 // legible size, so each tab carries a short form and the row keeps its shape instead of truncating.
+// The tab row never clips and never wraps. Rather than guess a breakpoint, each label is set to its
+// full form and then stepped down to a shorter one only while a tab still overflows its own box, so
+// the row is measured at the width it is actually rendered at.
 function twTabLabels() {
-  const short = window.innerWidth <= 380;
-  document.querySelectorAll('.tp-tab').forEach((t) => {
-    const next = short ? t.dataset.short : t.dataset.full;
-    if (next && t.innerHTML !== next) t.innerHTML = next;
-  });
+  const labels = [...document.querySelectorAll('.tp-tab-l')];
+  const fits = () => labels.every((l) => l.scrollWidth <= l.clientWidth + 1);
+  for (const key of ['full', 'short', 'mini']) {
+    labels.forEach((l) => { l.textContent = l.dataset[key] || l.dataset.full; });
+    if (fits()) return;
+  }
 }
 twTabLabels();
 window.addEventListener('resize', twTabLabels);
