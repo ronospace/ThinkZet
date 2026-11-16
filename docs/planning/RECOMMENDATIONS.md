@@ -146,3 +146,5 @@ Last updated: 16 November 2026.
 | R-124 | Nothing asked Apple whether the credential worked until a person clicked and failed | `OAUTH.probeApple()` runs once at boot and logs `[auth] apple probe: ok / not usable (code)` | Done `UI-154` |
 | R-125 | The probe consulted `providers()`, which the probe itself now writes, so it could refuse to run on its own previous answer | `appleConfigured()` split out and used by the probe; `providers()` composes it with the probe result | Done `UI-154` |
 | R-126 | The daily brief headline at 20px/700 filled the top of the email before the first action | 16px/650, and the market figure 22px to 18px | Done `UI-153` |
+| R-127 | `providers().apple` treated "no probe yet" as a pass, so the button was offered before anything had asked Apple | `appleConfigured() && !!appleProbe && appleProbe.ok === true`; no evidence is not a yes | Done `UI-155` |
+| R-128 | The probe ran beside `server.listen`, so the first request raced it | Awaited before `listen`, bounded by the probe's own 12s timeout | Done `UI-155` |
