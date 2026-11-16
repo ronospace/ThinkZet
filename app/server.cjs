@@ -3497,6 +3497,10 @@ server.listen(PORT, HOST, () => {
   // Warm the display rate table once, in the background, so the first market page prints its own
   // currency instead of falling back to the reporting currency. A failure is not fatal.
   require('./fx.cjs').table();
+  // Ask Apple once at boot whether the credential it will be handed actually works, so the sign-in
+  // page offers a button that leads somewhere. A failure withdraws the button instead of sending
+  // someone into an error only the founder can fix.
+  OAUTH.probeApple().then((r) => console.log(`[auth] apple probe: ${r.ok === true ? 'ok' : 'not usable'} (${r.code})`)).catch(() => {});
   console.log(`seed: ${ingest.raw ?? 0} raw → ${ingest.canonical ?? ingest.count} canonical, ${ingest.merged ?? 0} merged (${ingest.duplicateRate ?? 0}% dup) in ${ingestMs}ms`);
   // Live ingestion on boot, then every 30 minutes. Failures are isolated per source.
   const runLive = async (label) => {

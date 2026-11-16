@@ -43,13 +43,21 @@ function sweep() {
   pending.sweep();
 }
 
+// A provider is offered only when it will work. Four present variables and a key that parses is not
+// the same as Apple accepting the client: a rotated-out .p8 or a wrong Services ID passes every local
+// check and still answers invalid_client. So Apple is offered only after a probe that asked Apple, and
+// a failed probe withdraws the button instead of leading someone into an error they cannot fix.
+function appleConfigured() {
+  return !!(env('APPLE_CLIENT_ID') && env('APPLE_TEAM_ID') && env('APPLE_KEY_ID') && appleKeyUsable());
+}
 function providers() {
   return {
     google: !!(env('GOOGLE_CLIENT_ID') && env('GOOGLE_CLIENT_SECRET')),
-    apple: !!(env('APPLE_CLIENT_ID') && env('APPLE_TEAM_ID') && env('APPLE_KEY_ID') && appleKeyUsable()),
+    apple: appleConfigured() && (!appleProbe || appleProbe.ok === true),
   };
 }
 
+let appleProbe = null;
 const b64u = (b) => Buffer.from(b).toString('base64url');
 
 // Apple's client secret is a short-lived ES256 JWT signed with the .p8 key.
@@ -213,9 +221,9 @@ function readiness() {
 //   invalid_grant  -> our credentials are good, the code was the problem
 //   invalid_client -> Apple is refusing the key, the key id, the team id or the client id
 // The result is a boolean on the diagnostic page, never a key.
-let appleProbe = { at: null, ok: null, code: null };
+// appleProbe is declared above providers() so a probe result can withdraw the Apple button.
 async function probeApple() {
-  if (!providers().apple) { appleProbe = { at: new Date().toISOString(), ok: false, code: 'not_configured' }; return appleProbe; }
+  if (!appleConfigured()) { appleProbe = { at: new Date().toISOString(), ok: false, code: 'not_configured' }; return appleProbe; }
   try {
     const form = new URLSearchParams({
       grant_type: 'authorization_code', code: 'thinkzet-probe', redirect_uri: redirectUri('https://thinkzet.com', 'apple'),
@@ -249,4 +257,4 @@ function appleFormat() {
   };
 }
 
-module.exports = { providers, startUrl, finish, readiness, probeApple, appleCredentials, appleFormat };
+module.exports = { providers, appleConfigured, startUrl, finish, readiness, probeApple, appleCredentials, appleFormat };
