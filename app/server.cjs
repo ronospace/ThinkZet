@@ -3492,15 +3492,21 @@ const server = http.createServer(async (req, res) => {
 // Bind to all interfaces so a tunnel (cloudflared/ngrok) or your phone on the same
 // network can reach it. Localhost still works exactly as before.
 const HOST = process.env.HOST || '0.0.0.0';
+// The Apple button is offered only after Apple has answered, so the probe finishes before the first
+// request is served. A 12s timeout bounds the wait; a failure leaves the button withdrawn.
+(async () => {
+  try {
+    const r = await OAUTH.probeApple();
+    console.log(`[auth] apple probe: ${r.ok === true ? 'ok' : 'not usable'} (${r.code})`);
+  } catch (e) { console.log('[auth] apple probe: unreachable'); }
+})();
+
 server.listen(PORT, HOST, () => {
   console.log(`ThinkZet engine on http://127.0.0.1:${PORT}`);
   // Warm the display rate table once, in the background, so the first market page prints its own
   // currency instead of falling back to the reporting currency. A failure is not fatal.
   require('./fx.cjs').table();
-  // Ask Apple once at boot whether the credential it will be handed actually works, so the sign-in
-  // page offers a button that leads somewhere. A failure withdraws the button instead of sending
-  // someone into an error only the founder can fix.
-  OAUTH.probeApple().then((r) => console.log(`[auth] apple probe: ${r.ok === true ? 'ok' : 'not usable'} (${r.code})`)).catch(() => {});
+
   console.log(`seed: ${ingest.raw ?? 0} raw → ${ingest.canonical ?? ingest.count} canonical, ${ingest.merged ?? 0} merged (${ingest.duplicateRate ?? 0}% dup) in ${ingestMs}ms`);
   // Live ingestion on boot, then every 30 minutes. Failures are isolated per source.
   const runLive = async (label) => {

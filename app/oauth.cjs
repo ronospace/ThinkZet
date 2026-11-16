@@ -53,7 +53,8 @@ function appleConfigured() {
 function providers() {
   return {
     google: !!(env('GOOGLE_CLIENT_ID') && env('GOOGLE_CLIENT_SECRET')),
-    apple: appleConfigured() && (!appleProbe || appleProbe.ok === true),
+    // No probe result means no evidence, and no evidence is not a yes.
+    apple: appleConfigured() && !!appleProbe && appleProbe.ok === true,
   };
 }
 
