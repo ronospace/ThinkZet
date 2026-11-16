@@ -840,12 +840,13 @@ html[data-theme="light"] .check{box-shadow:0 18px 50px rgba(20,40,80,.10)}
 .hero-sec::before{content:"";position:absolute;inset:-8% -6% auto -6%;height:78%;z-index:-1;pointer-events:none;background:radial-gradient(60% 60% at 22% 30%,color-mix(in srgb,var(--accent2) 16%,transparent) 0%,transparent 70%),radial-gradient(45% 45% at 82% 12%,color-mix(in srgb,var(--accent2) 10%,transparent) 0%,transparent 72%)}
 html[data-theme="light"] .hero-sec::before{background:radial-gradient(60% 60% at 22% 30%,color-mix(in srgb,var(--accent2) 9%,transparent) 0%,transparent 70%),radial-gradient(45% 45% at 82% 12%,color-mix(in srgb,var(--accent2) 6%,transparent) 0%,transparent 72%)}
 .hero-grid{display:grid;grid-template-columns:1.1fr 0.9fr;gap:var(--sp-8);align-items:start;max-width:1280px;margin:0 auto}
-.hero-l{min-width:0}
-.hero-lede{font-size:var(--text-md);color:var(--ink2);line-height:1.55;margin:14px 0 0;max-width:52ch}
-.hero-brief{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:0;max-width:52ch;counter-reset:brief}
-.hero-brief li{position:relative;padding:0 0 11px 27px;font-size:var(--text-sm);line-height:1.55;color:var(--ink2)}
-.hero-brief li+li{border-top:1px solid var(--line-tint);padding-top:11px}
-.hero-brief li:last-child{padding-bottom:0;border-bottom:none}
+/* Above 1023px the two columns are one answer in two halves, so they end on the same line. The
+   proof block is pushed to the foot of the left column and the card fills its own column. */
+@media(min-width:1024px){.hero-grid{align-items:stretch}.hero-l{justify-content:space-between}.hero-l>.proof-src{margin-top:0}.twin-prev{display:flex;flex-direction:column;height:100%}#tp-panel{display:flex;flex-direction:column;flex:1 1 auto;min-height:0}.tp-body{flex:1 1 auto}}
+.hero-l{min-width:0;display:flex;flex-direction:column}
+.hero-lede{font-size:var(--text-md);color:var(--ink2);line-height:1.55;margin:14px 0 0;max-width:58ch}
+.hero-brief{list-style:none;margin:16px 0 0;padding:0;display:grid;gap:13px;max-width:58ch;counter-reset:brief}
+.hero-brief li{position:relative;padding:0 0 0 27px;font-size:var(--text-sm);line-height:1.55;color:var(--ink2)}
 .hero-brief li::before{content:counter(brief,decimal-leading-zero);counter-increment:brief;
   position:absolute;left:0;top:1px;width:auto;height:auto;border-radius:0;background:none;box-shadow:none;
   font-size:10px;font-weight:700;letter-spacing:.09em;color:var(--accent2);line-height:1.9}
@@ -2315,7 +2316,7 @@ function tpSignal(skill, opps) {
 // The first persona is rendered by the server, so the card is already full when the page paints.
 // Asking for it again would only replace good markup with a wait line, so the key is remembered and
 // a matching request is skipped. Every other persona fetches as before.
-let tpPrimedKey = 'Senior Data Scientist|8|GB';
+let tpRenderedKey = 'Senior Data Scientist|8|GB';
 async function tpLoad(opts) {
   const seq = ++tpSeq;
   const box = document.getElementById('tp-body');
@@ -2324,7 +2325,9 @@ async function tpLoad(opts) {
   const key = `${opts.role}|${opts.years}|${opts.country || ''}`;
   badge.textContent = opts.userDriven ? (T('twin.live') || 'Live preview') : (T('twin.sample') || 'Sample preview');
   badge.classList.toggle('live', !!opts.userDriven);
-  if (!opts.userDriven && key === tpPrimedKey && box.querySelector('.tp-range,.tp-empty')) return;
+  // The key compared is the one on screen, not the one the server primed. Comparing against the
+  // primed key meant a tab clicked back to the first persona kept whatever body was showing.
+  if (!opts.userDriven && key === tpRenderedKey && box.querySelector('.tp-range,.tp-empty')) return;
   box.innerHTML = `<p class="tp-wait">${esc(T('twin.wait') || 'Reading the live corpus…')}</p>`;
   try {
     const q = new URLSearchParams({ role: opts.role, years: String(opts.years), country: opts.country || '', hint: opts.hint || '' });
@@ -2332,10 +2335,12 @@ async function tpLoad(opts) {
     if (seq !== tpSeq) return;
     if (r.error || r.available === false) {
       box.innerHTML = `<div class="tp-empty">${esc(r.reason ? (T('twin.thin') || r.reason) : (r.error || 'Insufficient live salary data for this role and market.'))}</div>`;
+      tpRenderedKey = key;
       return;
     }
     const b = r.benchmark;
     box.innerHTML = tpRange(b) + tpOpps(r.opportunities) + tpSignal(r.topSkill, r.opportunities);
+    tpRenderedKey = key;
   } catch (e) {
     if (seq !== tpSeq) return;
     box.innerHTML = '<div class="tp-empty">The preview could not be read just now. Reload to try again.</div>';

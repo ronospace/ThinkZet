@@ -205,13 +205,13 @@ function renderHtml({ name, brief, rates, scores, unsub, hello = 'Hello' }) {
     <div style="padding:22px 24px;border-bottom:1px solid #222a35">
       <div style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:#4c8dff;font-weight:700">ThinkZet · Daily brief</div>
       <div style="font-size:10.5px;color:#6b7683;margin-top:4px">See your value. Expand your possibilities.</div>
-      <div style="font-size:20px;font-weight:700;letter-spacing:-.02em;margin-top:8px;line-height:1.35">${escHtml(brief.headline)}</div>
+      <div style="font-size:16px;font-weight:650;letter-spacing:-.01em;margin-top:7px;line-height:1.4">${escHtml(brief.headline)}</div>
     </div>
     <div style="padding:22px 24px">
       <p style="margin:0 0 16px;font-size:14px;color:#9aa7b8">${hello} ${escHtml(name)}.</p>
       ${rates && rates.gapPct != null ? `<div style="background:#161b24;border:1px solid #2f2a4d;border-radius:10px;padding:14px 16px;margin-bottom:18px">
         <div style="font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#a99bf0">Your market position</div>
-        <div style="font-size:22px;font-weight:750;margin-top:4px;color:${rates.gapPct > 5 ? '#ff8f96' : '#6fe3a4'}">${rates.gapPct > 0 ? rates.gapPct + '% below market' : Math.abs(rates.gapPct) + '% above market'}</div>
+        <div style="font-size:18px;font-weight:700;margin-top:3px;color:${rates.gapPct > 5 ? '#ff8f96' : '#6fe3a4'}">${rates.gapPct > 0 ? rates.gapPct + '% below market' : Math.abs(rates.gapPct) + '% above market'}</div>
         <div style="font-size:12.5px;color:#9aa7b8;margin-top:4px">Median ${money(rates.p50)}${rates.period === 'hour' ? '/hr' : '/yr'}${rates.gapAbs > 0 ? ` · ${money(rates.gapAbs)}/yr on the table` : ''}</div>
       </div>` : ''}
       ${brief.actions && brief.actions.length ? `<div style="margin-bottom:18px">
