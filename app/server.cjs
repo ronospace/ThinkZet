@@ -344,9 +344,14 @@ async function oauthCallback(req, res, provider, params) {
       noteOauth(provider, `failed at ${step}`, msg, JSON.stringify({ status: e.providerStatus, body: e.providerBody }).slice(0, 400));
     }
     // A key or token problem is our fault, not the person's. Say so, and keep the detail in the log.
-    if (/DECODER|PEM|private key|invalid_client|invalid_client_secret|token exchange/i.test(msg)) {
+    // Only a credential we cannot use is our fault. A refused grant is the person's to retry.
+    if (/DECODER|PEM|private key|invalid_client|invalid_client_secret/i.test(msg)) {
       noteOauth(provider, 'config error', msg, msg);
       return fail('Sign-in with ' + provider + ' is misconfigured on our side. We have been alerted.');
+    }
+    if (/invalid_grant/i.test(msg)) {
+      noteOauth(provider, 'grant refused, retry', msg);
+      return fail('This sign-in link expired. Please try again.');
     }
     fail(msg);
   }
@@ -3495,6 +3500,12 @@ const HOST = process.env.HOST || '0.0.0.0';
 // The Apple button is offered only after Apple has answered, so the probe finishes before the first
 // request is served. A 12s timeout bounds the wait; a failure leaves the button withdrawn.
 (async () => {
+  // The shape of the pasted key, in the log, so "did my paste land?" is answerable from Railway
+  // without opening the founder diagnostic. No byte of the key is printed.
+  try {
+    const k = OAUTH.appleKeyShape();
+    console.log(`[auth] apple key: present=${k.present} len=${k.length} begin=${k.hasBeginMarker} end=${k.hasEndMarker} literalBSN=${k.literalBackslashN} lines=${k.lines} parses=${k.parses}${k.error ? ' err=' + k.error : ''}`);
+  } catch (e) { console.log('[auth] apple key: unreadable'); }
   try {
     const r = await OAUTH.probeApple();
     console.log(`[auth] apple probe: ${r.ok === true ? 'ok' : 'not usable'} (${r.code})`);
