@@ -148,3 +148,5 @@ Last updated: 16 November 2026.
 | R-126 | The daily brief headline at 20px/700 filled the top of the email before the first action | 16px/650, and the market figure 22px to 18px | Done `UI-153` |
 | R-127 | `providers().apple` treated "no probe yet" as a pass, so the button was offered before anything had asked Apple | `appleConfigured() && !!appleProbe && appleProbe.ok === true`; no evidence is not a yes | Done `UI-155` |
 | R-128 | The probe ran beside `server.listen`, so the first request raced it | Awaited before `listen`, bounded by the probe's own 12s timeout | Done `UI-155` |
+| R-129 | The Apple diagnostic said `keyParses: false` and nothing else, so a bad paste and an absent key read the same | `appleKeyShape()` reports presence, length, markers, literal `\n`, real newlines, line count, quoting and the OpenSSL error, never a byte of the key | Done `UI-156` |
+| R-130 | An absent key reported `DECODER routines::unsupported`, an error about a key that was never supplied | The parse is skipped when nothing is present: `present:false`, `error:null` | Done `UI-156` |

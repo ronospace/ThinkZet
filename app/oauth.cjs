@@ -77,6 +77,33 @@ function normalisePem(raw) {
 }
 
 
+// What the pasted key actually looks like, without printing a byte of it. A .p8 that fails to parse
+// is almost always one of four shapes: the whole PEM on one line with literal \n, the base64 body
+// only, a truncated paste, or a key from a different key type. Naming the shape is the difference
+// between "misconfigured" and "paste it again like this".
+function appleKeyShape() {
+  const raw = String(env('APPLE_PRIVATE_KEY') || '');
+  const trimmed = raw.trim();
+  const shape = {
+    present: !!trimmed,
+    length: trimmed.length,
+    hasBeginMarker: /-----BEGIN [A-Z ]*PRIVATE KEY-----/.test(trimmed),
+    hasEndMarker: /-----END [A-Z ]*PRIVATE KEY-----/.test(trimmed),
+    literalBackslashN: /\\n/.test(trimmed),
+    realNewlines: /\n/.test(trimmed),
+    lines: trimmed ? trimmed.split(/\r?\n/).length : 0,
+    quoted: /^["']/.test(trimmed),
+    parses: false,
+    error: null,
+  };
+  // An absent key is absent, not broken: no marker, no error, nothing to explain.
+  if (trimmed) {
+    try { crypto.createPrivateKey(normalisePem(trimmed)); shape.parses = true; }
+    catch (e) { shape.error = String(e.message || e).replace(/[^\x20-\x7e]/g, ' ').slice(0, 160); }
+  }
+  return shape;
+}
+
 // True only when the private key actually parses. A key that is present but unreadable must not
 // advertise the provider as ready, or the button looks live and fails after consent.
 function appleKeyUsable() {
@@ -196,6 +223,7 @@ function readiness() {
       APPLE_KEY_ID: has('APPLE_KEY_ID'),
       APPLE_PRIVATE_KEY: has('APPLE_PRIVATE_KEY'),
       keyParses,
+      keyShape: appleKeyShape(),
       // Mint the client secret and check the signature against the key's own public half. This proves one
       // thing only: the JWT is well formed and signed by the key in APPLE_PRIVATE_KEY. It cannot prove that
       // APPLE_KEY_ID or APPLE_TEAM_ID name the same key and team, because the check never asks Apple.
@@ -258,4 +286,4 @@ function appleFormat() {
   };
 }
 
-module.exports = { providers, appleConfigured, startUrl, finish, readiness, probeApple, appleCredentials, appleFormat };
+module.exports = { providers, appleConfigured, startUrl, finish, readiness, probeApple, appleCredentials, appleFormat, appleKeyShape };
