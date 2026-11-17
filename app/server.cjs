@@ -3134,7 +3134,8 @@ route('POST', /^\/api\/ops\/backup$/, async (req, res) => {
   if (!isFounder(req, res)) return notFound(res);
   const { execFile } = require('node:child_process');
   const script = require('node:path').join(__dirname, '..', 'scripts', 'backup.cjs');
-  execFile(process.execPath, [script, '--keep', '7'], { timeout: 180000, maxBuffer: 4 * 1024 * 1024 }, (err, stdout, stderr) => {
+  const dir = require('node:path').join(process.env.DATA_DIR || require('node:path').join(__dirname, '..'), 'backups');
+  execFile(process.execPath, [script, '--keep', '7'], { timeout: 180000, maxBuffer: 4 * 1024 * 1024, env: { ...process.env, BACKUP_DIR: dir } }, (err, stdout, stderr) => {
     const lines = String(stdout || '').trim().split('\n').filter(Boolean);
     const uploaded = lines.find((l) => l.startsWith('upload    ')) || null;
     json(res, err ? 500 : 200, {

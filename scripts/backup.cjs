@@ -32,7 +32,9 @@ const flag = (n) => args.includes(n);
 const opt = (n, d) => { const i = args.indexOf(n); return i >= 0 && args[i + 1] ? args[i + 1] : d; };
 
 const DB_PATH = process.env.DB_PATH || path.join(REPO, 'data', 'careeros.db');
-const BACKUP_DIR = process.env.BACKUP_DIR || path.join(REPO, 'backups');
+// In a container the source tree is root-owned and read-only to the runtime user, so a snapshot
+// written beside the script fails with EACCES. DATA_DIR is the mounted volume, which is writable.
+const BACKUP_DIR = process.env.BACKUP_DIR || path.join(process.env.DATA_DIR || REPO, 'backups');
 const KEEP = Math.max(1, Number(opt('--keep', 7)) || 7);
 const LOCAL_ONLY = flag('--local-only');
 const NO_PRUNE = flag('--no-prune');
