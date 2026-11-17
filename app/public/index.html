@@ -226,9 +226,8 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 /* Two cells, in both states: what you are on the left, what you can do on the right. */
 .tb-row{display:grid;grid-template-columns:1fr 1fr;gap:4px}
 .tb-cell{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;padding:9px 10px;border-radius:8px;font-size:var(--text-sm);font-weight:600;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tb-cell-state{color:var(--ink);justify-content:flex-start;padding-left:11px}
-.tb-cell-act{color:var(--accent2);background:var(--wash);border:1px solid var(--line-tint)}
-.tb-cell-act:hover{background:color-mix(in srgb,var(--accent2) 12%,var(--panel));color:var(--accent2)}
+.tb-cell-act{color:var(--ink);background:var(--wash);border:1px solid var(--line-tint);text-decoration:none}
+.tb-cell-act:hover{background:color-mix(in srgb,var(--accent2) 12%,var(--panel));color:var(--accent2);border-color:color-mix(in srgb,var(--accent2) 34%,var(--line-tint))}
 .tb-drop button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:8px 10px;border-radius:8px;font-size:var(--text-sm);color:var(--ink2)}
 .tb-drop button[hidden]{display:none!important}
 .tb-drop button:hover{background:var(--panel2);color:var(--ink)}
@@ -1836,9 +1835,9 @@ body.tw-lock{overflow:hidden}
         </button>
         <div class="tb-drop" id="tb-drop" role="menu">
           <div class="tb-row">
-            <span id="profile-pill" class="tb-cell tb-cell-state" hidden>No Profile</span>
-            <button role="menuitem" id="menu-demo" class="tb-cell tb-cell-act" hidden>Demo</button>
             <button role="menuitem" id="menu-signin" class="tb-cell tb-cell-act" hidden>Sign In</button>
+            <a role="menuitem" id="menu-about" class="tb-cell tb-cell-act" href="/#how" hidden>About</a>
+            <a role="menuitem" id="menu-account" class="tb-cell tb-cell-act" href="/?app=1" hidden>Account</a>
             <button role="menuitem" id="logout" class="tb-cell tb-cell-act" hidden>Sign Out</button>
           </div>
           <!-- @internal:start -->
@@ -2715,7 +2714,6 @@ function renderOnboarding() {
   const D = draft;
   $('#view-title').textContent = 'Build your Career Twin';
   $('#view-sub').textContent = '';
-  $('#profile-pill').textContent = 'Setting Up';
 
   const stepDots = [1, 2, 3].map((n) => `<span style="width:${n === D.step ? 26 : 8}px;height:8px;border-radius:4px;background:${n <= D.step ? 'var(--accent)' : 'var(--line2)'};transition:.25s"></span>`).join('');
 
@@ -5067,10 +5065,11 @@ async function boot() {
   STATE.userRecord = auth.user;
   const inBtn = document.getElementById('menu-signin'); if (inBtn) inBtn.hidden = STATE.authed;
   const outBtn = document.getElementById('logout'); if (outBtn) outBtn.hidden = !STATE.authed;
-  // The demo belongs to a signed-out visitor: for a signed-in person it would replace their profile.
-  const demoBtn = document.getElementById('menu-demo'); if (demoBtn) demoBtn.hidden = STATE.authed;
+  // Two cells in both states: the destination on the left, the one secondary action on the right.
+  const aboutBtn = document.getElementById('menu-about'); if (aboutBtn) aboutBtn.hidden = STATE.authed;
+  const acctBtn = document.getElementById('menu-account'); if (acctBtn) acctBtn.hidden = !STATE.authed;
   if (!STATE.authed) {
-    $('#profile-pill').hidden = true;
+
     $('#nav').style.opacity = '.35';
     $('#nav').style.pointerEvents = 'none';
     // The corpus counts are public, so fill them for a signed-out visitor too.
@@ -5087,8 +5086,6 @@ async function boot() {
   STATE.user = me.user; STATE.profile = me.profile;
   const health = await api('/api/health');
   STATE.engineCounts = health.counts;
-  $('#profile-pill').hidden = false;
-  $('#profile-pill').textContent = me.profile ? `${titleCase(me.profile.seniority)} · ${me.profile.years_experience || '?'} Yrs` : 'No Profile';
   if (me.profile && me.profile.risk_tolerance === 'aggressive') STATE.horizon = 'growth';
   if (me.profile && me.profile.time_to_move === 'asap') STATE.horizon = 'income';
   $('#engine-counts').textContent = `${int(health.counts.opportunities)} Opportunities · ${int(health.counts.sources)} Sources`;
@@ -5371,13 +5368,10 @@ function setTheme(mode) { try { localStorage.setItem(THEME_KEY, mode); } catch (
 })();
 $('#cmdk').onclick = openPalette;
 if ($('#menu-signin')) $('#menu-signin').onclick = () => { document.getElementById('tb-drop').classList.remove('open'); go('auth'); };
-if ($('#menu-demo')) $('#menu-demo').onclick = async () => {
-  document.getElementById('tb-drop').classList.remove('open');
-  const r = await post('/api/demo', {});
-  if (r.error) return toast(r.error);
-  await boot();
-  go('radar');
-};
+// The left cell is a destination, so it closes the menu and lets the link do its own work.
+document.querySelectorAll('#menu-about,#menu-account').forEach((a) => {
+  a.addEventListener('click', () => document.getElementById('tb-drop').classList.remove('open'));
+});
 
 $('#palette-input').addEventListener('input', (e) => buildPalette(e.target.value));
 

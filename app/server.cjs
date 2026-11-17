@@ -51,7 +51,6 @@ const PORT = Number(process.env.PORT || 4173);
 const PUBLIC = path.join(__dirname, 'public');
 // Every route resolves the acting user from the session cookie.
 // The demo persona is a real user row, so the demo path and the real path are the same code.
-const DEMO_USER = 'demo-user';
 // acting user is resolved per-request
 
 // Simple fixed-window rate limiter for the public surface. In-memory is right for a single
@@ -77,9 +76,14 @@ setInterval(() => {
 const routes = [];
 const route = (method, pattern, handler) => routes.push({ method, pattern, handler });
 
+// Every consumer route answers for a signed-in person only. There is no shared account to fall
+// back to, so a request with no session stops here and the dispatcher answers 401. Throwing rather
+// than returning null means none of the call sites can forget to check.
+class NoSession extends Error {}
 function resolveUser(req, res) {
   const u = AUTH.currentUser(req, res);
-  return u ? u.id : DEMO_USER;
+  if (!u) throw new NoSession('no session');
+  return u.id;
 }
 
 
@@ -135,34 +139,6 @@ function opportunitiesWithMatch(userId, { limit = 200, types, minScore = 0 } = {
   });
 }
 
-const DEMO_CV = `GEOFFREY MORGAN - Senior Data Scientist / ML Engineer
-Lisbon, Portugal - Remote-first - Fluent English, conversational German
-
-SUMMARY
-Senior data scientist with 8 years of experience building production ML and analytics systems.
-Currently EUR 78,000 per year. Open to remote roles across the EU and open to relocating to Germany or the Netherlands.
-I require visa sponsorship for non-EU relocation.
-
-EXPERIENCE
-2022-2026  Senior Data Scientist - Fintech scale-up (Berlin, remote)
-  Built churn and credit-risk models in Python and scikit-learn; ran A/B tests and causal inference studies.
-  Owned the experimentation platform; SQL and dbt models across a Snowflake warehouse.
-  Deployed models with Docker on AWS (SageMaker). Partnered with product and engineering.
-
-2019-2022  Data Analyst to Data Scientist - Marketplace (Lisbon)
-  Python, SQL, Spark for large-scale event data. Built dashboards and forecasting models.
-
-2018-2019  Junior Analyst - Consulting
-
-SKILLS
-Python, SQL, scikit-learn, PyTorch (working), Machine Learning, Statistics, Experimentation,
-dbt, Airflow, Spark, Docker, AWS, Data Modelling, Communication, Leadership
-
-EDUCATION
-MSc Data Science, 2018
-
-GOALS
-Move to a senior/staff role at a product company. Target EUR 100,000+. Want to move into AI engineering (RAG, LLMOps).`;
 
 
 // ---- auth ----
@@ -415,17 +391,8 @@ function seedSkills() {
   db.exec('COMMIT');
 }
 
-function ensureDemoUser() {
-  const u = db.prepare('SELECT * FROM users WHERE id=?').get(DEMO_USER);
-  if (!u) {
-    db.prepare('INSERT INTO users (id,email,name,country) VALUES (?,?,?,?)')
-      .run(DEMO_USER, 'demo@careeros.local', 'Geoffrey', 'PT');
-  }
-}
-
 const t0 = Date.now();
 seedSkills();
-ensureDemoUser();
 REF.seedPrograms();
 const ingest = seedIfEmpty();
 const ingestMs = Date.now() - t0;
@@ -647,60 +614,6 @@ route('POST', /^\/api\/onboarding$/, async (req, res) => {
     parsed: parsed ? { skills: parsed.skills, years: parsed.years, seniority: parsed.seniority, roleFamily: parsed.roleFamily, sectionsDetected: parsed.sectionsDetected } : null,
     matched, scores, rates,
   });
-});
-
-route('POST', /^\/api\/demo$/, async (req, res) => {
-  // Demo mode belongs to signed-out visitors. For a signed-in person this endpoint would
-  // overwrite their real profile with the demo one.
-  if (AUTH.currentUser(req, res)) return json(res, 403, { error: 'Demo mode is only for signed-out visitors' });
-  const body = await readBody(req);
-  const uid = resolveUser(req);
-  const parsed = E.parseResume(DEMO_CV);
-  const resolved = parsed.skills.map((s) => s.canonical);
-
-  db.prepare(`INSERT INTO profiles (user_id,headline,summary,years_experience,seniority,current_role,current_company,
-      current_rate,rate_unit,rate_currency,target_rate_min,remote_preference,willing_to_relocate,target_countries,
-      visa_needed,risk_tolerance,time_to_move,goals,resume_text,completeness,updated_at)
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,datetime('now'))
-    ON CONFLICT(user_id) DO UPDATE SET headline=excluded.headline, years_experience=excluded.years_experience,
-      seniority=excluded.seniority, current_rate=excluded.current_rate, rate_unit=excluded.rate_unit,
-      target_rate_min=excluded.target_rate_min, remote_preference=excluded.remote_preference,
-      willing_to_relocate=excluded.willing_to_relocate, target_countries=excluded.target_countries,
-      visa_needed=excluded.visa_needed, resume_text=excluded.resume_text, completeness=excluded.completeness,
-      updated_at=datetime('now')`)
-    .run(
-      uid,                                                           // user_id
-      'Senior Data Scientist to AI Engineering',                     // headline
-      'Senior data scientist moving into AI engineering. 8 yrs.',    // summary
-      8,                                                             // years_experience
-      'senior',                                                      // seniority
-      'Senior Data Scientist',                                       // current_role
-      'Fintech scale-up',                                            // current_company
-      78000,                                                         // current_rate
-      'year',                                                        // rate_unit
-      'EUR',                                                         // rate_currency
-      100000,                                                        // target_rate_min
-      'remote',                                                      // remote_preference
-      1,                                                             // willing_to_relocate
-      JSON.stringify(['DE', 'NL', 'PT']),                            // target_countries
-      1,                                                             // visa_needed
-      body.riskTolerance || 'balanced',                              // risk_tolerance
-      '3m',                                                          // time_to_move
-      JSON.stringify({ primary: 'move into AI engineering (RAG/LLMOps)', targetIncome: 100000, targetCountries: ['DE', 'NL'] }),
-      DEMO_CV,                                                       // resume_text
-      88                                                             // completeness
-    );
-
-  db.prepare('DELETE FROM profile_skills WHERE user_id=?').run(uid);
-  const insPs = db.prepare(`INSERT OR IGNORE INTO profile_skills (user_id,skill_id,proficiency,confidence,source)
-    SELECT ?, id, 'advanced', 0.9, 'resume' FROM skills WHERE canonical=?`);
-  for (const s of resolved) insPs.run(uid, s);
-
-  E.computeMatches(uid);
-  E.computeCareerScore(uid);
-  log(uid, 'demo.loaded', 'profile', uid, { skills: resolved.length });
-  AN.track(uid, 'profile.created', { source: 'demo', skills: resolved.length });
-  json(res, 200, { ok: true, skills: resolved.length });
 });
 
 route('GET', /^\/api\/feed$/, async (req, res, url) => {
@@ -3509,6 +3422,7 @@ const server = http.createServer(async (req, res) => {
     if (m) {
       try { return await r.handler(req, res, url, m); }
       catch (e) {
+        if (e instanceof NoSession) return json(res, 401, { error: 'Sign in to continue' });
         console.error(e);
         return json(res, 500, { error: String(e && e.message || e) });
       }

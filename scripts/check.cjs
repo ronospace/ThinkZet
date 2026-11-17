@@ -2,6 +2,23 @@
 // Run: node scripts/check.cjs   (server must be running)
 'use strict';
 const BASE = process.env.BASE || 'http://127.0.0.1:4173';
+// A signed-in session is required by every consumer route now that the shared demo account is
+// gone, so the suite mints one for an existing user. TEST_SESSION overrides it.
+let TOKEN = process.env.TEST_SESSION || '';
+if (!TOKEN) {
+  try {
+    const { DatabaseSync } = require('node:sqlite');
+    const path = require('node:path');
+    const dbf = process.env.DB_PATH || path.join(__dirname, '..', 'data', 'careeros.db');
+    const d = new DatabaseSync(dbf);
+    const u = d.prepare('SELECT id FROM users ORDER BY created_at ASC LIMIT 1').get();
+    if (u) {
+      TOKEN = 'check-' + Date.now() + '-' + process.pid;
+      d.prepare("INSERT INTO sessions(token,user_id,expires_at) VALUES(?,?,datetime('now','+1 hour'))").run(TOKEN, u.id);
+    }
+    d.close();
+  } catch (e) { /* reported by the first failing call */ }
+}
 
 const GETS = [
   '/api/health', '/api/me', '/api/auth/me', '/api/feed?limit=5', '/api/scores', '/api/rates',
@@ -14,7 +31,6 @@ const GETS = [
   '/api/data-sources',
 ];
 const POSTS = [
-  ['/api/demo', {}],
   ['/api/public/rate-check', { role: 'Senior Data Scientist', years: 8, country: 'DE', currentSalary: 78000, skills: ['Python', 'SQL'] }],
   ['/api/public/lead', { email: 'smoke@careeros.test', role: 'Senior Data Scientist', years: 8, gapPct: 17, median: 90000 }],
   ['/api/public/share', { role: 'Senior Data Scientist', gapPct: 17, gapAbs: 13000, median: 90000 }],
@@ -30,10 +46,23 @@ const POSTS = [
 let pass = 0, fail = 0;
 const failures = [];
 
+async function callAnon(method, path, body) {
+  const headers = { 'x-forwarded-for': '10.0.0.2' };
+  if (body) headers['content-type'] = 'application/json';
+  const res = await fetch(BASE + path, { method, headers, body: body ? JSON.stringify(body) : undefined });
+  const text = await res.text();
+  let json = null;
+  try { json = JSON.parse(text); } catch { /* non-json is fine for static */ }
+  const hdrs = {};
+  res.headers.forEach((v, k) => { hdrs[k] = v; });
+  return { status: res.status, json, text, headers: hdrs };
+}
+
 async function call(method, path, body) {
   // A stable forwarded-for so the suite does not trip its own rate limiter, and so repeated
   // runs are not blocked by a previous run.
   const headers = { 'x-forwarded-for': '10.0.0.1' };
+  if (TOKEN) headers.cookie = `careeros_session=${TOKEN}`;
   if (body) headers['content-type'] = 'application/json';
   const res = await fetch(BASE + path, { method, headers, body: body ? JSON.stringify(body) : undefined });
   const text = await res.text();
@@ -45,8 +74,11 @@ async function call(method, path, body) {
 }
 
 (async () => {
-  // Seed the demo persona first: the personalised routes are supposed to 404 without it.
-  try { await call('POST', '/api/demo', {}); } catch { /* reported below */ }
+  // No session means no personalised route: that is the boundary, asserted below.
+  try {
+    const r = await callAnon('GET', '/api/feed?limit=5');
+    if (r.status === 401) pass++; else { fail++; failures.push(`/api/feed without a session -> ${r.status}, expected 401`); }
+  } catch (e) { fail++; failures.push(`/api/feed without a session -> ${e.message}`); }
 
   for (const p of GETS) {
     try {
@@ -68,7 +100,7 @@ async function call(method, path, body) {
   // so must every endpoint behind it.
   for (const p of ['/api/ops', '/api/ingest', '/api/leads', '/api/analytics', '/console', '/internal.js', '/diagnostic']) {
     try {
-      const r = await call('GET', p);
+      const r = await callAnon('GET', p);
       const ok = r.status === 404;
       if (ok) pass++; else { fail++; failures.push(`operator boundary: ${p} -> ${r.status} for a stranger`); }
     } catch (e) { fail++; failures.push(`operator boundary: ${p} -> ${e.message}`); }
@@ -111,8 +143,8 @@ async function call(method, path, body) {
 
   // Launch is founder-only: an anonymous caller must be refused, and the payload must still be complete
   // when the founder asks for it.
-  const launchAnon = await call('GET', '/api/launch');
-  const flagsAnon = await call('GET', '/api/me/flags');
+  const launchAnon = await callAnon('GET', '/api/launch');
+  const flagsAnon = await callAnon('GET', '/api/me/flags');
   const launchOk = launchAnon.status === 403
     && flagsAnon.json && flagsAnon.json.founder === false;
   if (launchOk) pass++; else { fail++; failures.push('invariant failed: launch is founder-only and refuses anonymous callers'); }
@@ -122,7 +154,7 @@ async function call(method, path, body) {
   if (founderOk) pass++; else { fail++; failures.push('invariant failed: launch refusal names the reason'); }
 
   // The strategy document is withdrawn from the public: gone, not merely missing, and never indexed.
-  const strat = await call('GET', '/strategy.html');
+  const strat = await callAnon('GET', '/strategy.html');
   const stratOk = strat.status === 410 && /noindex/i.test(String(strat.headers?.['x-robots-tag'] || ''));
   if (stratOk) pass++; else { fail++; failures.push('invariant failed: strategy page answers 410 with noindex'); }
 
