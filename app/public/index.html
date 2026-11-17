@@ -3878,7 +3878,7 @@ async function renderTwin() {
 
   $('#view').innerHTML = `
     <div class="tw-intro">
-      <p class="tw-lede">Your Career Twin is a living profile built from your experience, skills, preferences and career outcomes. ThinkZet uses it to personalise your market rate, opportunity matches and next-step recommendations.</p>
+      <p class="tw-lede">Your profile, used for every rate, match and score you see.</p>
       <div class="tw-acts">
         <button class="btn" id="tw-improve">Improve my Career Twin</button>
         <a class="tw-link" href="#account" id="tw-account">Manage account and privacy</a>
@@ -3895,7 +3895,7 @@ async function renderTwin() {
           <span style="width:${c.percent}%"></span>
         </div>
       </div>
-      <p class="tw-c-note">${c.complete ? 'Every part of your profile is filled in. Your estimates use all of it.' : 'Complete your profile to improve salary estimates and opportunity matching. Each item below is worth the points shown.'}</p>
+      <p class="tw-c-note">${c.complete ? 'Complete. Every estimate uses all of it.' : 'Each item below is worth the points shown.'}</p>
       ${c.missing.length ? `<ul class="tw-list">${c.missing.map((m) => `<li><button class="tw-add" data-sec="${esc(m.section)}"><span class="tw-add-l">${esc(m.label)}</span><span class="tw-add-w">+${int(m.weight)}</span></button></li>`).join('')}</ul>` : ''}
     </div>
 
@@ -3932,7 +3932,7 @@ async function renderTwin() {
           <div class="tw-src-list">
             ${d.sourceList.map((s) => `<div class="tw-src-row"><div><div class="tw-src-n">${esc(s.label)}</div><div class="tw-src-d">${esc(s.detail)}</div></div>${s.at ? `<span class="tw-src-at">${esc(String(s.at).slice(0, 10))}</span>` : ''}</div>`).join('')}
           </div>
-          <p class="tw-c-note">A CV is only listed once it has been uploaded. Nothing extracted from it replaces what you entered without your confirmation.</p>
+          <p class="tw-c-note">Only listed once uploaded. Nothing replaces what you entered without your confirmation.</p>
         </div>
       </div>
 
@@ -3940,7 +3940,7 @@ async function renderTwin() {
         <div class="card tw-card" data-sec="skills">
           <div class="tw-h"><h3>Skills &amp; Strengths</h3><button class="btn ghost sm" data-edit="skills">Add skill</button></div>
           ${groups.length ? groups.map(([k, name, note]) => `<div class="tw-grp"><div class="tw-grp-h">${esc(name)} <span class="tw-grp-n">${int(bySource[k].length)}</span></div><div class="tw-chips">${bySource[k].map((s) => chip(s, k)).join('')}</div><div class="tw-grp-note">${esc(note)}</div></div>`).join('') : `<p class="tw-c-note">No skills yet. Add the ones you would defend in an interview.</p>`}
-          ${skills.length < 5 ? `<p class="tw-c-note tw-enc">Add more relevant skills to improve role matching and skill-gap analysis.</p>` : ''}
+          ${skills.length < 5 ? `<p class="tw-c-note tw-enc">Add more skills to sharpen matching.</p>` : ''}
         </div>
 
         <div class="card tw-card" data-sec="activity">
@@ -3969,7 +3969,7 @@ async function renderTwin() {
 
         <div class="card plain tw-card" data-sec="privacy">
           <h3>Privacy</h3>
-          <p class="tw-c-note">Your Career Twin is stored on your account and used to produce your own estimates. It is not published, not shown to employers or recruiters, and not sold. You can export or delete it at any time from Account &amp; Privacy.</p>
+          <p class="tw-c-note">Never published or shown to employers. Export or delete it in <a class="tw-link" href="#account">Account &amp; Privacy</a>.</p>
           <a class="tw-link" href="#account">Manage account and privacy</a>
         </div>
       </div>
@@ -4708,11 +4708,10 @@ async function renderTrajectory(months) {
 async function renderAccount() {
   const me = STATE.userRecord || {};
   $('#view').innerHTML = `
-    <p class="tw-lede" style="margin:0 0 var(--sp-5);max-width:74ch">Your name, your data and what happens to it. Nothing on this page changes your Career Twin or your scores.</p>
     <div class="tw-grid-pair">
         <div class="card">
-          <h3>Display Name</h3>
-          <p class="tw-c-note" style="margin-top:8px">How your name appears across ThinkZet. Google and Apple supply one when you sign in with them; you can change it here at any time.</p>
+          <h3>Your Name</h3>
+          <p class="tw-c-note">Shown across ThinkZet.</p>
           <div class="row" style="gap:8px;margin-top:12px;flex-wrap:wrap">
             <label class="sr-only" for="dn-input">Display name</label>
             <input id="dn-input" type="text" maxlength="80" placeholder="Your name" style="flex:1;min-width:200px;background:var(--panel2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:9px 11px;color:var(--ink);font-size:var(--text-sm)"/>
@@ -4721,16 +4720,16 @@ async function renderAccount() {
         </div>
         <div class="card">
           <h3>Export Your Data</h3>
-          <p class="tw-c-note" style="margin-top:8px">A single JSON file containing every record we hold for you: your profile, skills, CV text, tracked opportunities, outcomes, saved searches and preferences. It downloads straight to your device and is not emailed.</p>
+          <p class="tw-c-note">Every record we hold, as one JSON file. Downloads to your device, never emailed.</p>
           <div class="tw-acts"><button class="btn ghost" id="d-export">Export Everything</button></div>
         </div>
         <div class="card plain">
           <h3>Privacy</h3>
-          <p class="tw-c-note" style="margin-top:8px">Your Career Twin is stored on your account and used to produce your own estimates. It is not published, not shown to employers or recruiters, and not sold. Read the full statement in the <a class="tw-link" href="/legal/privacy.html">Privacy Policy</a>.</p>
+          <p class="tw-c-note">Your data is never published, shown to employers, or sold. <a class="tw-link" href="/legal/privacy.html">Privacy Policy</a></p>
         </div>
         <div class="card">
           <h3>Delete Your Account</h3>
-          <p class="tw-c-note" style="margin-top:8px">This removes your profile, CV text, tracked opportunities, outcomes and preferences, and signs you out. It cannot be undone. Export your data first if you may want it later.</p>
+          <p class="tw-c-note">Removes everything and signs you out. Cannot be undone. Export first.</p>
           <div class="tw-acts"><button class="btn danger" id="d-delete">Delete My Account</button></div>
         </div>
     </div>`;
