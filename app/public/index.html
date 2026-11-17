@@ -221,23 +221,20 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 .tb-icon:hover{color:var(--ink);border-color:var(--line2);background:var(--panel3)}
 .tb-icon svg{width:15px;height:15px}
 .tb-menu{position:relative}
-.tb-drop{position:absolute;right:0;top:calc(100% + 8px);min-width:244px;background:var(--panel);border:1px solid var(--line2);border-radius:var(--radius);box-shadow:var(--shadow);padding:5px;display:none;z-index:90}
+/* The account menu is a segmented hairline bar, not a dialog: no wrapper padding, no card chrome,
+   no shadow. Two cells, one 1px rule between them, anchored under the trigger. */
+.tb-drop{position:absolute;right:0;top:calc(100% + 8px);display:none;z-index:90;padding:0;background:transparent;border:none;box-shadow:none}
 .tb-drop.open{display:block;animation:rise .14s ease both}
-/* Two cells, in both states: what you are on the left, what you can do on the right. */
-.tb-row{display:grid;grid-template-columns:1fr 1fr;gap:4px}
-.tb-cell{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;padding:9px 10px;border-radius:8px;font-size:var(--text-sm);font-weight:600;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.tb-cell-act{color:var(--ink);background:var(--wash);border:1px solid var(--line-tint);text-decoration:none}
-.tb-cell-act:hover{background:color-mix(in srgb,var(--accent2) 12%,var(--panel));color:var(--accent2);border-color:color-mix(in srgb,var(--accent2) 34%,var(--line-tint))}
-.tb-drop button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:8px 10px;border-radius:8px;font-size:var(--text-sm);color:var(--ink2)}
+.tb-row{display:flex;height:32px;border:1px solid var(--line-tint);border-radius:var(--radius-sm);overflow:hidden;background:color-mix(in srgb,var(--panel) 95%,transparent);backdrop-filter:blur(6px);box-shadow:none}
+.tb-cell{display:flex;align-items:center;justify-content:center;height:100%;padding:0 14px;border:none;border-radius:0;background:transparent;font-size:var(--text-xs);font-weight:500;color:var(--muted);white-space:nowrap;text-decoration:none;box-shadow:none}
+.tb-cell+.tb-cell{border-left:1px solid var(--line-tint)}
+.tb-cell:hover{background:var(--wash);color:var(--ink)}
+.tb-cell-lead{color:var(--ink)}
+.tb-cell-danger:hover{color:var(--bad);background:color-mix(in srgb,var(--bad) 8%,transparent)}
 .tb-drop button[hidden]{display:none!important}
-.tb-drop button:hover{background:var(--panel2);color:var(--ink)}
 .tb-drop button svg{width:14px;height:14px;opacity:.75;flex:0 0 auto}
-.tb-drop .tb-cell svg{opacity:.9}
-.tb-op{margin-top:4px;padding-top:4px;border-top:1px solid var(--line)}
-.tb-row button{width:auto!important;flex:0 1 auto;white-space:nowrap;padding:8px 8px}
-.tb-signout{margin-left:auto;color:var(--ink2)}
-.tb-signout:hover{color:var(--bad)}
-@media(max-width:400px){.tb-row button{font-size:var(--text-sm);padding:8px 6px}.tb-row button svg{width:13px;height:13px}}
+/* The same bar on a phone, one step taller, still with no outer padding. */
+@media(max-width:1023px){.tb-row{height:36px}.tb-cell{padding:0 12px}}
 .theme-btn{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
 .theme-btn:hover{color:var(--ink);border-color:var(--line2);background:var(--panel3)}
 .theme-btn svg{width:15px;height:15px;display:none}
@@ -1835,22 +1832,12 @@ body.tw-lock{overflow:hidden}
         </button>
         <div class="tb-drop" id="tb-drop" role="menu">
           <div class="tb-row">
-            <button role="menuitem" id="menu-signin" class="tb-cell tb-cell-act" hidden>Sign In</button>
-            <a role="menuitem" id="menu-about" class="tb-cell tb-cell-act" href="/#how" hidden>About</a>
-            <a role="menuitem" id="menu-account" class="tb-cell tb-cell-act" href="/?app=1" hidden>Account</a>
-            <button role="menuitem" id="logout" class="tb-cell tb-cell-act" hidden>Sign Out</button>
+            <button role="menuitem" id="menu-signin" class="tb-cell tb-cell-lead" hidden>Sign In</button>
+            <a role="menuitem" id="menu-about" class="tb-cell" href="/#how" hidden>About</a>
+            <a role="menuitem" id="menu-account" class="tb-cell tb-cell-lead" href="/?app=1" hidden>Account</a>
+            <button role="menuitem" id="logout" class="tb-cell tb-cell-danger" hidden>Sign Out</button>
           </div>
-          <!-- @internal:start -->
-          <!-- Operator action, apart from the two cells. stripInternal() removes this block before the
-               response leaves for anyone who is not a founder, and its handler lives in internal.js,
-               which is only served to a founder, so the consumer bundle names no ingest. -->
-          <div class="tb-op">
-            <button role="menuitem" id="run-ingest">
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg>
-              Run Ingest
-            </button>
-          </div>
-          <!-- @internal:end -->
+          <!-- The operator action lives on /console, not in the account menu: two cells, nothing else. -->
         </div>
       </div>
     </div>
