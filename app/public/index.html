@@ -169,6 +169,8 @@ a{color:var(--accent);text-decoration:none}
 .nav::-webkit-scrollbar{width:6px}
 .nav::-webkit-scrollbar-thumb{background:var(--line2);border-radius:3px}
 .nav-group{display:flex;flex-direction:column;gap:1px;margin-bottom:8px}
+.lbl-short{display:none}
+@media(max-width:639px){.lbl-full{display:none}.lbl-short{display:inline}}
 .nav-label{position:sticky;top:0;z-index:2;display:block;font-size:var(--text-2xs);letter-spacing:.14em;text-transform:uppercase;color:var(--ink2);font-weight:700;padding:7px 10px 4px;opacity:1;background:var(--panel);box-shadow:0 1px 0 var(--line)}
 .nav-wrap{position:relative;flex:1 1 auto;min-height:0;display:flex;overflow:hidden}
 .nav button{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;color:var(--ink2);text-align:left;width:100%;font-size:var(--text-base)}
@@ -1039,8 +1041,8 @@ html[data-theme="light"] .wm i{background-image:linear-gradient(100deg,var(--acc
   .tw-c-note{max-width:78ch}
   /* One grid, not two columns: rows are shared, so the two actions land on the same line across
      the page. Two nested columns would each size their own rows and drift apart. */
-  .tw-grid-pair{display:grid;grid-template-columns:1.12fr .88fr;gap:var(--sp-4);align-items:stretch}
-  .tw-grid-pair>.card{display:flex;flex-direction:column;min-width:0;padding:var(--sp-4) var(--sp-5)}
+  .tw-grid-pair{display:grid;grid-template-columns:1.12fr .88fr;gap:var(--sp-4);align-items:start}
+  .tw-grid-pair>.card{display:flex;flex-direction:column;min-width:0;padding:var(--sp-4)}
   .tw-grid-pair>.card:nth-child(1){grid-column:1;grid-row:1}
   .tw-grid-pair>.card:nth-child(2){grid-column:1;grid-row:2}
   .tw-grid-pair>.card:nth-child(3){grid-column:2;grid-row:1}
@@ -1362,6 +1364,16 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .tw-grid-pair>.card.acct-del{border-color:color-mix(in srgb,var(--bad) 26%,var(--line-tint))}
 .tw-grid-pair>.card.acct-mute{background:color-mix(in srgb,var(--panel) 60%,var(--panel2))}
 .acct-card h3{font-size:var(--text-md);font-weight:650;letter-spacing:-.01em;text-transform:none;color:var(--ink);margin:0}
+/* Save Name is one field's commit, not the page's primary action, so it takes a tint rather than the
+   solid accent. The input is a control, so it is one control tall. */
+.btn.acct-save{background:color-mix(in srgb,var(--accent2) 10%,var(--panel));border:1px solid color-mix(in srgb,var(--accent2) 30%,var(--line));color:var(--accent2);box-shadow:none;font-weight:600}
+.btn.acct-save:hover{background:color-mix(in srgb,var(--accent2) 16%,var(--panel));border-color:color-mix(in srgb,var(--accent2) 44%,var(--line))}
+.acct-card input[type="text"]{height:36px;font-size:var(--text-sm)}
+/* A link inside a sentence has to look like a link, not like emphasis. */
+.acct-link{color:var(--accent2);font-weight:600;text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+.acct-link:hover{color:color-mix(in srgb,var(--accent2) 82%,var(--ink))}
+/* The crawler status is operator telemetry. On the settings routes it is noise beside four controls. */
+.shell.hide-telemetry .rail-foot{display:none}
 .tw-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);align-items:start}
 .tw-col{display:grid;gap:var(--sp-4);min-width:0;align-content:start}
 .tw-card{min-width:0}
@@ -1434,7 +1446,7 @@ body.tw-lock{overflow:hidden}
 .tw-check input{width:16px;height:16px;accent-color:var(--accent2)}
 .tw-hint{font-size:var(--text-xs);color:var(--muted);line-height:1.4}
 .tw-chips-edit{margin-top:2px}
-@media(max-width:1279px){.tw-grid-pair{display:grid;grid-template-columns:1fr;gap:var(--sp-4)}.tw-grid-pair>.card{grid-column:1!important;grid-row:auto!important}}
+@media(max-width:1279px){.tw-grid-pair{display:grid;grid-template-columns:1fr;gap:var(--sp-3)}.tw-grid-pair>.card{grid-column:1!important;grid-row:auto!important}}
 @media(max-width:1023px){.tw-grid{grid-template-columns:1fr}.tw-c-head{grid-template-columns:1fr;gap:10px}}
 @media(max-width:640px){
   .tw-drawer{grid-template-columns:1fr}
@@ -1713,7 +1725,7 @@ body.tw-lock{overflow:hidden}
       <div class="nav-group"><span class="nav-label">Account</span>
       <button data-view="twin"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5.4" r="2.6"/><path d="M2.8 13.4c0-2.6 2.3-4.2 5.2-4.2s5.2 1.6 5.2 4.2"/></svg></span><span class="lbl">Career Twin</span></button>
       <button data-view="learning"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg></span><span class="lbl">Career Calibration</span></button>
-      <button data-view="account"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10.6 2.6l2.8 2.8-7 7H3.6v-2.8z"/><path d="M9 4.2l2.8 2.8"/></svg></span><span class="lbl">Account &amp; Privacy</span></button>
+      <button data-view="account"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10.6 2.6l2.8 2.8-7 7H3.6v-2.8z"/><path d="M9 4.2l2.8 2.8"/></svg></span><span class="lbl"><span class="lbl-full">Account &amp; Privacy</span><span class="lbl-short">Account</span></span></button>
       <button data-view="plan"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.8" y="3.6" width="12.4" height="8.8" rx="1.6"/><path d="M1.8 6.6h12.4"/></svg></span><span class="lbl">Plan</span></button>
       </div>
       
@@ -4727,8 +4739,8 @@ async function renderAccount() {
           <p class="tw-c-note">Shown across ThinkZet.</p>
           <div class="row" style="gap:8px;margin-top:12px;flex-wrap:wrap">
             <label class="sr-only" for="dn-input">Display name</label>
-            <input id="dn-input" type="text" maxlength="80" placeholder="Your name" style="flex:1;min-width:200px;background:var(--panel2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:9px 11px;color:var(--ink);font-size:var(--text-sm)"/>
-            <button class="btn sm" id="dn-save">Save Name</button>
+            <input id="dn-input" type="text" maxlength="80" placeholder="Your name" style="flex:1;min-width:200px;background:var(--panel2);border:1px solid var(--line);border-radius:var(--radius-sm);padding:0 11px;color:var(--ink);font-size:var(--text-sm)"/>
+            <button class="btn sm acct-save" id="dn-save">Save Name</button>
           </div>
         </div>
         <div class="card acct-card">
@@ -4738,7 +4750,7 @@ async function renderAccount() {
         </div>
         <div class="card plain acct-card acct-mute">
           <div class="acct-h"><span class="acct-ic priv" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><h3>Privacy</h3></div>
-          <p class="tw-c-note">Your data is never published, shown to employers, or sold. <a class="tw-link" href="/legal/privacy.html">Privacy Policy</a></p>
+          <p class="tw-c-note">Your data is never published, shown to employers, or sold. <a class="acct-link" href="/legal/privacy.html">Privacy Policy</a></p>
         </div>
         <div class="card acct-card acct-del">
           <div class="acct-h"><span class="acct-ic del" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/></svg></span><h3>Delete Your Account</h3></div>
@@ -4792,6 +4804,9 @@ async function go(view) {
   if (view === 'radar' && changed) track('radar.opened');
   const pill = document.getElementById('live-pill'); if (pill) pill.style.display = ['auth', 'onboard'].includes(view) ? 'none' : '';
   STATE.view = view;
+  // Settings routes carry four controls and no telemetry. The crawler status is operator data,
+  // so it steps out of the way on exactly these four and nowhere else.
+  document.querySelector('.shell')?.classList.toggle('hide-telemetry', ['account', 'twin', 'learning', 'plan'].includes(view));
   document.querySelectorAll('#nav button').forEach((b) => b.classList.toggle('active', b.dataset.view === view));
   // A view that is not in the consumer map does not exist for this application, whoever is signed in.
   if (!VIEWS[view]) {
