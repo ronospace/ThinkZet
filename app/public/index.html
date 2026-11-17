@@ -1040,7 +1040,7 @@ html[data-theme="light"] .wm i{background-image:linear-gradient(100deg,var(--acc
   /* One grid, not two columns: rows are shared, so the two actions land on the same line across
      the page. Two nested columns would each size their own rows and drift apart. */
   .tw-grid-pair{display:grid;grid-template-columns:1.12fr .88fr;gap:var(--sp-4);align-items:stretch}
-  .tw-grid-pair>.card{display:flex;flex-direction:column;min-width:0}
+  .tw-grid-pair>.card{display:flex;flex-direction:column;min-width:0;padding:var(--sp-4) var(--sp-5)}
   .tw-grid-pair>.card:nth-child(1){grid-column:1;grid-row:1}
   .tw-grid-pair>.card:nth-child(2){grid-column:1;grid-row:2}
   .tw-grid-pair>.card:nth-child(3){grid-column:2;grid-row:1}
@@ -1349,6 +1349,19 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .tw-add:hover{border-style:solid;border-color:color-mix(in srgb,var(--accent2) 45%,var(--line))}
 .tw-add:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
 .tw-add-w{font-size:var(--text-xs);font-weight:700;color:var(--accent2);white-space:nowrap}
+/* A settings card is a control, not a document: an icon names it at a glance, the title is a real
+   title rather than a micro-label, and the action sits on the card floor so two cards in a row
+   finish on the same line. Tints are two tokens, never a hardcoded colour. */
+.acct-h{display:flex;align-items:center;gap:10px;margin:0 0 6px}
+.acct-ic{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;flex:0 0 auto;border:1px solid var(--line-tint);background:var(--wash);color:var(--accent2)}
+.acct-ic svg{width:17px;height:17px;flex:0 0 auto;display:block}
+.acct-ic.you{color:var(--accent2);background:color-mix(in srgb,var(--accent2) 10%,var(--panel));border-color:color-mix(in srgb,var(--accent2) 28%,var(--line))}
+.acct-ic.priv{color:var(--ink2);background:color-mix(in srgb,var(--ink2) 8%,var(--panel));border-color:color-mix(in srgb,var(--ink2) 22%,var(--line))}
+.acct-ic.exp{color:var(--good);background:color-mix(in srgb,var(--good) 10%,var(--panel));border-color:color-mix(in srgb,var(--good) 30%,var(--line))}
+.acct-ic.del{color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--panel));border-color:color-mix(in srgb,var(--bad) 32%,var(--line))}
+.tw-grid-pair>.card.acct-del{border-color:color-mix(in srgb,var(--bad) 26%,var(--line-tint))}
+.tw-grid-pair>.card.acct-mute{background:color-mix(in srgb,var(--panel) 60%,var(--panel2))}
+.acct-card h3{font-size:var(--text-md);font-weight:650;letter-spacing:-.01em;text-transform:none;color:var(--ink);margin:0}
 .tw-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);align-items:start}
 .tw-col{display:grid;gap:var(--sp-4);min-width:0;align-content:start}
 .tw-card{min-width:0}
@@ -4709,8 +4722,8 @@ async function renderAccount() {
   const me = STATE.userRecord || {};
   $('#view').innerHTML = `
     <div class="tw-grid-pair">
-        <div class="card">
-          <h3>Your Name</h3>
+        <div class="card acct-card">
+          <div class="acct-h"><span class="acct-ic you" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><h3>Your Name</h3></div>
           <p class="tw-c-note">Shown across ThinkZet.</p>
           <div class="row" style="gap:8px;margin-top:12px;flex-wrap:wrap">
             <label class="sr-only" for="dn-input">Display name</label>
@@ -4718,17 +4731,17 @@ async function renderAccount() {
             <button class="btn sm" id="dn-save">Save Name</button>
           </div>
         </div>
-        <div class="card">
-          <h3>Export Your Data</h3>
+        <div class="card acct-card">
+          <div class="acct-h"><span class="acct-ic exp" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></span><h3>Export Your Data</h3></div>
           <p class="tw-c-note">Every record we hold, as one JSON file. Downloads to your device, never emailed.</p>
           <div class="tw-acts"><button class="btn ghost" id="d-export">Export Everything</button></div>
         </div>
-        <div class="card plain">
-          <h3>Privacy</h3>
+        <div class="card plain acct-card acct-mute">
+          <div class="acct-h"><span class="acct-ic priv" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><h3>Privacy</h3></div>
           <p class="tw-c-note">Your data is never published, shown to employers, or sold. <a class="tw-link" href="/legal/privacy.html">Privacy Policy</a></p>
         </div>
-        <div class="card">
-          <h3>Delete Your Account</h3>
+        <div class="card acct-card acct-del">
+          <div class="acct-h"><span class="acct-ic del" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="M19 6l-1 14H6L5 6"/><path d="M10 11v5M14 11v5"/></svg></span><h3>Delete Your Account</h3></div>
           <p class="tw-c-note">Removes everything and signs you out. Cannot be undone. Export first.</p>
           <div class="tw-acts"><button class="btn danger" id="d-delete">Delete My Account</button></div>
         </div>
