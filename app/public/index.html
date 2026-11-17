@@ -1365,7 +1365,6 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .acct-ic.priv{color:var(--ink2);background:color-mix(in srgb,var(--ink2) 8%,var(--panel));border-color:color-mix(in srgb,var(--ink2) 22%,var(--line))}
 .acct-ic.exp{color:var(--good);background:color-mix(in srgb,var(--good) 10%,var(--panel));border-color:color-mix(in srgb,var(--good) 30%,var(--line))}
 .acct-ic.del{color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--panel));border-color:color-mix(in srgb,var(--bad) 32%,var(--line))}
-.acct-id{display:none}
 /* Account Information: identity on the left, the one editable field on the right. */
 .acct-id{display:none}
 @media(max-width:1023px){
@@ -1397,7 +1396,6 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .acct-modal-acts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
 .acct-modal-err{font-size:var(--text-xs);color:var(--bad);margin:0 0 10px}
 @media(max-width:767px){.acct-modal-acts .btn{flex:1 1 0}}
-}
 .tw-grid-pair{display:grid;grid-template-columns:1fr;gap:var(--sp-3);align-items:start}
 .tw-grid-pair>.card{display:flex;flex-direction:column;min-width:0;padding:var(--sp-4)}
 @media(min-width:768px){
@@ -4821,7 +4819,9 @@ async function acctHead(view) {
   const shown = acctEmail(me);
   const method = String(me.auth_provider || '').toLowerCase();
   const methodLabel = { apple: 'Apple Account', google: 'Google Account', email: 'Email Account' }[method] || null;
-  const who = me.name || shown || methodLabel || 'Signed in';
+  // The card below prints the address, so the strip names the account by its method rather than
+  // repeating the same line twice on one screen.
+  const who = me.name || methodLabel || shown || 'Signed in';
   // The email is the identity when there is no name, so it is not printed twice.
   const provider = shown && me.name ? shown : null;
   return `<div class="acct-id">
