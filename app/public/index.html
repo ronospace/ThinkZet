@@ -1367,6 +1367,15 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .acct-ic.del{color:var(--bad);background:color-mix(in srgb,var(--bad) 10%,var(--panel));border-color:color-mix(in srgb,var(--bad) 32%,var(--line))}
 .acct-id{display:none}
 /* Account Information: identity on the left, the one editable field on the right. */
+.acct-id{display:none}
+@media(max-width:1023px){
+  /* Who you are, once. The bottom bar is the navigation, so there is no second layer under it. */
+  .acct-id{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 10px;padding:12px 14px;background:var(--wash);border:1px solid var(--line-tint);border-radius:var(--radius-lg)}
+  .acct-id-n{font-size:var(--text-md);font-weight:650;color:var(--ink);letter-spacing:-.01em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .acct-id-p{display:flex;flex-wrap:wrap;gap:6px;width:100%}
+  .acct-id-pill{font-size:var(--text-2xs);font-weight:600;letter-spacing:.02em;padding:3px 9px;border-radius:999px;border:1px solid var(--line-tint);background:var(--panel);color:var(--ink2);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .acct-id-pill.pro{color:var(--accent2);border-color:color-mix(in srgb,var(--accent2) 34%,var(--line-tint))}
+}
 .acct-who{display:flex;flex-direction:column;gap:4px;min-width:0}
 .acct-mail{font-size:var(--text-sm);color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .acct-prov{display:inline-flex;align-items:center;gap:6px;font-size:var(--text-2xs);font-weight:600;letter-spacing:.02em;color:var(--ink2);padding:3px 9px 3px 7px;border-radius:999px;border:1px solid var(--line-tint);background:var(--wash);width:fit-content;max-width:100%}
@@ -1388,18 +1397,6 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .acct-modal-acts{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
 .acct-modal-err{font-size:var(--text-xs);color:var(--bad);margin:0 0 10px}
 @media(max-width:767px){.acct-modal-acts .btn{flex:1 1 0}}
-.acct-sub{display:none}
-@media(max-width:1023px){
-  /* Who you are, then which of the four account screens you are on. Both are phone-only: the
-     desktop rail already answers both questions and a second answer would be noise. */
-  .acct-id{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin:0 0 10px;padding:12px 14px;background:var(--wash);border:1px solid var(--line-tint);border-radius:var(--radius-lg)}
-  .acct-id-n{font-size:var(--text-md);font-weight:650;color:var(--ink);letter-spacing:-.01em;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .acct-id-p{display:flex;flex-wrap:wrap;gap:6px;width:100%}
-  .acct-id-pill{font-size:var(--text-2xs);font-weight:600;letter-spacing:.02em;padding:3px 9px;border-radius:999px;border:1px solid var(--line-tint);background:var(--panel);color:var(--ink2);max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-  .acct-id-pill.pro{color:var(--accent2);border-color:color-mix(in srgb,var(--accent2) 34%,var(--line-tint))}
-  .acct-sub{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:0 0 12px;padding:4px;background:var(--panel2);border:1px solid var(--line-tint);border-radius:999px}
-  .acct-sub button{min-width:0;padding:7px 4px;border:none;background:transparent;color:var(--ink2);font-size:var(--text-xs);font-weight:600;border-radius:999px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:inherit;cursor:pointer}
-  .acct-sub button.on{background:var(--panel);color:var(--accent2);box-shadow:var(--shadow-sm)}
 }
 .tw-grid-pair{display:grid;grid-template-columns:1fr;gap:var(--sp-3);align-items:start}
 .tw-grid-pair>.card{display:flex;flex-direction:column;min-width:0;padding:var(--sp-4)}
@@ -4827,7 +4824,6 @@ async function acctHead(view) {
   const who = me.name || shown || methodLabel || 'Signed in';
   // The email is the identity when there is no name, so it is not printed twice.
   const provider = shown && me.name ? shown : null;
-  const tabs = [['account', 'Privacy'], ['twin', 'Twin'], ['learning', 'Calibration'], ['plan', 'Plan']];
   return `<div class="acct-id">
       <span class="acct-id-n">${esc(who)}</span>
       <span class="acct-id-p">
@@ -4835,9 +4831,6 @@ async function acctHead(view) {
         ${planLabel ? `<span class="acct-id-pill${planKey === 'pro' ? ' pro' : ''}">${esc(planLabel)}</span>` : ''}
         ${sinceLabel ? `<span class="acct-id-pill">${esc(sinceLabel)}</span>` : ''}
       </span>
-    </div>
-    <div class="acct-sub" role="tablist" aria-label="Account sections">
-      ${tabs.map(([v, l]) => `<button role="tab" aria-selected="${v === view}" class="${v === view ? 'on' : ''}" data-sub="${v}">${esc(l)}</button>`).join('')}
     </div>`;
 }
 
@@ -5331,15 +5324,6 @@ function setTheme(mode) { try { localStorage.setItem(THEME_KEY, mode); } catch (
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
   drop.querySelectorAll('button').forEach((b) => b.addEventListener('click', close));
 })();
-
-// The account sub-nav is delegated: the block is re-rendered with every account view, so a
-// per-button handler would be rebound on each render and leak.
-document.addEventListener('click', (e) => {
-  const b = e.target.closest && e.target.closest('.acct-sub button[data-sub]');
-  if (!b) return;
-  e.preventDefault();
-  go(b.dataset.sub);
-});
 
 (function initThemeToggle() {
   const btn = document.getElementById('theme-btn');
