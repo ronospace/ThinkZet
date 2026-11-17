@@ -521,7 +521,9 @@ route('GET', /^\/api\/ads$/, async (req, res) => {
 });
 
 route('GET', /^\/api\/data-sources$/, async (req, res) => {
-  const LIVE = ['arbeitnow', 'jobicy', 'remoteok', 'hackernews'];
+  // The registry is the list. A hardcoded copy here went stale the moment adzuna was registered, so
+  // a live source reported live:false while its postings were counted.
+  const LIVE = Object.keys(SOURCES.ADAPTERS);
   const ph = LIVE.map(() => '?').join(',');
   const open = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open'").get().n;
   const sal = db.prepare("SELECT COUNT(*) n FROM salary_records").get().n;

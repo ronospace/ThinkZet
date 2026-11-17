@@ -154,9 +154,13 @@ async function remove(key) {
   console.log(`verified  integrity ok · ${check.tables} tables · ${check.opportunities} opportunities · ${check.users} users · ${check.salaryRecords} salary records`);
 
   if (!bucketReady || LOCAL_ONLY) {
+    // Name the variables that are actually missing. "No bucket configured" sent the founder back to
+    // the dashboard to check four values when one was absent.
+    const missing = [['S3_ENDPOINT', S3.endpoint], ['S3_BUCKET', S3.bucket], ['S3_ACCESS_KEY', S3.key], ['S3_SECRET_KEY', S3.secret]]
+      .filter(([, v]) => !v).map(([k]) => k);
     console.log(bucketReady
       ? 'upload    skipped (--local-only)'
-      : 'upload    skipped: no bucket configured. Set S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY and S3_SECRET_KEY and this same command uploads.');
+      : `upload    skipped: missing ${missing.join(', ')}. Set ${missing.length === 1 ? 'it' : 'them'} and this same command uploads.`);
     console.log(`kept      ${snap.path}`);
     return;
   }
