@@ -3127,6 +3127,26 @@ route('GET', /^\/api\/ops$/, async (req, res) => {
   });
 });
 
+// A backup nobody can run is a plan. The bucket variables live on the server, so the server is where
+// the script has to run: a founder on a phone cannot export five secrets to a laptop that has none.
+// Founder only, same 404 as every other operator route, and the output is returned verbatim.
+route('POST', /^\/api\/ops\/backup$/, async (req, res) => {
+  if (!isFounder(req, res)) return notFound(res);
+  const { execFile } = require('node:child_process');
+  const script = require('node:path').join(__dirname, '..', 'scripts', 'backup.cjs');
+  execFile(process.execPath, [script, '--keep', '7'], { timeout: 180000, maxBuffer: 4 * 1024 * 1024 }, (err, stdout, stderr) => {
+    const lines = String(stdout || '').trim().split('\n').filter(Boolean);
+    const uploaded = lines.find((l) => l.startsWith('upload    ')) || null;
+    json(res, err ? 500 : 200, {
+      ok: !err,
+      uploaded: !!uploaded && !/skipped/.test(uploaded),
+      upload: uploaded,
+      lines,
+      error: err ? String(stderr || err.message).slice(0, 600) : null,
+    });
+  });
+});
+
 // ---------------- static ----------------
 const MIME = { '.webmanifest': 'application/manifest+json', '.html': 'text/html; charset=utf-8', '.css': 'text/css; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.svg': 'image/svg+xml', '.png': 'image/png', '.ico': 'image/x-icon' };
 
