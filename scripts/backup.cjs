@@ -172,10 +172,16 @@ async function remove(key) {
   console.log(`upload    ${S3.endpoint}/${S3.bucket}/${key}`);
 
   if (!NO_PRUNE) {
-    const keys = (await list(`${S3.prefix}/careeros-`)).sort();
+    // Pruning needs ListBucket, which a write-only token does not grant. The snapshot is already
+    // stored at this point, so a refused list is a warning about retention, never a failed backup.
+    let keys;
+    try { keys = (await list(`${S3.prefix}/careeros-`)).sort(); }
+    catch (e) { console.log(`prune     skipped: ${e.message}. Grant Object List on the bucket to enable retention.`); keys = null; }
+    if (keys) {
     const stale = keys.slice(0, Math.max(0, keys.length - KEEP));
     for (const k of stale) await remove(k);
     if (stale.length) console.log(`pruned    ${stale.length} old ${stale.length === 1 ? 'copy' : 'copies'}, ${Math.min(keys.length, KEEP)} kept`);
+    }
   }
   console.log(`done      ${((Date.now() - started) / 1000).toFixed(1)}s`);
 })().catch((e) => { console.error('FAILED  ' + e.message); process.exitCode = 1; });
