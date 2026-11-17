@@ -51,12 +51,12 @@ function verifyCode(email, code) {
     ORDER BY id DESC LIMIT 1`).get(clean, String(code || '').trim());
   if (!row) return null;
   db.prepare('UPDATE login_codes SET used=1 WHERE id=?').run(row.id);
-  return sessionForEmail(clean);
+  return sessionForEmail(clean, null, 'email');
 }
 
 // Shared by the email code and by Google/Apple sign-in. The caller must already have proved
 // that the person owns this address (a code from the inbox, or a provider-verified email).
-function sessionForEmail(clean, displayName) {
+function sessionForEmail(clean, displayName, provider) {
   let user = db.prepare('SELECT * FROM users WHERE email=?').get(clean);
   const provided = displayName && String(displayName).trim().slice(0, 80);
   if (user && provided && !(user.name && user.name.trim())) {
@@ -71,6 +71,11 @@ function sessionForEmail(clean, displayName) {
     db.prepare('INSERT INTO users (id,email,name) VALUES (?,?,?)').run(id, clean, name);
     user = db.prepare('SELECT * FROM users WHERE id=?').get(id);
   }
+  // The last successful sign-in is the account's method. A code sign-in records 'email', which is
+  // also the honest answer for anyone who signed in before this column existed.
+  const method = ['apple', 'google', 'email'].includes(provider) ? provider : 'email';
+  db.prepare('UPDATE users SET auth_provider=? WHERE id=?').run(method, user.id);
+  user = db.prepare('SELECT * FROM users WHERE id=?').get(user.id);
   const t = token();
   const expires = new Date(Date.now() + SESSION_DAYS * 86400000).toISOString();
   db.prepare('INSERT INTO sessions (token,user_id,expires_at) VALUES (?,?,?)').run(t, user.id, expires);

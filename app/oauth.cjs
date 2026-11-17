@@ -203,7 +203,7 @@ async function finish(provider, origin, code, state, appleUser) {
   if (!name && appleUser) {
     try { const u = typeof appleUser === 'string' ? JSON.parse(appleUser) : appleUser; name = [u?.name?.firstName, u?.name?.lastName].filter(Boolean).join(' ') || null; } catch { /* name is optional */ }
   }
-  return AUTH.sessionForEmail(String(c.email).toLowerCase(), name);
+  return AUTH.sessionForEmail(String(c.email).toLowerCase(), name, provider);
 }
 
 // Which variables a provider still needs, and whether the key parses. Names and booleans only, never a value.

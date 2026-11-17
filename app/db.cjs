@@ -423,6 +423,9 @@ const MIGRATIONS = [
   ['opportunities.degree_requirement', () => { if (!columnExists('opportunities', 'degree_requirement')) db.exec("ALTER TABLE opportunities ADD COLUMN degree_requirement TEXT DEFAULT 'unknown'"); }],
   ['opportunities.last_seen', () => { if (!columnExists('opportunities', 'last_seen')) db.exec("ALTER TABLE opportunities ADD COLUMN last_seen TEXT"); }],
   ['users.display_name', () => { if (!columnExists('users', 'display_name')) db.exec("ALTER TABLE users ADD COLUMN display_name TEXT"); }],
+  // How this account was last authenticated. Recorded at the moment of sign-in, never guessed from
+  // the address: an @icloud.com mailbox does not prove Apple, and a Gmail one does not prove Google.
+  ['users.auth_provider', () => { if (!columnExists('users', 'auth_provider')) db.exec("ALTER TABLE users ADD COLUMN auth_provider TEXT"); }],
   // A consumed OAuth state is marked, not deleted, so a duplicate callback can say "already completed"
   // instead of "expired". The sweep still removes it once its own expiry passes.
   // A saved search carries its own alert rhythm, so the person can mute one without deleting it.
