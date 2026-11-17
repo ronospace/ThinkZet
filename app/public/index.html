@@ -4790,6 +4790,17 @@ async function renderTrajectory(months) {
 // Account controls used to sit inside Career Twin, where a red delete button competed with the
 // intelligence on the page. They live here now: one routine control, two data controls, and the
 // destructive one last, in its own card, behind a typed confirmation.
+// An address the person would recognise. A private relay address is a routing artefact that says
+// nothing about the account, so it is not printed: the provider badge already answers the question.
+const RELAY_DOMAINS = ['privaterelay.appleid.com', 'appleid.com'];
+function acctEmail(me) {
+  const e = String(me.email || '').trim();
+  if (!e || !e.includes('@')) return null;
+  const d = e.split('@').pop().toLowerCase();
+  if (RELAY_DOMAINS.includes(d)) return null;
+  return e;
+}
+
 // The sign-in method the account actually used, recorded at sign-in. A badge is a fact, so an
 // unknown method prints nothing rather than a guess from the address.
 function acctProvider(me) {
@@ -4810,9 +4821,12 @@ async function acctHead(view) {
   const planLabel = planKey ? (planKey === 'pro' ? 'Plan: Pro' : 'Plan: Free') : null;
   const since = me.created_at ? new Date(String(me.created_at).replace(' ', 'T') + 'Z') : null;
   const sinceLabel = since && !isNaN(since) ? `Member since ${since.toLocaleString('en', { month: 'short', year: 'numeric' })}` : null;
-  const who = me.name || me.email || 'Signed in';
+  const shown = acctEmail(me);
+  const method = String(me.auth_provider || '').toLowerCase();
+  const methodLabel = { apple: 'Apple Account', google: 'Google Account', email: 'Email Account' }[method] || null;
+  const who = me.name || shown || methodLabel || 'Signed in';
   // The email is the identity when there is no name, so it is not printed twice.
-  const provider = me.email && me.name ? String(me.email) : null;
+  const provider = shown && me.name ? shown : null;
   const tabs = [['account', 'Privacy'], ['twin', 'Twin'], ['learning', 'Calibration'], ['plan', 'Plan']];
   return `<div class="acct-id">
       <span class="acct-id-n">${esc(who)}</span>
@@ -4829,12 +4843,14 @@ async function acctHead(view) {
 
 async function renderAccount() {
   const me = STATE.userRecord || {};
+  // `shown` is the address the person would recognise, which a relay address is not.
+  const shown = acctEmail(me);
   $('#view').innerHTML = `${await acctHead('account')}
     <div class="tw-grid-pair">
         <div class="card acct-card acct-name">
           <div class="acct-h"><span class="acct-ic you" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span><h3>Account Information</h3></div>
           <div class="acct-who">
-            <span class="acct-mail">${esc(me.email || '')}</span>
+            ${shown ? `<span class="acct-mail">${esc(shown)}</span>` : ''}
             ${acctProvider(me)}
           </div>
           <div class="acct-frow">
