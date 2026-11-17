@@ -76,6 +76,7 @@
   --leading-tight:1.15; --leading-snug:1.35; --leading-normal:1.55;
   --tracking-tight:-.02em; --tracking-tighter:-.032em;
   /* spacing scale (4px base) */
+  --view-max:1120px;
   --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px; --sp-8:32px; --sp-10:40px; --sp-12:48px; --sp-16:64px;
   --radius-sm:8px; --radius:12px; --radius-lg:16px; --radius-xl:22px;
 }
@@ -242,7 +243,7 @@ html[data-mode="dark"] .theme-btn .ico-moon{display:block}
 .pill.live{border-color:color-mix(in srgb,var(--good) 40%,var(--line));background:color-mix(in srgb,var(--good) 12%,var(--panel));color:var(--good);display:inline-flex;align-items:center;gap:6px}
 .pill.live i{width:6px;height:6px;border-radius:50%;background:currentColor;box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 20%,transparent)}
 html[data-theme="light"] .pill.live{background:#eaf7f0;border-color:transparent;color:#0a7a45}
-.view{padding:26px 28px 48px;max-width:1120px;margin:0 auto;min-width:0}
+.view{padding:26px 28px 48px;max-width:var(--view-max);margin:0 auto;min-width:0}
 .view>*{min-width:0}
 .tscroll{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 calc(var(--sp-5) * -1);padding:0 var(--sp-5)}
 .tscroll table.t{min-width:640px}
@@ -1014,7 +1015,7 @@ html[data-theme="light"] .hero-sec::before{background:radial-gradient(60% 60% at
   .foot-legal span{display:inline}
   .foot-legal span+span::before{content:" \00b7  "}
 }
-@media(min-width:901px){.topbar{padding-left:max(28px,calc((100% - 1120px)/2 + 28px));padding-right:max(28px,calc((100% - 1120px)/2 + 28px))}}
+@media(min-width:901px){.topbar{padding-left:max(28px,calc((100% - var(--view-max))/2 + 28px));padding-right:max(28px,calc((100% - var(--view-max))/2 + 28px))}}
 .mark{flex:none;display:block;border-radius:9px}
 .wm{font-weight:780;letter-spacing:-.025em}
 .wm i{font-style:normal;background:linear-gradient(100deg,var(--accent2) 0%,var(--rose) 100%);-webkit-background-clip:text;background-clip:text;color:transparent;-webkit-text-fill-color:transparent}
@@ -1023,6 +1024,28 @@ html[data-theme="light"] .wm i{background-image:linear-gradient(100deg,var(--acc
 .shell.rail-collapsed .logo-text{display:none}
 @media(min-width:901px){.topbar{padding-left:max(28px,calc((100% - 1120px)/2 + 28px));padding-right:max(28px,calc((100% - 1120px)/2 + 28px))}}
 
+
+/* A 1120px column on a 1920px screen leaves 280px of nothing on the right and makes every card a
+   phone card stretched sideways. Above 1280 the column widens to the 7xl step, the page heading
+   takes the next scale step up, and the vertical padding comes down, so the same content reads as
+   a desktop application rather than a mobile layout centred on a large screen. */
+@media(min-width:1280px){
+  :root{--view-max:1280px}
+  .view{padding:22px 32px 40px}
+  .topbar{padding-top:12px;padding-bottom:12px}
+  .topbar h1{font-size:var(--text-2xl);letter-spacing:-.02em}
+  .card h3{font-size:var(--text-base)}
+  .tw-grid{grid-template-columns:1.12fr .88fr}
+  .tw-c-note{max-width:78ch}
+  /* One grid, not two columns: rows are shared, so the two actions land on the same line across
+     the page. Two nested columns would each size their own rows and drift apart. */
+  .tw-grid-pair{display:grid;grid-template-columns:1.12fr .88fr;gap:var(--sp-4);align-items:stretch}
+  .tw-grid-pair>.card{display:flex;flex-direction:column;min-width:0}
+  .tw-grid-pair>.card:nth-child(1){grid-column:1;grid-row:1}
+  .tw-grid-pair>.card:nth-child(2){grid-column:1;grid-row:2}
+  .tw-grid-pair>.card:nth-child(3){grid-column:2;grid-row:1}
+  .tw-grid-pair>.card:nth-child(4){grid-column:2;grid-row:2}
+}
 
 /* ---------- landing: section snapping ---------- */
 /* Proximity, not mandatory: it settles on the nearest section when you stop, and never traps
@@ -1306,7 +1329,8 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 /* ---- Career Twin: an editor, not a record ---- */
 .tw-intro{margin:0 0 var(--sp-5);max-width:74ch}
 .tw-lede{margin:0;font-size:var(--text-md);line-height:1.6;color:var(--ink2);text-wrap:pretty}
-.tw-acts{display:flex;align-items:center;gap:var(--sp-4);flex-wrap:wrap;margin-top:var(--sp-4)}
+.tw-col>.card{display:flex;flex-direction:column}
+.tw-acts{display:flex;align-items:center;gap:var(--sp-4);flex-wrap:wrap;margin-top:auto;padding-top:var(--sp-4)}
 .tw-link{font-size:var(--text-sm);color:var(--accent2);text-decoration:none;border-bottom:1px solid color-mix(in srgb,var(--accent2) 35%,transparent);padding-bottom:1px}
 .tw-link:hover{color:var(--accent)}
 .tw-link:focus-visible{outline:2px solid var(--accent2);outline-offset:3px;border-radius:2px}
@@ -1397,6 +1421,7 @@ body.tw-lock{overflow:hidden}
 .tw-check input{width:16px;height:16px;accent-color:var(--accent2)}
 .tw-hint{font-size:var(--text-xs);color:var(--muted);line-height:1.4}
 .tw-chips-edit{margin-top:2px}
+@media(max-width:1279px){.tw-grid-pair{display:grid;grid-template-columns:1fr;gap:var(--sp-4)}.tw-grid-pair>.card{grid-column:1!important;grid-row:auto!important}}
 @media(max-width:1023px){.tw-grid{grid-template-columns:1fr}.tw-c-head{grid-template-columns:1fr;gap:10px}}
 @media(max-width:640px){
   .tw-drawer{grid-template-columns:1fr}
@@ -4684,8 +4709,7 @@ async function renderAccount() {
   const me = STATE.userRecord || {};
   $('#view').innerHTML = `
     <p class="tw-lede" style="margin:0 0 var(--sp-5);max-width:74ch">Your name, your data and what happens to it. Nothing on this page changes your Career Twin or your scores.</p>
-    <div class="tw-grid">
-      <div class="tw-col">
+    <div class="tw-grid-pair">
         <div class="card">
           <h3>Display Name</h3>
           <p class="tw-c-note" style="margin-top:8px">How your name appears across ThinkZet. Google and Apple supply one when you sign in with them; you can change it here at any time.</p>
@@ -4700,8 +4724,6 @@ async function renderAccount() {
           <p class="tw-c-note" style="margin-top:8px">A single JSON file containing every record we hold for you: your profile, skills, CV text, tracked opportunities, outcomes, saved searches and preferences. It downloads straight to your device and is not emailed.</p>
           <div class="tw-acts"><button class="btn ghost" id="d-export">Export Everything</button></div>
         </div>
-      </div>
-      <div class="tw-col">
         <div class="card plain">
           <h3>Privacy</h3>
           <p class="tw-c-note" style="margin-top:8px">Your Career Twin is stored on your account and used to produce your own estimates. It is not published, not shown to employers or recruiters, and not sold. Read the full statement in the <a class="tw-link" href="/legal/privacy.html">Privacy Policy</a>.</p>
@@ -4711,7 +4733,6 @@ async function renderAccount() {
           <p class="tw-c-note" style="margin-top:8px">This removes your profile, CV text, tracked opportunities, outcomes and preferences, and signs you out. It cannot be undone. Export your data first if you may want it later.</p>
           <div class="tw-acts"><button class="btn danger" id="d-delete">Delete My Account</button></div>
         </div>
-      </div>
     </div>`;
   const dn = $('#dn-input'), dns = $('#dn-save');
   dn.value = me.name || '';
