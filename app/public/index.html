@@ -221,16 +221,20 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 .tb-icon:hover{color:var(--ink);border-color:var(--line2);background:var(--panel3)}
 .tb-icon svg{width:15px;height:15px}
 .tb-menu{position:relative}
-.tb-drop{position:absolute;right:0;top:calc(100% + 8px);min-width:216px;background:var(--panel);border:1px solid var(--line2);border-radius:var(--radius);box-shadow:var(--shadow);padding:5px;display:none;z-index:90}
+.tb-drop{position:absolute;right:0;top:calc(100% + 8px);min-width:244px;background:var(--panel);border:1px solid var(--line2);border-radius:var(--radius);box-shadow:var(--shadow);padding:5px;display:none;z-index:90}
 .tb-drop.open{display:block;animation:rise .14s ease both}
-.tb-drop-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 10px 9px;border-bottom:1px solid var(--line);margin-bottom:4px}
-.tb-drop-label{font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
-.tb-drop-state{font-size:var(--text-xs);color:var(--ink2);font-weight:600}
+/* Two cells, in both states: what you are on the left, what you can do on the right. */
+.tb-row{display:grid;grid-template-columns:1fr 1fr;gap:4px}
+.tb-cell{display:flex;align-items:center;justify-content:center;gap:7px;min-width:0;padding:9px 10px;border-radius:8px;font-size:var(--text-sm);font-weight:600;color:var(--ink2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tb-cell-state{color:var(--ink);justify-content:flex-start;padding-left:11px}
+.tb-cell-act{color:var(--accent2);background:var(--wash);border:1px solid var(--line-tint)}
+.tb-cell-act:hover{background:color-mix(in srgb,var(--accent2) 12%,var(--panel));color:var(--accent2)}
 .tb-drop button{display:flex;align-items:center;gap:9px;width:100%;text-align:left;padding:8px 10px;border-radius:8px;font-size:var(--text-sm);color:var(--ink2)}
 .tb-drop button[hidden]{display:none!important}
 .tb-drop button:hover{background:var(--panel2);color:var(--ink)}
-.tb-drop button svg{width:14px;height:14px;opacity:.75}
-.tb-row{display:flex;align-items:center;flex-wrap:nowrap;gap:4px;padding:0 2px}
+.tb-drop button svg{width:14px;height:14px;opacity:.75;flex:0 0 auto}
+.tb-drop .tb-cell svg{opacity:.9}
+.tb-op{margin-top:4px;padding-top:4px;border-top:1px solid var(--line)}
 .tb-row button{width:auto!important;flex:0 1 auto;white-space:nowrap;padding:8px 8px}
 .tb-signout{margin-left:auto;color:var(--ink2)}
 .tb-signout:hover{color:var(--bad)}
@@ -1018,9 +1022,9 @@ html[data-theme="light"] .hero-sec::before{background:radial-gradient(60% 60% at
 .foot-legal{margin-top:var(--sp-8);padding-top:var(--sp-4);border-top:1px solid var(--line);font-size:var(--text-2xs);color:var(--muted);text-align:center;line-height:1.7;padding-bottom:8px}
 @media(max-width:900px){.land-footer{padding-bottom:96px}}
 /* Declared after the 900px rule, so a phone gets the full-width last card and no empty cell. */
-@media(max-width:760px){.foot-grid{grid-template-columns:1fr 1fr!important}.foot-grid>.foot-col:last-child{grid-column:1/-1}}
+@media(max-width:760px){.foot-grid{grid-template-columns:1fr!important}.foot-grid>.foot-col{grid-column:1/-1}}
 .foot-legal span{display:block}
-@media(max-width:900px){.price{padding:var(--sp-5)}.price-tag{left:var(--sp-4);font-size:var(--text-2xs);padding:3px 8px}.how-grid,.cap-grid,.price-grid{grid-template-columns:1fr}.foot-grid{grid-template-columns:1fr 1fr!important;gap:10px}.foot-grid>div:first-child{grid-column:1/-1;text-align:center;margin-bottom:6px}.foot-grid>div:first-child .land-brand{justify-content:center}.foot-grid>div:first-child .foot-note{margin:0 auto}.land-nav-links{display:none}.hero-sec{padding-top:var(--sp-10)}
+@media(max-width:900px){.price{padding:var(--sp-5)}.price-tag{left:var(--sp-4);font-size:var(--text-2xs);padding:3px 8px}.how-grid,.cap-grid,.price-grid{grid-template-columns:1fr}.foot-grid{grid-template-columns:1fr!important;gap:10px}.foot-grid>div:first-child{grid-column:1/-1;text-align:center;margin-bottom:6px}.foot-grid>div:first-child .land-brand{justify-content:center}.foot-grid>div:first-child .foot-note{margin:0 auto}.land-nav-links{display:none}.hero-sec{padding-top:var(--sp-10)}
   .land-tag{display:none}
   .land-nav{padding:10px 16px;gap:8px}
   .land-brand{font-size:var(--text-base)}
@@ -1074,7 +1078,7 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .ds-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:12px}
 .ds-cell .k{font-size:var(--text-2xs);color:var(--muted);letter-spacing:.06em;text-transform:uppercase}
 .ds-cell .v{font-size:var(--text-md);font-weight:700;margin-top:2px;font-variant-numeric:tabular-nums}
-.ds-note{margin-top:10px;font-size:var(--text-xs);color:var(--warn);line-height:1.5;max-width:760px}
+.ds-note{margin-top:10px;font-size:var(--text-xs);color:var(--muted);line-height:1.5;max-width:760px}
 @media(max-width:760px){.ds-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.foot-grid{grid-template-columns:1fr 1fr}.foot-col{padding:12px 10px}.foot-grid a{font-size:var(--text-xs)}}
 .outcome-card{margin-top:var(--sp-4)}
 .outcome-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;margin-bottom:14px}
@@ -1112,11 +1116,13 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .market-snapshot .ds-cell .k{font-size:var(--text-xs);color:var(--muted);white-space:nowrap}
 .market-snapshot .ds-cell .v{font-size:var(--text-sm);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
 /* Declared after the base rule, so the phone column count is the one that applies. */
-@media(max-width:760px){.market-snapshot .ds-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 14px}
-  .market-snapshot .ds-cell{display:block}
-  .market-snapshot .ds-cell .k{display:block;white-space:normal}
-  .market-snapshot .ds-cell .v{display:block;margin-top:2px;white-space:normal}}
-@media(max-width:359px){.market-snapshot .ds-grid{grid-template-columns:1fr}}
+@media(max-width:760px){
+  .market-snapshot .ds-grid{grid-template-columns:1fr;gap:0}
+  .market-snapshot .ds-cell{display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid var(--line)}
+  .market-snapshot .ds-cell:last-child{border-bottom:none;padding-bottom:0}
+  .market-snapshot .ds-cell .k{white-space:normal;min-width:0}
+  .market-snapshot .ds-cell .v{white-space:nowrap;text-align:right}
+}
 @media(max-width:760px){.market-snapshot{gap:12px;padding:12px}}
 .price-tagline{font-size:var(--text-sm);font-weight:600;font-style:italic;color:var(--ink2);margin:14px 0 6px;padding-top:12px;border-top:1px solid var(--line)}
 .plan-grid-compact .price-tagline{font-size:var(--text-sm);font-style:italic;margin:12px 0 4px;padding-top:10px}
@@ -1829,33 +1835,23 @@ body.tw-lock{overflow:hidden}
           <svg viewBox="0 0 16 16" fill="currentColor"><circle cx="3.2" cy="8" r="1.25"/><circle cx="8" cy="8" r="1.25"/><circle cx="12.8" cy="8" r="1.25"/></svg>
         </button>
         <div class="tb-drop" id="tb-drop" role="menu">
-          <div class="tb-drop-head">
-            <span class="tb-drop-label">Account</span>
-            <span id="profile-pill" class="tb-drop-state">No Profile</span>
-          </div>
           <div class="tb-row">
-            <!-- @internal:start -->
-            <!-- Operator action, in its own position in the account menu. stripInternal() removes this
-                 block before the response leaves for anyone who is not a founder, and its handler lives in
-                 internal.js, which is only served to a founder, so the consumer bundle names no ingest. -->
+            <span id="profile-pill" class="tb-cell tb-cell-state" hidden>No Profile</span>
+            <button role="menuitem" id="menu-demo" class="tb-cell tb-cell-act" hidden>Demo</button>
+            <button role="menuitem" id="menu-signin" class="tb-cell tb-cell-act" hidden>Sign In</button>
+            <button role="menuitem" id="logout" class="tb-cell tb-cell-act" hidden>Sign Out</button>
+          </div>
+          <!-- @internal:start -->
+          <!-- Operator action, apart from the two cells. stripInternal() removes this block before the
+               response leaves for anyone who is not a founder, and its handler lives in internal.js,
+               which is only served to a founder, so the consumer bundle names no ingest. -->
+          <div class="tb-op">
             <button role="menuitem" id="run-ingest">
               <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg>
               Run Ingest
             </button>
-            <!-- @internal:end -->
-            <button role="menuitem" id="logout" class="tb-signout" hidden>
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M6.2 2.6H3.4v10.8h2.8"/><path d="M9.4 8h4.2M11.4 5.8L13.6 8l-2.2 2.2"/></svg>
-              Sign Out
-            </button>
-            <button role="menuitem" id="menu-demo" hidden>
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2.2l1.5 3.6L13 7.2l-3.5 1.4L8 12.2 6.5 8.6 3 7.2l3.5-1.4z"/></svg>
-              Try the Demo
-            </button>
-            <button role="menuitem" id="menu-signin" class="tb-signout" hidden>
-              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M9.8 2.6h2.8v10.8H9.8"/><path d="M2.6 8h7.2M7.6 5.8L9.8 8l-2.2 2.2"/></svg>
-              Sign In
-            </button>
           </div>
+          <!-- @internal:end -->
         </div>
       </div>
     </div>
@@ -5074,7 +5070,7 @@ async function boot() {
   // The demo belongs to a signed-out visitor: for a signed-in person it would replace their profile.
   const demoBtn = document.getElementById('menu-demo'); if (demoBtn) demoBtn.hidden = STATE.authed;
   if (!STATE.authed) {
-    $('#profile-pill').textContent = 'Not signed in';
+    $('#profile-pill').hidden = true;
     $('#nav').style.opacity = '.35';
     $('#nav').style.pointerEvents = 'none';
     // The corpus counts are public, so fill them for a signed-out visitor too.
@@ -5091,6 +5087,7 @@ async function boot() {
   STATE.user = me.user; STATE.profile = me.profile;
   const health = await api('/api/health');
   STATE.engineCounts = health.counts;
+  $('#profile-pill').hidden = false;
   $('#profile-pill').textContent = me.profile ? `${titleCase(me.profile.seniority)} · ${me.profile.years_experience || '?'} Yrs` : 'No Profile';
   if (me.profile && me.profile.risk_tolerance === 'aggressive') STATE.horizon = 'growth';
   if (me.profile && me.profile.time_to_move === 'asap') STATE.horizon = 'income';
