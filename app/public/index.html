@@ -733,6 +733,8 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
   .nav button .ico{width:18px;height:18px}
   .nav button .ico svg{width:17px;height:17px}
   .nav button .lbl{max-width:100%;overflow:hidden;text-overflow:ellipsis}
+  .nav .lbl-full{display:none}
+  .nav .lbl-short{display:inline}
   .nav button.active{box-shadow:none;background:var(--nav-active)}
   main{overflow-y:auto;overflow-x:hidden;padding-bottom:calc(74px + env(safe-area-inset-bottom))}
   .view{padding:12px 14px 0}
@@ -1260,10 +1262,10 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .cal-now .fk{display:block;margin-bottom:10px}
 .cal-pair{display:grid;gap:10px}
 .cal-pair>div{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.cal-pair .v.lock{flex:1 1 100%;text-align:right;margin-top:-2px}
+.cal-pair .v.lock{flex:0 1 auto;margin-left:auto;text-align:right;margin-top:0;max-width:100%}
 .cal-pair .k{font-size:var(--text-sm);color:var(--ink2);min-width:0}
 .cal-pair .v{font-size:var(--text-md);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
-.cal-pair .v.lock{font-size:var(--text-sm);font-weight:600;color:var(--muted)}
+.cal-pair .v.lock{font-size:var(--text-sm);font-weight:600;color:var(--muted);white-space:normal;overflow-wrap:anywhere}
 .cal-kpi .kpi-v{font-size:var(--text-xl)}
 .cal-kpi .kpi-k{font-size:var(--text-2xs);letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--ink2)}
 .cal-kpi .kpi-s{font-size:var(--text-xs);color:var(--ink2);margin-top:2px;line-height:1.35;min-height:2.7em}
@@ -1783,7 +1785,7 @@ body.tw-lock{overflow:hidden}
       <div class="nav-group"><span class="nav-label">Account</span>
       <button data-view="twin"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5.4" r="2.6"/><path d="M2.8 13.4c0-2.6 2.3-4.2 5.2-4.2s5.2 1.6 5.2 4.2"/></svg></span><span class="lbl">Career Twin</span></button>
       <button data-view="learning"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg></span><span class="lbl">Career Calibration</span></button>
-      <button data-view="account" data-mtab="account"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10.6 2.6l2.8 2.8-7 7H3.6v-2.8z"/><path d="M9 4.2l2.8 2.8"/></svg></span><span class="lbl"><span class="lbl-full">Account &amp; Privacy</span><span class="lbl-short">Account</span></span></button>
+      <button data-view="account" data-mtab="account"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10.6 2.6l2.8 2.8-7 7H3.6v-2.8z"/><path d="M9 4.2l2.8 2.8"/></svg></span><span class="lbl">Account &amp; Privacy</span></button>
       <button data-view="plan"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.8" y="3.6" width="12.4" height="8.8" rx="1.6"/><path d="M1.8 6.6h12.4"/></svg></span><span class="lbl">Plan</span></button>
       </div>
       
