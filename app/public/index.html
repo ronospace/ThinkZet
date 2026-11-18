@@ -633,7 +633,7 @@ table.t tr:hover td{background:var(--panel2)}
 /* ---------- copilot ---------- */
 /* Conversation first: the thread takes the height, the composer sits on the floor, and every
    supporting widget is a chip or a badge rather than a card competing with the answer. */
-.chat{display:flex;flex-direction:column;height:calc(100vh - 130px);max-width:860px}
+.chat{display:flex;flex-direction:column;height:calc(var(--vvh, 100dvh) - 130px);max-width:860px}
 .msgs{flex:1;overflow:auto;display:flex;flex-direction:column;gap:14px;padding:2px 0 14px;scroll-behavior:smooth}
 .msg{max-width:82%;padding:11px 14px;border-radius:14px;line-height:1.6;font-size:var(--text-base);text-wrap:pretty}
 .msg.user{align-self:flex-end;background:var(--nav-active);border:1px solid var(--line2);border-bottom-right-radius:5px;white-space:pre-wrap}
@@ -667,7 +667,8 @@ table.t tr:hover td{background:var(--panel2)}
 .composer textarea:focus{border-color:var(--accent2)}
 .composer .btn{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:10px 15px}
 .composer .btn svg{width:13px;height:13px}
-.cp-hint{margin-top:6px;font-size:var(--text-xs);color:var(--muted)}
+.composer .btn[data-idle="1"]{background:var(--wash);color:var(--muted);box-shadow:none;transform:none;pointer-events:none}
+
 /* Career context: six badges, collapsible, a third of the weight it had as four tiles. */
 .cp-ctx{margin-top:10px;border-top:1px solid var(--line);padding-top:9px}
 .cp-ctx summary{cursor:pointer;list-style:none;display:flex;align-items:center;gap:8px;font-size:var(--text-2xs);font-weight:500;
@@ -685,7 +686,11 @@ table.t tr:hover td{background:var(--panel2)}
 @keyframes cpdot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
 @media(prefers-reduced-motion:reduce){.cp-typing i{animation:none;opacity:.6}}
 @media(max-width:1100px){.cp-chips{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:560px){.cp-chips{grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}.cp-chip{font-size:var(--text-xs);padding:7px 9px;min-height:34px}}
+@media(max-width:560px){
+  .cp-chips{display:flex;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;gap:6px;padding:0 0 6px;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .cp-chips::-webkit-scrollbar{display:none}
+  .cp-chip{flex:0 0 auto;max-width:76%;font-size:var(--text-xs);padding:9px 11px;min-height:44px;scroll-snap-align:start}
+}
 /* The intro is a card, not a bubble:/* The intro is a card, not a bubble: it carries a definition and four facts, so it takes the full width. */
 .msg-intro{width:100%;max-width:none;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
 .msg-intro .facts.tight{margin-top:12px;gap:5px 14px}
@@ -2647,6 +2652,24 @@ document.getElementById('land-signin').onclick = () => {
   const m0 = document.querySelector('main'); if (m0) m0.scrollTop = 0;
   go('auth');
 };
+// A phone keyboard shrinks the visual viewport but not 100vh, so the thread has to be told the real
+// height or the composer sits under the keyboard. One listener, one custom property.
+const trackViewport = () => {
+  const set = () => {
+    const vv = window.visualViewport;
+    const h = vv ? vv.height : window.innerHeight;
+    document.documentElement.style.setProperty('--vvh', h + 'px');
+  };
+  set();
+  if (window.visualViewport) {
+    window.visualViewport.addEventListener('resize', set);
+    window.visualViewport.addEventListener('scroll', set);
+  }
+  window.addEventListener('resize', set);
+  window.addEventListener('orientationchange', set);
+};
+trackViewport();
+
 document.getElementById('land-theme').onclick = () => {
   const order = ['system', 'light', 'dark'];
   const cur = localStorage.getItem('mirrorspread-theme') || 'system';
@@ -4229,13 +4252,15 @@ async function renderCopilot() {
       </div>
       <div class="composer">
         <textarea id="q" rows="1" placeholder="Ask Career Co-Pilot anything about your career..." aria-label="Ask Career Co-Pilot"></textarea>
-        <button class="btn" id="send">Ask <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 13V3.4"/><path d="M4.2 7.2L8 3.4l3.8 3.8"/></svg></button>
+        <button class="btn" id="send" data-idle="1" aria-label="Send">Ask <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 13V3.4"/><path d="M4.2 7.2L8 3.4l3.8 3.8"/></svg></button>
       </div>
-      <div class="cp-hint">Enter sends. Shift and Enter starts a new line.</div>
     </div>`;
   const box = $('#q');
   const grow = () => { box.style.height = 'auto'; box.style.height = Math.min(box.scrollHeight, 132) + 'px'; };
-  box.oninput = grow;
+  const sendBtn = $('#send');
+  const syncSend = () => { if (sendBtn) sendBtn.dataset.idle = box.value.trim() ? '0' : '1'; };
+  box.oninput = () => { grow(); syncSend(); };
+  syncSend();
   // The placeholder wraps on a phone, so the field is measured once it is in the document rather than
   // left at one row and clipped.
   grow();
