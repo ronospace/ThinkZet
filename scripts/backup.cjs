@@ -91,8 +91,11 @@ function verify(file) {
 const sha256 = (b) => crypto.createHash('sha256').update(b).digest('hex');
 const hmac = (k, d) => crypto.createHmac('sha256', k).update(d).digest();
 
-function signedHeaders(method, key, payloadHash, extra = {}) {
+function signedHeaders(method, key, payloadHash, extra = {}, query = {}) {
   const url = new URL(`${S3.endpoint}/${S3.bucket}/${key}`);
+  // The query string is part of the signature. It has to be on the URL before the canonical
+  // request is built, or the signature covers an empty query and the store answers 403.
+  for (const [k, v] of Object.entries(query)) url.searchParams.set(k, v);
   const amzDate = new Date().toISOString().replace(/[:-]|\.\d{3}/g, '');
   const dateStamp = amzDate.slice(0, 8);
   const headers = { host: url.host, 'x-amz-content-sha256': payloadHash, 'x-amz-date': amzDate, ...extra };
@@ -125,13 +128,9 @@ async function put(key, body) {
 }
 
 async function list(prefix) {
-  const { url, headers } = signedHeaders('GET', '', sha256(''), {});
-  const u = new URL(url);
-  u.searchParams.set('list-type', '2');
-  u.searchParams.set('prefix', prefix);
-  const { headers: h2 } = signedHeaders('GET', '', sha256(''), {});
-  const res = await fetch(u.toString(), { method: 'GET', headers: { ...h2 }, signal: AbortSignal.timeout(60000) });
-  if (!res.ok) throw new Error(`list failed ${res.status}`);
+  const { url, headers } = signedHeaders('GET', '', sha256(''), {}, { 'list-type': '2', prefix });
+  const res = await fetch(url, { method: 'GET', headers, signal: AbortSignal.timeout(60000) });
+  if (!res.ok) throw new Error(`list failed ${res.status}: ${(await res.text()).slice(0, 160)}`);
   const xml = await res.text();
   return [...xml.matchAll(/<Key>([^<]+)<\/Key>/g)].map((m) => m[1]);
 }
