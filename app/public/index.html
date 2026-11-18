@@ -654,12 +654,12 @@ table.t tr:hover td{background:var(--panel2)}
   /* Centred when it fits, scrollable from the top when it does not: an auto margin collapses to
      zero on overflow, where justify-content:center would clip the first line. */
   .chat .cp-empty{order:1;display:flex;flex:1 1 auto;min-height:0;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;padding-bottom:6px}
+  .cp-read{max-width:none}
   .chat .cp-empty-in{margin:auto 0;display:flex;flex-direction:column;gap:14px;min-height:0}
   /* With a keyboard open the person is typing, not reading: the instrument and the chips step
      aside so nothing is clipped and the field has the room. */
   html.kb-open .chat .cp-read,html.kb-open .chat .cp-chips{display:none}
   .chat .cp-empty-h{display:block}
-  .chat .cp-read{display:block}
   .chat:not([data-turns="1"]) .msgs{display:none}
   .chat[data-turns="1"] .cp-empty{display:none}
 }
@@ -691,22 +691,30 @@ table.t tr:hover td{background:var(--panel2)}
 .cp-empty-h b{color:var(--ink2);font-weight:600}
 /* The reading: the empty state shows the answer before it asks a question. A figure, where it sits
    in the market, and the one question that figure raises. */
-.cp-read{display:none}
-.cp-read-k{font-size:var(--text-2xs);font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
-.cp-read-n{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:0}
-.cp-read-n b{font-size:var(--text-3xl);font-weight:700;letter-spacing:-.02em;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
-.cp-read-n span{font-size:var(--text-sm);color:var(--muted);line-height:1.4}
-.cp-read-strip{position:relative;height:6px;border-radius:999px;margin:14px 0 6px;background:var(--wash);box-shadow:inset 0 0 0 1px var(--line-tint)}
+.cp-read{display:block}
+/* The reading is a tile, not a poster: one surface with a hairline, a small mark that says who is
+   speaking, and figures sized to be read inside a card rather than shouted across a screen. */
+.cp-read-t{display:flex;flex-direction:column;gap:12px;padding:14px;border:1px solid var(--line-tint);border-radius:14px;
+  background:var(--panel);box-shadow:0 1px 2px rgba(0,0,0,.04)}
+.cp-read-k{display:flex;align-items:center;gap:7px;font-size:var(--text-2xs);font-weight:700;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin:0}
+.cp-read-k .cp-read-ic{width:18px;height:18px;border-radius:6px;display:grid;place-items:center;flex:0 0 auto;
+  background:var(--accent-soft);color:var(--accent2);border:1px solid var(--ai-border)}
+.cp-read-n{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap;margin:0}
+.cp-read-n b{font-size:var(--text-xl);font-weight:650;letter-spacing:-.01em;line-height:1.1;color:var(--ink);font-variant-numeric:tabular-nums}
+.cp-read-n span{font-size:var(--text-xs);color:var(--muted);line-height:1.4}
+.cp-read-strip{position:relative;height:5px;border-radius:999px;margin:0;background:var(--wash);box-shadow:inset 0 0 0 1px var(--line-tint)}
 .cp-read-fill{position:absolute;inset:0 auto 0 0;border-radius:999px;background:linear-gradient(to right,var(--cta-a),var(--cta-b))}
 .cp-read-mark{position:absolute;top:50%;width:3px;height:14px;border-radius:2px;background:var(--ink);transform:translate(-1.5px,-50%);box-shadow:0 0 0 2px var(--panel)}
-.cp-read-scale{display:flex;justify-content:space-between;font-size:var(--text-2xs);color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.02em}
-.cp-read-cells{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin:14px 0 0;background:var(--line-tint);border:1px solid var(--line-tint);border-radius:10px;overflow:hidden}
-.cp-read-cells>div{background:var(--panel);padding:8px 10px;min-width:0}
+.cp-read-scale{display:flex;justify-content:space-between;font-size:var(--text-2xs);color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.02em;margin-top:-6px}
+.cp-read-cells{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin:0;background:var(--line-tint);
+  border:1px solid var(--line-tint);border-radius:10px;overflow:hidden}
+.cp-read-cells>div{background:var(--wash);padding:8px 10px;min-width:0}
 .cp-read-cells .k{display:block;font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cp-read-cells .v{display:block;font-size:var(--text-sm);font-weight:650;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:2px;white-space:nowrap}
 /* The question the figure raises is the primary action, not a chip in a row of equals. */
-.cp-ask{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;margin:14px 0 0;padding:10px 14px;
-  border-radius:12px;border:1px solid var(--line-tint);background:var(--wash);color:var(--ink);
+.cp-ask{display:flex;align-items:center;gap:10px;width:100%;min-height:44px;margin:0;padding:9px 12px;
+  border-radius:10px;border:1px solid var(--ai-border);background:var(--accent-soft);color:var(--ink);
   font:inherit;font-size:var(--text-sm);font-weight:600;text-align:left;cursor:pointer;transition:border-color .12s,background .12s}
 .cp-ask:hover{border-color:var(--accent2);background:var(--panel2)}
 .cp-ask:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
@@ -4326,7 +4334,8 @@ async function renderCopilot() {
       const gapPct = cur != null ? Math.round(((p.p50 - cur) / p.p50) * 100) : null;
       const money0 = (v) => money(Number(v), p.currency || 'EUR');
       const per = p.period === 'month' ? '/mo' : '/yr';
-      readHTML = `<p class="cp-read-k">Your market position</p>
+      readHTML = `<div class="cp-read-t">
+        <p class="cp-read-k"><span class="cp-read-ic" aria-hidden="true"><svg viewBox="0 0 16 16" width="11" height="11" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 2l1.4 3.4L13 6.8l-3.6 1.4L8 12l-1.4-3.8L3 6.8l3.6-1.4z"/></svg></span>Your market position</p>
         <p class="cp-read-n"><b>${esc(money0(p.p50))}${esc(per)}</b><span>median for your profile${p.sampleSize ? ` · ${int(p.sampleSize)} postings with pay` : ''}</span></p>
         ${pos != null ? `<div class="cp-read-strip" role="img" aria-label="Your pay sits at ${Math.round(pos)} percent of the market range">
           <span class="cp-read-fill" style="width:${pos}%"></span><span class="cp-read-mark" style="left:${pos}%"></span></div>
@@ -4336,7 +4345,8 @@ async function renderCopilot() {
           <div><span class="k">Gap</span><span class="v">${gapPct != null ? (gapPct > 0 ? '+' : '') + int(gapPct) + '%' : '-'}</span></div>
           <div><span class="k">Confidence</span><span class="v">${esc(titleCase(p.confidence || '-'))}</span></div>
         </div>
-        <button class="cp-ask" data-q="${esc(gapPct != null && gapPct > 0 ? 'Am I underpaid?' : 'What should I do next?')}"><span>${esc(gapPct != null && gapPct > 0 ? `Why is my pay ${int(gapPct)}% under the median?` : 'What should I do next?')}</span><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5L10.5 8L6 12.5"/></svg></button>`;
+        <button class="cp-ask" data-q="${esc(gapPct != null && gapPct > 0 ? 'Am I underpaid?' : 'What should I do next?')}"><span>${esc(gapPct != null && gapPct > 0 ? `Why is my pay ${int(gapPct)}% under the median?` : 'What should I do next?')}</span><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5L10.5 8L6 12.5"/></svg></button>
+      </div>`;
     }
   } catch (e) {}
   $('#view').innerHTML = `
@@ -4384,6 +4394,15 @@ async function renderCopilot() {
         <button class="btn" id="send" data-idle="1" aria-label="Send"><span class="lbl-send">Ask</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 13V3.4"/><path d="M4.2 7.2L8 3.4l3.8 3.8"/></svg></button>
       </div>
     </div>`;
+  // On a desktop the thread is tall enough to hold the reading, so it joins the conversation
+  // directly under the greeting rather than sitting at the floor with the chips. On a phone it
+  // stays inside the centred empty group, where it is the whole point of the screen.
+  const readEl = document.querySelector('.cp-read');
+  const msgsEl = document.getElementById('msgs');
+  if (readEl && msgsEl && window.matchMedia('(min-width:768px)').matches) {
+    readEl.style.marginTop = '2px';
+    msgsEl.appendChild(readEl);
+  }
   const box = $('#q');
   const grow = () => { box.style.height = 'auto'; box.style.height = Math.min(box.scrollHeight, 132) + 'px'; };
   const sendBtn = $('#send');
