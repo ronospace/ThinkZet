@@ -1499,6 +1499,19 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .tw-miss{color:var(--muted);font-style:italic}
 .tw-inline{background:none;border:none;padding:0;font:inherit;font-size:var(--text-xs);font-weight:600;color:var(--accent2);cursor:pointer;text-decoration:underline;text-underline-offset:2px}
 .tw-inline:focus-visible{outline:2px solid var(--accent2);outline-offset:3px;border-radius:2px}
+/* A row that is the action keeps the row's geometry and gains a closing mark on its right edge. */
+.tw-row-act{width:100%;background:none;border:none;border-bottom:1px solid var(--line);font:inherit;font-size:var(--text-sm);
+  color:var(--ink);text-align:left;cursor:pointer;padding:7px 0;gap:10px;border-radius:0}
+.tw-row-act:last-child{border-bottom:none}
+.tw-row-act:hover{background:var(--wash)}
+.tw-row-act:hover>span:first-child{color:var(--ink)}
+.tw-row-act:focus-visible{outline:2px solid var(--accent2);outline-offset:-2px;border-radius:6px}
+.tw-chev{width:14px;height:14px;flex:0 0 auto;color:var(--muted);align-self:center}
+.tw-row-act:hover .tw-chev{color:var(--accent2)}
+.tw-next{margin-top:10px;min-height:44px}
+/* A row that is a control is a touch target, so on a phone it is 44px like every other one. */
+@media(max-width:1023px){.tw-row-act{min-height:44px;padding:10px 0}}
+.tw-next .tw-chev{color:var(--accent2)}
 .tw-src{font-size:var(--text-2xs);font-weight:600;letter-spacing:.02em;padding:2px 7px;border-radius:999px;border:1px solid var(--line2);color:var(--ink2);background:var(--panel3);white-space:nowrap}
 .tw-src-you{color:var(--score-good);border-color:color-mix(in srgb,var(--score-good) 40%,var(--line));background:var(--score-good-bg)}
 .tw-src-cv{color:var(--blue);border-color:color-mix(in srgb,var(--blue) 40%,var(--line));background:color-mix(in srgb,var(--blue) 12%,var(--panel))}
@@ -1843,7 +1856,7 @@ body.tw-lock{overflow:hidden}
       <button data-view="searches"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2.4l1.8 3.7 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4L2.2 6.7l4-.6z"/></svg></span><span class="lbl" data-i18n="view.searches">Saved Searches</span></button>
       </div>
       <div class="nav-group"><span class="nav-label">Account</span>
-      <button data-view="twin"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5.4" r="2.6"/><path d="M2.8 13.4c0-2.6 2.3-4.2 5.2-4.2s5.2 1.6 5.2 4.2"/></svg></span><span class="lbl" data-i18n="view.twin">Career Twin</span></button>
+      <button data-view="twin" data-mtab="twin"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="8" cy="5.4" r="2.6"/><path d="M2.8 13.4c0-2.6 2.3-4.2 5.2-4.2s5.2 1.6 5.2 4.2"/></svg></span><span class="lbl" data-i18n="view.twin">Career Twin</span></button>
       <button data-view="learning"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M13.4 8a5.4 5.4 0 11-1.7-3.9"/><path d="M13.6 2.6v3.2h-3.2"/></svg></span><span class="lbl" data-i18n="view.learning">Career Calibration</span></button>
       <button data-view="account" data-mtab="account"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M10.6 2.6l2.8 2.8-7 7H3.6v-2.8z"/><path d="M9 4.2l2.8 2.8"/></svg></span><span class="lbl" data-i18n="view.account">Account &amp; Privacy</span></button>
       <button data-view="plan"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="1.8" y="3.6" width="12.4" height="8.8" rx="1.6"/><path d="M1.8 6.6h12.4"/></svg></span><span class="lbl" data-i18n="view.plan">Plan</span></button>
@@ -3993,7 +4006,9 @@ const TW = { data: null, draft: null, skills: [], open: false, opener: null, bus
 const TW_SRC = { cv: 'From your CV', manual: 'You entered this', account: 'From your account', inferred: 'Inferred by ThinkZet', review: 'Needs review', unknown: 'Source not recorded' };
 const TW_SRC_TONE = { cv: 'cv', manual: 'you', account: 'acct', inferred: 'inf', review: 'rev', unknown: 'unk' };
 const TW_SECTION = { identity: 'Identity', preferences: 'Preferences', compensation: 'Compensation', skills: 'Skills', sources: 'Sources' };
-const srcChip = (k) => `<span class="tw-src tw-src-${TW_SRC_TONE[k] || 'unk'}">${esc(TW_SRC[k] || TW_SRC.unknown)}</span>`;
+// A source nobody recorded is not a fact about the person, so it prints nothing. Six grey
+// "Source not recorded" chips on one screen read as a data-entry audit, not a profile.
+const srcChip = (k) => (k && k !== 'unknown' && TW_SRC[k]) ? `<span class="tw-src tw-src-${TW_SRC_TONE[k] || 'unk'}">${esc(TW_SRC[k])}</span>` : '';
 const notAdded = (what) => `<span class="tw-miss">${esc(what)}</span>`;
 
 function twNum(v, cur, period) {
@@ -4002,8 +4017,12 @@ function twNum(v, cur, period) {
   return money(Number(v), cur || 'EUR') + per;
 }
 
-function twRow(label, value, source, fix) {
-  return `<div class="kv tw-kv"><span>${esc(label)}</span><span class="tw-v">${value}${source ? srcChip(source) : ''}${fix || ''}</span></div>`;
+// A row that needs a value is the button that fills it. One target, the whole width, and no
+// second "Add" link sitting to the right of the thing it adds.
+function twRow(label, value, source, fix, section) {
+  const inner = `<span>${esc(label)}</span><span class="tw-v">${value}${source ? srcChip(source) : ''}${fix || ''}</span>`;
+  if (!section) return `<div class="kv tw-kv">${inner}</div>`;
+  return `<button class="kv tw-kv tw-row-act" data-sec="${esc(section)}" aria-label="${esc(label)}: ${esc(String(value).replace(/<[^>]*>/g, ''))}">${inner}<svg class="chev tw-chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5L10.5 8L6 12.5"/></svg></button>`;
 }
 
 function twSection(key) {
@@ -4059,28 +4078,28 @@ async function renderTwin() {
       <div class="tw-col">
         <div class="card tw-card" data-sec="identity">
           <div class="tw-h"><h3>Professional Identity</h3><button class="btn ghost sm" data-edit="identity">Edit</button></div>
-          ${twRow('Headline', d.identity.headline ? esc(d.identity.headline) : notAdded('Not added'), src.headline, d.identity.headline ? '' : `<button class="tw-inline" data-sec="identity">Add</button>`)}
-          ${twRow('Primary role', d.identity.currentRole ? esc(d.identity.currentRole) : notAdded('Not added'), src.current_role, d.identity.currentRole ? '' : `<button class="tw-inline" data-sec="identity">Add</button>`)}
-          ${twRow('Seniority', d.identity.seniority ? esc(titleCase(d.identity.seniority)) : notAdded('Not confirmed'), src.seniority, d.identity.seniority ? '' : `<button class="tw-inline" data-sec="identity">Confirm</button>`)}
-          ${twRow('Years of experience', d.identity.years != null ? int(d.identity.years) : notAdded('Not added'), src.years_experience, d.identity.years != null ? '' : `<button class="tw-inline" data-sec="identity">Add</button>`)}
+          ${twRow('Headline', d.identity.headline ? esc(d.identity.headline) : notAdded('Add your headline'), src.headline, '', d.identity.headline ? null : 'identity')}
+          ${twRow('Primary role', d.identity.currentRole ? esc(d.identity.currentRole) : notAdded('Add your role'), src.current_role, '', d.identity.currentRole ? null : 'identity')}
+          ${twRow('Seniority', d.identity.seniority ? esc(titleCase(d.identity.seniority)) : notAdded('Confirm your level'), src.seniority, '', d.identity.seniority ? null : 'identity')}
+          ${twRow('Years of experience', d.identity.years != null ? int(d.identity.years) : notAdded('Add your years'), src.years_experience, '', d.identity.years != null ? null : 'identity')}
         </div>
 
         <div class="card tw-card" data-sec="preferences">
           <div class="tw-h"><h3>Career Preferences</h3><button class="btn ghost sm" data-edit="preferences">Edit</button></div>
-          ${twRow('Work arrangement', d.preferences.remotePreference ? esc(titleCase(d.preferences.remotePreference)) : notAdded('No preference set'), src.remote_preference)}
+          ${twRow('Work arrangement', d.preferences.remotePreference ? esc(titleCase(d.preferences.remotePreference)) : notAdded('Set your arrangement'), src.remote_preference, '', d.preferences.remotePreference ? null : 'preferences')}
           ${twRow('Willing to relocate', d.preferences.willingToRelocate ? 'Yes' : 'No')}
-          ${twRow('Target countries', d.preferences.targetCountries.length ? d.preferences.targetCountries.map((x) => esc(String(x).toUpperCase())).join(', ') : notAdded('No target countries selected'), src.target_countries, d.preferences.targetCountries.length ? '' : `<button class="tw-inline" data-sec="preferences">Add</button>`)}
+          ${twRow('Target countries', d.preferences.targetCountries.length ? d.preferences.targetCountries.map((x) => esc(String(x).toUpperCase())).join(', ') : notAdded('Add target countries'), src.target_countries, '', d.preferences.targetCountries.length ? null : 'preferences')}
           ${twRow('Visa sponsorship needed', d.preferences.visaNeeded ? 'Yes' : 'No')}
-          ${twRow('Desired roles', d.preferences.desiredRoles.length ? d.preferences.desiredRoles.map(esc).join(', ') : notAdded('No target roles selected'), null, d.preferences.desiredRoles.length ? '' : `<button class="tw-inline" data-sec="preferences">Add</button>`)}
-          ${twRow('Employment type', d.preferences.employmentType ? esc(titleCase(d.preferences.employmentType)) : notAdded('Not selected'), null, d.preferences.employmentType ? '' : `<button class="tw-inline" data-sec="preferences">Add</button>`)}
+          ${twRow('Desired roles', d.preferences.desiredRoles.length ? d.preferences.desiredRoles.map(esc).join(', ') : notAdded('Add target roles'), null, '', d.preferences.desiredRoles.length ? null : 'preferences')}
+          ${twRow('Employment type', d.preferences.employmentType ? esc(titleCase(d.preferences.employmentType)) : notAdded('Choose a type'), null, '', d.preferences.employmentType ? null : 'preferences')}
         </div>
 
         <div class="card tw-card" data-sec="compensation">
           <div class="tw-h"><h3>Compensation</h3><button class="btn ghost sm" data-edit="compensation">Edit</button></div>
-          ${twRow('Current compensation', twNum(d.compensation.current, d.compensation.currency, d.compensation.period) || notAdded('Current compensation not provided'), src.current_rate, d.compensation.current ? '' : `<button class="tw-inline" data-sec="compensation">Add</button>`)}
-          ${twRow('Target compensation', twNum(d.compensation.target, d.compensation.currency, d.compensation.period) || notAdded('Target compensation not provided'), src.target_rate_min, d.compensation.target ? '' : `<button class="tw-inline" data-sec="compensation">Add</button>`)}
-          ${twRow('Currency', d.compensation.currency ? esc(d.compensation.currency) : notAdded('Not selected'))}
-          ${twRow('Pay period', d.compensation.period ? esc(titleCase(d.compensation.period)) : notAdded('Not selected'))}
+          ${twRow('Current compensation', twNum(d.compensation.current, d.compensation.currency, d.compensation.period) || notAdded('Add what you earn now'), src.current_rate, '', d.compensation.current ? null : 'compensation')}
+          ${twRow('Target compensation', twNum(d.compensation.target, d.compensation.currency, d.compensation.period) || notAdded('Add what you want next'), src.target_rate_min, '', d.compensation.target ? null : 'compensation')}
+          ${twRow('Currency', d.compensation.currency ? esc(d.compensation.currency) : notAdded('Choose a currency'), null, '', d.compensation.currency ? null : 'compensation')}
+          ${twRow('Pay period', d.compensation.period ? esc(titleCase(d.compensation.period)) : notAdded('Choose a period'), null, '', d.compensation.period ? null : 'compensation')}
         </div>
 
         <div class="card tw-card" data-sec="sources">
@@ -4119,8 +4138,8 @@ async function renderTwin() {
           <div class="tw-h"><h3>Personalisation Status</h3></div>
           <div class="tw-level"><b>${esc(p.name)}</b><span>${esc(p.note)}</span></div>
           <div class="tw-c-bar tw-c-bar-sm" role="progressbar" aria-valuenow="${p.percent}" aria-valuemin="0" aria-valuemax="100" aria-label="Personalisation"><span style="width:${p.percent}%"></span></div>
-          <div class="facts tight"><span class="fk">Based on</span><span class="fv">${esc(p.basis)}</span></div>
-          ${p.next ? `<div class="facts tight"><span class="fk">Next step</span><span class="fv"><button class="tw-inline" data-sec="${esc((c.missing[0] || {}).section || 'identity')}">${esc(p.next.label)}</button></span></div>` : ''}
+          <p class="tw-c-note">${esc(p.basis)}</p>
+          ${p.next ? `<button class="tw-add tw-next" data-sec="${esc((c.missing[0] || {}).section || 'identity')}"><span class="tw-add-l">${esc(p.next.label)}</span><svg class="chev tw-chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5L10.5 8L6 12.5"/></svg></button>` : ''}
         </div>
 
         <div class="card plain tw-card" data-sec="privacy">
@@ -4147,7 +4166,7 @@ async function renderTwin() {
 
   $('#tw-improve').onclick = (e) => openDrawer(c.missing[0] ? c.missing[0].section : 'identity', e.currentTarget);
   document.querySelectorAll('[data-edit]').forEach((b) => { b.onclick = (e) => openDrawer(b.dataset.edit, e.currentTarget); });
-  document.querySelectorAll('[data-sec].tw-add, [data-sec].tw-inline').forEach((b) => { b.onclick = (e) => { e.preventDefault(); twSection(b.dataset.sec); }; });
+  document.querySelectorAll('[data-sec].tw-add, [data-sec].tw-inline, [data-sec].tw-row-act').forEach((b) => { b.onclick = (e) => { e.preventDefault(); twSection(b.dataset.sec); }; });
   document.querySelectorAll('[data-close]').forEach((b) => { b.onclick = closeDrawer; });
   document.addEventListener('keydown', twKeys);
   $('#tw-save').onclick = twSave;
@@ -5051,7 +5070,9 @@ async function go(view) {
   document.querySelector('.shell')?.classList.toggle('hide-telemetry', ['account', 'twin', 'learning', 'plan'].includes(view));
   // The four account screens are one destination in the bottom bar, so the tab stays lit across
   // all four rather than going dark the moment you step into Career Twin.
-  const navKey = ['twin', 'learning', 'plan'].includes(view) ? 'account' : view;
+  // Career Twin has its own tab in the phone bar, so it lights that one. Only the two settings
+  // screens with no tab of their own fold into Account & Privacy.
+  const navKey = ['learning', 'plan'].includes(view) ? 'account' : view;
   document.querySelectorAll('#nav button').forEach((b) => b.classList.toggle('active', b.dataset.view === navKey));
   // A view that is not in the consumer map does not exist for this application, whoever is signed in.
   if (!VIEWS[view]) {
