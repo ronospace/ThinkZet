@@ -640,13 +640,21 @@ table.t tr:hover td{background:var(--panel2)}
 /* On a phone the thread is the screen: fixed to the visual viewport, the list takes what is left,
    and the composer sits on the floor of it. No page scroll, so nothing can sit under a keyboard. */
 @media(max-width:767px){
-  .chat{position:fixed;left:0;right:0;top:0;bottom:0;height:auto;max-width:none;padding:0 14px calc(58px + env(safe-area-inset-bottom));overflow:hidden;box-sizing:border-box}
+  /* The thread starts under the app bar, not behind it: 56px is the bar, and the first bubble
+     can never be clipped by it. */
+  .chat{position:fixed;left:0;right:0;top:56px;bottom:0;height:auto;max-width:none;padding:0 14px calc(82px + env(safe-area-inset-bottom));overflow:hidden;box-sizing:border-box}
   html.kb-open .chat{padding-bottom:calc(6px + env(safe-area-inset-bottom))}
   html.kb-open .rail{display:none}
-  .msgs{order:1;min-height:0;flex:1 1 auto;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding-bottom:10px}
+  .msgs{order:1;min-height:0;flex:1 1 auto;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding:2px 0 10px}
   /* A selector that ties on specificity loses to the later rule, so these two name the parent. */
   .chat .cp-hello{display:none}
   .chat .composer{order:3}
+  /* Empty state: one group, centred in the space above the composer, so there is no void between
+     a card at the top and chips at the floor. Once there is a turn it steps out entirely. */
+  .chat .cp-empty{order:1;display:flex;flex:1 1 auto;min-height:0;flex-direction:column;justify-content:center;gap:14px;padding-bottom:6px}
+  .chat .cp-empty-h{display:block}
+  .chat:not([data-turns="1"]) .msgs{display:none}
+  .chat[data-turns="1"] .cp-empty{display:none}
 }
 .msgs{flex:1;overflow:auto;display:flex;flex-direction:column;gap:14px;padding:2px 0 14px;scroll-behavior:smooth}
 .msg{max-width:82%;padding:11px 14px;border-radius:14px;line-height:1.6;font-size:var(--text-base);text-wrap:pretty}
@@ -669,6 +677,11 @@ table.t tr:hover td{background:var(--panel2)}
 .cp-hello h2{margin:0;font-size:var(--text-lg);font-weight:650;letter-spacing:var(--tracking-tight);color:var(--ink)}
 .cp-hello p{margin:3px 0 0;font-size:var(--text-sm);color:var(--muted);line-height:1.45}
 /* A suggested question is a chip: one line, even count, wraps, never a row of boxes. */
+/* The empty group is a wrapper on a phone and no box at all on a desktop, where the chips keep
+   their own row above the composer exactly as before. */
+.cp-empty{display:contents}
+.cp-empty-h{display:none;margin:0;font-size:var(--text-sm);color:var(--muted);line-height:1.6;text-wrap:pretty}
+.cp-empty-h b{color:var(--ink2);font-weight:600}
 .cp-chips{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:0 0 14px}
 .cp-chip{font:inherit;font-size:var(--text-sm);line-height:1.35;padding:8px 11px;border-radius:var(--radius-sm);border:1px solid var(--ai-border);
   background:var(--wash);color:var(--ink2);cursor:pointer;text-align:left;min-width:0;min-height:38px;display:flex;align-items:center;
@@ -687,7 +700,7 @@ table.t tr:hover td{background:var(--panel2)}
   .composer .btn .lbl-send{display:none}
   .composer .btn svg{width:15px;height:15px}
 }
-.composer .btn[data-idle="1"]{background:var(--wash);color:var(--muted);box-shadow:none;transform:none;pointer-events:none}
+.composer .btn[data-idle="1"]{background:var(--accent-soft);color:var(--accent2);box-shadow:none;transform:none}
 
 /* Career context: six badges, collapsible, a third of the weight it had as four tiles. */
 .cp-ctx{margin-top:10px;border-top:1px solid var(--line);padding-top:9px}
@@ -4303,9 +4316,12 @@ async function renderCopilot() {
           </div>
         </div>
       </div>
-      <div class="cp-chips">${CP_CHIPS.map((q) => `<button class="cp-chip" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>
+      <div class="cp-empty">
+        <p class="cp-empty-h">Ask me anything about: <b>Salary</b> · <b>Career moves</b> · <b>Opportunities</b> · <b>Relocations</b></p>
+        <div class="cp-chips">${CP_CHIPS.map((q) => `<button class="cp-chip" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>
+      </div>
       <div class="composer">
-        <textarea id="q" rows="1" enterkeyhint="send" placeholder="Ask Career Co-Pilot anything about your career..." aria-label="Ask Career Co-Pilot"></textarea>
+        <textarea id="q" rows="1" enterkeyhint="send" placeholder="Ask Career Co-Pilot..." aria-label="Ask Career Co-Pilot"></textarea>
         <button class="btn" id="send" data-idle="1" aria-label="Send"><span class="lbl-send">Ask</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 13V3.4"/><path d="M4.2 7.2L8 3.4l3.8 3.8"/></svg></button>
       </div>
     </div>`;
