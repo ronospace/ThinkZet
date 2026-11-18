@@ -1400,7 +1400,23 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
 
   // Intent routing over grounded facts
   let reply = '';
-  if (/rate|salary|pay|worth|underpaid|money|earn/.test(q)) {
+  // A person says hello, asks who you are, or says thanks. Answering that with a menu of ten
+  // questions is the opposite of an assistant, so those three come first and stay short.
+  const smallTalk = /^(hi|hey|hello|yo|hiya|howdy|good (morning|afternoon|evening)|sup)\b/.test(q)
+    ? 'greet'
+    : /(your name|who are you|what are you|are you (a )?(bot|human|ai|real))/.test(q)
+      ? 'who'
+      : /^(thanks|thank you|cheers|ta|ok|okay|cool|great|nice)\b/.test(q)
+        ? 'thanks'
+        : null;
+  if (smallTalk === 'greet') {
+    const nm = (profile.display_name || profile.name || '').trim().split(/\s+/)[0];
+    reply = `${nm ? `Hello ${nm}.` : 'Hello.'} I am the Career Co-Pilot. I read your profile, your pay benchmark and the live market, and I answer from those records rather than from general advice.\n\nAsk me about your pay, your next move, the skills blocking you, or relocating.`;
+  } else if (smallTalk === 'who') {
+    reply = `I am the Career Co-Pilot inside ThinkZet. I am not a general chatbot: every answer is computed from your Career Twin, your pay benchmark and the live postings, and I name the sample I used.\n\nThat is why I will ask which number you mean rather than guess.`;
+  } else if (smallTalk === 'thanks') {
+    reply = `Any time. Your records are unchanged, and the next question is always answered from the same numbers.`;
+  } else if (/rate|salary|pay|worth|underpaid|money|earn/.test(q)) {
     const r = rates;
     citations.push({ label: 'Rate intelligence', detail: `${r.sampleSize} comparable postings, ${r.confidence} confidence` });
     reply = r.verdict === 'underpaid'
@@ -1487,7 +1503,7 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
     citations.push({ label: 'Career Score', detail: `overall ${s.overall || 0}/100, p${s.benchmark_percentile || 0}` });
     reply = `Your Career Score is **${s.overall || 0}/100** – ${ordSup(Number(s.benchmark_percentile || 0))} percentile for your level.\n\n· Employability ${s.employability || 0} – your top-15 matches average ${top.length ? Math.round(top.reduce((a, b) => a + b.match_score, 0) / top.length) : 0}\n· Interview readiness ${s.interview_readiness || 0}\n· Market demand ${s.market_demand || 0}\n· Salary potential ${s.salary_potential || 0}\n· Future growth ${s.future_growth || 0}\n· Momentum ${s.career_momentum || 0}\n\nBiggest lever: ${weakest(s)}.`;
   } else {
-    reply = `I can answer from your actual data – try:\n\n· "What should I do next?"\n· "Am I underpaid?"\n· "Which skills are blocking me?"\n· "What jobs fit me best?"\n· "How competitive am I?"\n· "What is my fastest growth path?"\n· "What is realistic for relocating?"\n· "How do I prepare for an interview?"\n· "How do I negotiate my offer?"\n· "How are my applications going?"\n\nAlso: "How am I doing overall?"`;
+    reply = `I did not catch which of your numbers that is about. Ask me about pay, the next move, skills, applications or relocating, and I will answer from your own records.`;
   }
 
   function weakest(s) {
