@@ -651,8 +651,15 @@ table.t tr:hover td{background:var(--panel2)}
   .chat .composer{order:3}
   /* Empty state: one group, centred in the space above the composer, so there is no void between
      a card at the top and chips at the floor. Once there is a turn it steps out entirely. */
-  .chat .cp-empty{order:1;display:flex;flex:1 1 auto;min-height:0;flex-direction:column;justify-content:center;gap:14px;padding-bottom:6px}
+  /* Centred when it fits, scrollable from the top when it does not: an auto margin collapses to
+     zero on overflow, where justify-content:center would clip the first line. */
+  .chat .cp-empty{order:1;display:flex;flex:1 1 auto;min-height:0;flex-direction:column;overflow-y:auto;overscroll-behavior:contain;padding-bottom:6px}
+  .chat .cp-empty-in{margin:auto 0;display:flex;flex-direction:column;gap:14px;min-height:0}
+  /* With a keyboard open the person is typing, not reading: the instrument and the chips step
+     aside so nothing is clipped and the field has the room. */
+  html.kb-open .chat .cp-read,html.kb-open .chat .cp-chips{display:none}
   .chat .cp-empty-h{display:block}
+  .chat .cp-read{display:block}
   .chat:not([data-turns="1"]) .msgs{display:none}
   .chat[data-turns="1"] .cp-empty{display:none}
 }
@@ -682,6 +689,29 @@ table.t tr:hover td{background:var(--panel2)}
 .cp-empty{display:contents}
 .cp-empty-h{display:none;margin:0;font-size:var(--text-sm);color:var(--muted);line-height:1.6;text-wrap:pretty}
 .cp-empty-h b{color:var(--ink2);font-weight:600}
+/* The reading: the empty state shows the answer before it asks a question. A figure, where it sits
+   in the market, and the one question that figure raises. */
+.cp-read{display:none}
+.cp-read-k{font-size:var(--text-2xs);font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.cp-read-n{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin:0}
+.cp-read-n b{font-size:var(--text-3xl);font-weight:700;letter-spacing:-.02em;line-height:1;color:var(--ink);font-variant-numeric:tabular-nums}
+.cp-read-n span{font-size:var(--text-sm);color:var(--muted);line-height:1.4}
+.cp-read-strip{position:relative;height:6px;border-radius:999px;margin:14px 0 6px;background:var(--wash);box-shadow:inset 0 0 0 1px var(--line-tint)}
+.cp-read-fill{position:absolute;inset:0 auto 0 0;border-radius:999px;background:linear-gradient(to right,var(--cta-a),var(--cta-b))}
+.cp-read-mark{position:absolute;top:50%;width:3px;height:14px;border-radius:2px;background:var(--ink);transform:translate(-1.5px,-50%);box-shadow:0 0 0 2px var(--panel)}
+.cp-read-scale{display:flex;justify-content:space-between;font-size:var(--text-2xs);color:var(--muted);font-variant-numeric:tabular-nums;letter-spacing:.02em}
+.cp-read-cells{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;margin:14px 0 0;background:var(--line-tint);border:1px solid var(--line-tint);border-radius:10px;overflow:hidden}
+.cp-read-cells>div{background:var(--panel);padding:8px 10px;min-width:0}
+.cp-read-cells .k{display:block;font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cp-read-cells .v{display:block;font-size:var(--text-sm);font-weight:650;color:var(--ink);font-variant-numeric:tabular-nums;margin-top:2px;white-space:nowrap}
+/* The question the figure raises is the primary action, not a chip in a row of equals. */
+.cp-ask{display:flex;align-items:center;gap:10px;width:100%;min-height:48px;margin:14px 0 0;padding:10px 14px;
+  border-radius:12px;border:1px solid var(--line-tint);background:var(--wash);color:var(--ink);
+  font:inherit;font-size:var(--text-sm);font-weight:600;text-align:left;cursor:pointer;transition:border-color .12s,background .12s}
+.cp-ask:hover{border-color:var(--accent2);background:var(--panel2)}
+.cp-ask:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+.cp-ask span{flex:1 1 auto;min-width:0}
+.cp-ask .chev{color:var(--accent2)}
 .cp-chips{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:0 0 14px}
 .cp-chip{font:inherit;font-size:var(--text-sm);line-height:1.35;padding:8px 11px;border-radius:var(--radius-sm);border:1px solid var(--ai-border);
   background:var(--wash);color:var(--ink2);cursor:pointer;text-align:left;min-width:0;min-height:38px;display:flex;align-items:center;
@@ -4281,6 +4311,34 @@ async function renderCopilot() {
   const me = STATE.profile || {};
   const first = (me.display_name || me.name || '').trim().split(/\s+/)[0];
   const hello = first ? `Hello ${first}.` : 'Hello.';
+  // The reading is the product answering before it asks. One figure, where it sits, and the
+  // question that figure raises. If the numbers are not there, the instrument does not print.
+  let readHTML = '';
+  let topGap = null;
+  try {
+    const [rates, gaps] = await Promise.all([api('/api/rates'), api('/api/gaps')]);
+    topGap = (gaps && gaps.gaps && gaps.gaps[0]) || null;
+    const p = rates && Number(rates.p50) > 0 ? rates : null;
+    if (p) {
+      const cur = Number(p.current) > 0 ? Number(p.current) : null;
+      const lo = Number(p.p25), hi = Number(p.p90);
+      const pos = cur != null && hi > lo ? Math.max(0, Math.min(100, ((cur - lo) / (hi - lo)) * 100)) : null;
+      const gapPct = cur != null ? Math.round(((p.p50 - cur) / p.p50) * 100) : null;
+      const money0 = (v) => money(Number(v), p.currency || 'EUR');
+      const per = p.period === 'month' ? '/mo' : '/yr';
+      readHTML = `<p class="cp-read-k">Your market position</p>
+        <p class="cp-read-n"><b>${esc(money0(p.p50))}${esc(per)}</b><span>median for your profile${p.sampleSize ? ` · ${int(p.sampleSize)} postings with pay` : ''}</span></p>
+        ${pos != null ? `<div class="cp-read-strip" role="img" aria-label="Your pay sits at ${Math.round(pos)} percent of the market range">
+          <span class="cp-read-fill" style="width:${pos}%"></span><span class="cp-read-mark" style="left:${pos}%"></span></div>
+          <div class="cp-read-scale"><span>p25 ${esc(money0(lo))}</span><span>p90 ${esc(money0(hi))}</span></div>` : ''}
+        <div class="cp-read-cells">
+          <div><span class="k">You</span><span class="v">${cur != null ? esc(money0(cur)) : 'Not set'}</span></div>
+          <div><span class="k">Gap</span><span class="v">${gapPct != null ? (gapPct > 0 ? '+' : '') + int(gapPct) + '%' : '-'}</span></div>
+          <div><span class="k">Confidence</span><span class="v">${esc(titleCase(p.confidence || '-'))}</span></div>
+        </div>
+        <button class="cp-ask" data-q="${esc(gapPct != null && gapPct > 0 ? 'Am I underpaid?' : 'What should I do next?')}"><span>${esc(gapPct != null && gapPct > 0 ? `Why is my pay ${int(gapPct)}% under the median?` : 'What should I do next?')}</span><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3.5L10.5 8L6 12.5"/></svg></button>`;
+    }
+  } catch (e) {}
   $('#view').innerHTML = `
     <div class="chat">
       <div class="cp-hello">
@@ -4316,10 +4374,11 @@ async function renderCopilot() {
           </div>
         </div>
       </div>
-      <div class="cp-empty">
+      <div class="cp-empty"><div class="cp-empty-in">
+        <div class="cp-read">${readHTML}</div>
         <p class="cp-empty-h">Ask me anything about: <b>Salary</b> · <b>Career moves</b> · <b>Opportunities</b> · <b>Relocations</b></p>
         <div class="cp-chips">${CP_CHIPS.map((q) => `<button class="cp-chip" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>
-      </div>
+      </div></div>
       <div class="composer">
         <textarea id="q" rows="1" enterkeyhint="send" placeholder="Ask Career Co-Pilot..." aria-label="Ask Career Co-Pilot"></textarea>
         <button class="btn" id="send" data-idle="1" aria-label="Send"><span class="lbl-send">Ask</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 13V3.4"/><path d="M4.2 7.2L8 3.4l3.8 3.8"/></svg></button>
@@ -4351,7 +4410,7 @@ async function renderCopilot() {
   };
   $('#send').onclick = () => send();
   box.onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } };
-  document.querySelectorAll('.cp-chip').forEach((b) => { b.onclick = () => send(b.dataset.q); });
+  document.querySelectorAll('.cp-chip, .cp-ask').forEach((b) => { b.onclick = () => send(b.dataset.q); });
 }
 
 
