@@ -135,7 +135,6 @@ html[data-theme="light"]{
   --rail-bg:#FFF8FC;
 }
 *{box-sizing:border-box}
-:focus-visible{outline:none;box-shadow:var(--ring);border-radius:8px}
 ::selection{background:var(--accent-soft)}
 html,body{margin:0;height:100%;overflow-x:hidden}
 body{background:var(--bg);color:var(--ink);font:14px/1.55 -apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased}
@@ -1518,6 +1517,13 @@ body.tw-lock{overflow:hidden}
   .tw-acts{gap:10px}
   .tw-acts .btn{width:100%}
 }
+
+/* The focus ring is declared last on purpose: it shares specificity with a component's own
+   box-shadow, so source order decides. Earlier, .btn won and a focused button showed no ring. */
+:focus-visible{outline:none;box-shadow:var(--ring);border-radius:8px}
+/* A two-class component rule outranks a one-class pseudo-class, so the buttons that declare their own
+   shadow restate the ring here rather than losing it. */
+.btn:focus-visible,.btn.ghost:focus-visible,.btn.cta:focus-visible,.btn.ghost.cta:focus-visible{box-shadow:var(--ring)}
 </style>
 </head>
 <body>

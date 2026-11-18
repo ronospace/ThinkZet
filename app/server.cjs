@@ -1342,7 +1342,11 @@ route('GET', /^\/api\/taxonomy$/, async (req, res) => {
   const skills = db.prepare('SELECT canonical FROM skills ORDER BY demand_index DESC').all().map((r) => r.canonical);
   const roles = db.prepare(`SELECT role_family, COUNT(*) n FROM opportunities WHERE status='open'
     GROUP BY role_family ORDER BY n DESC`).all().map((r) => ({ family: r.role_family, postings: r.n }));
-  json(res, 200, { skills, roles, roleLabels: SEO_ROLE });
+  // A family is stored as `data_science`; the SEO table is keyed by slug. One label table is built
+  // from both, so a family always has a label and a partial SEO table falls back to the family name.
+  const labels = {};
+  for (const r of roles) labels[r.family] = FAMILY_LABEL[r.family] || titleFromFamily(r.family);
+  json(res, 200, { skills, roles, roleLabels: { ...SEO_ROLE, ...labels } });
 });
 
 route('GET', /^\/api\/skills$/, async (req, res) => {
@@ -3083,6 +3087,14 @@ const SEO_ROLE = { 'software-engineer': 'Backend Engineer', 'frontend-engineer':
   'platform-engineer': 'Platform Engineer', 'mobile-engineer': 'Mobile Engineer',
   'product-manager': 'Product Manager', 'security-engineer': 'Security Engineer',
   'product-designer': 'Product Designer' };
+// The label a family prints as. Kept beside the slug table so the two can never drift apart.
+const FAMILY_LABEL = { backend: 'Backend Engineer', frontend: 'Frontend Engineer', data_science: 'Data Scientist',
+  data_engineering: 'Data Engineer', ml_engineering: 'Machine Learning Engineer', ai_engineering: 'AI Engineer',
+  platform: 'Platform Engineer', mobile: 'Mobile Engineer', product: 'Product Manager',
+  security: 'Security Engineer', design: 'Product Designer' };
+function titleFromFamily(f) {
+  return String(f || '').replace(/_/g, ' ').replace(/\b\w/g, (m) => m.toUpperCase());
+}
 const SEO_COUNTRY = MK.names();
 
 // A market page is one template driven by the registry, so /de, /gb, /us and every future market are
