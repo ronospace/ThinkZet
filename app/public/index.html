@@ -674,6 +674,10 @@ table.t tr:hover td{background:var(--panel2)}
 .msg .ans-list li::marker{color:var(--ink2)}
 .msg p+p,.msg .ans-list+p,.msg p+.ans-list{margin-top:9px}
 .msg b{font-weight:650}
+/* The answer speaks in one voice. Emphasis inside a sentence is a rank above the sentence, and a
+   reply that emphasises a phrase per line reads as a wall of bold. Only the lead line and a list
+   item's own label carry weight. */
+.msg .ans-list li b{font-weight:600;color:var(--ink)}
 .msg p{margin:0}
 .msg .cite{margin-top:8px;font-size:var(--text-xs);color:var(--muted);border-top:1px solid var(--line);padding-top:7px}
 .msg-row{display:flex;gap:9px;align-items:flex-start;max-width:88%}
@@ -781,7 +785,9 @@ table.t tr:hover td{background:var(--panel2)}
 /* The intro is a card, not a bubble:/* The intro is a card, not a bubble: it carries a definition and four facts, so it takes the full width. */
 .msg-intro{width:100%;max-width:none;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
 .msg-intro .facts.tight{margin-top:12px;gap:5px 14px}
-.mi-lead{font-weight:650;color:var(--ink);margin-bottom:10px;font-size:var(--text-base)}
+.mi-lead{font-weight:500;color:var(--ink);margin-bottom:10px;font-size:var(--text-base);line-height:1.6}
+/* The lead is a sentence, so it is not bold. Only the name inside it carries weight. */
+.mi-lead b{font-weight:650}
 @media(max-width:700px){
   .cp-rows{display:block}
   .cp-row{display:flex;gap:8px;overflow-x:auto;scroll-snap-type:x proximity;scrollbar-width:none;-ms-overflow-style:none;padding-bottom:2px;margin-bottom:8px}
@@ -1378,21 +1384,29 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .cal-next{font-size:var(--text-sm);color:var(--ink2);margin-top:14px;line-height:1.5}
 .cal-now{background:var(--panel2);border:1px solid var(--line-tint);border-radius:var(--radius);padding:14px 16px}
 .cal-now .fk{display:block;margin-bottom:10px}
-.cal-pair{display:grid;gap:10px}
-.cal-pair>div{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.cal-pair{display:grid;gap:0}
+/* One hairline per row, and a real weight difference between the label and the value. Without the
+   rule the three rows ran together; without the weight they read as one grey block. */
+.cal-pair>div{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  padding:9px 0;border-top:1px solid var(--line-tint)}
+.cal-pair>div:first-child{border-top:none;padding-top:0}
+.cal-pair>div:last-child{padding-bottom:0}
 /* A value that is a sentence is not a value in a right column: it drops to its own line, left
    aligned under its label, so three rows read as three rows instead of a zigzag. */
 .cal-pair>div:has(.v.lock){display:block}
-.cal-pair .v.lock{display:block;margin:3px 0 0;text-align:left;max-width:100%}
-.cal-pair .k{font-size:var(--text-sm);color:var(--ink2);min-width:0}
-.cal-pair .v{font-size:var(--text-md);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
-.cal-pair .v.lock{font-size:var(--text-sm);font-weight:600;color:var(--muted);white-space:normal;overflow-wrap:anywhere}
+.cal-pair .k{font-size:var(--text-sm);color:var(--ink2);font-weight:500;min-width:0}
+.cal-pair .v{font-size:var(--text-md);font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;white-space:nowrap}
+.cal-pair .v.lock{display:flex;align-items:center;gap:6px;margin:5px 0 0;text-align:left;max-width:100%;
+  font-size:var(--text-xs);font-weight:500;color:var(--muted);white-space:normal;overflow-wrap:anywhere}
+.cal-pair .v.lock .lock-ic{width:11px;height:11px;flex:0 0 auto;opacity:.75}
+/* A sub-heading under rows needs its own rule, or it reads as a fourth row. */
+.cal-sub{margin-top:14px;padding-top:12px;border-top:1px solid var(--line-tint)}
 .cal-kpi .kpi-v{font-size:var(--text-xl)}
 .cal-kpi .kpi-k{font-size:var(--text-2xs);letter-spacing:.08em;text-transform:uppercase;font-weight:600;color:var(--ink2)}
 .cal-kpi .kpi-s{font-size:var(--text-xs);color:var(--ink2);margin-top:2px;line-height:1.35;min-height:2.7em}
 .cal-kpi .kpi{padding-bottom:var(--sp-3)}
 .cal-chart{position:relative;height:150px;margin-top:14px;border:1px solid var(--line-tint);border-radius:var(--radius);background:var(--panel2);overflow:hidden}
-.cal-chart.empty{height:auto;min-height:0;overflow:visible;padding:0}
+.cal-chart.empty{height:auto;min-height:0;overflow:visible;padding:0;border:none;background:transparent}
 .cal-chart .base{position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--line2)}
 .cal-chart.empty .msg{position:static;inset:auto;display:block;padding:22px 18px;text-align:center;
   font-size:var(--text-sm);color:var(--ink2);line-height:1.5}
@@ -1803,7 +1817,7 @@ body.tw-lock{overflow:hidden}
           <p class="pillar-s" data-i18n="cap.p3s">Where each path lands, and what makes the estimate sharper.</p>
           <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="path" aria-hidden="true"></span><h3 data-i18n="cap.path">Career Trajectory</h3></div><p data-i18n="cap.pathS">Where each path lands in 12, 24 or 60 months, with the risk priced in.</p></div>
           <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="track" aria-hidden="true"></span><h3 data-i18n="cap.track">Career Tracker</h3></div><p data-i18n="cap.trackS">Your pipeline, and the outcome loop that makes every estimate sharper.</p></div>
-          <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="cop" aria-hidden="true"></span><h3 data-i18n="cap.cop">Zyra</h3></div><p data-i18n="cap.copS">Grounded in your own data. It cites the sample it used, or says it does not know.</p></div>
+          <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="cop" aria-hidden="true"></span><h3 data-i18n="cap.cop">Career Co-Pilot</h3></div><p data-i18n="cap.copS">Grounded in your own data. It cites the sample it used, or says it does not know.</p></div>
         </div>
       </div>
     </section>
@@ -1920,7 +1934,7 @@ body.tw-lock{overflow:hidden}
       <div class="nav-group"><span class="nav-label">Act</span>
       <button data-view="gaps"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 12l4-5 3 2.5L14 4"/><path d="M11 4h3v3"/></svg></span><span class="lbl" data-i18n="view.gaps">Skill Gaps</span></button>
       <button data-view="tracker" class="nav-pri"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2.2" y="3" width="3.4" height="10" rx="1"/><rect x="6.4" y="3" width="3.4" height="6.5" rx="1"/><rect x="10.6" y="3" width="3.4" height="8.5" rx="1"/></svg></span><span class="lbl" data-i18n="view.tracker">Career Tracker</span></button>
-      <button data-view="copilot" class="nav-pri"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.5 3.6L13 7l-3.5 1.4L8 12l-1.5-3.6L3 7l3.5-1.4z"/><path d="M12.4 11.2l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/></svg></span><span class="lbl" data-i18n="view.copilot">Zyra</span></button>
+      <button data-view="copilot" class="nav-pri"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.5 3.6L13 7l-3.5 1.4L8 12l-1.5-3.6L3 7l3.5-1.4z"/><path d="M12.4 11.2l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/></svg></span><span class="lbl" data-i18n="view.copilot">Career Co-Pilot</span></button>
       <button data-view="searches"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2.4l1.8 3.7 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4L2.2 6.7l4-.6z"/></svg></span><span class="lbl" data-i18n="view.searches">Saved Searches</span></button>
       </div>
       <div class="nav-group"><span class="nav-label">Account</span>
@@ -2164,6 +2178,17 @@ async function mountAds(target) {
 function inlineMd(t) {
   return esc(t).replace(/\*\*([^*]+)\*\*/g, '<b>$1</b>').replace(/\s+[–-]\s+/g, ': ');
 }
+// A phrase emphasised in the middle of a sentence is noise: the sentence already says it. Bold is
+// kept only when the phrase opens the line and is followed by a separator, which is a label.
+function inlineMdSoft(t) {
+  return esc(t)
+    .replace(/\*\*([^*]+)\*\*/g, (m, inner, off, whole) => {
+      const atStart = whole.slice(0, off).trim() === '';
+      const labelled = /^[^.!?]{1,40}[:·]$/.test(whole.slice(off + m.length).trim().split(' ')[0] || '');
+      return atStart || labelled ? `<b>${inner}</b>` : inner;
+    })
+    .replace(/\s+[–-]\s+/g, ': ');
+}
 function formatReply(text) {
   const raw = String(text || '').trim();
   if (!raw) return '';
@@ -2180,18 +2205,19 @@ function formatReply(text) {
     let i = 0;
     while (i < lines.length && isNum(lines[i])) i++;
     if (i > 0) {
-      out.push(`<ol class="ans-list">${lines.slice(0, i).map((l) => `<li>${inlineMd(l.replace(/^\d+\.\s*/, ''))}</li>`).join('')}</ol>`);
+      out.push(`<ol class="ans-list">${lines.slice(0, i).map((l) => `<li>${inlineMdSoft(l.replace(/^\d+\.\s*/, ''))}</li>`).join('')}</ol>`);
     } else {
       while (i < lines.length && isBul(lines[i])) i++;
-      if (i > 0) out.push(`<ul class="ans-list">${lines.slice(0, i).map((l) => `<li>${inlineMd(l.replace(/^[·\-*]\s*/, ''))}</li>`).join('')}</ul>`);
+      if (i > 0) out.push(`<ul class="ans-list">${lines.slice(0, i).map((l) => `<li>${inlineMdSoft(l.replace(/^[·\-*]\s*/, ''))}</li>`).join('')}</ul>`);
     }
     const rest = lines.slice(i);
     if (rest.length) {
       if (!bi && !out.length && rest.length === 1) lead = rest[0];
-      else out.push(`<p>${inlineMd(rest.join(' '))}</p>`);
+      else out.push(`<p>${inlineMdSoft(rest.join(' '))}</p>`);
     }
   });
-  return `${lead ? `<div class="mi-lead">${inlineMd(lead)}</div>` : ''}${out.join('')}`;
+  // The lead is a sentence like any other, so it takes the same soft rule: no bold mid-sentence.
+  return `${lead ? `<div class="mi-lead">${inlineMdSoft(lead)}</div>` : ''}${out.join('')}`;
 }
 
 const track = (event, props) => { try { post('/api/track', { event, props: props || {}, path: location.pathname + location.search }); } catch (e) { /* never block the UI */ } };
@@ -4371,8 +4397,8 @@ async function renderCopilot() {
       <div class="cp-hello">
         <span class="cp-spark" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.5 3.6L13 7l-3.5 1.4L8 12l-1.5-3.6L3 7l3.5-1.4z"/></svg></span>
         <div>
-          <h2>Zyra</h2>
-          <p>Your career co-pilot. Ask about your salary, skills, opportunities, applications, relocation or next move.</p>
+          <h2>Career Co-Pilot</h2>
+          <p>Ask anything about your career, salary, skills, opportunities, applications, relocation plans or next move.</p>
         </div>
       </div>
       <div class="msgs" id="msgs">
@@ -4380,7 +4406,7 @@ async function renderCopilot() {
           <span class="cp-ava" aria-hidden="true"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.5 3.6L13 7l-3.5 1.4L8 12l-1.5-3.6L3 7l3.5-1.4z"/></svg></span>
           <div class="msg bot">
             <div class="mi-lead">${esc(hello)}</div>
-            <p>I have read your profile, career score, pay benchmark, opportunities, skill gaps and market position. Ask me anything about your next move.</p>
+            <p>I am Zyra, your career co-pilot. I have read your profile, career score, pay benchmark, opportunities, skill gaps and market position. Ask me anything about your next move.</p>
             <details class="cp-ctx">
               <summary>Career context</summary>
               <div class="cp-badges">
@@ -4407,7 +4433,7 @@ async function renderCopilot() {
         <div class="cp-chips">${CP_CHIPS.map((q) => `<button class="cp-chip" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>
       </div></div>
       <div class="composer">
-        <textarea id="q" rows="1" enterkeyhint="send" placeholder="Ask Zyra..." aria-label="Ask Zyra"></textarea>
+        <textarea id="q" rows="1" enterkeyhint="send" placeholder="Ask Career Co-Pilot..." aria-label="Ask Career Co-Pilot"></textarea>
         <button class="btn" id="send" data-idle="1" aria-label="Send"><span class="lbl-send">Ask</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 13V3.4"/><path d="M4.2 7.2L8 3.4l3.8 3.8"/></svg></button>
       </div>
     </div>`;
@@ -4618,6 +4644,8 @@ function calLevel(n) {
 }
 
 async function renderLearning() {
+  // A locked value is a state, and a state carries a mark. One lock for every locked row on the screen.
+  const LOCK = '<svg class="lock-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3.5" y="7" width="9" height="6.5" rx="1.5"/><path d="M6 7V5.2a2 2 0 014 0V7"/></svg>';
   const l = await api('/api/learning');
   const intel = await api('/api/outcomes/intel');
   const recent = await api('/api/tracker');
@@ -4675,8 +4703,8 @@ async function renderLearning() {
         <span class="fk">What changes as you calibrate</span>
         <div class="cal-pair">
           <div><span class="k">Market interview baseline</span><span class="v">${prior.p != null ? pct(prior.p, 1) : 'Not measured'}</span></div>
-          <div><span class="k">Your calibrated estimate</span><span class="v ${n ? '' : 'lock'}">${n ? pct(Math.min(99, Number(prior.p || 0) + Number(l.calibration.interviewPriorLift || 0)), 1) : 'Unlocks after your first completed outcome'}</span></div>
-          <div><span class="k">Signal weight on your records</span><span class="v ${share ? '' : 'lock'}">${share ? share + '%' : 'Using market baseline'}</span></div>
+          <div><span class="k">Your calibrated estimate</span><span class="v ${n ? '' : 'lock'}">${n ? pct(Math.min(99, Number(prior.p || 0) + Number(l.calibration.interviewPriorLift || 0)), 1) : LOCK + 'Unlocks after your first completed outcome'}</span></div>
+          <div><span class="k">Signal weight on your records</span><span class="v ${share ? '' : 'lock'}">${share ? share + '%' : LOCK + 'Using market baseline'}</span></div>
         </div>
       </div>
     </div>
@@ -4715,10 +4743,10 @@ async function renderLearning() {
         <h3>Career Twin Confidence</h3>
         <div class="cal-pair" style="margin-top:10px">
           <div><span class="k">Current signal</span><span class="v">${n >= 15 ? 'Higher-Confidence Personal Model' : n >= 5 ? 'Growing Personal Evidence' : n >= 1 ? 'Early Personal Signal' : 'Market Intelligence'}</span></div>
-          <div><span class="k">Offers logged</span><span class="v ${l.offers ? '' : 'lock'}">${l.offers ? int(l.offers) : 'None yet'}</span></div>
-          <div><span class="k">Average salary change on offers</span><span class="v ${l.avgSalaryDeltaPct == null ? 'lock' : ''}">${l.avgSalaryDeltaPct == null ? 'Available after an offer is logged' : (l.avgSalaryDeltaPct > 0 ? '+' : '') + pct(l.avgSalaryDeltaPct, 1)}</span></div>
+          <div><span class="k">Offers logged</span><span class="v ${l.offers ? '' : 'lock'}">${l.offers ? int(l.offers) : LOCK + 'None yet'}</span></div>
+          <div><span class="k">Average salary change on offers</span><span class="v ${l.avgSalaryDeltaPct == null ? 'lock' : ''}">${l.avgSalaryDeltaPct == null ? LOCK + 'Available after an offer is logged' : (l.avgSalaryDeltaPct > 0 ? '+' : '') + pct(l.avgSalaryDeltaPct, 1)}</span></div>
         </div>
-        <div class="facts tight" style="margin-top:12px">
+        <div class="facts tight cal-sub">
           <span class="fk">Composition</span>
           <span class="fv">${n ? `Market intelligence plus ${share}% weight on your own outcomes.` : 'Market intelligence only. No personal weight is applied until you report an outcome.'}</span>
         </div>
@@ -5180,7 +5208,7 @@ const VIEWS = {
   twin: [renderTwin, 'Career Twin', 'Your professional profile, scored and kept current'],
   account: [renderAccount, 'Account & Privacy', 'Your name, your data, and what happens to it'],
   auth: [renderAuth, 'Sign in', ''],
-  copilot: [renderCopilot, 'Zyra', 'Your career co-pilot, grounded in your own data'],
+  copilot: [renderCopilot, 'Career Co-Pilot', 'Grounded in your data, not generic advice'],
   learning: [renderLearning, 'Career Calibration', 'What your own outcomes teach the model'],
   searches: [renderSearches, 'Saved Searches', 'Standing questions the engine keeps answering'],
   brief: [renderBrief, 'Daily Brief', 'What changed since you last looked'],
