@@ -237,7 +237,10 @@ main{min-width:0;overflow-y:auto;overflow-x:hidden;padding:0;min-height:0;oversc
 .tb-drop button svg{width:14px;height:14px;opacity:.75;flex:0 0 auto}
 /* The same bar on a phone, one step taller, still with no outer padding. */
 @media(max-width:1023px){.tb-row{height:36px}.tb-cell{padding:0 12px}}
-.theme-btn{min-height:44px;min-width:44px;width:30px;height:30px;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
+.theme-btn{position:relative;width:30px;height:30px;min-width:0;min-height:0;display:grid;place-items:center;border-radius:9px;border:1px solid var(--line);background:var(--panel2);color:var(--ink2);transition:color .14s,border-color .14s,background .14s}
+/* The hit area is 44px without the box being 44px: the button looks like its neighbours and still
+   answers a thumb. */
+.theme-btn::after{content:"";position:absolute;inset:-7px;border-radius:12px}
 .theme-btn:hover{color:var(--ink);border-color:var(--line2);background:var(--panel3)}
 .theme-btn svg{width:15px;height:15px;display:none}
 html[data-mode="system"] .theme-btn .ico-auto{display:block}
@@ -1464,10 +1467,10 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .cal-kpi .kpi-s{font-size:var(--text-xs);color:var(--ink2);margin-top:2px;line-height:1.35;min-height:2.7em}
 .cal-kpi .kpi{padding-bottom:var(--sp-3)}
 .cal-chart{position:relative;height:150px;margin-top:14px;border:1px solid var(--line-tint);border-radius:var(--radius);background:var(--panel2);overflow:hidden}
-.cal-chart.empty{height:auto;min-height:0;overflow:visible;padding:0;border:none;background:transparent}
+.cal-chart.empty{height:auto;min-height:0;overflow:visible;padding:0;border:1px dashed var(--line2);background:var(--wash)}
 .cal-chart .base{position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--line2)}
-.cal-chart.empty .msg{position:static;inset:auto;display:block;padding:22px 18px;text-align:center;
-  font-size:var(--text-sm);color:var(--ink2);line-height:1.5}
+.cal-chart.empty .msg{position:static;inset:auto;display:block;padding:26px 20px;text-align:center;
+  font-size:var(--text-sm);color:var(--ink2);line-height:1.5;max-width:44ch;margin:0 auto}
 .cal-bars{position:absolute;inset:12px 14px;display:flex;align-items:flex-end;gap:8px}
 .cal-bars .b{flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;gap:3px;height:100%}
 .cal-bars .b i{display:block;border-radius:4px 4px 0 0;background:var(--accent2);opacity:.85}
@@ -1496,7 +1499,11 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
   .cal-wait .w .btn{justify-self:start}
 }
 /* ---------- learning loop ---------- */
-.lrn-grid{grid-template-columns:1.1fr 1fr}
+.lrn-grid{grid-template-columns:1fr 1fr;align-items:stretch}
+/* Both cards end on the same line, so the shorter one grows its chart instead of leaving a void
+   under it. */
+.lrn-grid>.card{display:flex;flex-direction:column}
+.lrn-grid>.card>.cal-chart{flex:1 1 auto;display:flex;align-items:center;justify-content:center}
 @media(max-width:1100px){.lrn-grid{grid-template-columns:1fr}}
 /* ---------- tracker ---------- */
 .tk-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
