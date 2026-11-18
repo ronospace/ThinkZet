@@ -29,6 +29,8 @@ const STRINGS = {
     'fbk.send': 'Send feedback',
     'fbk.cancel': 'Cancel',
     'fbk.done': 'Thank you. Your feedback helps improve ThinkZet.',
+    'fbk.ask': 'Was anything confusing?',
+    'fbk.give': 'Give Feedback',
 
     'view.brief': 'Daily Brief',
     'view.radar': 'Opportunity Radar',
@@ -199,6 +201,8 @@ const STRINGS = {
     'fbk.send': 'Feedback senden',
     'fbk.cancel': 'Abbrechen',
     'fbk.done': 'Danke. Dein Feedback hilft, ThinkZet zu verbessern.',
+    'fbk.ask': 'War etwas verwirrend?',
+    'fbk.give': 'Feedback geben',
 
     'view.brief': 'Tagesbrief',
     'view.radar': 'Chancen-Radar',

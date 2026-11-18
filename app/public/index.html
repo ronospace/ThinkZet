@@ -779,6 +779,18 @@ table.t tr:hover td{background:var(--panel2)}
 .fbk-done{padding:10px 12px;border-radius:10px;border:1px solid var(--ai-border);background:var(--accent-soft);
   color:var(--ink);font-size:var(--text-sm);font-weight:600}
 .fbk-done[hidden]{display:none}
+/* A quiet action, not a floating button: one word, in the muted ink, on the surface it belongs to. */
+.fbk-link{background:none;border:none;padding:0;font:inherit;font-size:var(--text-xs);color:var(--muted);
+  cursor:pointer;text-decoration:none;min-height:32px;display:inline-flex;align-items:center;transition:color .14s}
+.fbk-link:hover{color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+.fbk-foot-line{display:flex;justify-content:flex-end;margin-top:10px}
+.acct-legal .fbk-link{font-size:var(--text-xs);min-height:0;display:inline}
+.fbk-ask{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
+  margin-top:18px;padding-top:14px;border-top:1px solid var(--line-tint)}
+.fbk-ask>span{font-size:var(--text-sm);color:var(--ink2)}
+.cp-fbk{order:4;margin-top:6px;justify-content:center}
+@media(max-width:767px){.fbk-link{min-height:36px}.cp-fbk{margin-top:2px}}
+html.kb-open .cp-fbk{display:none}
 @media(max-width:560px){.fbk{align-items:flex-end;padding:0}.fbk-box{max-width:none;border-radius:16px 16px 0 0;
   max-height:92dvh;padding:16px 14px calc(16px + env(safe-area-inset-bottom))}.fbk-foot .btn{flex:1 1 0}}
 .composer textarea{flex:1 1 auto;min-width:0;background:var(--wash);border:1px solid var(--line-tint);border-radius:12px;padding:11px 13px;outline:none;
@@ -2069,7 +2081,7 @@ body.tw-lock{overflow:hidden}
     <div class="fbk-head">
       <h2 id="fbk-title" data-i18n="fbk.title">Send feedback</h2>
       <button class="fbk-x" id="fbk-x" aria-label="Close">
-        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+        <svg viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M3.4 8.4l3 3 6.2-6.8"/></svg>
       </button>
     </div>
     <p class="fbk-lede" data-i18n="fbk.lede">Tell us where the product lost you. One sentence is enough.</p>
@@ -2375,6 +2387,13 @@ const FBK = (() => {
   }
   return { open, close };
 })();
+// One handler for every entry point, so a view that re-renders never loses its Feedback action.
+document.addEventListener('click', (e) => {
+  const b = e.target && e.target.closest ? e.target.closest('[data-fbk]') : null;
+  if (!b) return;
+  e.preventDefault();
+  FBK.open();
+});
 const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2600); };
 
 let STATE = { profile: null, view: 'radar', feed: null, types: [], horizon: 'balanced', sort: 'score', demo: false };
@@ -2598,7 +2617,8 @@ async function runRateCheck() {
           <button class="btn" id="c-signup">Send me the full breakdown</button>
         </div>
         <div class="muted" id="c-lead-msg" style="font-size:var(--text-xs);margin-top:8px"></div>
-      </div>`;
+      </div>
+      <div class="fbk-ask"><span data-i18n="fbk.ask">Was anything confusing?</span><button class="btn ghost sm" data-fbk="check" data-i18n="fbk.give">Give Feedback</button></div>`;
     STATE.lastCheck = { input: r.input, benchmark: b, verdict: v };
 
     const oneLiner = v.gapPct != null
@@ -3408,6 +3428,7 @@ async function renderRadar() {
         </div>
       </div>
     </div>
+    <div class="fbk-foot-line"><button class="fbk-link" data-fbk="radar" data-i18n="fbk.open">Feedback</button></div>
   `;
 
   // KPI strip: four segmented cards with sparklines, mirroring the reference dashboards.
@@ -4597,6 +4618,7 @@ async function renderCopilot() {
         <textarea id="q" rows="1" enterkeyhint="send" placeholder="Ask Career Co-Pilot..." aria-label="Ask Career Co-Pilot"></textarea>
         <button class="btn" id="send" data-idle="1" aria-label="Send"><span class="lbl-send">Ask</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 13V3.4"/><path d="M4.2 7.2L8 3.4l3.8 3.8"/></svg></button>
       </div>
+      <div class="fbk-foot-line cp-fbk"><button class="fbk-link" data-fbk="copilot" data-i18n="fbk.open">Feedback</button></div>
     </div>`;
   // On a desktop the thread is tall enough to hold the reading, so it joins the conversation
   // directly under the greeting rather than sitting at the floor with the chips. On a phone it
@@ -5310,7 +5332,8 @@ async function renderAccount() {
     <div class="acct-legal">
       <a href="/legal/privacy.html">Privacy Policy</a><span class="sep">·</span>
       <a href="/legal/terms.html">Terms of Service</a><span class="sep">·</span>
-      <a href="mailto:support@thinkzet.com">Contact Support</a>
+      <a href="mailto:support@thinkzet.com">Contact Support</a><span class="sep">·</span>
+      <button class="fbk-link" data-fbk="account" data-i18n="fbk.open">Feedback</button>
     </div>`;
   const dn = $('#dn-input'), dns = $('#dn-save');
   dn.value = me.name || '';
