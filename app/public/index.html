@@ -941,7 +941,9 @@ html[data-theme="light"] .hero-sec::before{background:radial-gradient(60% 60% at
    768px so the desktop two-column hero is untouched. */
 @media(max-width:767px){
   .land-cta{display:grid;grid-template-columns:58fr 42fr;gap:8px;margin-top:var(--sp-4)}
-  .land-cta .btn{min-height:44px;padding:0 12px;font-size:var(--text-sm);border-radius:10px;gap:6px;white-space:nowrap}
+  /* A longer translation wraps inside its cell instead of pushing the row past the viewport. */
+  .land-cta .btn{min-height:44px;padding:8px 12px;font-size:var(--text-sm);border-radius:10px;gap:6px;white-space:normal;text-align:center;min-width:0;line-height:1.3}
+  .land-cta .btn span{min-width:0;overflow-wrap:break-word}
   .land-cta .cta-go{font-size:1em;line-height:1}
   .land-kicker{font-size:10px;letter-spacing:.1em;padding:4px 9px}
   .land-h1{font-weight:760;line-height:.98;margin-top:16px}
@@ -1732,8 +1734,8 @@ body.tw-lock{overflow:hidden}
         <div class="foot-links">
           <div class="foot-col">
             <div class="foot-h" data-i18n="foot.product">Product</div>
-            <a href="#capabilities">Capabilities</a>
-            <a href="#pricing">Pricing</a>
+            <a href="#capabilities" data-i18n="nav.capabilities">Capabilities</a>
+            <a href="#pricing" data-i18n="nav.pricing">Pricing</a>
             <a href="#faq" data-i18n="foot.faq">FAQ</a>
           </div>
           <div class="foot-col">

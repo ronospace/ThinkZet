@@ -197,3 +197,6 @@ Last updated: 16 November 2026.
 | R-175 | The footer linked "How It Works" while the FAQ above it answered the same question | Product is Capabilities, Pricing and FAQ, and FAQ links to the section it names | Done `UI-173` |
 | R-176 | Contact carried one address, so the privacy contact had no route from the footer | support@ and privacy@ are both listed; hello@ and billing@ stay removed | Done `UI-173` |
 | R-177 | The Market Snapshot was a bordered panel with a heading, a five-cell grid and a note, reading as a dashboard widget | It is one hairline metadata strip: the figures on the left, "Updated 2026-11-18" on the right, one line on desktop and two on a phone | Done `UI-173` |
+| R-178 | A German hero CTA overflowed its 42% cell at 393 and 360, pushing the button row 15px past the viewport | The phone CTA wraps inside its own cell and the row stays inside the viewport at 360 and 393 | Done `UI-174` |
+| R-179 | The footer's Product links were not keyed, so a German page printed "Capabilities" and "Pricing" in English | Both links carry their keys and print "Funktionen" and "Preise" | Done `UI-174` |
+| R-180 | The footer FAQ link and the metadata strip's date had no key, so both stayed English on `/de` | `foot.faq` and `snap.updated` are in the table, and the strip reads "Stand 2026-11-18" | Done `UI-174` |
