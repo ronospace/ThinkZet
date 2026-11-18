@@ -580,6 +580,9 @@ html[data-theme="light"] .delta.flat{background:var(--panel2)}
 .filters input:focus,.filters select:focus{border-color:var(--accent2)}
 .filters .chk{display:flex;align-items:center;gap:6px;font-size:var(--text-sm);color:var(--ink2);white-space:nowrap}
 .reveal{animation:rise .32s cubic-bezier(.2,.7,.3,1) both}
+/* A transform is a containing block: an animated ancestor would trap the phone thread inside it,
+   so the thread is not revealed. It is a surface, not an entrance. */
+.view .chat{animation:none!important;transform:none!important}
 .sk{background:linear-gradient(90deg,var(--panel2) 25%,var(--panel3) 37%,var(--panel2) 63%);background-size:400% 100%;animation:shimmer 1.3s ease-in-out infinite;border-radius:8px}
 @keyframes shimmer{0%{background-position:100% 0}100%{background-position:0 0}}
 @media(prefers-reduced-motion:reduce){.sk{animation:none;background:var(--panel2)}}
@@ -633,7 +636,18 @@ table.t tr:hover td{background:var(--panel2)}
 /* ---------- copilot ---------- */
 /* Conversation first: the thread takes the height, the composer sits on the floor, and every
    supporting widget is a chip or a badge rather than a card competing with the answer. */
-.chat{display:flex;flex-direction:column;height:calc(var(--vvh, 100dvh) - 130px);max-width:860px}
+.chat{display:flex;flex-direction:column;height:calc(var(--vvh, 100dvh) - 130px);max-width:860px;min-width:0;max-width:100%}
+/* On a phone the thread is the screen: fixed to the visual viewport, the list takes what is left,
+   and the composer sits on the floor of it. No page scroll, so nothing can sit under a keyboard. */
+@media(max-width:767px){
+  .chat{position:fixed;left:0;right:0;top:0;bottom:0;height:auto;max-width:none;padding:0 14px calc(58px + env(safe-area-inset-bottom));overflow:hidden;box-sizing:border-box}
+  html.kb-open .chat{padding-bottom:calc(6px + env(safe-area-inset-bottom))}
+  html.kb-open .rail{display:none}
+  .msgs{order:1;min-height:0;flex:1 1 auto;overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;padding-bottom:10px}
+  /* A selector that ties on specificity loses to the later rule, so these two name the parent. */
+  .chat .cp-hello{display:none}
+  .chat .composer{order:3}
+}
 .msgs{flex:1;overflow:auto;display:flex;flex-direction:column;gap:14px;padding:2px 0 14px;scroll-behavior:smooth}
 .msg{max-width:82%;padding:11px 14px;border-radius:14px;line-height:1.6;font-size:var(--text-base);text-wrap:pretty}
 .msg.user{align-self:flex-end;background:var(--nav-active);border:1px solid var(--line2);border-bottom-right-radius:5px;white-space:pre-wrap}
@@ -661,12 +675,18 @@ table.t tr:hover td{background:var(--panel2)}
   transition:border-color .12s,background .12s,color .12s}
 .cp-chip:hover{border-color:var(--accent2);background:var(--panel2);color:var(--ink)}
 .cp-chip:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
-.composer{display:flex;gap:8px;align-items:flex-end}
+.composer{display:flex;gap:8px;align-items:flex-end;flex:0 0 auto;min-width:0;max-width:100%}
 .composer textarea{flex:1 1 auto;min-width:0;background:var(--wash);border:1px solid var(--line-tint);border-radius:12px;padding:11px 13px;outline:none;
-  font:inherit;font-size:var(--text-base);line-height:1.5;color:var(--ink);resize:none;max-height:132px;overflow-y:auto}
+  font:inherit;font-size:16px;line-height:1.5;color:var(--ink);resize:none;max-height:132px;overflow-y:auto;box-sizing:border-box}
 .composer textarea:focus{border-color:var(--accent2)}
-.composer .btn{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;padding:10px 15px}
+.composer .btn{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 15px}
 .composer .btn svg{width:13px;height:13px}
+@media(max-width:767px){
+  .composer textarea{min-height:40px;max-height:110px;padding:8px 12px;border-radius:20px}
+  .composer .btn{width:36px;height:36px;min-width:36px;padding:0;border-radius:50%;gap:0}
+  .composer .btn .lbl-send{display:none}
+  .composer .btn svg{width:15px;height:15px}
+}
 .composer .btn[data-idle="1"]{background:var(--wash);color:var(--muted);box-shadow:none;transform:none;pointer-events:none}
 
 /* Career context: six badges, collapsible, a third of the weight it had as four tiles. */
@@ -686,10 +706,13 @@ table.t tr:hover td{background:var(--panel2)}
 @keyframes cpdot{0%,80%,100%{opacity:.25;transform:translateY(0)}40%{opacity:1;transform:translateY(-2px)}}
 @media(prefers-reduced-motion:reduce){.cp-typing i{animation:none;opacity:.6}}
 @media(max-width:1100px){.cp-chips{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:560px){
-  .cp-chips{display:flex;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;gap:6px;padding:0 0 6px;scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+@media(max-width:767px){
+  .chat .cp-chips{order:2;display:flex;flex-wrap:nowrap;overflow-x:auto;overflow-y:hidden;gap:6px;margin:0 0 8px;padding:0 0 4px;
+    scroll-snap-type:x proximity;scrollbar-width:none;-webkit-overflow-scrolling:touch}
   .cp-chips::-webkit-scrollbar{display:none}
-  .cp-chip{flex:0 0 auto;max-width:76%;font-size:var(--text-xs);padding:9px 11px;min-height:44px;scroll-snap-align:start}
+  .cp-chip{flex:0 0 auto;height:32px;min-height:32px;padding:0 12px;border-radius:999px;font-size:var(--text-xs);line-height:1;
+    white-space:nowrap;display:inline-flex;align-items:center;scroll-snap-align:start;max-width:none}
+  .chat[data-turns="1"] .cp-chips{display:none}
 }
 /* The intro is a card, not a bubble:/* The intro is a card, not a bubble: it carries a definition and four facts, so it takes the full width. */
 .msg-intro{width:100%;max-width:none;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:14px 16px}
@@ -802,7 +825,9 @@ kbd{background:var(--kbd-bg);border:1px solid var(--line2);border-bottom-width:2
   .overall{flex-direction:column;text-align:center;gap:14px}
   .grid{grid-template-columns:1fr!important}
   .form-grid,.row3,.row2{grid-template-columns:1fr!important}
-  .chat{height:calc(100dvh - 196px);min-height:0}
+  /* The phone thread is fixed to the visual viewport (see the 767 block); a height here would
+     win on source order and pin it to a box the keyboard cannot shrink. */
+  .chat{min-height:0}
   .msgs{max-height:none}
   table.t{font-size:var(--text-sm)}
   table.t th,table.t td{padding:7px 6px}
@@ -2659,6 +2684,16 @@ const trackViewport = () => {
     const vv = window.visualViewport;
     const h = vv ? vv.height : window.innerHeight;
     document.documentElement.style.setProperty('--vvh', h + 'px');
+    // A keyboard is a shorter visual viewport. When one is open the bottom bar has nowhere to be,
+    // so it steps aside and the thread takes the space, with the composer on the floor of it.
+    const kb = !!vv && vv.height < window.innerHeight - 120;
+    const was = document.documentElement.classList.contains('kb-open');
+    document.documentElement.classList.toggle('kb-open', kb);
+    if (kb) window.scrollTo(0, 0);
+    if (kb !== was) {
+      const m = document.getElementById('msgs');
+      if (m) m.scrollTop = m.scrollHeight;
+    }
   };
   set();
   if (window.visualViewport) {
@@ -4223,7 +4258,6 @@ async function renderCopilot() {
           <p>Ask anything about your career, salary, skills, opportunities, applications, relocation plans or next move.</p>
         </div>
       </div>
-      <div class="cp-chips">${CP_CHIPS.map((q) => `<button class="cp-chip" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>
       <div class="msgs" id="msgs">
         <div class="msg-row">
           <span class="cp-ava" aria-hidden="true"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.5 3.6L13 7l-3.5 1.4L8 12l-1.5-3.6L3 7l3.5-1.4z"/></svg></span>
@@ -4250,9 +4284,10 @@ async function renderCopilot() {
           </div>
         </div>
       </div>
+      <div class="cp-chips">${CP_CHIPS.map((q) => `<button class="cp-chip" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>
       <div class="composer">
-        <textarea id="q" rows="1" placeholder="Ask Career Co-Pilot anything about your career..." aria-label="Ask Career Co-Pilot"></textarea>
-        <button class="btn" id="send" data-idle="1" aria-label="Send">Ask <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 13V3.4"/><path d="M4.2 7.2L8 3.4l3.8 3.8"/></svg></button>
+        <textarea id="q" rows="1" enterkeyhint="send" placeholder="Ask Career Co-Pilot anything about your career..." aria-label="Ask Career Co-Pilot"></textarea>
+        <button class="btn" id="send" data-idle="1" aria-label="Send"><span class="lbl-send">Ask</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 13V3.4"/><path d="M4.2 7.2L8 3.4l3.8 3.8"/></svg></button>
       </div>
     </div>`;
   const box = $('#q');
@@ -4264,8 +4299,10 @@ async function renderCopilot() {
   // The placeholder wraps on a phone, so the field is measured once it is in the document rather than
   // left at one row and clipped.
   grow();
+  const chatEl = document.querySelector('.chat');
   const send = async (text) => {
     const q = (text || box.value).trim(); if (!q) return;
+    if (chatEl) chatEl.dataset.turns = '1';
     box.value = ''; grow();
     const msgs = $('#msgs');
     msgs.insertAdjacentHTML('beforeend', `<div class="msg user">${esc(q)}</div>`);
