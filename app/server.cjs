@@ -1398,22 +1398,45 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
   // RULES 14: a count printed for a reader carries a thousands separator, and null prints as a dash.
   const int = (n) => (n == null ? '–' : new Intl.NumberFormat('en-GB').format(n));
 
+  // UI-190: the person's own name, from their account or their profile, never a guess.
+  const meRow = db.prepare('SELECT name, display_name, email FROM users WHERE id=?').get(resolveUser(req));
+  const ownName = String((meRow && (meRow.display_name || meRow.name)) || profile.display_name || profile.name || '').trim();
+  const firstName = ownName ? ownName.split(/\s+/)[0] : '';
+  const ownEmail = String((meRow && meRow.email) || '').trim();
+
   // Intent routing over grounded facts
   let reply = '';
   // A person says hello, asks who you are, or says thanks. Answering that with a menu of ten
   // questions is the opposite of an assistant, so those three come first and stay short.
   const smallTalk = /^(hi|hey|hello|yo|hiya|howdy|good (morning|afternoon|evening)|sup)\b/.test(q)
     ? 'greet'
-    : /(your name|who are you|what are you|are you (a )?(bot|human|ai|real))/.test(q)
-      ? 'who'
-      : /^(thanks|thank you|cheers|ta|ok|okay|cool|great|nice)\b/.test(q)
-        ? 'thanks'
-        : null;
+    : /(my name|who am i|what.s my name|do you know me)/.test(q)
+      ? 'myname'
+      : /(your name|who are you|what are you|are you (a )?(bot|human|ai|real)|what do i call you)/.test(q)
+        ? 'who'
+        : /(what|which)\s+(date|day)\b|today.s date|what day is it/.test(q)
+          ? 'date'
+          : /(what|which)\s+time\b|time is it/.test(q)
+            ? 'time'
+            : /^(thanks|thank you|cheers|ta|ok|okay|cool|great|nice)\b/.test(q)
+              ? 'thanks'
+              : null;
   if (smallTalk === 'greet') {
-    const nm = (profile.display_name || profile.name || '').trim().split(/\s+/)[0];
-    reply = `${nm ? `Hello ${nm}.` : 'Hello.'} I am the Career Co-Pilot. I read your profile, your pay benchmark and the live market, and I answer from those records rather than from general advice.\n\nAsk me about your pay, your next move, the skills blocking you, or relocating.`;
+    reply = `${firstName ? `Hello ${firstName}.` : 'Hello.'} I am Zyra, your career co-pilot. I read your profile, your pay benchmark and the live market, and I answer from those records rather than from general advice.\n\nAsk me about your pay, your next move, the skills blocking you, or relocating.`;
+  } else if (smallTalk === 'myname') {
+    reply = ownName
+      ? `You are ${ownName}${ownEmail ? `, signed in as ${ownEmail}` : ''}. Your Career Twin is under that account, and everything I answer comes from it.`
+      : ownEmail
+        ? `Your account is ${ownEmail}, and no name is set on it yet. You can add one on the Career Twin screen and I will use it here.`
+        : `No name is recorded on this account yet. Add one on the Career Twin screen and I will use it here.`;
   } else if (smallTalk === 'who') {
-    reply = `I am the Career Co-Pilot inside ThinkZet. I am not a general chatbot: every answer is computed from your Career Twin, your pay benchmark and the live postings, and I name the sample I used.\n\nThat is why I will ask which number you mean rather than guess.`;
+    reply = `I am Zyra, your career co-pilot inside ThinkZet. I am not a general chatbot: every answer is computed from your Career Twin, your pay benchmark and the live postings, and I name the sample I used.`;
+  } else if (smallTalk === 'date') {
+    const d = new Date();
+    reply = `Today is ${d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}.`;
+  } else if (smallTalk === 'time') {
+    const d = new Date();
+    reply = `It is ${d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} where this server runs, on ${d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}.`;
   } else if (smallTalk === 'thanks') {
     reply = `Any time. Your records are unchanged, and the next question is always answered from the same numbers.`;
   } else if (/rate|salary|pay|worth|underpaid|money|earn/.test(q)) {
@@ -1519,8 +1542,33 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
   const phrased = await LLM.phrase(grounded, { voice: 'career copilot' });
   reply = phrased;
 
-  log(resolveUser(req), 'copilot.message', null, null, { intent: q.slice(0, 40), mode: LLM.mode(), rewritten: phrased !== grounded });
+  // UI-190: the turn is written before it is returned, so a refresh replays the same thread.
+  const uid = resolveUser(req);
+  try {
+    db.prepare('INSERT INTO copilot_messages(user_id,role,body,citations) VALUES(?,?,?,?)')
+      .run(uid, 'user', String(body.message || '').slice(0, 4000), null);
+    db.prepare('INSERT INTO copilot_messages(user_id,role,body,citations) VALUES(?,?,?,?)')
+      .run(uid, 'assistant', String(reply).slice(0, 8000), citations.length ? JSON.stringify(citations) : null);
+  } catch (e) { console.error('[copilot] persist failed', e.message); }
+
+  log(uid, 'copilot.message', null, null, { intent: q.slice(0, 40), mode: LLM.mode(), rewritten: phrased !== grounded });
   json(res, 200, { reply, citations, grounded: true, mode: LLM.mode() });
+});
+
+// UI-190: the thread is the server's answer, so a refresh continues the conversation.
+route('GET', /^\/api\/copilot\/thread$/, async (req, res) => {
+  const uid = resolveUser(req);
+  const rows = db.prepare('SELECT id,role,body,citations,created_at FROM copilot_messages WHERE user_id=? ORDER BY id DESC LIMIT 60').all(uid).reverse();
+  json(res, 200, {
+    ok: true,
+    messages: rows.map((r) => ({ id: r.id, role: r.role, body: r.body, citations: r.citations ? JSON.parse(r.citations) : [], at: r.created_at })),
+  });
+});
+
+route('DELETE', /^\/api\/copilot\/thread$/, async (req, res) => {
+  const uid = resolveUser(req);
+  db.prepare('DELETE FROM copilot_messages WHERE user_id=?').run(uid);
+  json(res, 200, { ok: true, cleared: true });
 });
 
 route('POST', /^\/api\/copilot\/opportunity$/, async (req, res) => {

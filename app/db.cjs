@@ -398,6 +398,19 @@ CREATE TABLE IF NOT EXISTS feed_snapshots (
   PRIMARY KEY (user_id, day)
 );
 
+-- UI-190: a conversation is a record, not a screen. Every turn is stored so a refresh, a second
+-- device or a return tomorrow continues the same thread instead of starting from the greeting.
+CREATE TABLE IF NOT EXISTS copilot_messages (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  user_id TEXT NOT NULL,
+  role TEXT NOT NULL,
+  body TEXT NOT NULL,
+  citations TEXT,
+  created_at TEXT DEFAULT (datetime('now'))
+);
+
+CREATE INDEX IF NOT EXISTS idx_cp_msg_user ON copilot_messages(user_id, id);
+
 CREATE INDEX IF NOT EXISTS idx_opp_type ON opportunities(type, status);
 CREATE INDEX IF NOT EXISTS idx_opp_country ON opportunities(country);
 CREATE INDEX IF NOT EXISTS idx_opp_family ON opportunities(role_family, seniority);

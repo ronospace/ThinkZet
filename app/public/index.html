@@ -1799,7 +1799,7 @@ body.tw-lock{overflow:hidden}
           <p class="pillar-s" data-i18n="cap.p3s">Where each path lands, and what makes the estimate sharper.</p>
           <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="path" aria-hidden="true"></span><h3 data-i18n="cap.path">Career Trajectory</h3></div><p data-i18n="cap.pathS">Where each path lands in 12, 24 or 60 months, with the risk priced in.</p></div>
           <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="track" aria-hidden="true"></span><h3 data-i18n="cap.track">Career Tracker</h3></div><p data-i18n="cap.trackS">Your pipeline, and the outcome loop that makes every estimate sharper.</p></div>
-          <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="cop" aria-hidden="true"></span><h3 data-i18n="cap.cop">Career Co-Pilot</h3></div><p data-i18n="cap.copS">Grounded in your own data. It cites the sample it used, or says it does not know.</p></div>
+          <div class="cap"><div class="cap-h"><span class="cap-ico" data-ico="cop" aria-hidden="true"></span><h3 data-i18n="cap.cop">Zyra</h3></div><p data-i18n="cap.copS">Grounded in your own data. It cites the sample it used, or says it does not know.</p></div>
         </div>
       </div>
     </section>
@@ -1916,7 +1916,7 @@ body.tw-lock{overflow:hidden}
       <div class="nav-group"><span class="nav-label">Act</span>
       <button data-view="gaps"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2 12l4-5 3 2.5L14 4"/><path d="M11 4h3v3"/></svg></span><span class="lbl" data-i18n="view.gaps">Skill Gaps</span></button>
       <button data-view="tracker" class="nav-pri"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2.2" y="3" width="3.4" height="10" rx="1"/><rect x="6.4" y="3" width="3.4" height="6.5" rx="1"/><rect x="10.6" y="3" width="3.4" height="8.5" rx="1"/></svg></span><span class="lbl" data-i18n="view.tracker">Career Tracker</span></button>
-      <button data-view="copilot" class="nav-pri"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.5 3.6L13 7l-3.5 1.4L8 12l-1.5-3.6L3 7l3.5-1.4z"/><path d="M12.4 11.2l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/></svg></span><span class="lbl" data-i18n="view.copilot">Career Co-Pilot</span></button>
+      <button data-view="copilot" class="nav-pri"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.5 3.6L13 7l-3.5 1.4L8 12l-1.5-3.6L3 7l3.5-1.4z"/><path d="M12.4 11.2l.6 1.4 1.4.6-1.4.6-.6 1.4-.6-1.4-1.4-.6 1.4-.6z"/></svg></span><span class="lbl" data-i18n="view.copilot">Zyra</span></button>
       <button data-view="searches"><span class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2.4l1.8 3.7 4 .6-2.9 2.8.7 4-3.6-1.9-3.6 1.9.7-4L2.2 6.7l4-.6z"/></svg></span><span class="lbl" data-i18n="view.searches">Saved Searches</span></button>
       </div>
       <div class="nav-group"><span class="nav-label">Account</span>
@@ -4367,8 +4367,8 @@ async function renderCopilot() {
       <div class="cp-hello">
         <span class="cp-spark" aria-hidden="true"><svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.5 3.6L13 7l-3.5 1.4L8 12l-1.5-3.6L3 7l3.5-1.4z"/></svg></span>
         <div>
-          <h2>Career Co-Pilot</h2>
-          <p>Ask anything about your career, salary, skills, opportunities, applications, relocation plans or next move.</p>
+          <h2>Zyra</h2>
+          <p>Your career co-pilot. Ask about your salary, skills, opportunities, applications, relocation or next move.</p>
         </div>
       </div>
       <div class="msgs" id="msgs">
@@ -4403,7 +4403,7 @@ async function renderCopilot() {
         <div class="cp-chips">${CP_CHIPS.map((q) => `<button class="cp-chip" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>
       </div></div>
       <div class="composer">
-        <textarea id="q" rows="1" enterkeyhint="send" placeholder="Ask Career Co-Pilot..." aria-label="Ask Career Co-Pilot"></textarea>
+        <textarea id="q" rows="1" enterkeyhint="send" placeholder="Ask Zyra..." aria-label="Ask Zyra"></textarea>
         <button class="btn" id="send" data-idle="1" aria-label="Send"><span class="lbl-send">Ask</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 13V3.4"/><path d="M4.2 7.2L8 3.4l3.8 3.8"/></svg></button>
       </div>
     </div>`;
@@ -4443,6 +4443,26 @@ async function renderCopilot() {
   $('#send').onclick = () => send();
   box.onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } };
   document.querySelectorAll('.cp-chip, .cp-ask').forEach((b) => { b.onclick = () => send(b.dataset.q); });
+
+  // UI-190: the thread is the server's record, so a refresh, a second device or tomorrow morning
+  // continues the same conversation. The greeting card stays as the first thing ever said.
+  api('/api/copilot/thread').then((t) => {
+    const rows = (t && t.messages) || [];
+    if (!rows.length) return;
+    const msgs = $('#msgs');
+    if (!msgs) return;
+    if (chatEl) chatEl.dataset.turns = '1';
+    const ava = `<span class="cp-ava" aria-hidden="true"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.5 3.6L13 7l-3.5 1.4L8 12l-1.5-3.6L3 7l3.5-1.4z"/></svg></span>`;
+    rows.forEach((m) => {
+      if (m.role === 'user') {
+        msgs.insertAdjacentHTML('beforeend', `<div class="msg user">${esc(m.body)}</div>`);
+      } else {
+        const cites = (m.citations || []).map((c) => `${c.label}: ${c.detail}`).join(' · ');
+        msgs.insertAdjacentHTML('beforeend', `<div class="msg-row">${ava}<div class="msg bot">${formatReply(m.body)}${cites ? `<div class="cite">Grounded in: ${esc(cites)}</div>` : ''}</div></div>`);
+      }
+    });
+    msgs.scrollTop = msgs.scrollHeight;
+  }).catch(() => {});
 }
 
 
@@ -5156,7 +5176,7 @@ const VIEWS = {
   twin: [renderTwin, 'Career Twin', 'Your professional profile, scored and kept current'],
   account: [renderAccount, 'Account & Privacy', 'Your name, your data, and what happens to it'],
   auth: [renderAuth, 'Sign in', ''],
-  copilot: [renderCopilot, 'Career Co-Pilot', 'Grounded in your data, not generic advice'],
+  copilot: [renderCopilot, 'Zyra', 'Your career co-pilot, grounded in your own data'],
   learning: [renderLearning, 'Career Calibration', 'What your own outcomes teach the model'],
   searches: [renderSearches, 'Saved Searches', 'Standing questions the engine keeps answering'],
   brief: [renderBrief, 'Daily Brief', 'What changed since you last looked'],
