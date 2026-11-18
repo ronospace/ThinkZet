@@ -1372,7 +1372,7 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .cal-seg i.on{background:var(--accent2);border-color:transparent}
 .cal-seg i.part{background:linear-gradient(90deg,var(--accent2) var(--p,50%),var(--panel2) var(--p,50%))}
 .cal-mile{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:8px}
-.cal-mile span{font-size:var(--text-2xs);color:var(--muted);line-height:1.3}
+.cal-mile span{font-size:var(--text-2xs);color:var(--muted);line-height:1.3;min-width:0}
 .cal-mile span.on{color:var(--ink);font-weight:600}
 .cal-acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}
 .cal-next{font-size:var(--text-sm);color:var(--ink2);margin-top:14px;line-height:1.5}
@@ -1380,7 +1380,10 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .cal-now .fk{display:block;margin-bottom:10px}
 .cal-pair{display:grid;gap:10px}
 .cal-pair>div{display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.cal-pair .v.lock{flex:0 1 auto;margin-left:auto;text-align:right;margin-top:0;max-width:100%}
+/* A value that is a sentence is not a value in a right column: it drops to its own line, left
+   aligned under its label, so three rows read as three rows instead of a zigzag. */
+.cal-pair>div:has(.v.lock){display:block}
+.cal-pair .v.lock{display:block;margin:3px 0 0;text-align:left;max-width:100%}
 .cal-pair .k{font-size:var(--text-sm);color:var(--ink2);min-width:0}
 .cal-pair .v{font-size:var(--text-md);font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
 .cal-pair .v.lock{font-size:var(--text-sm);font-weight:600;color:var(--muted);white-space:normal;overflow-wrap:anywhere}
@@ -1389,8 +1392,9 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .cal-kpi .kpi-s{font-size:var(--text-xs);color:var(--ink2);margin-top:2px;line-height:1.35;min-height:2.7em}
 .cal-kpi .kpi{padding-bottom:var(--sp-3)}
 .cal-chart{position:relative;height:150px;margin-top:14px;border:1px solid var(--line-tint);border-radius:var(--radius);background:var(--panel2);overflow:hidden}
+.cal-chart.empty{height:auto;min-height:0;overflow:visible;padding:0}
 .cal-chart .base{position:absolute;left:0;right:0;top:50%;border-top:1px dashed var(--line2)}
-.cal-chart .msg{position:absolute;inset:0;display:grid;place-items:center;padding:0 18px;text-align:center;
+.cal-chart.empty .msg{position:static;inset:auto;display:block;padding:22px 18px;text-align:center;
   font-size:var(--text-sm);color:var(--ink2);line-height:1.5}
 .cal-bars{position:absolute;inset:12px 14px;display:flex;align-items:flex-end;gap:8px}
 .cal-bars .b{flex:1 1 0;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;gap:3px;height:100%}
@@ -4634,13 +4638,13 @@ async function renderLearning() {
       const v = byType[t]; const h = Math.max(8, Math.round((v / Math.max(...OUTCOME_TYPES.map((x) => byType[x] || 0))) * 100));
       return `<div class="b"><i class="${t === 'interview' || t === 'offer' ? 'act' : ''}" style="height:${h}%"></i><em>${esc(OUTCOME_LABEL[t])} ${int(v)}</em></div>`;
     }).join('')}</div>`
-    : `<div class="base"></div><div class="msg">Your calibration chart will appear after you report your first completed outcome.</div>`;
+    : `<div class="msg">Your calibration chart will appear after you report your first completed outcome.</div>`;
 
   const stageSelect = (a) => `<select class="cal-stage" data-app="${esc(a.opportunity_id)}" aria-label="Stage for ${esc(a.title)}">
       ${STAGE_SET.map((st) => `<option value="${st}" ${a.status === st ? 'selected' : ''}>${STAGE_LABEL[st]}</option>`).join('')}
     </select>`;
 
-  $('#view').innerHTML = `${await acctHead('learning')}
+  $('#view').innerHTML = `
     <div class="card plain cal-hero">
       <div>
         <div class="cal-level">Current level</div>
@@ -4701,7 +4705,7 @@ async function renderLearning() {
     <div class="grid lrn-grid" style="margin-top:14px">
       <div class="card">
         <h3>Predicted vs Actual Interview Outcomes</h3>
-        <div class="cal-chart">${chart}</div>
+        <div class="cal-chart${n ? '' : ' empty'}">${chart}</div>
         <div class="facts tight" style="margin-top:12px">
           <span class="fk">What you are seeing</span>
           <span class="fv">${n ? 'Your reported outcomes, counted by type. The model compares these with what it predicted for the same opportunities.' : 'No outcomes reported yet, so there is nothing to compare. The chart fills as you report what actually happened.'}</span>
