@@ -3016,7 +3016,7 @@ function renderOnboarding() {
         </div>
         <div class="ob-actions" style="margin-top:20px">
           <button class="btn ghost" id="ob-edit">Edit Details</button>
-          <button class="btn" id="ob-finish">Open My Radar</button>
+          <button class="btn" id="ob-finish">My Radar<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></button>
         </div>`;
       $('#ob-finish').onclick = async () => { STATE.draft = null; await boot(); go('radar'); };
       $('#ob-edit').onclick = async () => { await save(2, {}); renderOnboarding(); };
@@ -4664,7 +4664,7 @@ async function renderLearning() {
             ? `<button class="btn sm" id="cal-primary">Update an outcome</button>`
             : recent.applications && recent.applications.length
               ? `<button class="btn sm" id="cal-primary">Log your first outcome</button>`
-              : `<button class="btn sm" id="cal-track">Go to Career Tracker</button>`}
+              : `<button class="btn sm" id="cal-track">Career Tracker<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></button>`}
           <button class="btn ghost sm" id="cal-refresh">Refresh</button>
         </div>
         <div class="cal-next">${n === 0
@@ -4692,7 +4692,7 @@ async function renderLearning() {
           <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap">${stageSelect(a)}<button class="btn ghost sm" data-log="${esc(a.opportunity_id)}">Update outcome</button></div>
         </div>`).join('')}</div>`
         : `<div class="tk-empty" style="margin-top:10px">Track an opportunity to begin personal calibration. ${recent.applications && recent.applications.length ? 'Everything you track is already closed, so there is nothing waiting.' : ''}</div>
-           <div style="margin-top:12px"><button class="btn sm" id="cal-track2">Go to Career Tracker</button></div>`}
+           <div style="margin-top:12px"><button class="btn sm" id="cal-track2">Career Tracker<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></button></div>`}
     </div>
 
     <div class="grid kpi-grid cal-kpi" style="margin-top:14px">
