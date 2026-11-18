@@ -725,8 +725,24 @@ table.t tr:hover td{background:var(--panel2)}
 .cp-ask span{flex:1 1 auto;min-width:0}
 .cp-ask .chev{color:var(--accent2)}
 .cp-chips{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin:0 0 14px}
+/* The hint is a caption, not a control: it appears only while the suggestions are hidden, and it
+   says the one thing the screen cannot show. */
+.cp-idle-hint{display:none;order:0;font-size:var(--text-2xs);color:var(--muted);letter-spacing:.02em;
+  text-align:center;padding:0 0 6px}
+.chat[data-turns="1"]:not([data-idle="1"]) .cp-idle-hint{display:block}
 /* Once the thread has a turn the suggestions have done their job, at every width. */
 .chat[data-turns="1"] .cp-chips,.chat[data-turns="1"] .cp-empty-h{display:none}
+/* Idle means the composer is empty and nothing is streaming, so the suggestions are useful again.
+   One tap anywhere on the thread brings them back; the hint under the composer says so in six words. */
+/* The chips live inside the empty group, and the empty group is hidden once there is a turn, so the
+   group itself has to come back as a pass-through rather than as a box. */
+.chat[data-turns="1"][data-idle="1"] .cp-empty,
+.chat[data-turns="1"][data-idle="1"] .cp-empty-in{display:contents}
+/* Only the chips come back. The reading and the greeting line belong to a first visit. */
+.chat[data-turns="1"] .cp-empty .cp-read,
+.chat[data-turns="1"] .cp-empty .cp-empty-h{display:none}
+.chat[data-turns="1"][data-idle="1"] .cp-chips{display:grid}
+@media(max-width:767px){.chat[data-turns="1"][data-idle="1"] .cp-chips{display:flex}}
 .cp-chip{font:inherit;font-size:var(--text-sm);line-height:1.35;padding:8px 11px;border-radius:var(--radius-sm);border:1px solid var(--ai-border);
   background:var(--wash);color:var(--ink2);cursor:pointer;text-align:left;min-width:0;min-height:38px;display:flex;align-items:center;
   transition:border-color .12s,background .12s,color .12s}
@@ -4432,6 +4448,7 @@ async function renderCopilot() {
         <p class="cp-empty-h">Ask me anything about: <b>Salary</b> · <b>Career moves</b> · <b>Opportunities</b> · <b>Relocations</b></p>
         <div class="cp-chips">${CP_CHIPS.map((q) => `<button class="cp-chip" data-q="${esc(q)}">${esc(q)}</button>`).join('')}</div>
       </div></div>
+      <div class="cp-idle-hint" id="cp-idle-hint">Tap the thread for suggestions</div>
       <div class="composer">
         <textarea id="q" rows="1" enterkeyhint="send" placeholder="Ask Career Co-Pilot..." aria-label="Ask Career Co-Pilot"></textarea>
         <button class="btn" id="send" data-idle="1" aria-label="Send"><span class="lbl-send">Ask</span> <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M8 13V3.4"/><path d="M4.2 7.2L8 3.4l3.8 3.8"/></svg></button>
@@ -4449,16 +4466,25 @@ async function renderCopilot() {
   const box = $('#q');
   const grow = () => { box.style.height = 'auto'; box.style.height = Math.min(box.scrollHeight, 132) + 'px'; };
   const sendBtn = $('#send');
-  const syncSend = () => { if (sendBtn) sendBtn.dataset.idle = box.value.trim() ? '0' : '1'; };
+  const chatEl = document.querySelector('.chat');
+  // Idle is a state of the whole thread, not only of the button: an empty composer with nothing
+  // streaming means the suggestions are worth showing again.
+  const syncSend = () => {
+    const empty = !box.value.trim();
+    if (sendBtn) sendBtn.dataset.idle = empty ? '0' : '1';
+    if (chatEl) {
+      if (empty && !chatEl.dataset.busy) chatEl.dataset.idle = '1';
+      else delete chatEl.dataset.idle;
+    }
+  };
   box.oninput = () => { grow(); syncSend(); };
   syncSend();
   // The placeholder wraps on a phone, so the field is measured once it is in the document rather than
   // left at one row and clipped.
   grow();
-  const chatEl = document.querySelector('.chat');
   const send = async (text) => {
     const q = (text || box.value).trim(); if (!q) return;
-    if (chatEl) chatEl.dataset.turns = '1';
+    if (chatEl) { chatEl.dataset.turns = '1'; chatEl.dataset.busy = '1'; delete chatEl.dataset.idle; }
     box.value = ''; grow();
     const msgs = $('#msgs');
     msgs.insertAdjacentHTML('beforeend', `<div class="msg user">${esc(q)}</div>`);
@@ -4469,6 +4495,16 @@ async function renderCopilot() {
     const cites = (res.citations || []).map((c) => `${c.label}: ${c.detail}`).join(' · ');
     msgs.insertAdjacentHTML('beforeend', `<div class="msg-row"><span class="cp-ava" aria-hidden="true"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.5 3.6L13 7l-3.5 1.4L8 12l-1.5-3.6L3 7l3.5-1.4z"/></svg></span><div class="msg bot">${formatReply(res.reply)}${cites ? `<div class="cite">Grounded in: ${esc(cites)}</div>` : ''}</div></div>`);
     msgs.scrollTop = msgs.scrollHeight;
+    if (chatEl) { delete chatEl.dataset.busy; syncSend(); }
+  };
+
+  // One tap anywhere on the thread brings the suggestions back. Tapping a bubble to read is not a
+  // question, so the tap never sends and never clears anything.
+  const msgsTap = $('#msgs');
+  if (msgsTap) msgsTap.onclick = () => {
+    if (!chatEl || chatEl.dataset.busy || box.value.trim()) return;
+    chatEl.dataset.idle = '1';
+    msgsTap.scrollTop = msgsTap.scrollHeight;
   };
   $('#send').onclick = () => send();
   box.onkeydown = (e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); send(); } };
