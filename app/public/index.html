@@ -77,6 +77,7 @@
   --tracking-tight:-.02em; --tracking-tighter:-.032em;
   /* spacing scale (4px base) */
   --view-max:1120px;
+  --cta-a:#7C5CFF;--cta-b:#6544F5;--cta-glow:rgba(109,74,255,.3);--cta-glow-hi:rgba(109,74,255,.38);
   --sp-1:4px; --sp-2:8px; --sp-3:12px; --sp-4:16px; --sp-5:20px; --sp-6:24px; --sp-8:32px; --sp-10:40px; --sp-12:48px; --sp-16:64px;
   --radius-sm:8px; --radius:12px; --radius-lg:16px; --radius-xl:22px;
 }
@@ -313,9 +314,12 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .big{font-size:var(--text-2xl);font-weight:700;letter-spacing:var(--tracking-tighter);line-height:var(--leading-tight)}
 /* The caption under a hero number is a sentence, not a footnote: one step up from --text-xs, in --ink2, weight 500. */
 .big-cap{font-size:var(--text-sm);font-weight:500;color:var(--ink2);line-height:1.45;margin-top:2px;text-wrap:pretty}
-.btn{background:var(--accent2);color:var(--on-accent);padding:9px 15px;border-radius:var(--radius-sm);font-size:var(--text-sm);font-weight:600;letter-spacing:-.005em;transition:background .14s ease,transform .08s ease,box-shadow .14s ease;box-shadow:0 1px 2px rgba(0,0,0,.25)}
-.btn:hover{filter:brightness(1.08);box-shadow:0 2px 10px -2px color-mix(in srgb,var(--accent2) 55%,transparent)}
-.btn:active{transform:translateY(.5px)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;height:44px;padding:0 20px;border-radius:12px;
+  background:linear-gradient(to bottom,var(--cta-a),var(--cta-b));color:var(--on-accent);font-size:var(--text-sm);font-weight:600;letter-spacing:-.005em;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 4px 14px var(--cta-glow);
+  transition:transform .15s ease,box-shadow .15s ease,filter .15s ease,background .15s ease}
+.btn:hover{filter:none;transform:translateY(-2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 8px 20px var(--cta-glow-hi)}
+.btn:active{transform:translateY(0)}
 .btn.ghost{background:color-mix(in srgb,var(--accent2) 8%,var(--panel));border:1px solid color-mix(in srgb,var(--accent2) 26%,var(--line2));color:var(--ink);box-shadow:none}
 .btn.ghost:hover{background:color-mix(in srgb,var(--accent2) 15%,var(--panel));border-color:color-mix(in srgb,var(--accent2) 44%,var(--line2))}
 .btn.ghost:hover{color:var(--ink);border-color:var(--accent2)}
@@ -871,12 +875,28 @@ html[data-theme="light"] .hero-sec::before{background:radial-gradient(60% 60% at
 .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;border:0}
 .land-cta{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:var(--sp-5)}
 .land-cta .ar{font-size:1.05em;line-height:1}
-.btn.cta{display:inline-flex;align-items:center;justify-content:center;gap:9px}
-.cta-go{font-size:1.05em;line-height:1;opacity:.85;transition:transform .14s ease}
-.cta:hover .cta-go{transform:translateX(2px)}
-.cta-ic{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:color-mix(in srgb,var(--accent2) 16%,transparent);color:var(--accent2);flex:0 0 auto}
+.btn.cta{display:inline-flex;align-items:center;justify-content:center;gap:9px;height:44px;padding:0 20px;border-radius:12px;font-weight:600;
+  background:linear-gradient(to bottom,var(--cta-a),var(--cta-b));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 4px 14px var(--cta-glow);
+  transition:transform .15s ease,box-shadow .15s ease,filter .15s ease}
+.btn.cta:hover{filter:none;transform:translateY(-2px);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 8px 20px var(--cta-glow-hi)}
+.btn.cta:active{transform:translateY(0)}
+/* A secondary action is a clean outline, not a tinted pill with a coloured dot. */
+.btn.ghost.cta{height:44px;padding:0 16px;border-radius:12px;background:color-mix(in srgb,var(--panel) 90%,transparent);
+  border:1px solid var(--line2);color:var(--ink2);box-shadow:none}
+.btn.ghost.cta:hover{background:color-mix(in srgb,var(--panel2) 92%,transparent);border-color:var(--line2);color:var(--ink);transform:none;filter:none;box-shadow:none}
+html[data-theme="light"] .btn.ghost.cta{background:rgba(255,255,255,.9);border-color:var(--line);color:var(--ink2)}
+html[data-theme="light"] .btn.ghost.cta:hover{background:#fff;border-color:var(--line2);color:var(--ink)}
+/* One chevron for every action that leads somewhere: the arrow glides and a stem fades in behind it. */
+.chev{width:16px;height:16px;flex:0 0 auto;display:block;overflow:visible}
+.chev-go{transition:transform .15s ease}
+.chev-stem{opacity:0;transition:opacity .15s ease}
+.cta:hover .chev-go,.btn:hover .chev-go,a:hover>.chev .chev-go{transform:translateX(2.5px)}
+.cta:hover .chev-stem,.btn:hover .chev-stem,a:hover>.chev .chev-stem{opacity:1}
+.cta-ic{display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;color:currentColor;flex:0 0 auto;transition:transform .15s ease}
 .cta-ic svg{display:block}
-@media(prefers-reduced-motion:reduce){.cta:hover .cta-go{transform:none}}
+.cta:hover .cta-ic{transform:rotate(180deg)}
+@media(prefers-reduced-motion:reduce){.cta:hover .chev-go,.cta:hover .cta-ic{transform:none}.cta:hover .chev-stem{opacity:1}}
 .proof{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-2);margin-top:var(--sp-6)}
 .proof-c{background:var(--wash);border:1px solid var(--line-tint);border-radius:var(--radius);padding:11px 13px;min-width:0}
 .proof-c b{display:block;font-size:var(--text-lg);font-weight:700;letter-spacing:var(--tracking-tight);font-variant-numeric:tabular-nums;color:var(--ink)}
@@ -943,7 +963,6 @@ html[data-theme="light"] .hero-sec::before{background:radial-gradient(60% 60% at
   /* A longer translation wraps inside its cell instead of pushing the row past the viewport. */
   .land-cta .btn{min-height:44px;padding:8px 12px;font-size:var(--text-sm);border-radius:10px;gap:6px;white-space:normal;text-align:center;min-width:0;line-height:1.3}
   .land-cta .btn span{min-width:0;overflow-wrap:break-word}
-  .land-cta .cta-go{font-size:1em;line-height:1}
   .land-kicker{font-size:10px;letter-spacing:.1em;padding:4px 9px}
   .land-h1{font-weight:760;line-height:.98;margin-top:16px}
   .hero-lede{margin-top:12px;line-height:1.5}
@@ -998,7 +1017,7 @@ html[data-theme="light"] .hero-sec::before{background:radial-gradient(60% 60% at
 .price li{font-size:var(--text-sm);color:var(--ink2);padding:7px 0 7px 20px;position:relative;border-bottom:1px solid var(--line)}
 .price li:last-child{border-bottom:none}
 .price li:before{content:"";position:absolute;left:2px;top:14px;width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.7}
-.price .btn,.price .btn.ghost{width:100%;justify-content:center;display:block;text-align:center}
+.price .btn,.price .btn.ghost{width:100%;justify-content:center;display:flex;text-align:center}
 .price .chip{align-self:center;margin-top:auto}
 
 .plan-grid-compact .price .btn,.plan-grid-compact .price .chip{margin-top:auto;width:100%}
@@ -1095,14 +1114,14 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .btn.danger{background:color-mix(in srgb,var(--bad) 9%,var(--panel));border:1px solid color-mix(in srgb,var(--bad) 45%,var(--line));color:var(--bad)}
 .btn.danger:hover{background:color-mix(in srgb,var(--bad) 12%,var(--panel));border-color:var(--bad)}
 .plan-grid-compact{max-width:1000px;margin:0 auto;gap:var(--sp-4)}
-@media(max-width:900px){.plan-grid-compact{grid-template-columns:1fr!important;gap:14px}.plan-grid-compact .price{padding:20px}.plan-grid-compact .price-v{font-size:var(--text-2xl)}.plan-grid-compact .price li{font-size:var(--text-sm);padding:6px 0 6px 20px}.plan-grid-compact .price .btn{padding:11px 14px;font-size:var(--text-sm)}}
+@media(max-width:900px){.plan-grid-compact{grid-template-columns:1fr!important;gap:14px}.plan-grid-compact .price{padding:20px}.plan-grid-compact .price-v{font-size:var(--text-2xl)}.plan-grid-compact .price li{font-size:var(--text-sm);padding:6px 0 6px 20px}.plan-grid-compact .price .btn{padding:0 14px;font-size:var(--text-sm)}}
 .plan-grid-compact .price{display:flex;flex-direction:column;padding:18px}
 .plan-grid-compact .price h3{font-size:var(--text-base);margin:0 0 4px}
 .plan-grid-compact .price-alt{font-size:var(--text-xs)}
 .plan-grid-compact .price-v{font-size:var(--text-3xl)}
 .plan-grid-compact .price ul{min-height:0;margin:10px 0 12px;flex:1 1 auto}
 .plan-grid-compact .price li{font-size:var(--text-sm);padding:7px 0 7px 20px}
-.plan-grid-compact .price .btn{padding:7px 14px;font-size:var(--text-sm);width:100%;justify-content:center;display:block;text-align:center}
+.plan-grid-compact .price .btn{padding:0 14px;font-size:var(--text-sm);width:100%;justify-content:center;display:flex;text-align:center}
 .plan-chip{margin-top:auto;width:100%;text-align:center;justify-content:center;display:block;padding:7px 14px;font-size:var(--text-sm)}
 @media(max-width:900px){.plan-grid-compact{max-width:100%}}
 .plan-plus-cta{background:linear-gradient(100deg,var(--gold-deep),var(--gold));color:var(--gold-ink);border:1px solid transparent}
@@ -1571,7 +1590,7 @@ body.tw-lock{overflow:hidden}
             <li data-i18n="hero.b3"><b>The move that pays.</b> Compare staying, switching, contracting or relocating.</li>
           </ul>
           <div class="land-cta">
-            <a class="btn cta" href="#check" id="hero-primary"><span data-i18n="hero.primary">Check my market gap</span><span class="cta-go" aria-hidden="true">&gt;</span></a>
+            <a class="btn cta" href="#check" id="hero-primary"><span data-i18n="hero.primary">Check my market gap</span><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></a>
             <button class="btn ghost cta" id="hero-sample" type="button" aria-describedby="hero-sample-hint"><span class="cta-ic" aria-hidden="true"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M13 3v4h-4"/><path d="M3 13v-4h4"/><path d="M12.6 7A5 5 0 0 0 4 5.2"/><path d="M3.4 9A5 5 0 0 0 12 10.8"/></svg></span><span data-i18n="hero.sample">Explore live sample</span></button>
             <span class="sr-only" id="hero-sample-hint" data-i18n="hero.sampleHint">Cycles the three sample profiles shown in the preview card.</span>
           </div>
