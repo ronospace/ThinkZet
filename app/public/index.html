@@ -1185,8 +1185,20 @@ html[data-theme="light"] .btn.ghost.cta:hover{background:#fff;border-color:var(-
 .foot-grid a{display:flex;align-items:center;min-height:32px;font-size:var(--text-sm);color:var(--foot-link);text-decoration:none;padding:0;line-height:1.5;overflow-wrap:break-word;transition:color .14s ease}
 .foot-col a+a{margin-top:2px}
 @media(max-width:1023px){.foot-grid a{min-height:44px}.foot-col a+a{margin-top:0}}
+/* Three columns in one row on a phone, as the founder asked: the contact block stops taking a
+   whole row of its own, which is where most of the footer's height was going. */
+@media(max-width:767px){
+  .foot-grid{gap:var(--sp-4)}
+  .foot-links{grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-3)}
+  .foot-col-contact{grid-column:auto}
+  .foot-h{margin:0 0 2px}
+  /* An address in a third of a phone is wider than its column, so it breaks after the @ rather
+     than running off the page. */
+  .foot-col-contact a{display:block;overflow-wrap:normal;word-break:normal;line-height:1.35;min-height:36px}
+  .foot-col-contact .dom{display:block;white-space:nowrap}
+}
 .foot-grid a:hover{color:var(--foot-link-hi);text-decoration:underline;text-underline-offset:3px}
-.foot-h{font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
+.foot-h{font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 4px}
 .foot-note{font-size:var(--text-sm);color:var(--muted);max-width:280px;line-height:var(--leading-normal)}
 /* Desktop: brand holds five of twelve, the three columns share the other seven. */
 @media(min-width:768px){.foot-grid{grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--sp-8)}.foot-brand{grid-column:span 5}.foot-links{grid-column:span 7;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-8)}.foot-col-contact{grid-column:auto}}
@@ -1276,9 +1288,10 @@ sup.ord{font-size:.62em;font-weight:650;line-height:0;vertical-align:.5em;margin
 .plan-plus-cta{background:linear-gradient(100deg,var(--gold-deep),var(--gold));color:var(--gold-ink);border:1px solid transparent}
 .plan-plus-cta:hover{filter:brightness(1.05)}
 /* Quiet metadata, not a dashboard widget: one hairline, one line of figures, the date on the right. */
-.foot-meta{display:flex;flex-direction:column;gap:6px;margin-top:var(--sp-8);padding-top:var(--sp-5);border-top:1px solid var(--line-tint)}
+.foot-meta{display:flex;flex-direction:column;gap:5px;margin-top:var(--sp-5);padding-top:var(--sp-4);border-top:1px solid var(--line-tint)}
 .fm-row{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;font-size:var(--text-xs);color:var(--muted);line-height:1.6}
-.fm-row .ds-cell{display:inline-flex;align-items:baseline;gap:5px;min-width:0;white-space:nowrap}
+.fm-row .ds-cell{display:inline-flex;align-items:center;gap:5px;min-width:0;white-space:nowrap}
+.fm-row .ds-cell .ic{width:13px;height:13px;flex:0 0 auto;color:var(--muted);opacity:.9}
 .fm-row .ds-cell .k{font-size:var(--text-xs);color:var(--muted);white-space:nowrap}
 .fm-row .ds-cell .v{font-size:var(--text-xs);font-weight:600;color:var(--ink2);font-variant-numeric:tabular-nums;white-space:nowrap}
 .fm-date{font-size:var(--text-xs);color:var(--muted);white-space:nowrap}
@@ -1944,8 +1957,8 @@ body.tw-lock{overflow:hidden}
           </div>
           <div class="foot-col foot-col-contact">
             <div class="foot-h" data-i18n="foot.contact">Contact</div>
-            <a href="mailto:support@thinkzet.com">support@thinkzet.com</a>
-            <a href="mailto:privacy@thinkzet.com">privacy@thinkzet.com</a>
+            <a href="mailto:support@thinkzet.com">support@<span class="dom">thinkzet.com</span></a>
+            <a href="mailto:privacy@thinkzet.com">privacy@<span class="dom">thinkzet.com</span></a>
           </div>
         </div>
       </div>
@@ -2887,13 +2900,21 @@ async function loadSnapshot() {
     if (!r.ok) throw new Error('http ' + r.status);
     const d = await r.json();
     clearTimeout(timer);
-    const cell = (k, v) => `<div class="ds-cell"><div class="k">${esc(k)}</div><div class="v">${esc(String(v))}</div></div>`;
+    // One icon, one label, one value, in that order, and never a break inside a group.
+    const IC = {
+      opportunities: '<path d="M2.2 5.6h11.6v7.2a1 1 0 01-1 1H3.2a1 1 0 01-1-1z"/><path d="M6 5.6V4.2a1 1 0 011-1h2a1 1 0 011 1v1.4"/>',
+      salaries: '<circle cx="8" cy="8" r="5.8"/><path d="M8 4.6v6.8M9.9 6.3c-.4-.5-1-.8-1.9-.8-1.1 0-1.9.6-1.9 1.4 0 1.9 4 1 4 3 0 .9-.9 1.5-2.1 1.5-.9 0-1.6-.3-2-.9"/>',
+      countries: '<circle cx="8" cy="8" r="5.8"/><path d="M2.2 8h11.6M8 2.2c1.7 1.7 2.5 3.7 2.5 5.8S9.7 12.1 8 13.8C6.3 12.1 5.5 10.1 5.5 8S6.3 3.9 8 2.2z"/>',
+      live: '<path d="M2.4 10.6a7 7 0 0111.2 0"/><path d="M4.9 8.9a4.2 4.2 0 016.2 0"/><circle cx="8" cy="11.8" r="1.1" fill="currentColor" stroke="none"/>',
+      confidence: '<circle cx="8" cy="8" r="5.8"/><circle cx="8" cy="8" r="2.4"/><circle cx="8" cy="8" r=".7" fill="currentColor" stroke="none"/>',
+    };
+    const cell = (ic, k, v) => `<div class="ds-cell"><svg class="ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.35" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${IC[ic]}</svg><span class="k">${esc(k)}</span><span class="v">${esc(String(v))}</span></div>`;
     const rows = [
-      cell(T('snap.opportunities') || 'Opportunities', int(d.opportunities)),
-      cell(T('snap.salaries') || 'Salary records', int(d.distinctSalaryValues) + ' ' + (T('snap.distinct') || 'distinct')),
-      cell(T('snap.countries') || 'Countries', int(d.countries)),
-      cell(T('snap.liveShare') || 'Live share', pct(d.liveSharePct)),
-      cell(T('snap.confidence') || 'Confidence', titleCase(d.confidence)),
+      cell('opportunities', T('snap.opportunities') || 'Opportunities', int(d.opportunities)),
+      cell('salaries', T('snap.salaries') || 'Salary records', int(d.distinctSalaryValues)),
+      cell('countries', T('snap.countries') || 'Countries', int(d.countries)),
+      cell('live', T('snap.liveShare') || 'Live share', pct(d.liveSharePct)),
+      cell('confidence', T('snap.confidence') || 'Confidence', titleCase(d.confidence)),
     ];
     box.innerHTML = rows.join('');
     const on = String(d.asOf || d.lastOpportunity || '').slice(0, 10);
