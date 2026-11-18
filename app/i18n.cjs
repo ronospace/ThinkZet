@@ -20,6 +20,15 @@ const STRINGS = {
 
     'view.account.short': 'Account',
     'view.plan': 'Plan',
+    'fbk.open': 'Feedback',
+    'fbk.title': 'Send feedback',
+    'fbk.lede': 'Tell us where the product lost you. One sentence is enough.',
+    'fbk.q': 'What confused you?',
+    'fbk.email': 'Email address',
+    'fbk.optional': 'optional',
+    'fbk.send': 'Send feedback',
+    'fbk.cancel': 'Cancel',
+    'fbk.done': 'Thank you. Your feedback helps improve ThinkZet.',
 
     'view.brief': 'Daily Brief',
     'view.radar': 'Opportunity Radar',
@@ -181,6 +190,15 @@ const STRINGS = {
 
     'view.account.short': 'Konto',
     'view.plan': 'Plan',
+    'fbk.open': 'Feedback',
+    'fbk.title': 'Feedback senden',
+    'fbk.lede': 'Sag uns, wo das Produkt dich verloren hat. Ein Satz genügt.',
+    'fbk.q': 'Was hat dich verwirrt?',
+    'fbk.email': 'E-Mail-Adresse',
+    'fbk.optional': 'optional',
+    'fbk.send': 'Feedback senden',
+    'fbk.cancel': 'Abbrechen',
+    'fbk.done': 'Danke. Dein Feedback hilft, ThinkZet zu verbessern.',
 
     'view.brief': 'Tagesbrief',
     'view.radar': 'Chancen-Radar',

@@ -190,6 +190,14 @@ async function call(method, path, body) {
   const legal = await call('GET', '/legal/privacy.html');
   if (legal.status === 200 && /Privacy/.test(legal.text || '')) pass++; else { fail++; failures.push('invariant failed: privacy page served'); }
 
+  // A confusion report is accepted from a stranger and refused to a stranger's read.
+  const fbPost = await callAnon('POST', '/api/feedback/report', { message: 'check: the gap percentage had no baseline', page: '/#rates', device: 'phone' });
+  if (fbPost.status === 200 && fbPost.json?.ok) pass++; else { fail++; failures.push('invariant failed: feedback report accepted'); }
+  const fbList = await callAnon('GET', '/api/feedback/reports');
+  if (fbList.status === 404) pass++; else { fail++; failures.push('invariant failed: feedback reports answer 404 to a stranger'); }
+  const fbShort = await callAnon('POST', '/api/feedback/report', { message: 'x' });
+  if (fbShort.status === 400) pass++; else { fail++; failures.push('invariant failed: a one-letter report is refused'); }
+
   const traj = await call('GET', '/api/trajectory');
   const trajOk = traj.json && traj.json.paths?.length === 5 && traj.json.paths.every((p) => p.endSalary > 0);
   if (trajOk) pass++; else { fail++; failures.push('invariant failed: five trajectory paths'); }

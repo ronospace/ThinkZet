@@ -466,6 +466,33 @@ route('POST', /^\/api\/feedback$/, async (req, res) => {
   json(res, 200, { ok: true, id });
 });
 
+// A confusion report carries what the screen already knows, so the person types one thing only.
+// The page, the device and the sign-in state are read here, never trusted from the body.
+route('POST', /^\/api\/feedback\/report$/, async (req, res) => {
+  const body = await readBody(req);
+  const message = String(body.message || '').replace(/\s+/g, ' ').trim().slice(0, 2000);
+  if (message.length < 3) return json(res, 400, { error: 'Tell us what confused you, in a few words' });
+  const rawEmail = String(body.email || '').trim().slice(0, 160);
+  if (rawEmail && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(rawEmail)) return json(res, 400, { error: 'That email address does not look complete' });
+  const u = AUTH.currentUser(req, res);
+  const page = String(body.page || '').slice(0, 120) || null;
+  const device = ['phone', 'tablet', 'desktop'].includes(body.device) ? body.device : 'desktop';
+  const id = crypto.randomUUID();
+  db.prepare('INSERT INTO feedback_reports (id,user_id,message,email,page,device,signed_in) VALUES (?,?,?,?,?,?,?)')
+    .run(id, u ? u.id : null, message, rawEmail || null, page, device, u ? 1 : 0);
+  AN.track(u ? u.id : null, 'feedback.reported', { page, device, signedIn: !!u });
+  json(res, 200, { ok: true, id });
+});
+
+// The reports are operator data: a stranger gets the same 404 a missing route answers.
+route('GET', /^\/api\/feedback\/reports$/, async (req, res) => {
+  const u = AUTH.currentUser(req, res);
+  if (!u || !isFounder(req, res)) return notFound(res);
+  const rows = db.prepare('SELECT id, message, email, page, device, signed_in, created_at FROM feedback_reports ORDER BY created_at DESC LIMIT 100').all();
+  const total = db.prepare('SELECT COUNT(*) n FROM feedback_reports').get().n;
+  json(res, 200, { ok: true, total, reports: rows });
+});
+
 route('GET', /^\/api\/feedback$/, async (req, res) => {
   const rows = db.prepare('SELECT rating, COUNT(*) n FROM feedback GROUP BY rating').all();
   const total = rows.reduce((a, r) => a + r.n, 0);

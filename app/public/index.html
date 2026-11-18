@@ -749,6 +749,35 @@ table.t tr:hover td{background:var(--panel2)}
 .cp-chip:hover{border-color:var(--accent2);background:var(--panel2);color:var(--ink)}
 .cp-chip:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
 .composer{display:flex;gap:8px;align-items:flex-end;flex:0 0 auto;min-width:0;max-width:100%}
+/* Feedback is a modal on the palette's scrim, but its own surface: one field, one optional field,
+   three facts the screen already knows, and one action. */
+.fbk{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:16px;
+  background:color-mix(in srgb,var(--bg) 62%,transparent);backdrop-filter:blur(3px)}
+.fbk[hidden]{display:none}
+.fbk-box{width:100%;max-width:520px;max-height:calc(100dvh - 32px);overflow-y:auto;box-sizing:border-box;
+  padding:18px;border:1px solid var(--line2);border-radius:16px;background:var(--panel);
+  box-shadow:0 24px 60px rgba(0,0,0,.34);display:flex;flex-direction:column;gap:10px}
+.fbk-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.fbk-head h2{margin:0;font-size:var(--text-lg);font-weight:650;letter-spacing:-.01em;color:var(--ink)}
+.fbk-x{display:grid;place-items:center;width:32px;height:32px;flex:0 0 auto;border:1px solid var(--line-tint);
+  border-radius:8px;background:transparent;color:var(--muted);cursor:pointer}
+.fbk-x:hover{background:var(--wash);color:var(--ink)}
+.fbk-lede{margin:0;font-size:var(--text-sm);color:var(--ink2);line-height:1.55}
+.fbk-l{font-size:var(--text-2xs);font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:2px 0 -4px}
+.fbk-l span:last-child{font-weight:500;letter-spacing:.02em;text-transform:none;color:var(--muted);opacity:.8}
+.fbk textarea,.fbk input{width:100%;box-sizing:border-box;background:var(--wash);border:1px solid var(--line-tint);
+  border-radius:10px;padding:10px 12px;outline:none;font:inherit;font-size:16px;line-height:1.5;color:var(--ink);resize:vertical}
+.fbk textarea{min-height:96px;max-height:220px}
+.fbk textarea:focus,.fbk input:focus{border-color:var(--accent2)}
+.fbk-facts{display:flex;flex-wrap:wrap;gap:4px 6px;font-size:var(--text-xs);color:var(--muted);line-height:1.6}
+.fbk-facts span{display:inline-flex;align-items:baseline;gap:5px;white-space:nowrap}
+.fbk-facts span+span::before{content:"\00b7";color:var(--line2)}
+.fbk-foot{display:flex;gap:8px;justify-content:flex-end;margin-top:2px}
+.fbk-done{padding:10px 12px;border-radius:10px;border:1px solid var(--ai-border);background:var(--accent-soft);
+  color:var(--ink);font-size:var(--text-sm);font-weight:600}
+.fbk-done[hidden]{display:none}
+@media(max-width:560px){.fbk{align-items:flex-end;padding:0}.fbk-box{max-width:none;border-radius:16px 16px 0 0;
+  max-height:92dvh;padding:16px 14px calc(16px + env(safe-area-inset-bottom))}.fbk-foot .btn{flex:1 1 0}}
 .composer textarea{flex:1 1 auto;min-width:0;background:var(--wash);border:1px solid var(--line-tint);border-radius:12px;padding:11px 13px;outline:none;
   font:inherit;font-size:16px;line-height:1.5;color:var(--ink);resize:none;max-height:132px;overflow-y:auto;box-sizing:border-box}
 .composer textarea:focus{border-color:var(--accent2)}
@@ -2004,6 +2033,7 @@ body.tw-lock{overflow:hidden}
             <button role="menuitem" id="menu-signin" class="tb-cell tb-cell-lead" hidden>Sign In</button>
             <a role="menuitem" id="menu-about" class="tb-cell" href="/#how" hidden>About</a>
             <a role="menuitem" id="menu-account" class="tb-cell tb-cell-lead" href="/?app=1" hidden>Account</a>
+            <button role="menuitem" id="menu-feedback" class="tb-cell" data-i18n="fbk.open">Feedback</button>
             <button role="menuitem" id="logout" class="tb-cell tb-cell-danger" hidden>Sign Out</button>
           </div>
           <!-- The operator action lives on /console, not in the account menu: two cells, nothing else. -->
@@ -2014,6 +2044,27 @@ body.tw-lock{overflow:hidden}
   </main>
 </div>
 <div class="toast" id="toast"></div>
+<div class="fbk" id="fbk" role="dialog" aria-modal="true" aria-labelledby="fbk-title" hidden>
+  <div class="fbk-box">
+    <div class="fbk-head">
+      <h2 id="fbk-title" data-i18n="fbk.title">Send feedback</h2>
+      <button class="fbk-x" id="fbk-x" aria-label="Close">
+        <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 4l8 8M12 4l-8 8"/></svg>
+      </button>
+    </div>
+    <p class="fbk-lede" data-i18n="fbk.lede">Tell us where the product lost you. One sentence is enough.</p>
+    <label class="fbk-l" for="fbk-msg" data-i18n="fbk.q">What confused you?</label>
+    <textarea id="fbk-msg" rows="4" maxlength="2000" placeholder="I could not tell what the gap percentage was measured against."></textarea>
+    <label class="fbk-l" for="fbk-email"><span data-i18n="fbk.email">Email address</span> <span data-i18n="fbk.optional">optional</span></label>
+    <input id="fbk-email" type="email" autocomplete="email" maxlength="160" placeholder="you@example.com"/>
+    <div class="fbk-facts" id="fbk-facts"></div>
+    <div class="fbk-foot">
+      <button class="btn ghost" id="fbk-cancel" data-i18n="fbk.cancel">Cancel</button>
+      <button class="btn cta" id="fbk-send"><span data-i18n="fbk.send">Send feedback</span><svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></button>
+    </div>
+    <div class="fbk-done" id="fbk-done" data-i18n="fbk.done" hidden>Thank you. Your feedback helps improve ThinkZet.</div>
+  </div>
+</div>
 <div class="palette" id="palette">
   <div class="palette-box">
     <input id="palette-input" placeholder="Search opportunities, jump to a view, run a command…" autocomplete="off"/>
@@ -2239,6 +2290,71 @@ function formatReply(text) {
 const track = (event, props) => { try { post('/api/track', { event, props: props || {}, path: location.pathname + location.search }); } catch (e) { /* never block the UI */ } };
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+// Feedback: one modal, opened from the account menu on every view. It reads the page, the device
+// and the sign-in state itself, so the person types only what confused them.
+const FBK = (() => {
+  const el = $('#fbk'), msg = $('#fbk-msg'), mail = $('#fbk-email'), facts = $('#fbk-facts');
+  const done = $('#fbk-done'), sendBtn = $('#fbk-send');
+  let lastFocus = null;
+  const device = () => (window.matchMedia('(max-width:600px)').matches ? 'phone'
+    : window.matchMedia('(max-width:1023px)').matches ? 'tablet' : 'desktop');
+  const page = () => {
+    const v = (STATE && STATE.view) || 'brief';
+    return location.pathname.replace(/\/$/, '') + (location.pathname.startsWith('/?app') || location.search.includes('app=1') ? '#' + v : '');
+  };
+  const paint = () => {
+    if (!facts) return;
+    const on = !!(STATE && STATE.authed);
+    facts.innerHTML = [['Page', page()], ['Device', device()], ['Signed in', on ? 'Yes' : 'No']]
+      .map(([k, v]) => `<span><b style="font-weight:600;color:var(--ink2)">${esc(k)}</b> ${esc(v)}</span>`).join('');
+  };
+  const open = () => {
+    if (!el) return;
+    lastFocus = document.activeElement;
+    if (done) done.hidden = true;
+    if (sendBtn) sendBtn.disabled = false;
+    paint();
+    el.hidden = false;
+    document.body.style.overflow = 'hidden';
+    setTimeout(() => { if (msg) msg.focus(); }, 30);
+  };
+  const close = () => {
+    if (!el) return;
+    el.hidden = true;
+    document.body.style.overflow = '';
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  };
+  const submit = async () => {
+    const body = (msg && msg.value || '').trim();
+    if (body.length < 3) { toast('Tell us what confused you, in a few words'); if (msg) msg.focus(); return; }
+    if (sendBtn) sendBtn.disabled = true;
+    try {
+      const r = await api('/api/feedback/report', { method: 'POST', body: JSON.stringify({
+        message: body, email: (mail && mail.value || '').trim(), page: page(), device: device()
+      }) });
+      if (!r || !r.ok) throw new Error((r && r.error) || 'Could not send');
+      if (msg) msg.value = ''; if (mail) mail.value = '';
+      if (done) done.hidden = false;
+      if (sendBtn) sendBtn.disabled = true;
+      setTimeout(close, 2200);
+    } catch (e) {
+      if (sendBtn) sendBtn.disabled = false;
+      toast(e.message || 'Could not send');
+    }
+  };
+  if (el) {
+    const x = $('#fbk-x'), cancel = $('#fbk-cancel');
+    if (x) x.onclick = close;
+    if (cancel) cancel.onclick = close;
+    if (sendBtn) sendBtn.onclick = submit;
+    el.onclick = (e) => { if (e.target === el) close(); };
+    el.onkeydown = (e) => {
+      if (e.key === 'Escape') { e.stopPropagation(); close(); }
+      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) submit();
+    };
+  }
+  return { open, close };
+})();
 const toast = (m) => { const t = $('#toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2600); };
 
 let STATE = { profile: null, view: 'radar', feed: null, types: [], horizon: 'balanced', sort: 'score', demo: false };
@@ -5661,6 +5777,7 @@ function setTheme(mode) { try { localStorage.setItem(THEME_KEY, mode); } catch (
 })();
 $('#cmdk').onclick = openPalette;
 if ($('#menu-signin')) $('#menu-signin').onclick = () => { document.getElementById('tb-drop').classList.remove('open'); go('auth'); };
+if ($('#menu-feedback')) $('#menu-feedback').onclick = () => { document.getElementById('tb-drop').classList.remove('open'); FBK.open(); };
 // The left cell is a destination, so it closes the menu and lets the link do its own work.
 document.querySelectorAll('#menu-about,#menu-account').forEach((a) => {
   a.addEventListener('click', () => document.getElementById('tb-drop').classList.remove('open'));
