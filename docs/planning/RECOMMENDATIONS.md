@@ -194,3 +194,6 @@ Last updated: 16 November 2026.
 | R-172 | The footer was three lavender cards with borders and radius, so navigation read as three oversized boxes | The cards are deleted: no tint, no border, no radius, no min-height, content on the page surface | Done `UI-172` |
 | R-173 | Three equal columns gave the brand no anchor and the links no grouping | A 12-column grid at 768 and up: brand spans 5, the three link columns share 7; on a phone brand full width, Product and Company side by side, Contact below | Done `UI-172` |
 | R-174 | Four contact addresses wrapped inside a narrow column | The footer carries one address, support@thinkzet.com, on one line at every width | Done `UI-172` |
+| R-175 | The footer linked "How It Works" while the FAQ above it answered the same question | Product is Capabilities, Pricing and FAQ, and FAQ links to the section it names | Done `UI-173` |
+| R-176 | Contact carried one address, so the privacy contact had no route from the footer | support@ and privacy@ are both listed; hello@ and billing@ stay removed | Done `UI-173` |
+| R-177 | The Market Snapshot was a bordered panel with a heading, a five-cell grid and a note, reading as a dashboard widget | It is one hairline metadata strip: the figures on the left, "Updated 2026-11-18" on the right, one line on desktop and two on a phone | Done `UI-173` |
