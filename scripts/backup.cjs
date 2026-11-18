@@ -171,15 +171,18 @@ async function remove(key) {
   console.log(`upload    ${S3.endpoint}/${S3.bucket}/${key}`);
 
   if (!NO_PRUNE) {
-    // Pruning needs ListBucket, which a write-only token does not grant. The snapshot is already
-    // stored at this point, so a refused list is a warning about retention, never a failed backup.
+    // Pruning needs list permission on the bucket. The snapshot is already stored at this point, so
+    // a refused list is a warning about retention, never a failed backup. The list is printed even
+    // when nothing is stale, so a run that keeps everything says so instead of saying nothing.
     let keys;
     try { keys = (await list(`${S3.prefix}/careeros-`)).sort(); }
-    catch (e) { console.log(`prune     skipped: ${e.message}. Grant Object List on the bucket to enable retention.`); keys = null; }
+    catch (e) { console.log(`prune     skipped: ${e.message}`); keys = null; }
     if (keys) {
-    const stale = keys.slice(0, Math.max(0, keys.length - KEEP));
-    for (const k of stale) await remove(k);
-    if (stale.length) console.log(`pruned    ${stale.length} old ${stale.length === 1 ? 'copy' : 'copies'}, ${Math.min(keys.length, KEEP)} kept`);
+      const stale = keys.slice(0, Math.max(0, keys.length - KEEP));
+      for (const k of stale) await remove(k);
+      console.log(stale.length
+        ? `pruned    ${stale.length} old ${stale.length === 1 ? 'copy' : 'copies'}, ${Math.min(keys.length, KEEP)} kept`
+        : `kept      ${keys.length} of ${KEEP} allowed, nothing to prune`);
     }
   }
   console.log(`done      ${((Date.now() - started) / 1000).toFixed(1)}s`);
