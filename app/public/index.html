@@ -1007,22 +1007,24 @@ html[data-theme="light"] .hero-sec::before{background:radial-gradient(60% 60% at
 .faq summary:after{content:"+";color:var(--muted);font-weight:400}
 .faq details[open] summary:after{content:"\2013"}
 .faq p{font-size:var(--text-sm);color:var(--ink2);line-height:var(--leading-normal);margin:10px 0 0;max-width:720px}
-.land-footer{margin-top:var(--sp-16);padding-top:var(--sp-8);border-top:1px solid var(--line)}
-.foot-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-4);align-items:start}
-.foot-grid>div:first-child{grid-column:1/-1;margin-bottom:var(--sp-4);text-align:left}
-.foot-col{display:flex;flex-direction:column;background:var(--accent-soft);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px}
-.foot-grid a{display:block;font-size:var(--text-sm);color:var(--muted);text-decoration:none;padding:3px 0;overflow-wrap:break-word}
+.land-footer{margin-top:var(--sp-16);padding:var(--sp-8) 0 var(--sp-6);border-top:1px solid var(--line)}
+/* Structured navigation, not three cards: no tint, no border, no radius, no min-height. */
+.foot-grid{display:grid;grid-template-columns:1fr;gap:var(--sp-6);align-items:start}
+.foot-brand{min-width:0}
+.foot-links{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-6);align-items:start}
+.foot-col{display:block;min-width:0}
+.foot-col-contact{grid-column:1/-1}
+.foot-grid a{display:block;font-size:var(--text-sm);color:var(--ink2);text-decoration:none;padding:0;line-height:1.7;overflow-wrap:break-word}
+.foot-col a+a{margin-top:8px}
 .foot-grid a:hover{color:var(--ink)}
-.foot-h{font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;color:var(--ink2);font-weight:700;margin-bottom:8px}
+.foot-h{font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:700;margin:0 0 10px}
 .foot-note{font-size:var(--text-sm);color:var(--muted);max-width:280px;line-height:var(--leading-normal)}
+/* Desktop: brand holds five of twelve, the three columns share the other seven. */
+@media(min-width:768px){.foot-grid{grid-template-columns:repeat(12,minmax(0,1fr));gap:var(--sp-8)}.foot-brand{grid-column:span 5}.foot-links{grid-column:span 7;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--sp-8)}.foot-col-contact{grid-column:auto}}
 .foot-legal{margin-top:var(--sp-8);padding-top:var(--sp-4);border-top:1px solid var(--line);font-size:var(--text-2xs);color:var(--muted);text-align:center;line-height:1.7;padding-bottom:8px}
 @media(max-width:900px){.land-footer{padding-bottom:96px}}
-/* Declared after the 900px rule, so a phone gets the full-width last card and no empty cell. */
-@media(max-width:760px){.foot-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px;align-items:stretch}.foot-grid>.foot-col{grid-column:auto;padding:10px 8px}.foot-grid a{font-size:var(--text-2xs);line-height:1.45;overflow-wrap:normal;word-break:normal;hyphens:none}
-  /* An address breaks after the @ on every row, so four addresses read as one list. */
-  .foot-col a .dom{display:block}.foot-col h4,.foot-col .foot-h{font-size:var(--text-2xs);letter-spacing:.08em}}
 .foot-legal span{display:block}
-@media(max-width:900px){.price{padding:var(--sp-5)}.price-tag{left:var(--sp-4);font-size:var(--text-2xs);padding:3px 8px}.how-grid,.cap-grid,.price-grid{grid-template-columns:1fr}.foot-grid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:8px}.foot-grid>div:first-child{grid-column:1/-1;text-align:center;margin-bottom:6px}.foot-grid>div:first-child .land-brand{justify-content:center}.foot-grid>div:first-child .foot-note{margin:0 auto}.land-nav-links{display:none}.hero-sec{padding-top:var(--sp-10)}
+@media(max-width:900px){.price{padding:var(--sp-5)}.price-tag{left:var(--sp-4);font-size:var(--text-2xs);padding:3px 8px}.how-grid,.cap-grid,.price-grid{grid-template-columns:1fr}.land-nav-links{display:none}.hero-sec{padding-top:var(--sp-10)}
   .land-tag{display:none}
   .land-nav{padding:10px 16px;gap:8px}
   .land-brand{font-size:var(--text-base)}
@@ -1729,27 +1731,26 @@ body.tw-lock{overflow:hidden}
 
     <footer class="land-footer">
       <div class="foot-grid">
-        <div>
+        <div class="foot-brand">
           <div class="land-brand" style="margin-bottom:10px"><svg class="mark" viewBox="0 0 192 192" aria-hidden="true" focusable="false"><use href="#tz-mark"/></svg> <span class="wm">Think<i>Zet</i></span></div>
           <div class="foot-note">Think beyond. Build what's next.</div>
         </div>
-        <div class="foot-col">
-          <div class="foot-h" data-i18n="foot.product">Product</div>
-          <a href="#capabilities">Capabilities</a>
-          <a href="#pricing">Pricing</a>
-          <a href="#how">How It Works</a>
-        </div>
-        <div class="foot-col">
-          <div class="foot-h" data-i18n="foot.company">Company</div>
-          <a href="/legal/terms.html" data-i18n="foot.terms">Terms</a>
-          <a href="/legal/privacy.html" data-i18n="foot.privacy">Privacy</a>
-        </div>
-        <div class="foot-col">
-          <div class="foot-h" data-i18n="foot.contact">Contact</div>
-          <a href="mailto:support@thinkzet.com">support@<span class="dom">thinkzet.com</span></a>
-          <a href="mailto:hello@thinkzet.com">hello@<span class="dom">thinkzet.com</span></a>
-          <a href="mailto:billing@thinkzet.com">billing@<span class="dom">thinkzet.com</span></a>
-          <a href="mailto:privacy@thinkzet.com">privacy@<span class="dom">thinkzet.com</span></a>
+        <div class="foot-links">
+          <div class="foot-col">
+            <div class="foot-h" data-i18n="foot.product">Product</div>
+            <a href="#capabilities">Capabilities</a>
+            <a href="#pricing">Pricing</a>
+            <a href="#how">How It Works</a>
+          </div>
+          <div class="foot-col">
+            <div class="foot-h" data-i18n="foot.company">Company</div>
+            <a href="/legal/terms.html" data-i18n="foot.terms">Terms</a>
+            <a href="/legal/privacy.html" data-i18n="foot.privacy">Privacy</a>
+          </div>
+          <div class="foot-col foot-col-contact">
+            <div class="foot-h" data-i18n="foot.contact">Contact</div>
+            <a href="mailto:support@thinkzet.com">support@thinkzet.com</a>
+          </div>
         </div>
       </div>
       <div class="market-snapshot" id="data-sources">

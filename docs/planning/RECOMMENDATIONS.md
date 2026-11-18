@@ -191,3 +191,6 @@ Last updated: 16 November 2026.
 | R-169 | A third row for the operator action sat inside the account menu, which is a consumer surface | The row is deleted; the operator action lives on `/console`, and a stranger's HTML now names no ingest at all | Done `UI-170` |
 | R-170 | The footer stacked its three tiles on a phone, so Product, Company and Contact read as three full-width blocks | Three equal columns in one row at 393, 360 and 320, stretched to one height | Done `UI-171` |
 | R-171 | An email address wrapped mid-word inside a narrow tile, so four addresses read as eight fragments | The domain is its own line, so every address breaks after the @ and the list reads as four rows | Done `UI-171` |
+| R-172 | The footer was three lavender cards with borders and radius, so navigation read as three oversized boxes | The cards are deleted: no tint, no border, no radius, no min-height, content on the page surface | Done `UI-172` |
+| R-173 | Three equal columns gave the brand no anchor and the links no grouping | A 12-column grid at 768 and up: brand spans 5, the three link columns share 7; on a phone brand full width, Product and Company side by side, Contact below | Done `UI-172` |
+| R-174 | Four contact addresses wrapped inside a narrow column | The footer carries one address, support@thinkzet.com, on one line at every width | Done `UI-172` |
