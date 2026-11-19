@@ -1606,8 +1606,8 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .tk-start{margin-top:14px}
 .tk-start-rows{display:grid;gap:0;margin-top:12px}
 .tk-start .sr{display:grid;grid-template-columns:34px minmax(0,1fr) auto;align-items:center;gap:10px;
-  padding:10px 0;border-top:1px solid var(--line-tint)}
-.tk-start .sr:first-child{border-top:none;padding-top:0}
+  min-height:58px;padding:8px 0;border-top:1px solid var(--line-tint)}
+.tk-start .sr:first-child{border-top:none}
 .tk-start .sr-s{display:grid;place-items:center;width:34px;height:26px;border-radius:7px;font-size:var(--text-xs);
   font-weight:700;font-variant-numeric:tabular-nums;color:var(--score-good);background:var(--wash);border:1px solid var(--line-tint)}
 .tk-start .sr-s.g{color:var(--accent2)}
@@ -1615,7 +1615,17 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .tk-start .sr-b{min-width:0;display:flex;flex-direction:column;gap:2px}
 .tk-start .sr-t{font-size:var(--text-sm);font-weight:600;line-height:1.35;overflow-wrap:anywhere}
 .tk-start .sr-c{font-size:var(--text-xs);color:var(--ink2);line-height:1.4;overflow-wrap:anywhere}
-@media(max-width:560px){.tk-start .sr{grid-template-columns:34px minmax(0,1fr);row-gap:8px}.tk-start .sr .btn{grid-column:2;justify-self:start;min-height:36px}}
+/* Three Save buttons stacked are three commits inside one card, not the page's primary action, so
+   they take a tint and a 32px height on a desktop and keep the 44px target on a phone. */
+.tk-start .sr .btn{height:32px;min-width:64px;padding:0 12px;border-radius:8px;font-weight:600;
+  background:color-mix(in srgb,var(--accent2) 10%,var(--panel));
+  border:1px solid color-mix(in srgb,var(--accent2) 30%,var(--line));
+  color:var(--accent2);box-shadow:none}
+.tk-start .sr .btn:hover{background:color-mix(in srgb,var(--accent2) 17%,var(--panel));
+  border-color:color-mix(in srgb,var(--accent2) 46%,var(--line))}
+.tk-start .sr .btn[disabled]{opacity:.55;cursor:default}
+@media(max-width:560px){.tk-start .sr{grid-template-columns:34px minmax(0,1fr);row-gap:8px;min-height:0;padding:10px 0}
+  .tk-start .sr .btn{grid-column:2;justify-self:start;height:44px;min-width:96px}}
 @media(max-width:1100px){.tk-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:560px){.tk-grid{grid-template-columns:1fr;gap:10px}.tk-col{min-height:0}}
 /* ---------- brief metric bar ---------- */
