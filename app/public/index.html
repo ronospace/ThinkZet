@@ -289,7 +289,7 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .sh-watch{display:inline-flex;flex-wrap:wrap;gap:5px}
 .sh-alert{font:inherit;font-size:var(--text-xs);padding:3px 6px;border-radius:6px;border:1px solid var(--line-tint);background:var(--wash);color:var(--ink2);cursor:pointer}
 .sh-name{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.sh-input{font:inherit;font-size:var(--text-sm);padding:8px 11px;border-radius:var(--radius-sm);border:1px solid var(--line-tint);background:var(--wash);color:var(--ink);min-width:0;flex:1 1 190px;outline:none}
+.sh-input{font:inherit;font-size:var(--text-sm);padding:0 11px;height:36px;box-sizing:border-box;border-radius:var(--radius-sm);border:1px solid var(--line-tint);background:var(--wash);color:var(--ink);min-width:0;flex:1 1 190px;outline:none}
 .sh-input:focus{border-color:var(--accent2)}
 .sh-quick{display:flex;gap:2px;opacity:0;transition:opacity .12s}
 .sh:hover .sh-quick,.sh:focus-within .sh-quick{opacity:1}
@@ -1594,11 +1594,15 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 /* ---------- your data ---------- */
 .data-acts{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:10px;align-items:start}
 .data-act{display:flex;flex-direction:column;align-items:flex-start;gap:7px}
+/* Two acts side by side are one row of controls with a note under each, so the control sits on one
+   line, both controls are the same height and both notes start on the same line. */
+.data-act .sh-name{width:100%}
+.data-act .btn{height:36px;min-height:36px}
 
 .data-act .btn{justify-content:center}
 .da-note{font-size:var(--text-xs);color:var(--ink2);line-height:1.5}
 /* Side by side at every width: two short actions, and stacking them made the pair read as a sequence. */
-@media(max-width:560px){.data-acts{grid-template-columns:1fr;gap:14px}.data-act .btn{padding-left:8px;padding-right:8px}.sh-name{flex-wrap:wrap}.sh-input{flex:1 1 100%}}
+@media(max-width:560px){.data-acts{grid-template-columns:1fr;gap:14px}.data-act .btn{height:44px;min-height:44px;padding-left:8px;padding-right:8px}.sh-name{flex-wrap:wrap}.sh-input{flex:1 1 100%;height:44px}}
 /* ---------- career calibration ---------- */
 .opt{font-size:var(--text-2xs);font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink2);
   background:var(--wash);border:1px solid var(--line-tint);border-radius:5px;padding:1px 5px;margin-left:6px;vertical-align:1px}
