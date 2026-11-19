@@ -1882,9 +1882,11 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 /* A link inside a sentence has to look like a link, not like emphasis. */
 .acct-link{color:var(--foot-link);font-weight:600;text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
 .acct-link:hover{color:var(--foot-link-hi)}
-/* The crawler status is operator telemetry. On the settings routes it is noise beside four controls. */
-.tw-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);align-items:start}
-.tw-col{display:grid;gap:var(--sp-4);min-width:0;align-content:start}
+/* Two columns of cards end on one line. The shorter column shares the height it was given between
+   its own cards rather than leaving a block of empty page under its last one, and each card keeps
+   its content at the top so nothing drifts apart inside it. */
+.tw-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);align-items:stretch}
+.tw-col{display:grid;gap:var(--sp-4);min-width:0;align-content:stretch}
 .tw-card{min-width:0}
 .tw-card.tw-flash{border-color:color-mix(in srgb,var(--accent2) 55%,var(--line))}
 .tw-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px;flex-wrap:wrap}
@@ -1969,7 +1971,7 @@ body.tw-lock{overflow:hidden}
 .tw-hint{font-size:var(--text-xs);color:var(--muted);line-height:1.4}
 .tw-chips-edit{margin-top:2px}
 
-@media(max-width:1023px){.tw-grid{grid-template-columns:1fr}.tw-c-head{grid-template-columns:1fr;gap:10px}}
+@media(max-width:1023px){.tw-grid{grid-template-columns:1fr;align-items:start}.tw-col{align-content:start}.tw-c-head{grid-template-columns:1fr;gap:10px}}
 @media(max-width:640px){
   .tw-drawer{grid-template-columns:1fr}
   .tw-panel{border-left:none;border-top:1px solid var(--line-tint);border-radius:var(--radius-lg) var(--radius-lg) 0 0;align-self:end;max-height:92dvh}
