@@ -4602,7 +4602,7 @@ async function renderTwin() {
     <div class="tw-intro">
       <p class="tw-lede">Your profile, used for every rate, match and score you see.</p>
       <div class="tw-acts">
-        <button class="btn" id="tw-improve">Improve my Career Twin</button>
+        <button class="btn" id="tw-improve">Improve my Career Twin<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></button>
         <a class="tw-link" href="#account" id="tw-account">Manage account and privacy</a>
       </div>
     </div>
@@ -5019,7 +5019,7 @@ async function renderSearches() {
           <div class="da-note">Saves the filters above as a standing search. Leave the name blank and it is named from the filters.</div>
         </div>
         <div class="data-act">
-          <button class="btn ghost" id="s-edit">Change the Filters</button>
+          <button class="btn ghost" id="s-edit">Change the Filters<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></button>
           <div class="da-note">Opens The Radar with the same filters, so you can widen or narrow what is watched before saving.</div>
         </div>
       </div>
@@ -5345,12 +5345,12 @@ async function renderPlan() {
         p.plans.pro.features,
         p.plan === 'pro'
           ? '<button class="btn plan-done" disabled>Unlock Pro</button>'
-          : '<button class="btn" id="up-month">Unlock Pro</button>')}
+          : '<button class="btn" id="up-month">Unlock Pro<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></button>')}
       ${cell('is-plus', '', 'Pro+', 'For Bigger Decisions', '€49<span> /month</span>', '',
         ['Relocation offers, countries, contract and permanent paths, salary, tax and living costs compared side by side', 'Offer negotiation briefs'],
         p.plan === 'plus'
           ? '<button class="btn plan-done" disabled>Pro+ Unlocked</button>'
-          : '<button class="btn plan-plus-cta" id="up-plus">Unlock Pro+</button>')}
+          : '<button class="btn plan-plus-cta" id="up-plus">Unlock Pro+<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></button>')}
     </div>
     <div class="card plain" style="margin-top:14px">
       <h3>Why the Rate Check Is Free</h3>
@@ -5424,7 +5424,7 @@ async function renderNegotiation() {
     </div>
     ${n.anchorOpportunity ? `<div class="card" style="margin-top:14px"><h3>Anchor This to a Live Opportunity</h3>
       <div class="dim" style="font-size:var(--text-sm);margin-top:6px">${esc(n.anchorOpportunity.title)} at ${esc(n.anchorOpportunity.company)} – listed at ${n.anchorOpportunity.compMin ? money(n.anchorOpportunity.compMin) + '–' + money(n.anchorOpportunity.compMax) + ' ' + esc(n.anchorOpportunity.currency) : 'compensation not disclosed'}.</div>
-      <div style="margin-top:10px"><button class="btn sm ghost" onclick="go('radar')">Back to The Radar</button></div>
+      <div style="margin-top:10px"><button class="btn sm ghost" onclick="go('radar')">Back to The Radar<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></button></div>
     </div>` : ''}`;
   document.querySelectorAll('.cp').forEach((b) => { b.onclick = () => copy(b.dataset.t); });
 }
@@ -5690,7 +5690,7 @@ async function renderAccount() {
         <div class="card acct-card">
           <div class="acct-h"><span class="acct-ic exp" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M7 10l5 5 5-5"/><path d="M12 15V3"/></svg></span><h3>Export Your Data</h3></div>
           <p class="tw-c-note">Every record we hold, as one JSON file. Downloads to your device, never emailed.</p>
-          <div class="tw-acts"><button class="btn ghost" id="d-export">Export Everything</button></div>
+          <div class="tw-acts"><button class="btn ghost" id="d-export">Export Everything<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></button></div>
         </div>
         <div class="card plain acct-card acct-mute">
           <div class="acct-h"><span class="acct-ic priv" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></span><h3>Privacy</h3></div>
@@ -5815,7 +5815,7 @@ async function go(view) {
     $('#view').innerHTML = `<div class="card plain" style="max-width:480px;margin:32px auto;text-align:center">
       <h3 style="margin-bottom:6px">This Screen Is Not Part of the Product</h3>
       <p class="sub" style="margin-bottom:14px">Nothing here is about your career. The screens that are sit in the menu on the left.</p>
-      <button class="btn sm" onclick="go('radar')">Back to The Radar</button>
+      <button class="btn sm" onclick="go('radar')">Back to The Radar<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></button>
     </div>`;
     return;
   }
@@ -5842,7 +5842,7 @@ async function go(view) {
     $('#view').innerHTML = `<div class="card" style="max-width:520px;margin:32px auto;text-align:center">
       <h3 style="margin-bottom:6px">This screen did not load</h3>
       <p class="sub" style="margin-bottom:14px">Something went wrong on our side. Your data is safe and nothing was changed.</p>
-      <div class="row" style="justify-content:center;gap:8px"><button class="btn sm" id="retry-view">Try again</button><button class="btn sm ghost" onclick="go('radar')">Back to The Radar</button></div>
+      <div class="row" style="justify-content:center;gap:8px"><button class="btn sm" id="retry-view">Try again</button><button class="btn sm ghost" onclick="go('radar')">Back to The Radar<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></button></div>
     </div>`;
     const retry = document.getElementById('retry-view');
     if (retry) retry.onclick = () => go(view);
