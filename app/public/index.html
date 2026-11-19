@@ -803,9 +803,11 @@ table.t tr:hover td{background:var(--panel2)}
 .pl-take-list{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:var(--text-sm);line-height:1.55;color:var(--ink2)}
 .pl-take-list b{color:var(--ink);font-weight:650}
 /* Six tracks, each card two wide: three cards fill a row, and the last row's two cards take three
-   tracks each so no cell is left standing empty. */
-.pl-grid{grid-template-columns:repeat(6,minmax(0,1fr));align-items:start}
-.pl-grid > .card{grid-column:span 2;align-self:start}
+   tracks each so no cell is left standing empty. Cards in a row end on one line: a row that hangs
+   at three different heights reads as scattered tiles, so the row is as tall as its tallest card
+   and every card in it reaches that line. */
+.pl-grid{grid-template-columns:repeat(6,minmax(0,1fr));align-items:stretch}
+.pl-grid > .card{grid-column:span 2;display:flex;flex-direction:column}
 .pl-grid > .card:nth-child(4),.pl-grid > .card:nth-child(5){grid-column:span 3}
 /* The country list is twice as long as any other, so where the card is wide enough to hold two
    columns of label and figure it flows into two and the card ends near its neighbour instead of
@@ -825,7 +827,10 @@ table.t tr:hover td{background:var(--panel2)}
      stands empty. */
   .pl-grid > .card:nth-child(5){grid-column:1/-1}
 }
-.pl-list{margin-top:8px}
+/* The list takes the height its card was given, so a short card fills to the row's line instead of
+   leaving a white box under its last row. The rows share the leftover space between them. */
+.pl-list{margin-top:8px;flex:1 1 auto;display:flex;flex-direction:column;justify-content:space-between}
+.pl-grid .pl-list.pl-2col{display:block}
 .pl-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 12px;width:100%;box-sizing:border-box;
   padding:6px 0;border:none;border-bottom:1px solid var(--line);background:none;color:inherit;font:inherit;
   font-size:var(--text-sm);text-align:left;cursor:pointer;border-radius:0}
