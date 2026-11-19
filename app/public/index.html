@@ -163,6 +163,8 @@ a{color:var(--accent);text-decoration:none}
 /* ---------- rail ---------- */
 .rail{position:relative;background:var(--panel);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:16px 12px;overflow:hidden;height:100%;min-height:0}
 .rail-toggle{position:absolute;top:14px;right:-11px;z-index:5;width:22px;height:22px;border-radius:50%;background:var(--panel2);border:1px solid var(--line2);color:var(--muted);display:grid;place-items:center;font-size:var(--text-sm);line-height:1}
+.rail-chev{width:13px;height:13px;display:block;transition:transform .16s ease}
+.rail-collapsed .rail-chev{transform:rotate(180deg)}
 .logo{display:flex;align-items:center;gap:11px;padding:7px 8px 24px}
 .logo .mark{width:32px;height:32px}
 
@@ -332,6 +334,7 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .btn.ghost:hover{color:var(--ink);border-color:var(--accent2)}
 .btn.sm{padding:5px 10px;font-size:var(--text-sm);border-radius:7px}
 .btn .ext{display:inline-block;margin-left:5px;font-size:var(--text-xs);opacity:.85;transform:translateY(-.5px)}
+.btn.act-apply .chev{width:14px;height:14px}
 .btn.act-apply{font-weight:620;background:color-mix(in srgb,var(--accent2) 8%,var(--panel));color:color-mix(in srgb,var(--accent) 82%,var(--ink2));border:1px solid color-mix(in srgb,var(--accent2) 30%,transparent);box-shadow:none}
 .btn.act-apply:hover{background:color-mix(in srgb,var(--accent2) 16%,var(--panel));border-color:color-mix(in srgb,var(--accent2) 60%,transparent);filter:none;box-shadow:none}
 html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accent2) 10%,#fff);color:var(--accent)}
@@ -346,7 +349,8 @@ html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accen
 .arow-t{flex:1;min-width:0;font-size:var(--text-sm);line-height:var(--leading-normal);overflow-wrap:anywhere}
 .arow .prio{margin:0;flex:0 0 auto;white-space:nowrap;align-self:flex-start}
 .arow-n,.arow-c{padding-top:1px}
-.arow-c{flex:0 0 auto;color:var(--muted);opacity:.5;font-size:var(--text-sm)}
+.arow-c{flex:0 0 auto;color:var(--muted);opacity:.5;font-size:var(--text-sm);display:inline-flex;align-items:center}
+.arow-c .chev{width:14px;height:14px}
 @media(max-width:560px){
   .arow{flex-wrap:wrap;align-items:flex-start;row-gap:6px}
   .arow-n{order:1}
@@ -356,8 +360,7 @@ html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accen
   /* The chevron stays: it is the only mark that says a row opens something. Absolute, so it centres on
      the row itself rather than on the wrapped line the pill created. */
   .arow{position:relative}
-  .arow-c{display:block;position:absolute;right:2px;top:50%;transform:translateY(-50%);padding:0;opacity:.45;font-size:var(--text-md)}
-  .arow-t{padding-right:16px}
+  .arow-c{display:grid;place-items:center;position:absolute;right:2px;top:50%;transform:translateY(-50%);padding:0;opacity:.45;font-size:var(--text-md)}  .arow-t{padding-right:16px}
 }
 .prio{display:inline-block;margin-top:5px;font-size:var(--text-2xs);font-weight:650;letter-spacing:.01em;padding:2px 7px;border-radius:5px;border:1px solid var(--line2);color:var(--muted);background:var(--panel2)}
 .prio.p1{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,var(--line2));background:color-mix(in srgb,var(--accent) 10%,var(--panel2))}
@@ -1683,8 +1686,8 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .cal-acc summary{cursor:pointer;padding:14px 18px;font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;
   font-weight:600;color:var(--ink2);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}
 .cal-acc summary::-webkit-details-marker{display:none}
-.cal-acc summary::after{content:'›';font-size:16px;color:var(--muted);transform:rotate(90deg);transition:transform .16s}
-.cal-acc[open] summary::after{transform:rotate(-90deg)}
+.cal-acc summary::after{content:'';width:7px;height:7px;border-right:1.8px solid var(--muted);border-bottom:1.8px solid var(--muted);transform:rotate(45deg);transition:transform .16s}
+.cal-acc[open] summary::after{transform:rotate(-135deg)}
 .cal-acc .in{padding:0 18px 16px}
 @media(max-width:1100px){.cal-hero{grid-template-columns:1fr}}
 @media(max-width:560px){
@@ -1779,7 +1782,8 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .sh-b{flex:1;min-width:0;display:block}
 .sh-t{display:block;font-size:var(--text-sm);font-weight:600;line-height:1.35;overflow-wrap:anywhere;transition:color .12s}
 .sh-c{display:block;font-size:var(--text-xs);color:var(--ink2);margin-top:1px;overflow-wrap:anywhere}
-.sh-x{flex:0 0 auto;color:var(--muted);opacity:.5;font-size:var(--text-sm)}
+.sh-x{flex:0 0 auto;color:var(--muted);opacity:.5;font-size:var(--text-sm);display:inline-flex;align-items:center}
+.sh-x .chev{width:14px;height:14px}
 .sh-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:2px}
 .sh-n{font-size:var(--text-2xs);color:var(--muted);font-variant-numeric:tabular-nums;white-space:nowrap}
 /* Declared last so it wins over every earlier title size on a very narrow phone. */
@@ -2230,7 +2234,7 @@ body.tw-lock{overflow:hidden}
 </div>
 <div class="shell" id="app-shell" style="display:none">
   <aside class="rail">
-    <button class="rail-toggle" id="rail-toggle" title="Collapse sidebar" aria-label="Collapse sidebar">‹</button>
+    <button class="rail-toggle" id="rail-toggle" title="Collapse sidebar" aria-label="Collapse sidebar"><svg class="rail-chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 3.5L5.5 8L10 12.5"/></svg></button>
     <div class="logo">
       <svg class="mark" viewBox="0 0 192 192" aria-hidden="true" focusable="false"><use href="#tz-mark"/></svg>
       <div class="logo-text"><b><span class="wm">Think<i>Zet</i></span></b><span>Think Beyond</span></div>
@@ -2562,6 +2566,9 @@ function formatReply(text) {
 const track = (event, props) => { try { post('/api/track', { event, props: props || {}, path: location.pathname + location.search }); } catch (e) { /* never block the UI */ } };
 
 const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+// One arrow for the whole product. A row that opens something carries this mark, never a typed glyph,
+// so every screen draws the same chevron at the same weight and the head fades in on hover.
+const CHEV = '<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg>';
 // Feedback: one modal, opened from the account menu on every view. It reads the page, the device
 // and the sign-in state itself, so the person types only what confused them.
 const FBK = (() => {
@@ -2746,7 +2753,7 @@ async function renderSharedCard(id) {
   const fmt = (n) => new Intl.NumberFormat('en-GB', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 }).format(n);
   const per = r.payload?.period === 'hour' ? '/hr' : '/yr';
   if (r.error) {
-    document.body.innerHTML = '<div style="padding:60px;text-align:center;font-family:system-ui">This card has expired or never existed. <a href="/">Try your own →</a></div>';
+    document.body.innerHTML = '<div style="padding:60px;text-align:center;font-family:system-ui">This card has expired or never existed. <a href="/">Try your own</a></div>';
     return;
   }
   const p = r.payload;
@@ -3526,7 +3533,7 @@ async function renderRadar() {
             <div class="mono arow-n">${i + 1}</div>
             <div class="arow-t">${esc(a.text)}</div>
             <span class="prio ${actionClass(a)}">${actionLabel(a)}</span>
-            <div class="${a.done ? 'done-tick arow-c' : 'arow-c'}">${a.done ? '✓' : '›'}</div>
+            <div class="${a.done ? 'done-tick arow-c' : 'arow-c'}">${a.done ? '✓' : CHEV}</div>
           </div>`).join('')}
         </div>
       </div>`;
@@ -3934,7 +3941,7 @@ function oppCard(o, idx = 0) {
         <div><b>${o.offer_probability}%</b>offer</div>
       </div>
       <div class="row" style="gap:6px">
-        <a class="btn sm primary act-apply" data-id="${o.id}" href="${esc(o.apply_url || '#')}" target="_blank" rel="noopener" title="Open the employer page in a new tab">Apply<span class="ext" aria-hidden="true">↗</span></a>
+        <a class="btn sm primary act-apply" data-id="${o.id}" href="${esc(o.apply_url || '#')}" target="_blank" rel="noopener" title="Open the employer page in a new tab">Apply${CHEV}</a>
         <button class="btn sm ghost act-track" data-id="${o.id}">${o.tracked ? 'Tracked ✓' : 'Track'}</button>
         <button class="btn sm ghost act-open" data-id="${o.id}">Why?</button>
       </div>
@@ -4188,7 +4195,7 @@ function openDetail(id) {
             <span class="muted">A</span><span>${esc(q.structure.action)}</span>
             <span class="muted">R</span><span>${esc(q.structure.result)}</span>
           </div>
-          <div class="muted" style="font-size:var(--text-xs);margin-top:6px;padding-left:22px">↳ ${esc(q.evidence)}</div>
+          <div class="muted" style="font-size:var(--text-xs);margin-top:6px;margin-left:22px;padding-left:10px;border-left:2px solid var(--line-tint)">${esc(q.evidence)}</div>
         </div>`).join('')}
       </div>
       <div style="margin-top:16px"><h3>Four-Day Plan</h3>
@@ -5072,7 +5079,7 @@ async function renderSearches() {
             <button class="sh-q" data-save="${esc(h.id)}" title="Save to Career Tracker" aria-label="Save to Career Tracker"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><path d="M4 2.6h8v11l-4-2.6-4 2.6z"/></svg></button>
             <button class="sh-q" data-dismiss="${esc(h.id)}" title="Dismiss this opportunity" aria-label="Dismiss this opportunity"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
           </span>
-          <span class="sh-x">›</span>
+          <span class="sh-x">${CHEV}</span>
         </div>`).join('')}</div>` : `<div class="empty-line">Nothing new since you last looked. ${int(s.total)} scored ${s.total === 1 ? 'opportunity matches' : 'opportunities match'} this search.</div>`}
       </div>`).join('') : '<div class="card"><div class="empty-line">No searches watched yet. Set filters on The Radar, then press Watch This Search.</div></div>'}
     </div>
@@ -5993,7 +6000,7 @@ async function renderBrief() {
             <div class="mono arow-n">${i + 1}</div>
             <div class="arow-t">${esc(a.text)}</div>
             <span class="prio ${actionClass(a)}">${actionLabel(a)}</span>
-            <div class="${a.done ? 'done-tick arow-c' : 'arow-c'}">${a.done ? '✓' : '›'}</div>
+            <div class="${a.done ? 'done-tick arow-c' : 'arow-c'}">${a.done ? '✓' : CHEV}</div>
           </div>`).join('')}
         </div>
 
@@ -6006,7 +6013,7 @@ async function renderBrief() {
           ${s.hits.map((h) => `<div class="sh" data-opp="${esc(h.id)}">
             <span class="sh-s ${h.match_score >= 85 ? '' : h.match_score >= 70 ? 'g' : h.match_score >= 55 ? 'm' : 'l'}">${h.match_score}</span>
             <span class="sh-b"><span class="sh-t">${esc(h.title)}</span><span class="sh-c">${esc(h.company)}</span></span>
-            <span class="sh-x" aria-hidden="true">›</span>
+            <span class="sh-x" aria-hidden="true">${CHEV}</span>
           </div>`).join('')}
         </div>`).join('')}` : ''}
       </div>
@@ -6154,7 +6161,6 @@ function setTheme(mode) { try { localStorage.setItem(THEME_KEY, mode); } catch (
   if (!shell || !btn) return;
   if (localStorage.getItem('mirrorspread-rail') === 'collapsed') {
     shell.classList.add('rail-collapsed');
-    btn.textContent = '›';
   }
   const syncTitles = (collapsed) => {
     document.querySelectorAll('#nav button').forEach((b) => {
@@ -6166,7 +6172,6 @@ function setTheme(mode) { try { localStorage.setItem(THEME_KEY, mode); } catch (
   };
   btn.onclick = () => {
     const collapsed = shell.classList.toggle('rail-collapsed');
-    btn.textContent = collapsed ? '›' : '‹';
     btn.setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
     syncTitles(collapsed);
     try { localStorage.setItem('mirrorspread-rail', collapsed ? 'collapsed' : 'open'); } catch (e) {}
