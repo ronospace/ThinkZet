@@ -589,9 +589,22 @@ html[data-theme="light"] .delta.flat{background:var(--panel2)}
   .foot-col{padding:12px 10px}
   .foot-grid a{font-size:var(--text-sm);padding:4px 0}
 }
-.feed-wrap{display:grid;grid-template-columns:minmax(0,1fr) 288px;gap:18px;align-items:start}
-.facets{position:sticky;top:74px}
-@media(max-width:1180px){.feed-wrap{grid-template-columns:1fr}.facets{position:static}}
+.feed-wrap{display:grid;grid-template-columns:1fr;gap:18px;align-items:start}
+.feed-main{display:flex;flex-direction:column;min-width:0}
+/* The two ends of the feed share one row: what is hidden on the left, the rating on the right.
+   Either can be absent and the other keeps its own width instead of stretching into a hole. */
+.feed-tail{display:flex;flex-wrap:wrap;gap:14px;align-items:stretch;margin-top:14px}
+.feed-tail #plan-note{flex:1 1 260px;min-width:0;display:flex}
+.feed-tail #plan-note:empty{display:none}
+.feed-tail .plan-note{margin-bottom:0;flex:1 1 auto;align-items:center}
+.feed-tail .fb-card{flex:0 1 300px;min-width:0;margin-top:0;display:flex;flex-direction:column;justify-content:center}
+@media(max-width:767px){.feed-tail{flex-direction:column;gap:12px}.feed-tail #plan-note,.feed-tail .fb-card{flex:1 1 auto;width:100%}}
+.facets{position:static;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px;align-items:stretch}
+/* Both cards in the row reach the same line. The shorter one keeps its rows at the top and the
+   leftover sits under them inside the card, so no block of page is left standing empty. */
+.facets > .card{display:flex;flex-direction:column}
+.facets > .card > .kbd-grid{flex:1 1 auto;align-content:start}
+@media(max-width:1023px){.facets{grid-template-columns:1fr;align-items:start}.facets > .card{display:block}}
 .facet-row{display:flex;justify-content:space-between;font-size:var(--text-sm);padding:5px 0;border-bottom:1px solid var(--line)}
 .facet-row:last-child{border-bottom:none}
 .facet-mini{height:5px;border-radius:3px;background:var(--track);margin-top:4px;overflow:hidden}
@@ -3627,8 +3640,11 @@ async function renderRadar() {
     <div id="habit" style="margin-bottom:12px"></div>
     <div id="teach" style="margin-bottom:12px"></div>
     <div class="feed-wrap">
-      <div id="opps"></div>
-      <div id="ad-radar" class="ad-slot" aria-label="Advertisement"></div>
+      <div class="feed-main">
+        <div id="opps"></div>
+        <div id="ad-radar" class="ad-slot" aria-label="Advertisement"></div>
+        <div class="feed-tail">
+          <div id="plan-note"></div>
     <div id="feedback" class="card fb-card" hidden>
       <div class="fb-row">
         <div>
@@ -3655,7 +3671,9 @@ async function renderRadar() {
         <span class="fb-done-txt">Thank you. You rated</span>
         <button class="btn sm ghost fb-done-share" id="fb-edit">Edit</button>
       </div>
-    </div>
+      </div>
+      </div>
+      </div>
       <div class="facets">
         <div class="card">
           <h3>Shortcuts</h3>
@@ -3681,7 +3699,7 @@ async function renderRadar() {
             </div>
           </div>
         </div>
-        <div class="card" style="margin-top:12px">
+        <div class="card" style="margin-top:0">
           <h3>Your Market Right Now</h3>
           <div id="facet-body" style="margin-top:10px"><span class="muted" style="font-size:var(--text-sm)">Loading…</span></div>
         </div>
@@ -3789,7 +3807,10 @@ async function renderRadar() {
     mountAds('#ad-radar');
     mountFeedback();
     fitHeadlines();
-    $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') + (capped.length < rows.length ? `<div class="plan-note"><span class="pn-k">Free</span><span class="pn-v">${rows.length - capped.length} more scored opportunities are hidden</span><button class="pn-link" onclick="go('plan')">See plans</button></div>` : '') : '<div class="empty">No opportunities match those filters. Loosen one.</div>';
+    $('#opps').innerHTML = capped.length ? capped.map((o, i) => oppCard(o, i)).join('') : '<div class="empty">No opportunities match those filters. Widen one of them above.</div>';
+    // What is hidden and the rating share one row under the feed, so neither leaves a hole beside it.
+    const pn = $('#plan-note');
+    if (pn) pn.innerHTML = capped.length && capped.length < rows.length ? `<div class="plan-note"><span class="pn-k">Free</span><span class="pn-v">${int(rows.length - capped.length)} more scored opportunities are hidden</span><button class="pn-link" onclick="go('plan')">See plans</button></div>` : '';
     $('#f-count').textContent = `${int(rows.length)} of ${int(feed.opportunities.length)} shown`;
     bindOppActions();
     renderFacets(rows);
