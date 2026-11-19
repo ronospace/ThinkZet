@@ -393,9 +393,18 @@ button.bdg:active{transform:translateY(.5px)}
 .signal-v{font-size:var(--text-lg);font-weight:680;letter-spacing:var(--tracking-tight);margin:3px 0 2px;color:var(--ink)}
 .signal-why{font-size:var(--text-sm);color:var(--ink2);line-height:1.5;margin-top:2px}
 .signal-go{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:var(--text-sm);font-weight:600;color:var(--accent2)}
+.signal-go .chev{width:14px;height:14px}
 .tk-empty{font-size:var(--text-sm);color:var(--ink2);line-height:1.5;padding:10px 11px;border:1px dashed var(--line);border-radius:9px}
 .pool-line{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:var(--text-xs)}
 .empty-line{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:10px 14px;border:1px dashed var(--line2);border-radius:var(--radius);font-size:var(--text-sm)}
+/* UI-208: a row that leaves the page ends on the same inline chevron every other CTA carries,
+   and it is named after the page it opens. No bare glyph, no arrow character. */
+.row-go{display:inline-flex;align-items:center;gap:6px;flex:0 0 auto;height:32px;padding:0 11px;border-radius:8px;border:1px solid var(--line-tint);background:var(--wash);font:inherit;font-size:var(--text-sm);font-weight:600;color:var(--foot-link);white-space:nowrap;cursor:pointer;transition:color .14s,border-color .14s,background .14s}
+.row-go:hover{color:var(--foot-link-hi);border-color:var(--line2);background:var(--panel2)}
+.row-go .chev{width:14px;height:14px}
+.row-go:hover .chev-go{transform:translateX(2.5px)}
+.row-go:hover .chev-stem{opacity:1}
+@media(max-width:767px){.empty-line{flex-wrap:wrap;gap:8px}.row-go{width:100%;justify-content:center;min-height:44px}}
 .prio.p4{color:var(--good);border-color:color-mix(in srgb,var(--good) 45%,var(--line2));background:color-mix(in srgb,var(--good) 12%,var(--panel2))}
 .done-tick{color:var(--good);opacity:1}
 .hello-mission{margin-top:10px;font-size:var(--text-md);line-height:var(--leading-snug);color:var(--ink2);max-width:64ch}
@@ -1621,6 +1630,9 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .acct-legal a,.acct-legal .fbk-link{color:var(--foot-link);text-decoration:none}
 .acct-legal a:hover,.acct-legal .fbk-link:hover{color:var(--foot-link-hi);text-decoration:underline;text-underline-offset:2px}
 .acct-legal .sep{opacity:.55}
+/* UI-208: on a phone the legal row is centred, so the four references read as one block under
+   the cards instead of hugging the left edge with Feedback orphaned on its own line. */
+@media(max-width:767px){.acct-legal{justify-content:center;text-align:center;gap:6px 8px}.acct-legal .fbk-link{min-height:32px;display:inline-flex;align-items:center;gap:5px}.acct-legal .sep:last-of-type{display:none}}
 /* A destructive confirmation is a dialog, not a prompt: it can be read, cancelled and retried. */
 .acct-modal{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(5,7,10,.62);backdrop-filter:blur(4px)}
 .acct-modal.open{display:flex}
@@ -5621,7 +5633,7 @@ async function renderBrief() {
         </div>
 
         <h2 class="section">New at Your Bar</h2>
-        <div>${(b.newHighMatch || []).map(oppCard).join('') || `<div class="empty-line"><span class="muted">Nothing new at 80+ since your last visit.</span><button class="btn sm ghost" onclick="go('radar')">Open the radar</button></div>`}</div>
+        <div>${(b.newHighMatch || []).map(oppCard).join('') || `<div class="empty-line"><span class="muted">Nothing new at 80+ since your last visit.</span><button class="row-go" onclick="go('radar')">The Radar<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></button></div>`}</div>
 
         ${b.searchHits && b.searchHits.length ? `<h2 class="section">Your Saved Searches Found</h2>
         ${b.searchHits.map((s) => `<div class="card" style="margin-bottom:10px">
@@ -5640,7 +5652,7 @@ async function renderBrief() {
             <div class="kpi-k">Biggest blocker</div>
             <div class="signal-v">${esc(b.topGap.skill)}</div>
             <div class="signal-why">Missing from ${int(b.topGap.blocking)} of your ${int(b.counts.totalScored)} scored opportunities. No other skill blocks more of your set.</div>
-            <div class="signal-go">See what closing it unblocks<span aria-hidden="true">›</span></div>
+            <div class="signal-go">See what closing it unblocks<svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path class="chev-stem" d="M2.5 8H10"/><path class="chev-go" d="M6 3.5L10.5 8L6 12.5"/></svg></div>
           </div>` : ''}
           <div class="facts tight stack" style="margin-top:12px">
             ${!b.rates ? `<span class="fk">Your pay vs market</span><span class="fv">Add your pay on Career Twin and this line becomes a comparison.</span>` : ''}
