@@ -89,20 +89,20 @@ const INTENTS = [
   },
   {
     name: 'fit',
-    phrases: [['which job', 7], ['what job', 6], ['best fit', 7], ['match me', 7], ['suited', 6], ['good fit', 6], ['which roles', 6], ['what roles', 6]],
-    words: [['fit', 4], ['suited', 4], ['match', 3], ['job', 3], ['role', 3], ['roles', 3], ['suits', 4]],
+    phrases: [['which job', 7], ['what job', 6], ['best fit', 7], ['match me', 7], ['suited', 6], ['good fit', 6], ['which roles', 6], ['what roles', 6], ['which companies', 8], ['who is hiring', 8], ['companies hiring', 8], ['who hires', 7], ['where is hiring', 7]],
+    words: [['fit', 4], ['suited', 4], ['match', 3], ['job', 3], ['role', 3], ['roles', 3], ['suits', 4], ['companies', 4], ['company', 4], ['hiring', 5], ['hire', 4], ['employers', 4]],
     against: [],
   },
   {
     name: 'competitive',
-    phrases: [['how strong', 7], ['how competitive', 7], ['stand out', 6], ['my chances', 6], ['what are my odds', 7], ['am i competitive', 7]],
-    words: [['competitive', 5], ['chances', 4], ['odds', 4], ['strong', 3], ['stand', 2], ['compete', 4]],
+    phrases: [['how strong', 7], ['how competitive', 7], ['stand out', 6], ['my chances', 6], ['what are my odds', 7], ['am i competitive', 7], ['my cv', 7], ['my resume', 7], ['my application', 6], ['good candidate', 7]],
+    words: [['competitive', 5], ['chances', 4], ['odds', 4], ['strong', 3], ['stand', 2], ['compete', 4], ['cv', 5], ['resume', 5], ['candidate', 3]],
     against: [],
   },
   {
     name: 'growth',
-    phrases: [['career trajectory', 8], ['over two years', 7], ['in two years', 7], ['24 months', 6], ['next two years', 7], ['fastest path', 7], ['promotion path', 7], ['long term', 5]],
-    words: [['growth', 4], ['trajectory', 5], ['promotion', 5], ['promoted', 5], ['fastest', 4], ['months', 2], ['years', 2], ['path', 4], ['ceiling', 4], ['future', 3]],
+    phrases: [['career trajectory', 8], ['over two years', 7], ['in two years', 7], ['24 months', 6], ['next two years', 7], ['fastest path', 7], ['promotion path', 7], ['long term', 5], ['how do i get to', 8], ['get to staff', 8], ['become a staff', 8], ['get promoted', 8], ['next level', 7], ['step up to', 7], ['how do i become', 7]],
+    words: [['growth', 4], ['trajectory', 5], ['promotion', 5], ['promoted', 5], ['fastest', 4], ['months', 2], ['years', 2], ['path', 4], ['ceiling', 4], ['future', 3], ['staff', 4], ['principal', 4], ['become', 4], ['level', 3]],
     against: [],
   },
   {
@@ -116,6 +116,24 @@ const INTENTS = [
     phrases: [['how do i negotiate', 8], ['counter offer', 7], ['counteroffer', 7], ['ask for a raise', 7], ['salary negotiation', 8], ['negotiate my', 7]],
     words: [['negotiate', 6], ['negotiation', 6], ['counter', 4], ['raise', 4], ['offer', 3], ['anchor', 4], ['package', 3]],
     against: [],
+  },
+  {
+    name: 'product',
+    phrases: [['how does thinkzet', 9], ['what does thinkzet do', 9], ['how do you make money', 9], ['how does this work', 6], ['what does it cost', 8], ['how much does it cost', 8], ['is it free', 8], ['free plan', 7], ['pro plan', 7], ['cancel my subscription', 8]],
+    words: [['thinkzet', 5], ['pricing', 6], ['subscription', 5], ['cost', 4], ['price', 4], ['free', 3], ['billing', 5], ['upgrade', 4], ['plan', 3]],
+    against: [['my pay', -6], ['salary', -4], ['worth', -4]],
+  },
+  {
+    name: 'cover',
+    phrases: [['cover letter', 9], ['write my cover', 9], ['covering letter', 8], ['application letter', 8], ['write a letter', 7]],
+    words: [['cover', 5], ['letter', 4]],
+    against: [],
+  },
+  {
+    name: 'skillone',
+    phrases: [['demand for', 8], ['is it worth learning', 8], ['worth learning', 7], ['how popular is', 7], ['how in demand', 8], ['should i learn', 6]],
+    words: [['demand', 5], ['popular', 5], ['trending', 5], ['hype', 4]],
+    against: [['skill gap', -9], ['gaps', -7], ['learn next', -9], ['blocking', -6]],
   },
   {
     name: 'tracker',

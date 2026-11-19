@@ -1175,7 +1175,8 @@ route('GET', /^\/api\/pulse$/, async (req, res) => {
 
   // Supply: postings per role family in the last 14 days
   const recent = db.prepare(`SELECT role_family, COUNT(*) n FROM opportunities
-    WHERE posted_at > datetime('now','-14 days') GROUP BY role_family ORDER BY n DESC`).all();
+    WHERE status='open' AND posted_at > datetime('now','-14 days') GROUP BY role_family ORDER BY n DESC`).all();
+  const recentTotal = recent.reduce((a2, r) => a2 + r.n, 0);
 
   // Skill demand with premiums
   const skillRows = db.prepare('SELECT canonical, demand_index, salary_premium, growth_rate, is_emerging FROM skills ORDER BY demand_index DESC').all();
@@ -1190,6 +1191,8 @@ route('GET', /^\/api\/pulse$/, async (req, res) => {
     families,
     countries,
     supply: recent,
+    supplyTotal: recentTotal,
+    supplyWindowDays: 14,
     skills: {
       rising: skillRows.filter((s) => s.growth_rate >= 15).slice(0, 8),
       falling: skillRows.filter((s) => s.growth_rate < 0).slice(0, 6),
@@ -1551,6 +1554,32 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
     const floor = Math.round(rates.p50);
     citations.push({ label: 'Negotiation', detail: `p50 ${fmt(floor)} floor, p75 ${fmt(target)} target, p90 ${fmt(Math.round(rates.p90))} stretch` });
     reply = `Anchor on ${fmt(target)} (p75), treat ${fmt(floor)} (p50) as the floor, and ${fmt(Math.round(rates.p90))} as the stretch.\n\n· Never name a number before they do, ask for their band first.\n· Tie every figure to your own market sample of ${int(rates.sampleSize)} postings, not to what you earn now.\n· Negotiate the package, not the base: equity, sign-on, remote allowance, learning budget.\n· Get it in writing before you accept verbally.\n\nNegotiation has the exact script to say.`;
+  } else if (intent === 'skillone') {
+    // One named skill, answered from the same row the /skills/ page prints. The name is whatever the
+    // question contains that the tracked vocabulary recognises, so nothing is inferred from a guess.
+    const vocab = db.prepare('SELECT canonical, category, demand_index, salary_premium, growth_rate, is_emerging FROM skills').all();
+    const said = String(body.message || '').toLowerCase();
+    const hit = vocab.find((r) => said.includes(String(r.canonical).toLowerCase())) || null;
+    if (!hit) {
+      reply = `Name the skill and I will read its demand, its pay premium and its growth from the tracked vocabulary.\n\n${vocab.slice(0, 6).map((r) => r.canonical).join(' · ')} – and ${int(vocab.length - 6)} more.`;
+    } else {
+      const n = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open' AND lower(skills) LIKE ?").get('%' + String(hit.canonical).toLowerCase() + '%').n;
+      citations.push({ label: 'Skill intelligence', detail: `${hit.canonical} · demand ${hit.demand_index}/200 · ${int(n)} open postings` });
+      reply = `${hit.canonical} right now: demand index ${hit.demand_index}/200, salary premium +${hit.salary_premium}%, 90-day growth ${hit.growth_rate > 0 ? '+' : ''}${hit.growth_rate}%, asked for in ${int(n)} open postings.\n\n${hit.is_emerging ? 'It is flagged as emerging, so the sample is thin by definition and the premium is the part to trust least.' : 'It is an established skill, so the demand figure is the part to trust most.'} ${twin.skills.includes(hit.canonical) ? `You already list it, which is why it is not in your gap list.` : `You do not list it yet – Skill Gaps ranks it against the roles you actually match.`}`;
+    }
+  } else if (intent === 'product') {
+    // What the product is and what it costs, from the plan table rather than a written-out sentence.
+    const plans = Object.values(BILLING.PLANS);
+    citations.push({ label: 'Plans', detail: plans.map((x) => `${x.label} ${x.price ? '€' + x.price + '/' + x.period : 'free'}`).join(' · ') });
+    reply = `ThinkZet reads live job postings and tells you what your profile is worth, which roles fit it, and what to do next. It is a product of ZyraFlow GmbH.\n\n${plans.map((x) => `· ${x.label}: ${x.price ? '€' + x.price + ' per ' + x.period + (x.annual ? ', or €' + x.annual + ' a year' : '') : 'no cost'} – ${x.features.slice(0, 2).join(', ').toLowerCase()}`).join('\n')}\n\nBilling is handled by Stripe, and a plan can be cancelled from Account at any time.`;
+  } else if (intent === 'cover') {
+    // The letter itself is generated on the opportunity, so the answer routes there instead of
+    // inventing prose in the thread.
+    const best = top[0];
+    citations.push({ label: 'Cover letter', detail: best ? `${best.title} at ${best.company}` : 'no scored opportunity yet' });
+    reply = best
+      ? `A cover letter is written against one listing, so it opens on the opportunity rather than in this thread.\n\nYour strongest listing right now is ${best.title} at ${best.company} – ${best.match_score}/100 match. Open it and press Cover Letter: it drafts from your Career Twin and the listing's own requirements, and it names the evidence it used.\n\nIf you meant a different listing, say which company and I will point you at it.`
+      : 'A cover letter needs a listing to write against. Nothing is scored yet, so load a profile first and I will point you at the strongest one.';
   } else if (intent === 'tracker') {
     const apps = db.prepare('SELECT status, COUNT(*) n FROM applications WHERE user_id=? GROUP BY status').all(resolveUser(req));
     const by = Object.fromEntries(apps.map((a) => [a.status, a.n]));
@@ -1571,6 +1600,7 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
     if (top.length) offers.push('what to do next');
     if (twin.skills.length) offers.push('which skills block me');
     offers.push('how complete my profile is');
+    offers.push('what ThinkZet costs');
     if (JSON.parse(profile.target_countries || '[]').length) offers.push('whether to relocate');
     reply = `That one is outside what I hold. I answer from your Career Twin, your pay benchmark and the live postings, and I will not guess at anything else.\n\nWhat I can answer right now: ${offers.slice(0, 4).join(' · ')}.`;
   }
@@ -3262,6 +3292,7 @@ function seoFor(pathname) {
 function seoBody(seo, origin, lang) {
   const de = lang === 'de';
   const T = (en, ger) => (de ? ger : en);
+  const CN = (cc) => MK.nameIn(cc, de ? 'de' : 'en') || String(cc || '').toUpperCase();
   const E2 = (x) => LANDING.esc(x);
   const M2 = (n, cur) => LANDING.money(n, cur || 'EUR');
   const wrap = (inner) => `<div class="land-wrap"><div class="land-nav"><div class="land-brand">`
@@ -3271,7 +3302,7 @@ function seoBody(seo, origin, lang) {
 
   if (seo.market) {
     const cc = seo.market.toUpperCase();
-    const country = SEO_COUNTRY[seo.market];
+    const country = CN(seo.market);
     const cur = MK.has(seo.market) ? MK.get(seo.market).currency : 'EUR';
     const fams = db.prepare(`SELECT role_family, COUNT(*) n FROM opportunities WHERE status='open' AND country=?
       GROUP BY role_family HAVING n >= 5 ORDER BY n DESC LIMIT 10`).all(cc);
@@ -3298,13 +3329,14 @@ function seoBody(seo, origin, lang) {
   }
 
   if (seo.salary) {
-    const { role, country, cc } = seo.salary;
+    const { role, cc } = seo.salary;
+    const country = seo.salary.country ? CN(seo.salary.cc) : '';
     const cur = cc && MK.has(cc) ? MK.get(cc).currency : 'EUR';
     const pv = cached(`seo:salary:${role}:${cc}`, () => previewFor({ role, years: 7, country: cc || null, titleHint: '' }));
     if (!pv || !pv.available || !pv.benchmark) {
       return wrap(`<h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${E2(role)} ${T('salary', 'Gehalt')}${country ? ' in ' + E2(country) : ''}</h1>
-        <p class="land-sub">The corpus cannot defend a figure for this role in this market yet. It prints nothing rather than a guess.</p>
-        <div class="card" style="margin-top:22px"><div class="muted">${E2(pv && pv.reason ? pv.reason : 'Insufficient live salary data for this role and market.')}</div></div>`);
+        <p class="land-sub">${T('The corpus cannot defend a figure for this role in this market yet. It prints nothing rather than a guess.', 'Der Korpus kann für diese Rolle in diesem Markt noch keine Zahl belegen. Er zeigt lieber nichts als eine Schätzung.')}</p>
+        <div class="card" style="margin-top:22px"><div class="muted">${E2(pv && pv.reason ? pv.reason : T('Insufficient live salary data for this role and market.', 'Zu wenige Live-Gehaltdaten für diese Rolle und diesen Markt.'))}</div></div>`);
     }
     const b = pv.benchmark;
     const ch = (b.byChannel || []).filter((c) => c.n >= 5);
@@ -3312,7 +3344,7 @@ function seoBody(seo, origin, lang) {
       + `<span class="mono">${o.compMin == null ? `<span class="muted">${T('Salary undisclosed', 'Gehalt nicht angegeben')}</span>` : M2(o.compMin, o.currency || cur)}</span></div>`).join('');
     return wrap(`
       <span class="land-kicker">${T('Live market data', 'Live-Marktdaten')} · ${LANDING.int(b.sampleSize)} ${T('postings', 'Stellen')} · ${T('updated continuously', 'laufend aktualisiert')}</span>
-      <h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${E2(role)} salary${country ? ' in ' + E2(country) : ''}</h1>
+      <h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${E2(role)} ${T('salary', 'Gehalt')}${country ? ' ' + T('in', 'in') + ' ' + E2(country) : ''}</h1>
       <p class="land-sub">${T('What employers are actually publishing right now - not a survey, not self-reported.', 'Was Arbeitgeber gerade tatsächlich veröffentlichen - keine Umfrage, keine Selbstauskunft.')}</p>
       <div class="card" style="margin-top:24px">
         <div class="kv"><span>${T('Median', 'Median')}</span><span class="mono">${M2(b.p50, b.currency)}</span></div>
@@ -3322,20 +3354,20 @@ function seoBody(seo, origin, lang) {
         <div class="kv"><span>${T('Sample', 'Stichprobe')}</span><span class="mono">${LANDING.int(b.sampleSize)} ${T('postings', 'Stellen')}</span></div>
         <div class="kv"><span>${T('Exact-profile comparables', 'Exakt vergleichbare Profile')}</span><span class="mono">${LANDING.int(b.exactComparables)}</span></div>
         <div class="kv"><span>${T('Confidence', 'Aussagekraft')}</span><span class="mono">${E2(LANDING.titleCase(b.confidence))}</span></div>
-        <div class="muted" style="margin-top:10px;font-size:var(--text-xs)">${E2(b.segment || '')}${b.mode && b.mode !== 'country' ? ' · the pool is ' + E2(b.mode === 'currency' ? b.sourceCurrency + ' area' : 'global') + ' because ' + E2(country || 'this market') + ' holds ' + LANDING.int(b.countryDepth || 0) + ' comparable postings' : ''}</div>
+        <div class="muted" style="margin-top:10px;font-size:var(--text-xs)">${E2(b.segment || '')}${b.mode && b.mode !== 'country' ? ' · ' + T('the pool is ' + (b.mode === 'currency' ? b.sourceCurrency + ' area' : 'global') + ' because ' + (country || 'this market') + ' holds ' + LANDING.int(b.countryDepth || 0) + ' comparable postings', 'der Pool ist ' + (b.mode === 'currency' ? 'der ' + b.sourceCurrency + '-Raum' : 'global') + ', weil ' + (country || 'dieser Markt') + ' ' + LANDING.int(b.countryDepth || 0) + ' vergleichbare Stellen enthält') : ''}</div>
       </div>
-      ${ch.length ? `<h2 style="font-size:var(--text-lg);margin:32px 0 10px">${T('Where the Money Is', 'Wo das Geld liegt')}</h2><div class="card">${ch.map((c) => `<div class="kv"><span>${E2(LANDING.titleCase(c.channel))} <span class="muted">· ${LANDING.int(c.n)} postings</span></span><span class="mono">${M2(c.median, b.currency)}</span></div>`).join('')}</div>` : ''}
+      ${ch.length ? `<h2 style="font-size:var(--text-lg);margin:32px 0 10px">${T('Where the Money Is', 'Wo das Geld liegt')}</h2><div class="card">${ch.map((c) => `<div class="kv"><span>${E2(LANDING.titleCase(c.channel))} <span class="muted">· ${LANDING.int(c.n)} ${T('postings', 'Stellen')}</span></span><span class="mono">${M2(c.median, b.currency)}</span></div>`).join('')}</div>` : ''}
       ${opps ? `<h2 style="font-size:var(--text-lg);margin:32px 0 10px">${T('Open Now', 'Jetzt offen')}</h2><div class="card">${opps}</div>` : ''}
       <div class="card" style="margin-top:26px;text-align:center"><div style="font-size:var(--text-md);font-weight:600">${T('Where do you sit against this?', 'Wo stehst du dazu?')}</div>
         <div class="dim" style="font-size:var(--text-sm);margin-top:6px">${T('Free and takes a minute.', 'Kostenlos und in einer Minute.')}</div>
         <a class="btn" href="/" style="margin-top:14px;display:inline-block">${T('Check my market value', 'Meinen Marktwert prüfen')}</a></div>
-      <div class="muted" style="font-size:var(--text-xs);margin-top:22px">Source: ${LANDING.int(b.sampleSize)} live postings disclosing pay, shown in ${E2(b.currency)}${b.converted ? ' and converted at ' + E2(String(b.rateAsOf || '')) : ''}. Segments with fewer than eight postings are omitted rather than shown with false precision.</div>`);
+      <div class="muted" style="font-size:var(--text-xs);margin-top:22px">${T(`Source: ${LANDING.int(b.sampleSize)} live postings disclosing pay, shown in ${E2(b.currency)}${b.converted ? ' and converted at ' + E2(String(b.rateAsOf || '')) : ''}. Segments with fewer than eight postings are omitted rather than shown with false precision.`, `Quelle: ${LANDING.int(b.sampleSize)} Live-Stellen mit Gehaltsangabe, angezeigt in ${E2(b.currency)}${b.converted ? ', umgerechnet zum Kurs vom ' + E2(String(b.rateAsOf || '')) : ''}. Segmente mit weniger als acht Stellen werden weggelassen statt mit falscher Genauigkeit gezeigt.`)}</div>`);
   }
 
   if (seo.skill) {
     const name = seo.skill;
     const row = db.prepare('SELECT * FROM skills WHERE lower(canonical)=lower(?)').get(name);
-    if (!row) return wrap(`<h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${E2(name)}</h1><p class="land-sub">This skill is not in the tracked vocabulary.</p>`);
+    if (!row) return wrap(`<h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${E2(name)}</h1><p class="land-sub">${T('This skill is not in the tracked vocabulary.', 'Diese Fähigkeit steht nicht im erfassten Vokabular.')}</p>`);
     const postings = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open' AND lower(skills) LIKE ?").get('%' + row.canonical.toLowerCase() + '%').n;
     const fams = db.prepare(`SELECT role_family, COUNT(*) n FROM opportunities WHERE status='open' AND lower(skills) LIKE ?
       GROUP BY role_family ORDER BY n DESC LIMIT 6`).all('%' + row.canonical.toLowerCase() + '%');
@@ -3347,13 +3379,13 @@ function seoBody(seo, origin, lang) {
         <div class="kv"><span>${T('Market demand index', 'Marktnachfrage-Index')}</span><span class="mono">${LANDING.int(row.demand_index)}/200</span></div>
         <div class="kv"><span>${T('Salary premium', 'Gehaltsprämie')}</span><span class="mono" style="color:var(--good)">+${LANDING.int(row.salary_premium)}%</span></div>
         <div class="kv"><span>${T('90-day growth', 'Wachstum 90 Tage')}</span><span class="mono">${row.growth_rate > 0 ? '+' : ''}${LANDING.int(row.growth_rate)}%</span></div>
-        <div class="kv"><span>${T('Emerging', 'Aufkommend')}</span><span class="mono">${row.is_emerging ? 'Yes' : 'No'}</span></div>
+        <div class="kv"><span>${T('Emerging', 'Aufkommend')}</span><span class="mono">${row.is_emerging ? T('Yes', 'Ja') : T('No', 'Nein')}</span></div>
         <div class="kv"><span>${T('Open postings asking for it', 'Offene Stellen mit dieser Anforderung')}</span><span class="mono">${LANDING.int(postings)}</span></div>
       </div>
-      ${fams.length ? `<h2 style="font-size:var(--text-lg);margin:32px 0 10px">${T('Which Roles Ask for It', 'Welche Rollen sie verlangen')}</h2><div class="card">${fams.map((f) => `<div class="kv"><span>${E2(FAMILY_LABEL[f.role_family] || titleFromFamily(f.role_family))}</span><span class="mono">${LANDING.int(f.n)} postings</span></div>`).join('')}</div>` : ''}
+      ${fams.length ? `<h2 style="font-size:var(--text-lg);margin:32px 0 10px">${T('Which Roles Ask for It', 'Welche Rollen sie verlangen')}</h2><div class="card">${fams.map((f) => `<div class="kv"><span>${E2(FAMILY_LABEL[f.role_family] || titleFromFamily(f.role_family))}</span><span class="mono">${LANDING.int(f.n)} ${T('postings', 'Stellen')}</span></div>`).join('')}</div>` : ''}
       <div class="card" style="margin-top:22px;text-align:center"><div style="font-size:var(--text-base);font-weight:600">${T('Do you have', 'Hast du')} ${E2(row.canonical)}?</div>
         <div class="dim" style="font-size:var(--text-sm);margin-top:6px">${T('See what it is worth on your profile, and what it costs you not to have it.', 'Sieh, was sie auf deinem Profil wert ist, und was sie dich kostet, wenn du sie nicht hast.')}</div>
-        <a class="btn" href="/" style="margin-top:14px;display:inline-block">Check my market value</a></div>`);
+        <a class="btn" href="/" style="margin-top:14px;display:inline-block">${T('Check my market value', 'Meinen Marktwert prüfen')}</a></div>`);
   }
   return null;
 }

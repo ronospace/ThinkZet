@@ -778,7 +778,19 @@ table.t tr:hover td{background:var(--panel2)}
   transition:border-color .12s,background .12s,color .12s}
 .cp-chip:hover{border-color:var(--accent2);background:var(--panel2);color:var(--ink)}
 .cp-chip:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
-.composer{display:flex;gap:8px;align-items:flex-end;flex:0 0 auto;min-width:0;max-width:100%}
+.composer{position:relative;display:block;flex:0 0 auto;min-width:0;max-width:100%}
+/* The commit lives inside the field it commits, the same way the feedback card does it: no row is
+   spent on a button, and the mark sits where the typing ends. */
+#send{position:absolute;right:5px;bottom:5px;width:34px;height:34px;min-width:0;padding:0;border:none;
+  background:none;box-shadow:none;border-radius:0;display:grid;place-items:center;cursor:pointer;
+  transform:none;transition:filter .14s,opacity .14s}
+#send .send-ic{width:26px;height:26px;display:block;overflow:visible;transition:transform .14s}
+#send:hover .send-ic{transform:translateX(1.5px)}
+#send stop:first-child{stop-color:var(--accent)}
+#send stop:last-child{stop-color:var(--cta-b)}
+#send .lbl-send{display:none}
+#send[data-idle="1"] stop{stop-color:color-mix(in srgb,var(--accent2) 46%,var(--panel2))}
+#send[data-idle="1"]:hover stop{stop-color:color-mix(in srgb,var(--accent2) 70%,var(--panel2))}
 /* Feedback is a modal on the palette's scrim, but its own surface: one field, one optional field,
    three facts the screen already knows, and one action. */
 .fbk{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:16px;
@@ -824,33 +836,17 @@ table.t tr:hover td{background:var(--panel2)}
 html.kb-open .cp-fbk{display:none}
 @media(max-width:560px){.fbk{align-items:flex-end;padding:0}.fbk-box{max-width:none;border-radius:16px 16px 0 0;
   max-height:92dvh;padding:16px 14px calc(16px + env(safe-area-inset-bottom))}.fbk-foot .btn{flex:1 1 0}}
-.composer textarea{flex:1 1 auto;min-width:0;background:var(--wash);border:1px solid var(--line-tint);border-radius:12px;padding:11px 13px;outline:none;
+.composer textarea{width:100%;flex:1 1 auto;min-width:0;background:var(--wash);border:1px solid var(--line-tint);border-radius:12px;padding:11px 13px;outline:none;
   font:inherit;font-size:16px;line-height:1.5;color:var(--ink);resize:none;max-height:132px;overflow-y:auto;box-sizing:border-box}
 /* A rectangle, not a capsule: the field is a place to type, and the chips below it are the
    suggestions. Two shapes, two jobs. */
-.composer textarea{border-radius:var(--radius-sm)}
+.composer textarea{border-radius:var(--radius-sm);padding-right:50px}
 .composer textarea:focus{border-color:var(--accent2)}
-.composer .btn{flex:0 0 auto;display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:10px 15px}
-.composer .btn svg{width:13px;height:13px}
 @media(max-width:767px){
-  .composer textarea{min-height:40px;max-height:110px;padding:8px 12px;border-radius:var(--radius-sm)}
-  .composer .btn{width:36px;height:36px;min-width:36px;padding:0;border-radius:50%;gap:0}
-  .composer .btn .lbl-send{display:none}
-  .composer .btn svg{width:15px;height:15px}
+  .composer textarea{min-height:44px;max-height:110px;padding:10px 50px 10px 12px;border-radius:var(--radius-sm)}
+  #send{width:38px;height:38px;right:3px;bottom:3px}
+  #send .send-ic{width:28px;height:28px}
 }
-.composer .btn[data-idle="1"]{background:var(--accent-soft);color:var(--accent2);box-shadow:none;transform:none}
-/* Crystal water: the send button is glass over the field, not a slab of deep violet. A translucent
-   tint, a lit top edge and a thin rim, so it reads as a droplet rather than a block. */
-.composer .btn[data-idle="0"]{background:linear-gradient(to bottom,
-    color-mix(in srgb,var(--accent2) 18%,transparent),color-mix(in srgb,var(--accent2) 32%,transparent));
-  color:var(--accent2);border:1px solid color-mix(in srgb,var(--accent2) 34%,var(--line));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.55),0 2px 10px color-mix(in srgb,var(--accent2) 16%,transparent);
-  backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);transform:none}
-.composer .btn[data-idle="0"]:hover{background:linear-gradient(to bottom,
-    color-mix(in srgb,var(--accent2) 26%,transparent),color-mix(in srgb,var(--accent2) 42%,transparent));
-  border-color:color-mix(in srgb,var(--accent2) 52%,var(--line));transform:none}
-.composer .btn[data-idle="0"]:active{transform:scale(.96)}
-@media(prefers-reduced-motion:reduce){.composer .btn[data-idle="0"]:active{transform:none}}
 
 /* Career context: six badges, collapsible, a third of the weight it had as four tiles. */
 .cp-ctx{margin-top:10px;border-top:1px solid var(--line);padding-top:9px}
@@ -1633,6 +1629,10 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .tk-start .sr-c{font-size:var(--text-xs);color:var(--ink2);line-height:1.4;overflow-wrap:anywhere}
 /* Three Save buttons stacked are three commits inside one card, not the page's primary action, so
    they take a tint and a 32px height on a desktop and keep the 44px target on a phone. */
+.tk-commit{height:36px;min-width:0;padding:0 14px;border-radius:8px;font-weight:600;background:color-mix(in srgb,var(--accent2) 10%,var(--panel));border:1px solid color-mix(in srgb,var(--accent2) 30%,var(--line));color:var(--accent2);box-shadow:none}
+.tk-commit:hover{background:color-mix(in srgb,var(--accent2) 17%,var(--panel));border-color:color-mix(in srgb,var(--accent2) 46%,var(--line))}
+.tk-commit[disabled]{opacity:.55;cursor:default}
+@media(max-width:560px){.tk-commit{height:44px;min-width:96px}}
 .tk-start .sr .btn{height:32px;min-width:64px;padding:0 12px;border-radius:8px;font-weight:600;
   background:color-mix(in srgb,var(--accent2) 10%,var(--panel));
   border:1px solid color-mix(in srgb,var(--accent2) 30%,var(--line));
@@ -3649,7 +3649,7 @@ async function renderRadar() {
           <div style="font-size:var(--text-base);font-weight:600">Every card here is scored against your twin.</div>
           <div class="dim" style="font-size:var(--text-sm);margin-top:4px">The big number is <b>match</b>. The two small numbers are <b>interview</b> and <b>offer</b> probability – calibrated from real outcomes, not guesses. Start with the highest interview odds, not the highest match.</div>
         </div>
-        <button class="btn sm" id="teach-ok">Got it</button>
+        <button class="btn ghost sm" id="teach-ok">Got it</button>
       </div>
     </div>`;
     $('#teach-ok').onclick = () => { localStorage.setItem('karyvo-taught', '1'); teach.innerHTML = ''; };
@@ -4807,7 +4807,7 @@ async function renderCopilot() {
       <div class="cp-idle-hint" id="cp-idle-hint">Tap the thread for suggestions</div>
       <div class="composer">
         <textarea id="q" rows="1" enterkeyhint="send" placeholder="Ask Career Co-Pilot..." aria-label="Ask Career Co-Pilot"></textarea>
-        <button class="btn" id="send" data-idle="1" aria-label="Send"><span class="lbl-send">Ask</span> <svg class="send-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13.9 2.1L2.4 7.2l4.3 1.9 1.9 4.3z"/><path d="M13.9 2.1L6.7 9.1"/></svg></button>
+        <button class="btn" id="send" data-idle="1" aria-label="Send"><span class="lbl-send">Ask</span><svg class="send-ic" viewBox="0 0 24 24" aria-hidden="true"><defs><linearGradient id="sendGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0"/><stop offset="1"/></linearGradient></defs><path d="M4.4 4.4l15.4 7.6-15.4 7.6 3.1-7.6z" fill="url(#sendGrad)"/></svg></button>
       </div>
       <div class="fbk-foot-line cp-fbk"><button class="fbk-link" data-fbk="copilot"><svg class="fbk-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.4 3.4h11.2v7.2H7.2L4 13.4v-2.8H2.4z"/></svg><span data-i18n="fbk.open">Feedback</span></button></div>
     </div>`;
@@ -4828,7 +4828,7 @@ async function renderCopilot() {
   // streaming means the suggestions are worth showing again.
   const syncSend = () => {
     const empty = !box.value.trim();
-    if (sendBtn) sendBtn.dataset.idle = empty ? '0' : '1';
+    if (sendBtn) sendBtn.dataset.idle = empty ? '1' : '0';
     if (chatEl) {
       if (empty && !chatEl.dataset.busy) chatEl.dataset.idle = '1';
       else delete chatEl.dataset.idle;
@@ -4933,7 +4933,7 @@ async function renderSearches() {
         <div class="data-act">
           <div class="sh-name">
             <input id="s-name" class="sh-input" maxlength="80" placeholder="Name this search (optional)" aria-label="Name this search"/>
-            <button class="btn" id="s-add">Watch This Search</button>
+            <button class="btn tk-commit" id="s-add">Watch This Search</button>
           </div>
           <div class="da-note">Saves the filters above as a standing search. Leave the name blank and it is named from the filters.</div>
         </div>
@@ -5357,9 +5357,9 @@ async function renderPulse() {
   const famLabel = (f) => titleCase(f);
   $('#view').innerHTML = `
     <div class="row" style="gap:14px;margin-bottom:16px;flex-wrap:wrap">
-      <div class="card" style="flex:1;min-width:150px"><h3>Corpus</h3><div class="big mono">${p.totals.opportunities}</div><div class="muted" style="font-size:var(--text-xs)">live opportunities</div></div>
-      <div class="card" style="flex:1;min-width:150px"><h3>With Disclosed Pay</h3><div class="big mono">${p.sample}</div><div class="muted" style="font-size:var(--text-xs)">used in these benchmarks</div></div>
-      <div class="card" style="flex:1;min-width:150px"><h3>Remote Share</h3><div class="big mono">${p.remoteShare}%</div><div class="muted" style="font-size:var(--text-xs)">of all live roles</div></div>
+      <div class="card" style="flex:1;min-width:150px"><h3>Corpus</h3><div class="big mono">${int(p.totals.opportunities)}</div><div class="muted" style="font-size:var(--text-xs)">live opportunities, ${int(p.totals.remote)} of them remote</div></div>
+      <div class="card" style="flex:1;min-width:150px"><h3>With Disclosed Pay</h3><div class="big mono">${int(p.sample)}</div><div class="muted" style="font-size:var(--text-xs)">${Math.round((p.sample / Math.max(p.totals.opportunities, 1)) * 100)}% of the corpus states a figure</div></div>
+      <div class="card" style="flex:1;min-width:150px"><h3>Remote Share</h3><div class="big mono">${p.remoteShare}%</div><div class="muted" style="font-size:var(--text-xs)">${int(p.totals.remote)} of ${int(p.totals.opportunities)} live roles</div></div>
     </div>
     <div class="grid" style="grid-template-columns:1fr 1fr">
       <div class="card">
@@ -5385,14 +5385,20 @@ async function renderPulse() {
       <div class="card">
         <h3>Skills Rising</h3>
         <div style="margin-top:10px">${p.skills.rising.map((s) => `<div class="kv"><span>${esc(s.canonical)}</span><span class="mono" style="color:var(--good)">+${s.growth_rate}%</span></div>`).join('')}</div>
+        ${(p.skills.falling || []).length ? `<div class="muted" style="font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;margin-top:12px">Falling</div>
+        <div style="margin-top:6px">${p.skills.falling.map((s) => `<div class="kv"><span>${esc(s.canonical)}</span><span class="mono" style="color:var(--bad)">${s.growth_rate}%</span></div>`).join('')}</div>` : ''}
       </div>
       <div class="card">
         <h3>Highest Salary Premium</h3>
         <div style="margin-top:10px">${p.skills.premium.map((s) => `<div class="kv"><span>${esc(s.canonical)}</span><span class="mono" style="color:var(--good)">+${s.salary_premium}%</span></div>`).join('')}</div>
       </div>
       <div class="card">
-        <h3>Supply – Postings in 14 Days</h3>
-        <div style="margin-top:10px">${p.supply.slice(0, 8).map((s) => `<div class="kv"><span>${esc(famLabel(s.role_family))}</span><span class="mono">${int(s.n)}</span></div>`).join('')}</div>
+        <h3>Supply – Postings in ${p.supplyWindowDays || 14} Days</h3>
+        <div style="margin-top:10px">${p.supply.slice(0, 8).map((s) => `<div style="margin:7px 0">
+          <div class="row" style="justify-content:space-between;font-size:var(--text-sm)"><span>${esc(famLabel(s.role_family))}</span><span class="mono">${int(s.n)} <span class="muted" style="font-size:var(--text-2xs)">${Math.round((s.n / Math.max(p.supplyTotal || 1, 1)) * 100)}%</span></span></div>
+          <div class="bar" style="margin-top:4px"><i style="width:${Math.max(3, Math.round((s.n / Math.max(...p.supply.slice(0, 8).map((x) => x.n), 1)) * 100))}%"></i></div>
+        </div>`).join('')}
+        <div class="muted" style="font-size:var(--text-xs);margin-top:8px">${int(p.supplyTotal || 0)} open postings dated inside the window. Share is of that total.</div>
       </div>
     </div>
     <div class="card" style="margin-top:14px">
@@ -5432,14 +5438,18 @@ async function renderTrajectory(months) {
           <div style="text-align:right"><div class="mono" style="font-size:var(--text-md);font-weight:650">${money(p.endSalary)}</div><div class="mono" style="font-size:var(--text-xs);color:${p.deltaPct > 0 ? 'var(--good)' : 'var(--bad)'}">${p.deltaPct > 0 ? '+' : ''}${p.deltaPct}%</div></div>
         </div>
         <div class="bar" style="margin-top:9px"><i style="width:${bar(p.endSalary)}%"></i></div>
-        <div class="row" style="justify-content:space-between;margin-top:6px;font-size:var(--text-xs);color:var(--muted)">
+        <div class="row" style="justify-content:space-between;margin-top:6px;font-size:var(--text-xs);color:var(--muted);flex-wrap:wrap;gap:6px 12px">
           <span>risk ${Math.round(p.risk * 100)}/100 · ${int(p.promotions)} promotion${p.promotions === 1 ? '' : 's'} · ends at ${esc(p.endLevel)}</span>
           <span>risk-adjusted ${money(p.riskAdjusted)}</span>
+        </div>
+        <div class="row" style="justify-content:space-between;margin-top:4px;font-size:var(--text-xs);color:var(--muted);flex-wrap:wrap;gap:6px 12px">
+          <span>${money(p.totalEarnings)} earned across the ${months} months</span>
+          <span>${(p.timeline || []).length ? (p.timeline || []).map((e) => `month ${int(e.month)}: ${esc(e.event)} at ${money(e.salary)}`).join(' · ') : 'no promotion inside the window'}</span>
         </div>
       </div>`).join('')}
     </div>
 
-    <div class="grid" style="grid-template-columns:1fr 1fr;margin-top:14px">
+    <div class="grid traj-facts" style="grid-template-columns:1fr 1fr;margin-top:14px">
       <div class="card">
         <h3>Why the Model Says This</h3>
         <div style="margin-top:10px">
@@ -5452,6 +5462,19 @@ async function renderTrajectory(months) {
         </div>
       </div>
       <div class="card">
+        <h3>Against Your Market</h3>
+        <div style="margin-top:10px">
+          <div class="kv"><span>Your number today</span><span class="mono">${money(t.currentAnnual)}</span></div>
+          <div class="kv"><span>Market median (p50)</span><span class="mono">${money(t.benchmark.p50)}</span></div>
+          <div class="kv"><span>75th percentile (p75)</span><span class="mono">${money(t.benchmark.p75)}</span></div>
+          <div class="kv"><span>90th percentile (p90)</span><span class="mono">${money(t.benchmark.p90)}</span></div>
+        </div>
+        <div class="facts tight" style="margin-top:12px">
+          <span class="fk">What it means</span>
+          <span class="fv">${t.currentAnnual < t.benchmark.p50 ? `You sit ${money(t.benchmark.p50 - t.currentAnnual)} under the median today, so the first move is a correction, not a climb.` : t.currentAnnual < t.benchmark.p75 ? `You are above the median and ${money(t.benchmark.p75 - t.currentAnnual)} short of p75, which is the band a promotion lands in.` : `You are already at or above p75 for your level, so a path has to change the level, not the rate.`}</span>
+        </div>
+      </div>
+      <div class="card" style="grid-column:1/-1">
         <h3>Assumptions (All of Them)</h3>
         <div style="margin-top:10px">${t.assumptions.map((a) => `<div style="padding:6px 0;border-bottom:1px solid var(--line);font-size:var(--text-sm);color:var(--ink2)">${esc(a)}</div>`).join('')}</div>
       </div>

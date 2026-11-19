@@ -85,6 +85,26 @@ const get = (cc) => MARKETS[String(cc || '').toLowerCase()] || null;
 const alias = (cc) => ALIAS[String(cc || '').toLowerCase()] || null;
 const names = () => Object.fromEntries(Object.entries(MARKETS).map(([k, v]) => [k, v.name]));
 
+// A country is written in the language of the page that names it. Only the markets the sitemap can
+// defend carry a local spelling; anything else falls back to the registry's own name rather than a
+// half-translated guess.
+const LOCAL_NAME = {
+  de: { de: 'Deutschland' }, at: { de: 'Österreich' }, ch: { de: 'Schweiz' },
+  gb: { de: 'Vereinigtes Königreich' }, us: { de: 'Vereinigte Staaten' },
+  ie: { de: 'Irland' }, nl: { de: 'Niederlande' }, pl: { de: 'Polen' },
+  pt: { de: 'Portugal' }, se: { de: 'Schweden' }, es: { de: 'Spanien' },
+  fr: { de: 'Frankreich' }, ca: { de: 'Kanada' }, ae: { de: 'Vereinigte Arabische Emirate' },
+  in: { de: 'Indien' }, it: { de: 'Italien' }, be: { de: 'Belgien' }, dk: { de: 'Dänemark' },
+  fi: { de: 'Finnland' }, no: { de: 'Norwegen' }, cz: { de: 'Tschechien' },
+};
+const nameIn = (cc, lang) => {
+  const k = String(cc || '').toLowerCase();
+  const rec = MARKETS[k];
+  if (!rec) return '';
+  const local = LOCAL_NAME[k];
+  return (local && lang && local[lang]) || rec.name;
+};
+
 // The market a request is about, in order: an explicit query parameter, the route, the profile, the
 // browser's own language header. Nothing is assumed and nothing is locked in: the caller can always
 // pass a different market, and the interface can always be switched to another language.
@@ -142,4 +162,4 @@ function alternates(origin, codes, lang) {
     .concat([{ hreflang: l, href: `${origin}/` }, { hreflang: 'x-default', href: `${origin}/` }]);
 }
 
-module.exports = { MARKETS, ALIAS, LANGS, LANG_NAME, has, get, alias, names, fromRequest, languageFor, config, alternates };
+module.exports = { MARKETS, ALIAS, LANGS, LANG_NAME, has, get, alias, names, nameIn, fromRequest, languageFor, config, alternates };
