@@ -188,6 +188,8 @@ a{color:var(--accent);text-decoration:none}
 .rf-sep{height:1px;background:var(--line2);margin:9px 0 8px}
 html[data-theme="light"] .rf-sep{background:var(--line2)}
 .rf-legal{line-height:1.7}
+.rf-legal a{color:var(--foot-link)}
+.rf-legal a:hover{color:var(--foot-link-hi)}
 .rf-copy{margin-top:6px;font-size:var(--text-2xs);opacity:.7;line-height:1.5}
 .dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--good);margin-right:5px;vertical-align:1px}
 
@@ -467,7 +469,8 @@ textarea.cv:focus{border-color:var(--accent2)}
 .auth-skip{display:block;width:100%;margin-top:18px;padding-top:16px;border-top:1px solid var(--line);color:var(--ink2);font-size:var(--text-sm);text-align:center}
 .auth-skip:hover{color:var(--accent)}
 .auth-legal{margin:16px 0 0;text-align:center;color:var(--muted);font-size:var(--text-xs);line-height:1.6}
-.auth-legal a{color:var(--ink2);text-decoration:underline;text-underline-offset:2px}
+.auth-legal a{color:var(--foot-link);text-decoration:underline;text-underline-offset:2px}
+.auth-legal a:hover{color:var(--foot-link-hi)}
 
 
 /* ---------- feed ---------- */
@@ -1228,6 +1231,9 @@ html[data-theme="light"] .btn.ghost.cta:hover{background:#fff;border-color:var(-
 .foot-legal{margin-top:var(--sp-8);padding-top:var(--sp-4);border-top:1px solid var(--line);font-size:var(--text-2xs);color:var(--muted);text-align:center;line-height:1.7;padding-bottom:8px}
 
 .foot-legal span{display:block}
+/* The copyright line is a fact, but the two marks in it are still links. */
+.foot-legal a{color:var(--foot-link);text-decoration:none}
+.foot-legal a:hover{color:var(--foot-link-hi);text-decoration:underline;text-underline-offset:2px}
 @media(max-width:900px){.price{padding:var(--sp-5)}.price-tag{left:var(--sp-4);font-size:var(--text-2xs);padding:3px 8px}.how-grid,.cap-grid,.price-grid{grid-template-columns:1fr}.land-nav-links{display:none}.hero-sec{padding-top:var(--sp-10)}
   .land-tag{display:none}
   .land-nav{padding:10px 16px;gap:8px}
@@ -1653,8 +1659,8 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .btn.acct-save:hover{background:color-mix(in srgb,var(--accent2) 16%,var(--panel));border-color:color-mix(in srgb,var(--accent2) 44%,var(--line))}
 .acct-card input[type="text"]{height:36px;font-size:var(--text-sm)}
 /* A link inside a sentence has to look like a link, not like emphasis. */
-.acct-link{color:var(--accent2);font-weight:600;text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
-.acct-link:hover{color:color-mix(in srgb,var(--accent2) 82%,var(--ink))}
+.acct-link{color:var(--foot-link);font-weight:600;text-decoration:underline;text-underline-offset:2px;text-decoration-thickness:1px}
+.acct-link:hover{color:var(--foot-link-hi)}
 /* The crawler status is operator telemetry. On the settings routes it is noise beside four controls. */
 .shell.hide-telemetry .rail-foot{display:none}
 .tw-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4);align-items:start}
