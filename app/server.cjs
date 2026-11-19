@@ -35,6 +35,7 @@ const AN = require('./analytics.cjs');
 const BILLING = require('./billing.cjs');
 const MAIL = require('./mailer.cjs');
 const LLM = require('./llm.cjs');
+const CP = require('./copilot.cjs');
 
 const COMPANY = {
   name: 'ZyraFlow GmbH',
@@ -1431,42 +1432,52 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
   const firstName = ownName ? ownName.split(/\s+/)[0] : '';
   const ownEmail = String((meRow && meRow.email) || '').trim();
 
-  // Intent routing over grounded facts
+  // UI-206: what the question is about is decided in one place, by score, not by whichever regex
+  // happens to come first in this file. CP.plan() never answers and never reads the database.
+  const P = CP.plan(body.message);
+  const intent = P.name;
   let reply = '';
-  // A person says hello, asks who you are, or says thanks. Answering that with a menu of ten
-  // questions is the opposite of an assistant, so those three come first and stay short.
-  const smallTalk = /^(hi|hey|hello|yo|hiya|howdy|good (morning|afternoon|evening)|sup)\b/.test(q)
-    ? 'greet'
-    : /(my name|who am i|what.s my name|do you know me)/.test(q)
-      ? 'myname'
-      : /(your name|who are you|what are you|are you (a )?(bot|human|ai|real)|what do i call you)/.test(q)
-        ? 'who'
-        : /\b(date|today|todays|day is it|day today|what day)\b/.test(q) && !/\b(update|validate|candidate)\b/.test(q)
-          ? 'date'
-          : /\b(time|clock)\b/.test(q) && /\b(what|which|current|now)\b/.test(q)
-            ? 'time'
-            : /^(thanks|thank you|cheers|ta|ok|okay|cool|great|nice)\b/.test(q)
-              ? 'thanks'
-              : null;
-  if (smallTalk === 'greet') {
+  if (intent === 'greet') {
     reply = `${firstName ? `Hello ${firstName}.` : 'Hello.'} I am Zyra – your Career Co-Pilot. I read your profile, your pay benchmark and the live market, and I answer from those records rather than from general advice.\n\nAsk me about your pay, your next move, the skills blocking you, or relocating.`;
-  } else if (smallTalk === 'myname') {
+  } else if (intent === 'myname') {
     reply = ownName
       ? `You are ${ownName}${ownEmail ? `, signed in as ${ownEmail}` : ''}. Your Career Twin is under that account, and everything I answer comes from it.`
       : ownEmail
         ? `Your account is ${ownEmail}, and no name is set on it yet. You can add one on the Career Twin screen and I will use it here.`
         : `No name is recorded on this account yet. Add one on the Career Twin screen and I will use it here.`;
-  } else if (smallTalk === 'who') {
+  } else if (intent === 'who') {
     reply = `I am Zyra – your Career Co-Pilot inside ThinkZet. I am not a general chatbot: every answer is computed from your Career Twin, your pay benchmark and the live postings, and I name the sample I used.`;
-  } else if (smallTalk === 'date') {
+  } else if (intent === 'date') {
     const d = new Date();
     reply = `Today is ${d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}.`;
-  } else if (smallTalk === 'time') {
+  } else if (intent === 'time') {
     const d = new Date();
     reply = `It is ${d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })} where this server runs, on ${d.toLocaleDateString('en-GB', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })}.`;
-  } else if (smallTalk === 'thanks') {
+  } else if (intent === 'thanks') {
     reply = `Any time. Your records are unchanged, and the next question is always answered from the same numbers.`;
-  } else if (/rate|salary|pay|worth|underpaid|money|earn/.test(q)) {
+  } else if (intent === 'profile') {
+    // UI-206: everything here is a field the person owns, read back to them with its own source and
+    // its own completeness weight. Nothing is inferred, and a blank field is named as blank.
+    const tp = twinProfile(resolveUser(req));
+    const c = tp.completeness;
+    const id = tp.identity;
+    const pr = tp.preferences;
+    const comp2 = tp.compensation;
+    const skillNames = tp.skills.map((x) => x.canonical);
+    const missing = c.missing.slice(0, 4);
+    citations.push({ label: 'Career Twin', detail: `${c.percent}% complete, ${c.earned} of ${c.total} weighted points, ${skillNames.length} skills on record` });
+    reply = `Here is what your Career Twin holds, and nothing beyond it.\n\n`
+      + `· Role: ${id.currentRole || 'not set'}${id.seniority ? ` · ${titleCaseServer(id.seniority)}` : ' · seniority not set'}${id.years != null ? ` · ${id.years} years` : ' · years not set'}\n`
+      + `· Headline: ${id.headline || 'not set'}\n`
+      + `· Pay: ${comp2.current != null ? `${fmt(comp2.current)} ${comp2.period || ''}`.trim() : 'current rate not set'}${comp2.target != null ? `, targeting ${fmt(comp2.target)}` : ''}\n`
+      + `· Skills: ${skillNames.length ? skillNames.slice(0, 8).join(', ') + (skillNames.length > 8 ? ` and ${skillNames.length - 8} more` : '') : 'none recorded'}\n`
+      + `· Targets: ${pr.targetCountries.length ? pr.targetCountries.join(', ') : 'no countries set'}${pr.visaNeeded ? ', sponsorship needed' : ''}${pr.willingToRelocate ? ', open to relocating' : ', not open to relocating'}\n`
+      + `· Remote: ${pr.remotePreference ? titleCaseServer(pr.remotePreference) : 'not set'}\n`
+      + `· Activity: ${int(tp.counts.applications)} tracked, ${int(tp.counts.outcomes)} outcomes reported\n\n`
+      + `Completeness is ${c.percent}%: ${c.earned} of ${c.total} weighted points.`
+      + (missing.length ? ` The heaviest gaps are ${missing.map((m) => `${m.label} (${m.weight})`).join(', ')}.` : ' Every weighted field is filled.')
+      + `\n\nYou can change any of it on the Career Twin screen, and I answer from the change immediately.`;
+  } else if (intent === 'pay') {
     const r = rates;
     citations.push({ label: 'Rate intelligence', detail: `${r.sampleSize} comparable postings, ${r.confidence} confidence` });
     reply = r.verdict === 'underpaid'
@@ -1474,7 +1485,7 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
       : r.verdict === 'at_market'
         ? `You're roughly at market: ${fmt(r.current)} vs a median of ${fmt(r.p50)} (p25 ${fmt(r.p25)} → p75 ${fmt(r.p75)}). The upside isn't a raise, it's a reposition – p75 is ${fmt(r.p75)}, and the channel with the highest median is ${r.byChannel[0] ? r.byChannel[0].channel + ' at ' + fmt(r.byChannel[0].median) : 'n/a'}.`
         : `You're above market median (${fmt(r.current)} vs ${fmt(r.p50)}). Your leverage now is growth, not rate: the emerging skills in your adjacency are ${r.topPayingSkills.slice(0, 3).map((s) => s.skill).join(', ')}.`;
-  } else if (/what should i|next|priorit|focus|best opportunit/.test(q)) {
+  } else if (intent === 'next') {
     const best = top[0];
     citations.push({ label: 'Ranking', detail: `horizon=${top[0]?.horizon || 'balanced'} · top ${top.length} of ${db.prepare('SELECT COUNT(*) n FROM matches WHERE user_id=?').get(resolveUser(req)).n} scored` });
     const horizonNote = best?.horizon === 'income'
@@ -1485,7 +1496,7 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
     reply = best
       ? `Do this next: ${best.title} at ${best.company} – ${best.match_score}/100 match, ${best.interview_probability}% interview probability, ${best.offer_probability}% offer probability.${best.income_delta_pct != null ? ` Expected income is ${best.income_delta_pct > 0 ? '+' : ''}${best.income_delta_pct}% vs your current rate.` : ''}\n\nWhy it ranks first: ${best.reasons.slice(0, 3).map((r) => `${r.factor.toLowerCase()} (${r.detail})`).join('; ')}.\n\n${horizonNote}\n\nBlockers: ${best.missing_skills.length ? best.missing_skills.join(', ') : 'none – you cover every listed skill'}.\n\nRunners-up: ${top.slice(1, 4).map((o) => `${o.title} (${o.match_score})`).join(', ')}.`
       : 'No matches yet – load a profile first.';
-  } else if (/skill|gap|learn|missing|course|study/.test(q)) {
+  } else if (intent === 'skills') {
     const mine = new Set(twin.skills);
     const freq = new Map();
     for (const o of opportunitiesWithMatch(resolveUser(req), { limit: 40, minScore: 55 })) for (const s of o.missing_skills) freq.set(s, (freq.get(s) || 0) + 1);
@@ -1494,7 +1505,7 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
     reply = topGaps.length
       ? `Your gaps, ranked by how many of your realistic opportunities they block:\n\n${topGaps.map(([s, n], i) => `${i + 1}. ${s} – blocks ${n} of your top 40 matches`).join('\n')}\n\nYou already have ${mine.size} recognised skills. The pattern is clear: your data-science core is strong, and the missing layer is deployment and LLM infrastructure. Closing ${topGaps[0][0]} alone would unblock the largest number of roles.`
       : 'No systematic gaps detected across your top 40 matches – your coverage is unusually complete.';
-  } else if (/visa|relocat|move|country|germany|netherlands|abroad/.test(q)) {
+  } else if (intent === 'relocate') {
     const r = rates;
     citations.push({ label: 'Relocation exposure', detail: `${JSON.parse(profile.target_countries || '[]').join(', ') || 'none set'}` });
     const allScored = opportunitiesWithMatch(resolveUser(req), { limit: 400 });
@@ -1502,18 +1513,18 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
     const declared = allScored.filter((o) => o.visa_sponsorship === 'yes' || o.visa_sponsorship === 'no').length;
     const targets = JSON.parse(profile.target_countries || '[]');
     reply = `You need sponsorship and you're targeting ${targets.join(', ') || 'no countries yet'}.\n\nOf ${allScored.length} scored opportunities, ${withVisa} are explicitly sponsorship-positive – and only ${declared} state a position at all. The other ${allScored.length - declared} are silent, which is the real signal: most employers never say, so a filter that only matches "yes" hides most of the market.\n\nRealistic read: at ${fmt(r.p50)} median for your profile you clear the EU Blue Card threshold in Germany and the highly-skilled migrant threshold in the Netherlands on paper. Your constraint is not your level, and it is not your skills – it is that ${Math.round(((allScored.length - declared) / allScored.length) * 100)}% of the market gives you no signal at all. That is an outreach problem, not an application problem.`;
-  } else if (/fit|best job|which job|match me|suited/.test(q)) {
+  } else if (intent === 'fit') {
     const five = top.slice(0, 3);
     citations.push({ label: 'Ranking', detail: `${int(top.length)} of your scored matches, highest first` });
     reply = five.length
       ? `The three that fit you best right now:\n\n${five.map((o, i) => `${i + 1}. ${o.title} at ${o.company} – ${o.match_score}/100 match, ${o.interview_probability}% interview probability${o.comp_min != null ? `, ${fmt(o.comp_min)}${o.comp_max && o.comp_max !== o.comp_min ? ' to ' + fmt(o.comp_max) : ''} listed` : ', pay not disclosed'}`).join('\n')}\n\nWhy these three: ${five[0].match_score >= 80 ? 'the top one clears 80, which is where your interview odds stop being a lottery' : 'none clears 80 yet, so the gap work on Skill Gaps moves these numbers more than more searching does'}.`
       : 'Nothing scored yet. Load a profile and I can rank what fits.';
-  } else if (/competit|how strong|chances|odds|stand out/.test(q)) {
+  } else if (intent === 'competitive') {
     const s2 = scores || {};
     const topScore = top[0] ? top[0].match_score : 0;
     citations.push({ label: 'Career Score', detail: `overall ${s2.overall || 0}/100, p${s2.benchmark_percentile || 0}, top match ${topScore}` });
     reply = `Your overall score is ${s2.overall || 0}/100, ${ordSup(Number(s2.benchmark_percentile || 0))} percentile for your level.\n\n· Best match ${topScore}/100, so ${topScore >= 85 ? 'you are a strong candidate on paper for your top roles' : topScore >= 70 ? 'you clear the screen for your top roles but not the shortlist' : 'your top roles are still a stretch on paper'}\n· Weakest link: ${weakest(s2)}\n· Interview readiness ${s2.interview_readiness || 0}, which is what decides between two candidates with the same CV.`;
-  } else if (/growth|fastest|promotion|trajectory|24 month|two year/.test(q)) {
+  } else if (intent === 'growth') {
     const traj = TRAJ.simulate({
       currentAnnual: (rates && rates.current) || (rates && rates.p50) || 0,
       level: profile.seniority || 'mid',
@@ -1529,18 +1540,18 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
     reply = best
       ? `Over 24 months the fastest path for you is ${best.label}: ${fmt(best.endSalary)} projected, ${fmt(best.riskAdjusted)} of total earnings once risk is priced in.\n\n${withRisk.map((p) => `· ${p.label}: ${fmt(p.endSalary)} end salary, ${fmt(p.riskAdjusted)} risk-adjusted earnings`).join('\n')}\n\nThe model is a set of stated multipliers, not a forecast: it compounds a stated raise every quarter, adds ${int(best.promotions)} promotion${best.promotions === 1 ? '' : 's'} at your current level, and prices risk as a fixed penalty. Career Trajectory shows every multiplier.`
       : 'Load a profile and I can simulate the paths.';
-  } else if (/interview|prepare|prep/.test(q)) {
+  } else if (intent === 'interview') {
     const best = top[0];
     if (!best) return json(res, 200, { reply: 'Nothing scored yet, so there is no interview to prepare for. Load a profile first.', citations, grounded: true, mode: LLM.mode() });
     const plan = INTERVIEW.buildPlan(profile, twin, best, JSON.parse(db.prepare('SELECT missing_skills FROM matches WHERE user_id=? AND opportunity_id=?').get(resolveUser(req), best.id)?.missing_skills || '[]'));
     citations.push({ label: 'Interview plan', detail: `${best.title} at ${best.company}` });
     reply = `For ${best.title} at ${best.company}, ${plan.questions ? plan.questions.length : 0} questions are likely.\n\n${(plan.questions || []).slice(0, 3).map((x, i) => `${i + 1}. ${x.q || x.question}`).join('\n')}\n\nOpen the opportunity and press Interview Prep for the full set, the answer frame and the gaps they will probe.`;
-  } else if (/negotiat|offer|counter|raise/.test(q)) {
+  } else if (intent === 'negotiate') {
     const target = Math.round(rates.p75);
     const floor = Math.round(rates.p50);
     citations.push({ label: 'Negotiation', detail: `p50 ${fmt(floor)} floor, p75 ${fmt(target)} target, p90 ${fmt(Math.round(rates.p90))} stretch` });
     reply = `Anchor on ${fmt(target)} (p75), treat ${fmt(floor)} (p50) as the floor, and ${fmt(Math.round(rates.p90))} as the stretch.\n\n· Never name a number before they do, ask for their band first.\n· Tie every figure to your own market sample of ${int(rates.sampleSize)} postings, not to what you earn now.\n· Negotiate the package, not the base: equity, sign-on, remote allowance, learning budget.\n· Get it in writing before you accept verbally.\n\nNegotiation has the exact script to say.`;
-  } else if (/application|tracker|pipeline|progress|outcome/.test(q)) {
+  } else if (intent === 'tracker') {
     const apps = db.prepare('SELECT status, COUNT(*) n FROM applications WHERE user_id=? GROUP BY status').all(resolveUser(req));
     const by = Object.fromEntries(apps.map((a) => [a.status, a.n]));
     const total = apps.reduce((a, b) => a + b.n, 0);
@@ -1548,12 +1559,20 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
     reply = total
       ? `You are tracking ${int(total)} ${total === 1 ? 'opportunity' : 'opportunities'}: ${apps.map((a) => `${int(a.n)} ${String(a.status).replace(/_/g, ' ')}`).join(', ')}.\n\n${by.applied ? `${int(by.applied)} are applied, so the next number that matters is how many answer.` : 'Nothing is marked applied yet, so there is no response rate to read.'} ${by.interview ? `${int(by.interview)} reached interview.` : ''}`
       : 'Nothing tracked yet. Save an opportunity from The Radar and it appears here with its stage.';
-  } else if (/score|how am i|assess|rating/.test(q) || !q) {
+  } else if (intent === 'score' || !q) {
     const s = scores || {};
     citations.push({ label: 'Career Score', detail: `overall ${s.overall || 0}/100, p${s.benchmark_percentile || 0}` });
     reply = `Your Career Score is ${s.overall || 0}/100 – ${ordSup(Number(s.benchmark_percentile || 0))} percentile for your level.\n\n· Employability ${s.employability || 0} – your top-15 matches average ${top.length ? Math.round(top.reduce((a, b) => a + b.match_score, 0) / top.length) : 0}\n· Interview readiness ${s.interview_readiness || 0}\n· Market demand ${s.market_demand || 0}\n· Salary potential ${s.salary_potential || 0}\n· Future growth ${s.future_growth || 0}\n· Momentum ${s.career_momentum || 0}\n\nBiggest lever: ${weakest(s)}.`;
   } else {
-    reply = `I did not catch which of your numbers that is about. Ask me about pay, the next move, skills, applications or relocating, and I will answer from your own records.`;
+    // UI-206: an off-topic question gets one honest sentence and the nearest questions it can answer,
+    // chosen from what the person actually has on record. It never invents a fact to be helpful.
+    const offers = [];
+    offers.push('what my pay is worth');
+    if (top.length) offers.push('what to do next');
+    if (twin.skills.length) offers.push('which skills block me');
+    offers.push('how complete my profile is');
+    if (JSON.parse(profile.target_countries || '[]').length) offers.push('whether to relocate');
+    reply = `That one is outside what I hold. I answer from your Career Twin, your pay benchmark and the live postings, and I will not guess at anything else.\n\nWhat I can answer right now: ${offers.slice(0, 4).join(' · ')}.`;
   }
 
   function weakest(s) {

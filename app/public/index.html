@@ -4677,6 +4677,10 @@ async function renderCopilot() {
     msgs.insertAdjacentHTML('beforeend', `<div class="msg-row"><span class="cp-ava" aria-hidden="true"><svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M8 2l1.5 3.6L13 7l-3.5 1.4L8 12l-1.5-3.6L3 7l3.5-1.4z"/></svg></span><div class="msg bot">${formatReply(res.reply)}${cites ? `<div class="cite">Grounded in: ${esc(cites)}</div>` : ''}</div></div>`);
     msgs.scrollTop = msgs.scrollHeight;
     if (chatEl) { delete chatEl.dataset.busy; syncSend(); }
+    // UI-207: the chips come back the moment the answer lands, so the thread has to give them their
+    // height back in the same frame. Reading scrollHeight before that layout is the old value, which
+    // is why the newest bubble used to sit under the chip rail until the next scroll.
+    requestAnimationFrame(() => { msgs.scrollTop = msgs.scrollHeight; });
   };
 
   // One tap anywhere on the thread brings the suggestions back. Tapping a bubble to read is not a
