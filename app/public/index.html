@@ -1452,7 +1452,18 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .apply-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 .fb-card{margin-top:14px}
 .fb-row{display:flex;flex-direction:column;gap:10px}
-.fb-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%}
+/* The commit lives inside the field it commits, bottom-right, so the card spends no row on a
+   button and the send mark sits where the typing ends. */
+.fb-field{position:relative;width:100%}
+.fb-send{position:absolute;right:7px;bottom:7px;width:30px;height:30px;display:grid;place-items:center;
+  padding:0;border:none;border-radius:8px;cursor:pointer;color:var(--on-accent);
+  background:linear-gradient(to bottom,var(--cta-a),var(--cta-b));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.28),0 3px 10px var(--cta-glow);transition:filter .14s,opacity .14s}
+.fb-send svg{width:15px;height:15px;display:block}
+.fb-send:hover{filter:brightness(1.07)}
+.fb-send[disabled]{opacity:.45;cursor:default;filter:none}
+.fb-send.sent{background:var(--good);box-shadow:none}
+@media(max-width:560px){.fb-send{width:34px;height:34px;right:6px;bottom:6px}}
 .fb-follow .fb-sub{margin:0}
 .fb-q{font-size:var(--text-sm);font-weight:650}
 .fb-sub{font-size:var(--text-xs);color:var(--muted);margin-top:2px}
@@ -1471,7 +1482,7 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .fb-why[readonly]{opacity:.7}
 #fb-send.sent{background:var(--good);border-color:var(--good);color:var(--on-accent)}
 .fb-follow{margin-top:10px;display:flex;flex-direction:column;gap:8px;align-items:flex-start}
-.fb-why{width:100%;background:var(--panel2);border:1px solid var(--line2);border-radius:var(--radius);color:var(--ink);padding:9px 11px;font:inherit;font-size:var(--text-sm);resize:vertical}
+.fb-why{width:100%;box-sizing:border-box;background:var(--panel2);border:1px solid var(--line2);border-radius:var(--radius);color:var(--ink);padding:9px 48px 9px 11px;font:inherit;font-size:var(--text-sm);resize:none;min-height:72px}
 .fb-why:focus{outline:none;border-color:var(--accent2)}
 @media(max-width:560px){.fb-stars{margin-left:0}.fb-star{width:30px;height:30px}}
 /* ---------- saved searches ---------- */
@@ -2299,7 +2310,8 @@ async function mountFeedback() {
     why.value = localStorage.getItem(K.comment) || '';
     send.disabled = false;
     send.classList.remove('sent');
-    send.textContent = 'Send';
+    send.disabled = false;
+    send.setAttribute('aria-label', 'Send feedback');
     follow.hidden = false;
   };
   const submit = async (n, comment) => {
@@ -2319,7 +2331,7 @@ async function mountFeedback() {
     why.readOnly = true;
     send.disabled = true;
     send.classList.add('sent');
-    send.textContent = 'Sent';
+    send.setAttribute('aria-label', 'Sent');
     setTimeout(showDone, 700);
   };
 
@@ -2332,7 +2344,7 @@ async function mountFeedback() {
       follow.hidden = false;
       send.disabled = false;
       send.classList.remove('sent');
-      send.textContent = 'Send';
+      send.setAttribute('aria-label', 'Send feedback');
       why.focus();
     };
   });
@@ -3509,10 +3521,11 @@ async function renderRadar() {
       </div>
       <div class="fb-follow" hidden>
         <label class="fb-sub" for="fb-why">What is missing or unclear?</label>
-        <textarea id="fb-why" class="fb-why" rows="2" maxlength="600" placeholder="One line is enough"></textarea>
-        <div class="fb-actions">
-          <span></span>
-          <button class="btn sm" id="fb-send">Send</button>
+        <div class="fb-field">
+          <textarea id="fb-why" class="fb-why" rows="2" maxlength="600" placeholder="One line is enough"></textarea>
+          <button class="fb-send" id="fb-send" aria-label="Send feedback">
+            <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.6 8h9.4"/><path d="M7.6 3.4L12.2 8l-4.6 4.6"/></svg>
+          </button>
         </div>
       </div>
       <div class="fb-done" hidden>
