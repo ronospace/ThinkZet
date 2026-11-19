@@ -1258,6 +1258,10 @@ html[data-theme="light"] .btn.ghost.cta:hover{background:#fff;border-color:var(-
 .foot-legal{margin-top:var(--sp-8);padding-top:var(--sp-4);border-top:1px solid var(--line);font-size:var(--text-2xs);color:var(--muted);text-align:center;line-height:1.7;padding-bottom:8px}
 
 .foot-legal span{display:block}
+/* The copyright line is the one row on the page that states who stands behind the product, so it
+   carries a mark and the product's own good tone instead of the grey of a footnote. */
+.foot-legal .fl-c{display:inline-flex;align-items:center;justify-content:center;gap:6px;color:var(--score-good);font-weight:600}
+.foot-legal .fl-ic{width:12px;height:12px;flex:0 0 auto;opacity:.9}
 /* The copyright line is a fact, but the two marks in it are still links. */
 .foot-legal a{color:var(--foot-link);text-decoration:none}
 .foot-legal a:hover{color:var(--foot-link-hi);text-decoration:underline;text-underline-offset:2px}
@@ -1544,6 +1548,25 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .cal-wait .s{font-size:var(--text-xs);color:var(--ink2);margin-top:2px}
 .cal-stage{font:inherit;font-size:var(--text-xs);padding:5px 7px;border-radius:6px;border:1px solid var(--line-tint);background:var(--wash);color:var(--ink);min-width:0}
 .cal-form{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)}
+/* A ladder is read down one column of figures, so the four rows share one set of tracks. */
+.cal-ladder{display:grid;gap:0;margin-top:12px}
+.cal-ladder .lv{display:grid;grid-template-columns:44px minmax(120px,1.1fr) 62px minmax(0,2fr);
+  align-items:baseline;gap:10px;padding:9px 0;border-top:1px solid var(--line-tint)}
+.cal-ladder .lv:first-child{border-top:none;padding-top:0}
+.cal-ladder .lv-n{font-size:var(--text-md);font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}
+.cal-ladder .lv-t{font-size:var(--text-sm);font-weight:600;color:var(--ink2)}
+.cal-ladder .lv-w{font-size:var(--text-sm);font-weight:700;color:var(--muted);font-variant-numeric:tabular-nums;text-align:right}
+.cal-ladder .lv-s{font-size:var(--text-xs);color:var(--muted);line-height:1.45;overflow-wrap:anywhere}
+.cal-ladder .lv.now{background:linear-gradient(94deg,color-mix(in srgb,var(--accent2) 12%,transparent) 0%,transparent 72%);
+  border-radius:8px;padding-left:8px;padding-right:8px;margin-left:-8px;margin-right:-8px;
+  box-shadow:inset 2px 0 0 color-mix(in srgb,var(--accent2) 62%,transparent)}
+.cal-ladder .lv.now .lv-t{color:var(--ink)}
+.cal-ladder .lv.now .lv-w{color:var(--accent2)}
+.cal-ladder .lv.done .lv-w{color:var(--good)}
+@media(max-width:767px){
+  .cal-ladder .lv{grid-template-columns:36px minmax(0,1fr) auto;row-gap:2px}
+  .cal-ladder .lv-s{grid-column:1/-1}
+}
 .cal-acc{border:1px solid var(--line-tint);border-radius:var(--radius-lg);background:var(--wash);margin-top:14px}
 .cal-acc summary{cursor:pointer;padding:14px 18px;font-size:var(--text-2xs);letter-spacing:.1em;text-transform:uppercase;
   font-weight:600;color:var(--ink2);list-style:none;display:flex;align-items:center;justify-content:space-between;gap:10px}
@@ -2048,7 +2071,7 @@ body.tw-lock{overflow:hidden}
         <div class="fm-row" id="ds-grid"><span class="ds-wait" data-i18n="snap.reading">Reading the live corpus…</span></div>
         <div class="fm-date" id="ds-note"></div>
       </div>
-      <div class="foot-legal"><span>&copy; 2026 ZyraFlow GmbH&trade;. All rights reserved.</span><span>ThinkZet is a product of ZyraFlow GmbH&trade;.</span></div>
+      <div class="foot-legal"><span class="fl-c"><svg class="fl-ic" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 1.8l5 1.9v4.1c0 3-2.1 5.2-5 6.4-2.9-1.2-5-3.4-5-6.4V3.7z"/><path d="M5.9 8.1l1.6 1.6 2.9-3.1"/></svg>&copy; 2026 ZyraFlow GmbH&trade;. All rights reserved.</span><span>ThinkZet is a product of ZyraFlow GmbH&trade;.</span></div>
     </footer>
   </div>
 </div>
@@ -4988,6 +5011,7 @@ async function renderLearning() {
           <div><span class="k">Market interview baseline</span><span class="v">${prior.p != null ? pct(prior.p, 1) : 'Not measured'}</span></div>
           <div><span class="k">Your calibrated estimate</span><span class="v ${n ? '' : 'lock'}">${n ? pct(Math.min(99, Number(prior.p || 0) + Number(l.calibration.interviewPriorLift || 0)), 1) : LOCK + 'Unlocks after your first completed outcome'}</span></div>
           <div><span class="k">Signal weight on your records</span><span class="v ${share ? '' : 'lock'}">${share ? share + '%' : LOCK + 'Using market baseline'}</span></div>
+          <div><span class="k">Market baseline sample</span><span class="v">${prior.n ? int(prior.n) + ' scored' : 'Not measured'}</span></div>
         </div>
       </div>
     </div>
@@ -5033,6 +5057,28 @@ async function renderLearning() {
           <span class="fk">Composition</span>
           <span class="fv">${n ? `Market intelligence plus ${share}% weight on your own outcomes.` : 'Market intelligence only. No personal weight is applied until you report an outcome.'}</span>
         </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:14px">
+      <h3>What Each Level Unlocks</h3>
+      <div class="cal-ladder">
+        ${CAL_LEVELS.map((lv, i) => {
+          const w = Math.round((lv.at / (lv.at + 20)) * 100);
+          const note = i === 0
+            ? 'Published market priors only. Nothing of yours is blended in yet.'
+            : `Your own results carry ${w}% of the weight against the market figure.`;
+          return `<div class="lv${i === lvl ? ' now' : ''}${i < lvl ? ' done' : ''}">
+            <span class="lv-n">${int(lv.at)}</span>
+            <span class="lv-t">${esc(lv.name)}</span>
+            <span class="lv-w">${i === 0 ? 'Market' : w + '%'}</span>
+            <span class="lv-s">${esc(note)}</span>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="facts tight" style="margin-top:12px">
+        <span class="fk">Why the weight is small at first</span>
+        <span class="fv">Weight is shrunk by n/(n+20), so the first outcome moves the model by five points, not by all of it. The interview lift is capped at ${pct(18, 0)} whatever you report.</span>
       </div>
     </div>
 
