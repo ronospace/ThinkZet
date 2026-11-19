@@ -339,7 +339,7 @@ html[data-theme="light"] .btn.act-apply{background:color-mix(in srgb,var(--accen
 .arow{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-bottom:1px solid var(--line);cursor:pointer}
 .arow-n{color:var(--ink2);font-size:var(--text-sm);font-weight:700;font-variant-numeric:tabular-nums;width:16px;flex:0 0 auto}
 /* The first row is the one to do now, so it carries a tint and a soft left edge. */
-.arow.top{background:color-mix(in srgb,var(--accent) 6%,transparent);border-radius:10px;padding-left:8px;padding-right:8px;margin-left:-8px;margin-right:-8px}
+.arow.top{background:linear-gradient(94deg,color-mix(in srgb,var(--accent2) 12%,transparent) 0%,color-mix(in srgb,var(--accent2) 4%,transparent) 62%,transparent 100%);border-radius:10px;padding-left:8px;padding-right:8px;margin-left:-8px;margin-right:-8px;box-shadow:inset 2px 0 0 color-mix(in srgb,var(--accent2) 62%,transparent)}
 .arow{transition:background .12s ease}
 .arow:hover{background:color-mix(in srgb,var(--accent) 5%,transparent)}
 .arow:active{background:color-mix(in srgb,var(--accent) 9%,transparent)}
@@ -391,6 +391,9 @@ button.bdg:active{transform:translateY(.5px)}
 .signal-lead{margin:10px 0 6px;padding:12px 14px;border-radius:var(--radius);background:color-mix(in srgb,var(--accent) 7%,var(--panel));border:1px solid color-mix(in srgb,var(--accent) 28%,var(--line));cursor:pointer}
 .signal-lead:hover{border-color:var(--accent2)}
 .signal-v{font-size:var(--text-lg);font-weight:680;letter-spacing:var(--tracking-tight);margin:3px 0 2px;color:var(--ink)}
+/* UI-209: a figure that names the answer takes the same transition the heading does, so the eye
+   lands on the value and then on the colour that ends it. */
+.signal-v,.brief-hl b,.brief-hl strong{background:linear-gradient(94deg,var(--ink) 0%,var(--ink) 52%,var(--sec-b) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;width:fit-content}
 .signal-why{font-size:var(--text-sm);color:var(--ink2);line-height:1.5;margin-top:2px}
 .signal-go{display:flex;align-items:center;gap:6px;margin-top:9px;font-size:var(--text-sm);font-weight:600;color:var(--accent2)}
 .signal-go .chev{width:14px;height:14px}
@@ -428,9 +431,21 @@ button.bdg:active{transform:translateY(.5px)}
 .pct-dot{position:absolute;top:-3px;width:14px;height:14px;border-radius:50%;transform:translateX(-50%);box-shadow:0 0 0 3px var(--panel)}
 .bar > i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,var(--accent2),var(--rose))}
 .empty{padding:60px 20px;text-align:center;color:var(--muted)}
+/* UI-209: the section heading is where the product's colour lives. The ink holds for the first third
+   and the accent takes the last clause, so the eye is pulled to the end of the line and never to a
+   block of colour. --sec-a/--sec-b are tokens, so both themes and every surface share one gradient. */
+:root{--sec-a:var(--ink);--sec-b:color-mix(in srgb,var(--accent2) 96%,var(--ink))}
 h2.section{font-size:var(--text-md);margin:26px 0 12px;font-weight:650;letter-spacing:-.01em;
-  background:linear-gradient(94deg,var(--ink) 0%,var(--ink) 38%,color-mix(in srgb,var(--accent2) 94%,var(--ink)) 100%);
+  background:linear-gradient(94deg,var(--sec-a) 0%,var(--sec-a) 34%,var(--sec-b) 100%);
   -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;color:var(--ink);width:fit-content}
+/* A card heading is a label, so it keeps its uppercase and gains the same transition at a smaller
+   scale: the last word is the accent, the rest is the muted label colour. */
+.card h3{background:linear-gradient(94deg,var(--ink2) 0%,var(--ink2) 46%,color-mix(in srgb,var(--accent2) 88%,var(--ink2)) 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;width:fit-content}
+/* The view title is the page's own name. It takes the accent later in the line than a section, so a
+   page and its sections are never the same gradient. */
+#view-title{background:linear-gradient(94deg,var(--ink) 0%,var(--ink) 58%,var(--sec-b) 100%);
+  -webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;width:fit-content}
 /* Section headings that describe system health carry a small tinted icon, so the group reads at a glance. */
 h2.section-ico{display:flex;align-items:center;gap:8px}
 h2.section-ico:before{content:"";width:18px;height:18px;border-radius:6px;flex:none;background:color-mix(in srgb,var(--accent2) 16%,var(--panel));border:1px solid color-mix(in srgb,var(--accent2) 40%,var(--line));background-image:radial-gradient(circle at 50% 50%,var(--accent2) 0 2.2px,transparent 2.4px);background-repeat:no-repeat;background-position:center}
@@ -1551,6 +1566,7 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 .bstat{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:14px;padding-top:12px;border-top:1px solid var(--line)}
 .bstat>div{min-width:0}
 .bstat-v{font-size:var(--text-xl);font-weight:720;letter-spacing:var(--tracking-tighter);line-height:1.15}
+.bstat>div:first-child .bstat-v{background:linear-gradient(94deg,var(--ink) 0%,var(--ink) 46%,var(--sec-b) 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;width:fit-content}
 .bstat-s{font-size:var(--text-sm);font-weight:600;color:var(--ink2);margin-left:1px}
 /* The sub-label carries the meaning, so it is readable, not a whisper. */
 .bstat-k{font-size:var(--text-xs);color:var(--ink2);margin-top:2px;line-height:1.3}
