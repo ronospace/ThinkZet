@@ -781,7 +781,10 @@ table.t tr:hover td{background:var(--panel2)}
 .composer{position:relative;display:block;flex:0 0 auto;min-width:0;max-width:100%}
 /* The commit lives inside the field it commits, the same way the feedback card does it: no row is
    spent on a button, and the mark sits where the typing ends. */
-#send{position:absolute;right:5px;bottom:5px;width:34px;height:34px;min-width:0;padding:0;border:none;
+/* Centred by the box, not by a guessed offset: top and bottom both pin to the field and the auto
+   margins split what is left, so the mark stays on the field's centre line when the field grows a
+   line and when it is one line tall. No transform is used, so .btn:hover cannot move it. */
+#send{position:absolute;right:5px;top:0;bottom:0;margin:auto 0;width:34px;height:34px;min-width:0;padding:0;border:none;
   background:none;box-shadow:none;border-radius:0;display:grid;place-items:center;cursor:pointer;
   transform:none;transition:filter .14s,opacity .14s}
 #send .send-ic{width:26px;height:26px;display:block;overflow:visible;transition:transform .14s}
@@ -836,7 +839,7 @@ table.t tr:hover td{background:var(--panel2)}
 html.kb-open .cp-fbk{display:none}
 @media(max-width:560px){.fbk{align-items:flex-end;padding:0}.fbk-box{max-width:none;border-radius:16px 16px 0 0;
   max-height:92dvh;padding:16px 14px calc(16px + env(safe-area-inset-bottom))}.fbk-foot .btn{flex:1 1 0}}
-.composer textarea{width:100%;flex:1 1 auto;min-width:0;background:var(--wash);border:1px solid var(--line-tint);border-radius:12px;padding:11px 13px;outline:none;
+.composer textarea{display:block;width:100%;flex:1 1 auto;min-width:0;background:var(--wash);border:1px solid var(--line-tint);border-radius:12px;padding:11px 13px;outline:none;
   font:inherit;font-size:16px;line-height:1.5;color:var(--ink);resize:none;max-height:132px;overflow-y:auto;box-sizing:border-box}
 /* A rectangle, not a capsule: the field is a place to type, and the chips below it are the
    suggestions. Two shapes, two jobs. */
@@ -844,7 +847,7 @@ html.kb-open .cp-fbk{display:none}
 .composer textarea:focus{border-color:var(--accent2)}
 @media(max-width:767px){
   .composer textarea{min-height:44px;max-height:110px;padding:10px 50px 10px 12px;border-radius:var(--radius-sm)}
-  #send{width:38px;height:38px;right:3px;bottom:3px}
+  #send{width:38px;height:38px;right:3px}
   #send .send-ic{width:28px;height:28px}
 }
 
