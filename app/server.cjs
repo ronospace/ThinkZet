@@ -3237,6 +3237,7 @@ function seoFor(pathname) {
       title: `${role} Salary${country ? ' in ' + country : ''} – Live Market Rates | ThinkZet`,
       description: `What ${role.toLowerCase()}s are paid${where}, computed from live postings with pay disclosed. Median, 25th and 75th percentile, sample size and confidence, plus the rate gap against your own number.`,
       h1: `${role} Salary${country ? ' in ' + country : ''}`,
+      salary: { role, country: country || '', cc },
       body: `ThinkZet computes ${role.toLowerCase()} pay${where} from live postings that disclose a number, and states the sample size behind every figure. Open the page to see the median, the interquartile band, the currencies in the pool and the gap against what you are paid today.`,
     };
   }
@@ -3246,8 +3247,113 @@ function seoFor(pathname) {
       title: `${skill} Demand and Pay – Live Market Data | ThinkZet`,
       description: `How many live postings ask for ${skill.toLowerCase()}, what they pay, and which roles it unlocks. Computed from the same corpus every other ThinkZet number comes from.`,
       h1: `${skill} Demand and Pay`,
+      skill,
       body: `ThinkZet counts how many live postings ask for ${skill.toLowerCase()}, what those postings pay, and which role families the skill appears in most. Every figure names its sample.`,
     };
+  }
+  return null;
+}
+
+
+// A page the crawler reads must be the page the visitor sees (RULES 23). These three surfaces are
+// built here, from the same engine the app calls, so every URL carries its own numbers instead of
+// the same shell with a different title. Two URLs that print the same body are one page to a
+// crawler, and it will pick its own canonical for them however the tag is written.
+function seoBody(seo, origin, lang) {
+  const de = lang === 'de';
+  const T = (en, ger) => (de ? ger : en);
+  const E2 = (x) => LANDING.esc(x);
+  const M2 = (n, cur) => LANDING.money(n, cur || 'EUR');
+  const wrap = (inner) => `<div class="land-wrap"><div class="land-nav"><div class="land-brand">`
+    + `<svg class="mark" viewBox="0 0 192 192" aria-hidden="true" focusable="false"><use href="#tz-mark"/></svg> `
+    + `<span class="wm">Think<i>Zet</i></span></div><a class="btn ghost sm" href="/">Check your own</a></div>`
+    + inner + `</div>`;
+
+  if (seo.market) {
+    const cc = seo.market.toUpperCase();
+    const country = SEO_COUNTRY[seo.market];
+    const cur = MK.has(seo.market) ? MK.get(seo.market).currency : 'EUR';
+    const fams = db.prepare(`SELECT role_family, COUNT(*) n FROM opportunities WHERE status='open' AND country=?
+      GROUP BY role_family HAVING n >= 5 ORDER BY n DESC LIMIT 10`).all(cc);
+    const label = (f) => FAMILY_LABEL[f] || titleFromFamily(f);
+    const med = (f) => {
+      const rows = db.prepare(`SELECT amount FROM salary_records WHERE country=? AND role_family=? AND amount>0
+        AND currency=? ORDER BY amount`).all(cc, f, cur).map((r) => r.amount);
+      if (rows.length < 3) return null;
+      return rows[Math.floor(rows.length / 2)];
+    };
+    const total = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open' AND country=?").get(cc).n;
+    const paid = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open' AND country=? AND comp_min IS NOT NULL").get(cc).n;
+    const rows = fams.map((f) => {
+      const m = med(f.role_family);
+      return `<tr><td><b>${E2(label(f.role_family))}</b></td><td class="mono">${LANDING.int(f.n)}</td>`
+        + `<td class="mono">${m == null ? `<span class="muted">${T('Not disclosed', 'Nicht angegeben')}</span>` : M2(m, cur)}</td></tr>`;
+    }).join('');
+    return wrap(`
+      <span class="land-kicker">${T('Live market data', 'Live-Marktdaten')} · ${LANDING.int(total)} ${T('open postings', 'offene Stellen')} · ${LANDING.int(paid)} ${T('disclosing pay', 'mit Gehaltsangabe')}</span>
+      <h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${E2(country)}: ${T('Salaries and Opportunities', 'Gehälter und Stellen')}</h1>
+      <p class="land-sub">${T(`What ${E2(country)} employers are publishing right now, role by role, with the sample behind every figure.`, `Was Arbeitgeber in ${E2(country)} gerade veröffentlichen, Rolle für Rolle, mit der Stichprobe hinter jeder Zahl.`)}</p>
+      <div class="card" style="margin-top:24px"><table class="t"><thead><tr><th>${T('Role', 'Rolle')}</th><th>${T('Open postings', 'Offene Stellen')}</th><th>${T('Median pay', 'Median-Gehalt')} (${E2(cur)})</th></tr></thead><tbody>${rows}</tbody></table></div>
+      <div class="muted" style="font-size:var(--text-xs);margin-top:18px">${T(`Median is the middle of the postings in ${E2(country)} that state a figure in ${E2(cur)}. A role with fewer than three such postings prints "Not disclosed" rather than a number the sample cannot defend. ${E2(country)} is one market among the ${Object.keys(SEO_COUNTRY).length} the platform covers.`, `Der Median ist die Mitte der Stellen in ${E2(country)}, die eine Zahl in ${E2(cur)} nennen. Eine Rolle mit weniger als drei solchen Stellen zeigt "Nicht angegeben" statt einer Zahl, die die Stichprobe nicht tragen kann. ${E2(country)} ist einer von ${Object.keys(SEO_COUNTRY).length} Märkten der Plattform.`)}</div>`);
+  }
+
+  if (seo.salary) {
+    const { role, country, cc } = seo.salary;
+    const cur = cc && MK.has(cc) ? MK.get(cc).currency : 'EUR';
+    const pv = cached(`seo:salary:${role}:${cc}`, () => previewFor({ role, years: 7, country: cc || null, titleHint: '' }));
+    if (!pv || !pv.available || !pv.benchmark) {
+      return wrap(`<h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${E2(role)} ${T('salary', 'Gehalt')}${country ? ' in ' + E2(country) : ''}</h1>
+        <p class="land-sub">The corpus cannot defend a figure for this role in this market yet. It prints nothing rather than a guess.</p>
+        <div class="card" style="margin-top:22px"><div class="muted">${E2(pv && pv.reason ? pv.reason : 'Insufficient live salary data for this role and market.')}</div></div>`);
+    }
+    const b = pv.benchmark;
+    const ch = (b.byChannel || []).filter((c) => c.n >= 5);
+    const opps = (pv.opportunities || []).map((o) => `<div class="kv"><span>${E2(o.title)} <span class="muted">· ${E2(o.company || '')}</span></span>`
+      + `<span class="mono">${o.compMin == null ? `<span class="muted">${T('Salary undisclosed', 'Gehalt nicht angegeben')}</span>` : M2(o.compMin, o.currency || cur)}</span></div>`).join('');
+    return wrap(`
+      <span class="land-kicker">${T('Live market data', 'Live-Marktdaten')} · ${LANDING.int(b.sampleSize)} ${T('postings', 'Stellen')} · ${T('updated continuously', 'laufend aktualisiert')}</span>
+      <h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${E2(role)} salary${country ? ' in ' + E2(country) : ''}</h1>
+      <p class="land-sub">${T('What employers are actually publishing right now - not a survey, not self-reported.', 'Was Arbeitgeber gerade tatsächlich veröffentlichen - keine Umfrage, keine Selbstauskunft.')}</p>
+      <div class="card" style="margin-top:24px">
+        <div class="kv"><span>${T('Median', 'Median')}</span><span class="mono">${M2(b.p50, b.currency)}</span></div>
+        <div class="kv"><span>${T('25th percentile', '25. Perzentil')}</span><span class="mono">${M2(b.p25, b.currency)}</span></div>
+        <div class="kv"><span>${T('75th percentile', '75. Perzentil')}</span><span class="mono">${M2(b.p75, b.currency)}</span></div>
+        <div class="kv"><span>${T('90th percentile', '90. Perzentil')}</span><span class="mono">${M2(b.p90, b.currency)}</span></div>
+        <div class="kv"><span>${T('Sample', 'Stichprobe')}</span><span class="mono">${LANDING.int(b.sampleSize)} ${T('postings', 'Stellen')}</span></div>
+        <div class="kv"><span>${T('Exact-profile comparables', 'Exakt vergleichbare Profile')}</span><span class="mono">${LANDING.int(b.exactComparables)}</span></div>
+        <div class="kv"><span>${T('Confidence', 'Aussagekraft')}</span><span class="mono">${E2(LANDING.titleCase(b.confidence))}</span></div>
+        <div class="muted" style="margin-top:10px;font-size:var(--text-xs)">${E2(b.segment || '')}${b.mode && b.mode !== 'country' ? ' · the pool is ' + E2(b.mode === 'currency' ? b.sourceCurrency + ' area' : 'global') + ' because ' + E2(country || 'this market') + ' holds ' + LANDING.int(b.countryDepth || 0) + ' comparable postings' : ''}</div>
+      </div>
+      ${ch.length ? `<h2 style="font-size:var(--text-lg);margin:32px 0 10px">${T('Where the Money Is', 'Wo das Geld liegt')}</h2><div class="card">${ch.map((c) => `<div class="kv"><span>${E2(LANDING.titleCase(c.channel))} <span class="muted">· ${LANDING.int(c.n)} postings</span></span><span class="mono">${M2(c.median, b.currency)}</span></div>`).join('')}</div>` : ''}
+      ${opps ? `<h2 style="font-size:var(--text-lg);margin:32px 0 10px">${T('Open Now', 'Jetzt offen')}</h2><div class="card">${opps}</div>` : ''}
+      <div class="card" style="margin-top:26px;text-align:center"><div style="font-size:var(--text-md);font-weight:600">${T('Where do you sit against this?', 'Wo stehst du dazu?')}</div>
+        <div class="dim" style="font-size:var(--text-sm);margin-top:6px">${T('Free and takes a minute.', 'Kostenlos und in einer Minute.')}</div>
+        <a class="btn" href="/" style="margin-top:14px;display:inline-block">${T('Check my market value', 'Meinen Marktwert prüfen')}</a></div>
+      <div class="muted" style="font-size:var(--text-xs);margin-top:22px">Source: ${LANDING.int(b.sampleSize)} live postings disclosing pay, shown in ${E2(b.currency)}${b.converted ? ' and converted at ' + E2(String(b.rateAsOf || '')) : ''}. Segments with fewer than eight postings are omitted rather than shown with false precision.</div>`);
+  }
+
+  if (seo.skill) {
+    const name = seo.skill;
+    const row = db.prepare('SELECT * FROM skills WHERE lower(canonical)=lower(?)').get(name);
+    if (!row) return wrap(`<h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${E2(name)}</h1><p class="land-sub">This skill is not in the tracked vocabulary.</p>`);
+    const postings = db.prepare("SELECT COUNT(*) n FROM opportunities WHERE status='open' AND lower(skills) LIKE ?").get('%' + row.canonical.toLowerCase() + '%').n;
+    const fams = db.prepare(`SELECT role_family, COUNT(*) n FROM opportunities WHERE status='open' AND lower(skills) LIKE ?
+      GROUP BY role_family ORDER BY n DESC LIMIT 6`).all('%' + row.canonical.toLowerCase() + '%');
+    return wrap(`
+      <span class="land-kicker">${T('Skill intelligence · live', 'Skill-Intelligenz · live')}</span>
+      <h1 class="land-h1" style="font-size:clamp(26px,4.2vw,40px)">${E2(row.canonical)} ${T('Demand and Pay', 'Nachfrage und Gehalt')}</h1>
+      <p class="land-sub">${E2(LANDING.titleCase(row.category || T('Skill', 'Skill')))} · ${T('asked for in', 'gefragt in')} ${LANDING.int(postings)} ${T('open postings right now', 'offenen Stellen gerade jetzt')}.</p>
+      <div class="card" style="margin-top:24px">
+        <div class="kv"><span>${T('Market demand index', 'Marktnachfrage-Index')}</span><span class="mono">${LANDING.int(row.demand_index)}/200</span></div>
+        <div class="kv"><span>${T('Salary premium', 'Gehaltsprämie')}</span><span class="mono" style="color:var(--good)">+${LANDING.int(row.salary_premium)}%</span></div>
+        <div class="kv"><span>${T('90-day growth', 'Wachstum 90 Tage')}</span><span class="mono">${row.growth_rate > 0 ? '+' : ''}${LANDING.int(row.growth_rate)}%</span></div>
+        <div class="kv"><span>${T('Emerging', 'Aufkommend')}</span><span class="mono">${row.is_emerging ? 'Yes' : 'No'}</span></div>
+        <div class="kv"><span>${T('Open postings asking for it', 'Offene Stellen mit dieser Anforderung')}</span><span class="mono">${LANDING.int(postings)}</span></div>
+      </div>
+      ${fams.length ? `<h2 style="font-size:var(--text-lg);margin:32px 0 10px">${T('Which Roles Ask for It', 'Welche Rollen sie verlangen')}</h2><div class="card">${fams.map((f) => `<div class="kv"><span>${E2(FAMILY_LABEL[f.role_family] || titleFromFamily(f.role_family))}</span><span class="mono">${LANDING.int(f.n)} postings</span></div>`).join('')}</div>` : ''}
+      <div class="card" style="margin-top:22px;text-align:center"><div style="font-size:var(--text-base);font-weight:600">${T('Do you have', 'Hast du')} ${E2(row.canonical)}?</div>
+        <div class="dim" style="font-size:var(--text-sm);margin-top:6px">${T('See what it is worth on your profile, and what it costs you not to have it.', 'Sieh, was sie auf deinem Profil wert ist, und was sie dich kostet, wenn du sie nicht hast.')}</div>
+        <a class="btn" href="/" style="margin-top:14px;display:inline-block">Check my market value</a></div>`);
   }
   return null;
 }
@@ -3396,8 +3502,15 @@ function withSeo(html, origin, pathname, lang) {
   out = primeLanding(out, seo && seo.market ? seo.market : null, uiLang);
   if (seo) {
     out = out.replace(/<title>[^<]*<\/title>/, `<title>${seo.title.replace(/</g, '&lt;')}</title>`);
-    // The crawler gets the same words the visitor gets, before any script runs.
-    out = out.replace('</body>', `<noscript><main><h1>${seo.h1}</h1><p>${seo.body}</p></main></noscript></body>`);
+    // The crawler gets the same words the visitor gets, before any script runs, and each URL gets
+    // its own numbers. A noscript line under an identical body is not a distinct page.
+    const body = seoBody(seo, origin, uiLang);
+    if (body) {
+      out = out.replace(/<div class="landing" id="landing">[\s\S]*?(?=\n<div class="shell" id="app-shell")/,
+        `<div class="landing" id="landing">${body}</div>\n`);
+    } else {
+      out = out.replace('</body>', `<noscript><main><h1>${seo.h1}</h1><p>${seo.body}</p></main></noscript></body>`);
+    }
   }
   return out;
 }
