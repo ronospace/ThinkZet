@@ -810,10 +810,12 @@ table.t tr:hover td{background:var(--panel2)}
 /* A quiet action, not a floating button: one word, in the muted ink, on the surface it belongs to. */
 .fbk-link{background:none;border:none;padding:0;font:inherit;font-size:var(--text-xs);color:var(--foot-link);
   cursor:pointer;text-decoration:none;min-height:32px;display:inline-flex;align-items:center;gap:5px;transition:color .14s}
-.fbk-link .fbk-ic{width:13px;height:13px;flex:0 0 auto;opacity:.85}
+.fbk-link .fbk-ic{width:13px;height:13px;flex:0 0 auto;opacity:.85;display:block}
 .fbk-link:hover{color:var(--foot-link-hi);text-decoration:underline;text-underline-offset:3px}
 .fbk-foot-line{display:flex;justify-content:flex-end;margin-top:10px}
-.acct-legal .fbk-link{font-size:var(--text-xs);min-height:0;display:inline}
+/* The button keeps its flex row at every width: `display:inline` here outranked the base rule on
+   specificity, so the mark fell onto the text baseline and hung two pixels high on desktop. */
+.acct-legal .fbk-link{font-size:var(--text-xs);min-height:0;display:inline-flex;align-items:center;gap:5px;vertical-align:middle}
 .fbk-ask{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
   margin-top:18px;padding-top:14px;border-top:1px solid var(--line-tint)}
 .fbk-ask>span{font-size:var(--text-sm);color:var(--ink2)}
@@ -4373,8 +4375,8 @@ async function renderTracker() {
           <div class="dim" style="font-size:var(--text-sm);margin-top:4px">Person, opportunity, action, result. Every entry sharpens the next estimate.</div>
         </div>
         <span class="chip">${int(outcomes.length)} recorded</span>
-      </div></div>
-      ${outcomes.length ? outcomes.map((o) => `<div class="outcome-row"><div><div class="o-type">${esc(String(o.outcome_type).replace(/_/g, ' '))}</div><div class="o-meta">${esc(o.title || 'Opportunity')}${o.company ? ' · ' + esc(o.company) : ''}</div></div><div class="o-delta" style="color:${o.salary_delta_pct > 0 ? 'var(--good)' : o.salary_delta_pct < 0 ? 'var(--bad)' : 'var(--muted)'}">${o.salary_delta_pct != null ? (o.salary_delta_pct > 0 ? '+' : '') + o.salary_delta_pct + '%' : '–'}</div><span class="muted o-meta">${new Date(o.occurred_at).toLocaleDateString('en-GB')}</span></div>`).join('') : '<div class="muted">No outcomes yet. Report one from any opportunity detail.</div>'}
+      </div>
+      ${outcomes.length ? outcomes.map((o) => `<div class="outcome-row"><div><div class="o-type">${esc(String(o.outcome_type).replace(/_/g, ' '))}</div><div class="o-meta">${esc(o.title || 'Opportunity')}${o.company ? ' · ' + esc(o.company) : ''}</div></div><div class="o-delta" style="color:${o.salary_delta_pct > 0 ? 'var(--good)' : o.salary_delta_pct < 0 ? 'var(--bad)' : 'var(--muted)'}">${o.salary_delta_pct != null ? (o.salary_delta_pct > 0 ? '+' : '') + o.salary_delta_pct + '%' : '–'}</div><span class="muted o-meta">${new Date(o.occurred_at).toLocaleDateString('en-GB')}</span></div>`).join('') : '<div class="tk-empty" style="margin-top:12px">No outcomes yet. Report one from any opportunity detail.</div>'}
     </div>`;
   document.querySelectorAll('.mv').forEach((b) => {
     b.onclick = async () => { await post('/api/applications/status', { opportunityId: b.dataset.id, status: b.dataset.to }); toast('Moved'); renderTracker(); };
