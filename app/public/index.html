@@ -1741,6 +1741,15 @@ html.is-landing,html.is-landing body{overflow-y:auto;overflow-x:hidden;height:au
 /* UI-210: the rate card answers the question it raises. A band row states the band, its figure,
    the distance from the person's own rate, and what that band means, in that order. */
 .rate-sub{font-size:var(--text-2xs);font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+/* The rate screen is one wide card and one column of cards beside it. The column ends on the wide
+   card's line, so its last card takes the height left over and its rows share it, instead of the
+   column stopping 169px short and leaving a white gap under its last row. */
+.rt-grid{align-items:stretch}
+.rt-grid > .card{display:flex;flex-direction:column}
+.rt-grid > div:last-child{display:flex;flex-direction:column;min-width:0}
+.rt-grid > div:last-child > .card:last-child{flex:1 1 auto;display:flex;flex-direction:column}
+.rt-grid > div:last-child > .card:last-child > div:last-child{flex:1 1 auto;display:flex;flex-direction:column;justify-content:flex-start}
+@media(max-width:900px){.rt-grid{align-items:start}.rt-grid > .card{display:block}.rt-grid > div:last-child{display:block}.rt-grid > div:last-child > .card:last-child{display:block}.rt-grid > div:last-child > .card:last-child > div:last-child{display:block}}
 .rate-band{display:grid;grid-template-columns:34px minmax(72px,auto) minmax(64px,auto) 1fr;align-items:baseline;gap:10px;padding:8px 0;border-top:1px solid var(--line-tint)}
 .rate-band:first-of-type{border-top:none}
 .rate-band .rb-k{font-size:var(--text-2xs);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
@@ -4352,7 +4361,7 @@ async function renderRates() {
   if (!r || r.error) return renderOnboarding();
   const pos = (v) => Math.max(0, Math.min(100, ((v - r.p25 * 0.88) / (r.p90 * 1.06 - r.p25 * 0.88)) * 100));
   $('#view').innerHTML = `
-    <div class="grid" style="grid-template-columns:1.3fr 1fr;align-items:start">
+    <div class="grid rt-grid" style="grid-template-columns:1.3fr 1fr">
       <div class="card">
         <h3>Your Market Rate – ${r.period === 'hour' ? 'per hour' : 'per year'}, EUR</h3>
         <div class="big mono" style="margin:10px 0 2px">${money(r.p50)}</div>
@@ -4404,7 +4413,7 @@ async function renderRates() {
           ${r.confidenceDetail.caveat ? `<div style="margin-top:8px;font-size:var(--text-xs);color:var(--warn)">${esc(r.confidenceDetail.caveat)}</div>` : ''}
         </div>` : ''}
         </div>
-        <div class="card" style="margin-top:14px">
+        <div class="card rt-side" style="margin-top:14px">
           <h3>Highest-Premium Skills in Your Adjacency</h3>
           <div style="margin-top:10px">
             ${r.topPayingSkills.map((s) => `<div class="kv"><span>${esc(s.skill)}</span><span class="mono" style="color:var(--good)">+${s.premium}%</span></div>`).join('')}
