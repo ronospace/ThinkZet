@@ -334,6 +334,12 @@ html[data-theme="light"] .card.tone-blue [style*="var(--tone-ink)"]{color:#1d4ed
 .btn.ghost:hover{color:var(--ink);border-color:var(--accent2)}
 .btn.sm{padding:5px 10px;font-size:var(--text-sm);border-radius:7px}
 .btn .ext{display:inline-block;margin-left:5px;font-size:var(--text-xs);opacity:.85;transform:translateY(-.5px)}
+/* A dismiss is one mark, not a sentence. The thumb is the acknowledgement, and the word it replaces
+   stays as the accessible name so a screen reader still hears what the button does. */
+.teach-ok{width:40px;height:40px;min-width:40px;padding:0;display:grid;place-items:center;flex:0 0 auto}
+.teach-thumb{font-size:17px;line-height:1;display:block;transform:translateY(.5px);transition:transform .14s ease}
+.teach-ok:hover .teach-thumb{transform:translateY(.5px) scale(1.12)}
+@media(max-width:767px){.teach-ok{width:44px;height:44px;min-width:44px}.teach-thumb{font-size:19px}}
 .btn.act-apply .chev{width:14px;height:14px}
 .btn.act-apply{font-weight:620;background:color-mix(in srgb,var(--accent2) 8%,var(--panel));color:color-mix(in srgb,var(--accent) 82%,var(--ink2));border:1px solid color-mix(in srgb,var(--accent2) 30%,transparent);box-shadow:none}
 .btn.act-apply:hover{background:color-mix(in srgb,var(--accent2) 16%,var(--panel));border-color:color-mix(in srgb,var(--accent2) 60%,transparent);filter:none;box-shadow:none}
@@ -3757,7 +3763,7 @@ async function renderRadar() {
           <div style="font-size:var(--text-base);font-weight:600">Every card here is scored against your twin.</div>
           <div class="dim" style="font-size:var(--text-sm);margin-top:4px">The big number is <b>match</b>. The two small numbers are <b>interview</b> and <b>offer</b> probability – calibrated from real outcomes, not guesses. Start with the highest interview odds, not the highest match.</div>
         </div>
-        <button class="btn ghost sm" id="teach-ok">Got it</button>
+        <button class="btn ghost sm teach-ok" id="teach-ok" aria-label="Got it" title="Got it"><span class="teach-thumb" aria-hidden="true">👍</span></button>
       </div>
     </div>`;
     $('#teach-ok').onclick = () => { localStorage.setItem('karyvo-taught', '1'); teach.innerHTML = ''; };
