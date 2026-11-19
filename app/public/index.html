@@ -794,6 +794,84 @@ table.t tr:hover td{background:var(--panel2)}
 #send .lbl-send{display:none}
 #send[data-idle="1"] stop{stop-color:color-mix(in srgb,var(--accent2) 46%,var(--panel2))}
 #send[data-idle="1"]:hover stop{stop-color:color-mix(in srgb,var(--accent2) 70%,var(--panel2))}
+/* Market Pulse is a data screen: the grid carries market figures only, and every card ends on its
+   own content instead of stretching to a neighbour's height. */
+.pl-figs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:14px}
+.pl-fig{display:flex;flex-direction:column;gap:2px}
+.pl-note{font-size:var(--text-xs);line-height:1.45}
+.pl-take{margin-bottom:14px}
+.pl-take-list{margin:8px 0 0;padding-left:18px;display:flex;flex-direction:column;gap:6px;font-size:var(--text-sm);line-height:1.55;color:var(--ink2)}
+.pl-take-list b{color:var(--ink);font-weight:650}
+/* Six tracks, each card two wide: three cards fill a row, and the last row's two cards take three
+   tracks each so no cell is left standing empty. */
+.pl-grid{grid-template-columns:repeat(6,minmax(0,1fr));align-items:start}
+.pl-grid > .card{grid-column:span 2;align-self:start}
+.pl-grid > .card:nth-child(4),.pl-grid > .card:nth-child(5){grid-column:span 3}
+/* The country list is twice as long as any other, so where the card is wide enough to hold two
+   columns of label and figure it flows into two and the card ends near its neighbour instead of
+   running 250px past it. Below that width a column would be narrower than its own label. */
+.pl-grid .pl-list.pl-2col > *{break-inside:avoid}
+@media(min-width:1280px){.pl-grid .pl-list.pl-2col{column-count:2;column-gap:20px}}
+/* Between the rail and the wide grid three cards would be 235px each, narrower than a country name
+   beside its figure, so two cards share the row and every card keeps room for one line. */
+@media(min-width:901px) and (max-width:1279px){
+  .pl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pl-grid > .card,.pl-grid > .card:nth-child(4),.pl-grid > .card:nth-child(5){grid-column:span 1}
+  /* The two long lists take the full row and flow into two columns, so each card ends near its own
+     content and no cell is left standing empty beside a short one. */
+  .pl-grid > .card:nth-child(1),.pl-grid > .card:nth-child(2){grid-column:1/-1}
+  .pl-grid > .card:nth-child(1) .pl-list,.pl-grid > .card:nth-child(2) .pl-list{column-count:2;column-gap:24px}
+  /* Five cards over two columns leave one cell over; the last card takes the whole row so no cell
+     stands empty. */
+  .pl-grid > .card:nth-child(5){grid-column:1/-1}
+}
+.pl-list{margin-top:8px}
+.pl-row{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 12px;width:100%;box-sizing:border-box;
+  padding:6px 0;border:none;border-bottom:1px solid var(--line);background:none;color:inherit;font:inherit;
+  font-size:var(--text-sm);text-align:left;cursor:pointer;border-radius:0}
+.pl-row:hover .pl-k{color:var(--accent2)}
+.pl-row:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+.pl-k{color:var(--muted);min-width:0;overflow-wrap:anywhere}
+.pl-v{font-variant-numeric:tabular-nums;white-space:nowrap}
+.pl-n{color:var(--muted);font-size:var(--text-2xs)}
+.pl-good{color:var(--good)}
+.pl-bad{color:var(--bad)}
+.pl-bar{margin:5px 0 2px}
+.pl-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pl-seg{display:flex;gap:4px;padding:3px;border-radius:999px;background:var(--panel2)}
+.pl-seg .seg{padding:3px 10px;font-size:var(--text-xs)}
+.pl-sub{font-size:var(--text-xs);margin-top:2px}
+.pl-foot{margin-top:8px}
+/* The methodology trigger sits in the header beside the live pill, so the grid is left to the data. */
+.pl-method-wrap{position:relative;display:inline-flex;min-width:0}
+.pl-method{height:26px;padding:0 10px;border-radius:999px;border:1px solid var(--line2);background:var(--panel2);
+  color:var(--ink2);font:inherit;font-size:var(--text-xs);font-weight:600;cursor:pointer;white-space:nowrap}
+.pl-method-ic{display:none;font-weight:700}
+.pl-method:hover{color:var(--ink);border-color:var(--accent2)}
+.pl-method:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+.pl-mpop{position:absolute;top:calc(100% + 8px);left:0;z-index:60;width:min(430px,calc(100vw - 40px));box-sizing:border-box;
+  padding:14px;border:1px solid var(--line2);border-radius:14px;background:var(--panel);
+  box-shadow:0 18px 44px rgba(0,0,0,.28)}
+.pl-mpop[hidden]{display:none}
+.pl-mpop .facts{margin-top:0;gap:8px 14px}
+.pl-mpop .fk{font-size:var(--text-2xs)}
+.pl-mpop .fv{font-size:var(--text-xs);line-height:1.5}
+@media(max-width:1023px){
+  .pl-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .pl-grid > .card,.pl-grid > .card:nth-child(4),.pl-grid > .card:nth-child(5){grid-column:span 1}
+}
+@media(max-width:767px){
+  /* The header keeps the page name whole, so the trigger gives up its word before the title does. */
+  .pl-method{width:26px;padding:0;display:inline-grid;place-items:center}
+  .pl-method-lbl{display:none}
+  .pl-method-ic{display:inline}
+  .pl-figs{grid-template-columns:1fr}
+  .pl-grid{grid-template-columns:1fr}
+  .pl-grid > .card,.pl-grid > .card:nth-child(4),.pl-grid > .card:nth-child(5){grid-column:span 1}
+  /* A popover anchored to a 26px trigger runs off the screen, so on a phone it is pinned to the
+     viewport under the top bar instead of to the button. */
+  .pl-mpop{position:fixed;left:14px;right:14px;top:58px;width:auto;max-height:calc(100dvh - 76px);overflow-y:auto}
+}
 /* Feedback is a modal on the palette's scrim, but its own surface: one field, one optional field,
    three facts the screen already knows, and one action. */
 .fbk{position:fixed;inset:0;z-index:120;display:flex;align-items:center;justify-content:center;padding:16px;
@@ -2185,7 +2263,7 @@ body.tw-lock{overflow:hidden}
   <main>
     <div class="topbar">
       <div class="tb-title">
-        <div class="tb-line"><span class="tb-brand" id="tb-brand" aria-hidden="true"><svg class="mark" viewBox="0 0 192 192" focusable="false"><use href="#tz-mark"/></svg></span><span class="tb-ico" id="view-ico" aria-hidden="true"></span><h1 id="view-title">Opportunity Radar</h1><span class="pill live" id="live-pill"><i></i>live</span></div>
+        <div class="tb-line"><span class="tb-brand" id="tb-brand" aria-hidden="true"><svg class="mark" viewBox="0 0 192 192" focusable="false"><use href="#tz-mark"/></svg></span><span class="tb-ico" id="view-ico" aria-hidden="true"></span><h1 id="view-title">Opportunity Radar</h1><span class="pill live" id="live-pill"><i></i>live</span><span class="pl-method-wrap" id="pl-method-wrap" hidden><button class="pl-method" id="pl-method" aria-haspopup="dialog" aria-expanded="false" aria-label="Methodology"><span class="pl-method-lbl">Methodology</span><span class="pl-method-ic" aria-hidden="true">?</span></button><div class="pl-mpop" id="pl-mpop" role="dialog" aria-label="How to read this data" hidden><div class="facts tight"><span class="fk">Source</span><span class="fv" id="pl-m-source">Live postings that state pay, taken from the boards listed on the landing page.</span><span class="fk">Not a survey</span><span class="fv">Nothing here is self-reported. It is what employers are publishing today.</span><span class="fk">Currency</span><span class="fv">Every figure is annualised and converted to EUR, so two disciplines are compared on the same basis.</span><span class="fk">Small samples</span><span class="fv">A discipline with fewer than eight disclosed postings is left out, not shown with false precision.</span><span class="fk">The number in brackets</span><span class="fv">How many postings the median was built from. Read it before you trust the gap between two rows.</span></div></div></span></div>
         <div class="sub" id="view-sub" hidden></div>
       </div>
       <div class="spacer"></div>
@@ -5358,62 +5436,113 @@ async function renderPulse() {
   const maxCty = Math.max(...p.countries.map((c) => c.median), 1);
   const bar = (v, max) => Math.max(3, Math.round((v / max) * 100));
   const famLabel = (f) => titleCase(f);
+  // Every list is read top-down, so every list is sorted descending at the point it is printed.
+  const desc = (k) => (a, b) => (b[k] || 0) - (a[k] || 0);
+  const fams = p.families.slice().sort(desc('median'));
+  const ctys = p.countries.slice().sort(desc('median'));
+  const rising = (p.skills.rising || []).slice().sort(desc('growth_rate'));
+  const falling = (p.skills.falling || []).slice().sort((a, b) => (a.growth_rate || 0) - (b.growth_rate || 0));
+  const premium = (p.skills.premium || []).slice().sort(desc('salary_premium'));
+  const supply = (p.supply || []).slice().sort(desc('n'));
+  const supplyTop = Math.max(...supply.slice(0, 8).map((x) => x.n), 1);
+  const pct = (n, total) => Math.round((n / Math.max(total || 1, 1)) * 100);
+  const dir = STATE.pulseDir === 'falling' ? 'falling' : 'rising';
+  const dirRows = dir === 'falling' ? falling : rising;
+  // One row is a drill-down: it opens the Radar filtered to what the row names.
+  const drill = (kind, value, label) => `<button class="pl-row" data-drill="${kind}" data-v="${esc(value)}" title="Open in Opportunity Radar"><span class="pl-k">${esc(label)}</span>`;
   $('#view').innerHTML = `
-    <div class="row" style="gap:14px;margin-bottom:16px;flex-wrap:wrap">
-      <div class="card" style="flex:1;min-width:150px"><h3>Corpus</h3><div class="big mono">${int(p.totals.opportunities)}</div><div class="muted" style="font-size:var(--text-xs)">live opportunities, ${int(p.totals.remote)} of them remote</div></div>
-      <div class="card" style="flex:1;min-width:150px"><h3>With Disclosed Pay</h3><div class="big mono">${int(p.sample)}</div><div class="muted" style="font-size:var(--text-xs)">${Math.round((p.sample / Math.max(p.totals.opportunities, 1)) * 100)}% of the corpus states a figure</div></div>
-      <div class="card" style="flex:1;min-width:150px"><h3>Remote Share</h3><div class="big mono">${p.remoteShare}%</div><div class="muted" style="font-size:var(--text-xs)">${int(p.totals.remote)} of ${int(p.totals.opportunities)} live roles</div></div>
+    <div class="row pl-figs">
+      <div class="card pl-fig"><h3>Corpus</h3><div class="big mono">${int(p.totals.opportunities)}</div><div class="muted pl-note">live opportunities, ${int(p.totals.remote)} of them remote</div></div>
+      <div class="card pl-fig"><h3>With Disclosed Pay</h3><div class="big mono">${int(p.sample)}</div><div class="muted pl-note">${pct(p.sample, p.totals.opportunities)}% of the corpus states a figure</div></div>
+      <div class="card pl-fig"><h3>Remote Share</h3><div class="big mono">${p.remoteShare}%</div><div class="muted pl-note">${int(p.totals.remote)} of ${int(p.totals.opportunities)} live roles</div></div>
     </div>
-    <div class="grid" style="grid-template-columns:1fr 1fr">
+    <div class="card pl-take">
+      <h3>Key Market Takeaways</h3>
+      <ol class="pl-take-list">
+        <li><b>${esc(rising[0] ? rising[0].canonical : 'No skill is rising')}</b> is the fastest-growing skill in demand, ${rising[0] ? '+' + rising[0].growth_rate + '%' : 'flat'} over 14 days, and <b>${esc(premium[0] ? premium[0].canonical : 'no skill')}</b> carries the largest pay lift at ${premium[0] ? '+' + premium[0].salary_premium + '%' : '0%'}.</li>
+        <li><b>${esc(fams[0] ? famLabel(fams[0].family) : 'No discipline')}</b> pays the highest median at ${fams[0] ? money(fams[0].median) : money(0)} a year, and <b>${esc(ctys[0] ? ctys[0].country : 'no market')}</b> is the top-paying market at ${ctys[0] ? money(ctys[0].median) : money(0)}.</li>
+        <li><b>${esc(supply[0] ? famLabel(supply[0].role_family) : 'No discipline')}</b> holds ${supply[0] ? pct(supply[0].n, p.supplyTotal) : 0}% of the ${int(p.supplyTotal || 0)} open postings dated inside the window, and ${p.remoteShare}% of the corpus is remote.</li>
+      </ol>
+    </div>
+    <div class="grid pl-grid">
       <div class="card">
         <h3>Median Pay by Discipline (EUR, Annualised)</h3>
-        <div style="margin-top:12px">
-          ${p.families.map((f) => `<div style="margin:9px 0">
-            <div class="row" style="justify-content:space-between;font-size:var(--text-sm)"><span>${esc(famLabel(f.family))}</span><span class="mono">${money(f.median)} <span class="muted" style="font-size:var(--text-2xs)">(${f.n})</span></span></div>
-            <div class="bar" style="margin-top:4px"><i style="width:${bar(f.median, maxFam)}%"></i></div>
-          </div>`).join('')}
+        <div class="pl-list">
+          ${fams.map((f) => `${drill('family', f.family, famLabel(f.family))}<span class="pl-v mono">${money(f.median)} <span class="pl-n">(${f.n})</span></span></button>
+            <div class="bar pl-bar"><i style="width:${bar(f.median, maxFam)}%"></i></div>`).join('')}
         </div>
       </div>
       <div class="card">
         <h3>Median Pay by Country</h3>
-        <div style="margin-top:12px">
-          ${p.countries.map((c) => `<div style="margin:9px 0">
-            <div class="row" style="justify-content:space-between;font-size:var(--text-sm)"><span>${esc(c.country)}</span><span class="mono">${money(c.median)} <span class="muted" style="font-size:var(--text-2xs)">(${c.n})</span></span></div>
-            <div class="bar" style="margin-top:4px"><i style="width:${bar(c.median, maxCty)}%"></i></div>
-          </div>`).join('')}
+        <div class="pl-list pl-2col">
+          ${ctys.map((c) => `${drill('country', c.country, c.country)}<span class="pl-v mono">${money(c.median)} <span class="pl-n">(${c.n})</span></span></button>
+            <div class="bar pl-bar"><i style="width:${bar(c.median, maxCty)}%"></i></div>`).join('')}
         </div>
       </div>
-    </div>
-    <div class="grid" style="grid-template-columns:1fr 1fr 1fr;margin-top:14px">
       <div class="card">
-        <h3>Skills Rising</h3>
-        <div style="margin-top:10px">${p.skills.rising.map((s) => `<div class="kv"><span>${esc(s.canonical)}</span><span class="mono" style="color:var(--good)">+${s.growth_rate}%</span></div>`).join('')}</div>
-        ${(p.skills.falling || []).length ? `<div class="muted" style="font-size:var(--text-2xs);letter-spacing:.12em;text-transform:uppercase;margin-top:12px">Falling</div>
-        <div style="margin-top:6px">${p.skills.falling.map((s) => `<div class="kv"><span>${esc(s.canonical)}</span><span class="mono" style="color:var(--bad)">${s.growth_rate}%</span></div>`).join('')}</div>` : ''}
+        <div class="pl-head">
+          <h3>Skill Demand (14d)</h3>
+          <div class="pl-seg" role="group" aria-label="Skill demand direction">
+            <button class="seg${dir === 'rising' ? ' on' : ''}" data-pdir="rising">Rising</button>
+            <button class="seg${dir === 'falling' ? ' on' : ''}" data-pdir="falling">Falling</button>
+          </div>
+        </div>
+        <div class="pl-list">
+          ${dirRows.map((s) => `${drill('skill', s.canonical, s.canonical)}<span class="pl-v mono ${dir === 'falling' ? 'pl-bad' : 'pl-good'}">${s.growth_rate > 0 ? '+' : ''}${s.growth_rate}%</span></button>`).join('')}
+        </div>
       </div>
       <div class="card">
         <h3>Highest Salary Premium</h3>
-        <div style="margin-top:10px">${p.skills.premium.map((s) => `<div class="kv"><span>${esc(s.canonical)}</span><span class="mono" style="color:var(--good)">+${s.salary_premium}%</span></div>`).join('')}</div>
+        <div class="muted pl-sub">Median pay lift vs. the baseline role</div>
+        <div class="pl-list">
+          ${premium.map((s) => `${drill('skill', s.canonical, s.canonical)}<span class="pl-v mono pl-good">+${s.salary_premium}%</span></button>`).join('')}
+        </div>
       </div>
       <div class="card">
-        <h3>Supply – Postings in ${p.supplyWindowDays || 14} Days</h3>
-        <div style="margin-top:10px">${p.supply.slice(0, 8).map((s) => `<div style="margin:7px 0">
-          <div class="row" style="justify-content:space-between;font-size:var(--text-sm)"><span>${esc(famLabel(s.role_family))}</span><span class="mono">${int(s.n)} <span class="muted" style="font-size:var(--text-2xs)">${Math.round((s.n / Math.max(p.supplyTotal || 1, 1)) * 100)}%</span></span></div>
-          <div class="bar" style="margin-top:4px"><i style="width:${Math.max(3, Math.round((s.n / Math.max(...p.supply.slice(0, 8).map((x) => x.n), 1)) * 100))}%"></i></div>
-        </div>`).join('')}
-        <div class="muted" style="font-size:var(--text-xs);margin-top:8px">${int(p.supplyTotal || 0)} open postings dated inside the window. Share is of that total.</div>
-      </div>
-    </div>
-    <div class="card" style="margin-top:14px">
-      <h3>How to Read This</h3>
-      <div class="facts tight" style="margin-top:10px">
-        <span class="fk">Source</span><span class="fv">${int(p.sample)} live postings that state pay, taken from the boards listed on the landing page.</span>
-        <span class="fk">Not a survey</span><span class="fv">Nothing here is self-reported. It is what employers are publishing today.</span>
-        <span class="fk">Currency</span><span class="fv">Every figure is annualised and converted to EUR, so two disciplines are compared on the same basis.</span>
-        <span class="fk">Small samples</span><span class="fv">A discipline with fewer than eight disclosed postings is left out, not shown with false precision.</span>
-        <span class="fk">The number in brackets</span><span class="fv">How many postings the median was built from. Read it before you trust the gap between two rows.</span>
+        <h3>Market Supply by Discipline (14d)</h3>
+        <div class="pl-list">
+          ${supply.slice(0, 8).map((s) => `${drill('family', s.role_family, famLabel(s.role_family))}<span class="pl-v mono">${int(s.n)} <span class="pl-n">${pct(s.n, p.supplyTotal)}%</span></span></button>
+            <div class="bar pl-bar"><i style="width:${Math.max(3, Math.round((s.n / supplyTop) * 100))}%"></i></div>`).join('')}
+        </div>
+        <div class="muted pl-note pl-foot">${int(p.supplyTotal || 0)} open postings dated inside the window. Share is of that total.</div>
       </div>
     </div>`;
+  // Methodology is a header trigger, not a card in the grid: the grid is for market data.
+  const mSrc = document.getElementById('pl-m-source');
+  if (mSrc) mSrc.textContent = `${int(p.sample)} live postings that state pay, taken from the boards listed on the landing page.`;
+  const mBtn = document.getElementById('pl-method');
+  const mPop = document.getElementById('pl-mpop');
+  if (mBtn && mPop) {
+    mBtn.onclick = (e) => {
+      e.stopPropagation();
+      const open = mPop.hasAttribute('hidden');
+      if (open) mPop.removeAttribute('hidden'); else mPop.setAttribute('hidden', '');
+      mBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    };
+    mPop.onclick = (e) => e.stopPropagation();
+    if (!mPop.dataset.bound) {
+      mPop.dataset.bound = '1';
+      document.addEventListener('click', () => {
+        if (!mPop.hasAttribute('hidden')) { mPop.setAttribute('hidden', ''); mBtn.setAttribute('aria-expanded', 'false'); }
+      });
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && !mPop.hasAttribute('hidden')) { mPop.setAttribute('hidden', ''); mBtn.setAttribute('aria-expanded', 'false'); mBtn.focus(); }
+      });
+    }
+  }
+  document.querySelectorAll('[data-pdir]').forEach((b) => {
+    b.onclick = () => { STATE.pulseDir = b.dataset.pdir; renderPulse(); };
+  });
+  document.querySelectorAll('.pl-row[data-drill]').forEach((b) => {
+    b.onclick = () => {
+      const kind = b.dataset.drill, v = b.dataset.v;
+      FILTERS.q = ''; FILTERS.seniority = ''; FILTERS.visa = false; FILTERS.degree = '';
+      if (kind === 'family') { FILTERS.family = v; FILTERS.country = ''; }
+      else if (kind === 'country') { FILTERS.country = v; FILTERS.family = ''; }
+      else { FILTERS.family = ''; FILTERS.country = ''; FILTERS.q = v; }
+      go('radar');
+    };
+  });
 }
 
 /* ---------------- trajectory ---------------- */
@@ -5670,6 +5799,9 @@ async function go(view) {
   const vEl = document.getElementById('view'); if (vEl) vEl.classList.toggle('auth-view', view === 'auth');
   if (view === 'radar' && changed) track('radar.opened');
   const pill = document.getElementById('live-pill'); if (pill) pill.style.display = ['auth', 'onboard'].includes(view) ? 'none' : '';
+  // The methodology trigger belongs to Market Pulse alone: no other screen carries a popover in its header.
+  const mWrap = document.getElementById('pl-method-wrap'); if (mWrap) mWrap.hidden = view !== 'pulse';
+  const mPop0 = document.getElementById('pl-mpop'); if (mPop0 && view !== 'pulse') { mPop0.setAttribute('hidden', ''); const mb0 = document.getElementById('pl-method'); if (mb0) mb0.setAttribute('aria-expanded', 'false'); }
   STATE.view = view;
   // The rail keeps its foot on every screen: the engine status, the counts and the legal line are
   // part of the frame, not of the page. Nothing about a screen may remove them.
