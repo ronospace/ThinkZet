@@ -1441,9 +1441,9 @@ route('POST', /^\/api\/copilot$/, async (req, res) => {
       ? 'myname'
       : /(your name|who are you|what are you|are you (a )?(bot|human|ai|real)|what do i call you)/.test(q)
         ? 'who'
-        : /(what|which)\s+(date|day)\b|today.s date|what day is it/.test(q)
+        : /\b(date|today|todays|day is it|day today|what day)\b/.test(q) && !/\b(update|validate|candidate)\b/.test(q)
           ? 'date'
-          : /(what|which)\s+time\b|time is it/.test(q)
+          : /\b(time|clock)\b/.test(q) && /\b(what|which|current|now)\b/.test(q)
             ? 'time'
             : /^(thanks|thank you|cheers|ta|ok|okay|cool|great|nice)\b/.test(q)
               ? 'thanks'

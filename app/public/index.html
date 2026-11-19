@@ -5444,11 +5444,9 @@ async function go(view) {
   STATE.view = view;
   // The rail keeps its foot on every screen: the engine status, the counts and the legal line are
   // part of the frame, not of the page. Nothing about a screen may remove them.
-  // The four account screens are one destination in the bottom bar, so the tab stays lit across
-  // all four rather than going dark the moment you step into Career Twin.
-  // Career Twin has its own tab in the phone bar, so it lights that one. Only the two settings
-  // screens with no tab of their own fold into Account & Privacy.
-  const navKey = ['learning', 'plan'].includes(view) ? 'account' : view;
+  // Every screen in the rail has its own button, including Career Twin, Career Calibration and
+  // Plan, so the button that lights is the button that was clicked. Nothing folds into a neighbour.
+  const navKey = view;
   document.querySelectorAll('#nav button').forEach((b) => b.classList.toggle('active', b.dataset.view === navKey));
   // A view that is not in the consumer map does not exist for this application, whoever is signed in.
   if (!VIEWS[view]) {
